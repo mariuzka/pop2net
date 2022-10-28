@@ -17,7 +17,7 @@ exclude = '''
 [tool.poetry]
 name = "popy"
 version = "0.1.0"
-packages = [{include = "*", from = "src"}]
+packages = [{include = "src"}]
 description = "Creates representative random populations for simulation studies"
 authors = ["Marius Kaffai <marius.kaffai@sowi.uni-stuttgart.de>"]
 license = "MIT"
@@ -27,7 +27,6 @@ readme = "README.md"
 python = "^3.8,<4.0"
 pandas = "^1.5.1"
 
-
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.2.0"
 black = "^22.10.0"
@@ -36,9 +35,13 @@ pre-commit = "^2.20.0"
 mypy = "^0.982"
 faker = "^15.1.1"
 
-
 [tool.poetry.group.mypy.dependencies]
 tox = "^3.27.0"
+
+[tool.pytest.ini_options]
+pythonpath = [
+  "."
+]
 
 [build-system]
 requires = ["poetry-core"]
