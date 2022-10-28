@@ -51,7 +51,7 @@ class SOEPProvider(BaseProvider):
         self.work_dist = lambda: self.rng.normal(loc=6.429, scale=2.92)
 
     def _multinomial_select(self, pvals: list[float]) -> int:
-        return np.argmax(self.rng.multinomial(n=1, pvals=pvals))
+        return int(np.argmax(self.rng.multinomial(n=1, pvals=pvals)))
 
     def household(self) -> tuple[int, int, int]:
 
