@@ -1,5 +1,7 @@
 from typing import Any
+from typing import List
 from typing import Literal
+from typing import Tuple
 
 import faker
 import numpy as np
@@ -50,10 +52,10 @@ class SOEPProvider(BaseProvider):
         self.work_full_day_dist = lambda: self.rng.binomial(n=1, p=0.188)
         self.work_dist = lambda: self.rng.normal(loc=6.429, scale=2.92)
 
-    def _multinomial_select(self, pvals: list[float]) -> int:
+    def _multinomial_select(self, pvals: List[float]) -> int:
         return int(np.argmax(self.rng.multinomial(n=1, pvals=pvals)))
 
-    def household(self) -> tuple[int, int, int]:
+    def household(self) -> Tuple[int, int, int]:
 
         while (hh_size := self.hh_size_dist()) < 1:
             pass
