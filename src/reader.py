@@ -20,8 +20,14 @@ class DataReader:
 
     def sample(self, by: str, size: int, weights: Optional[str] = None) -> pd.DataFrame:
 
-        id_col = self.df[by]
-        weight_col = list(self.df[weights]) if weights else None
+        if weights is None:
+            unique_by = self.df[[by]].drop_duplicates(subset=by, keep="first")
+            weight_col = None
+        else:
+            unique_by = self.df[[by, weights]].drop_duplicates(subset=by, keep="first")
+            weight_col = unique_by[weights].tolist()
+
+        id_col = unique_by[by].tolist()
         sample = self.rng.choices(id_col, weights=weight_col, k=size)
 
         subset_dfs = []
