@@ -2,33 +2,23 @@ import random
 
 import agentpy as ap
 
-from src.agent import PopyAgent
-from src.environment import PopyEnvironment
-from src.location import PopyLocation
-from src.model import PopyModel
+import src
 
 
 def test_model(data_regression):
-    class MyAgent(PopyAgent):
-        def setup(self):
-            self.n_contacts = 0
+    class Population:
+        def __init__(self, model) -> None:
+            self.model = model
+            self.agents = src.AgentList(model, model.p.agents, MyAgent)
+            self.locations = src.LocationList(
+                self,
+                [
+                    src.Location(self, category="home"),
+                    src.Location(self, category="school"),
+                    src.Location(self, category="home"),
+                ],
+            )
 
-        def do_stuff(self):
-            self.n_contacts += 1
-
-        @property
-        def len_contacts(self):
-            return len(self.contact_diary)
-
-    class MyModel(PopyModel):
-        def setup(self):
-            # initiate a list of agents
-            self.agents = ap.AgentList(self, self.p.agents, MyAgent)
-            self.locations = [
-                PopyLocation(self, category="home"),
-                PopyLocation(self, category="school"),
-                PopyLocation(self, category="home"),
-            ]
             # home 1
             self.agents[0].add_location(self.locations[0])
             self.agents[1].add_location(self.locations[0])
@@ -43,14 +33,33 @@ def test_model(data_regression):
             self.agents[4].add_location(self.locations[2])
             self.agents[5].add_location(self.locations[2])
 
+        def update(self) -> None:
+            self.agents.visit_locations(self.model)
+            self.locations.connect_visitors()
+
+    class MyAgent(src.Agent):
+        def setup(self):
+            self.n_contacts = 0
+
+        def do_stuff(self):
+            self.n_contacts += 1
+
+        @property
+        def len_contacts(self):
+            return len(self.contact_diary)
+
+    class MyModel(src.Model):
+        def setup(self):
+            self.population = Population(self)
+
         def step(self):
-            self.agents.do_stuff()
+            self.population.agents.do_stuff()
 
         def update(self):
             # record n_contacts
-            self.agents.record("my_diary")
-            self.agents.record("n_contacts")
-            self.agents.record("len_contacts")
+            self.population.agents.record("my_diary")
+            self.population.agents.record("n_contacts")
+            self.population.agents.record("len_contacts")
 
         def end(self):
             pass

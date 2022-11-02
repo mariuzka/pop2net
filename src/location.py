@@ -4,11 +4,12 @@ from typing import Optional
 import agentpy as ap
 
 
-class PopyLocation:
+class Location:
     """The place where agents encounter each other."""
 
-    def __init__(self, model, category: str, max_size: Optional[int] = None):
+    def __init__(self, model, category: Optional[str] = None, max_size: Optional[int] = None):
 
+        self.model = model
         self.category = category
         self.max_size = max_size
 
@@ -16,7 +17,7 @@ class PopyLocation:
         self.n_associated_agents: int = 0
 
     def __repr__(self) -> str:
-        return self.category
+        return f"Location(category={self.category}"
 
     def can_visit(self, agent):
         return True

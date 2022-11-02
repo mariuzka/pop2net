@@ -2,15 +2,17 @@ import statistics as stats
 
 import agentpy as ap
 
+from .sequences import LocationList
 
-class PopyAgent(ap.Agent):
+
+class Agent(ap.Agent):
     def __init__(self, model, *args, **kwargs):
         super().__init__(model, *args, **kwargs)
 
         self._model = model
         self.contacts = set()
         self.contact_diary = []
-        self.locations = []
+        self.locations = LocationList(self._model)
 
     @property
     def _n_agents_ever_met(self) -> int:
