@@ -5,7 +5,7 @@ import agentpy as ap
 import src
 
 
-def test_model(data_regression):
+def test_model(dataframe_regression):
     class Population:
         def __init__(self, model) -> None:
             self.model = model
@@ -57,15 +57,20 @@ def test_model(data_regression):
 
         def update(self):
             # record n_contacts
-            self.population.agents.record("my_diary")
+            self.population.agents.record("contacts")
             self.population.agents.record("n_contacts")
             self.population.agents.record("len_contacts")
 
         def end(self):
             pass
 
-    model = MyModel(parameters={"agents": 6, "steps": 3, "seed": 43})
+    model = MyModel(parameters={"agents": 6, "steps": 3})
     results = model.run()
 
-    result = results.variables.MyAgent.to_dict()
-    data_regression.check(result)
+    # multi index not supported by pytest-regressions
+    result = results.variables.MyAgent.reset_index()
+
+    # lists cannot be saved in pytest-regressions
+    result["contacts"] = result.contacts.apply(str)
+
+    dataframe_regression.check(result)
