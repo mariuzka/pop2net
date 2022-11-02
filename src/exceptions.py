@@ -1,0 +1,2 @@
+class PopyException(Exception):
+    pass
