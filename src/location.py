@@ -1,39 +1,92 @@
-from typing import List
+from typing import Callable
 from typing import Optional
 
 import agentpy as ap
+import networkx as nx
+from agentpy.sequences import AgentList
+
+
+class FullGraph:
+    def __init__(self, model) -> None:
+        self.model = model
+        self.g = nx.Graph()
+
+    def add_agent(self, agent, **kwargs):
+
+        self.g.add_node(agent.id, _agent=agent, **kwargs)
+        for node in self.g.nodes():
+            if node != agent.id:
+                self.g.add_edge(agent.id, node)
+
+    @property
+    def agents(self):
+        return AgentList(
+            model=self.model,
+            objs=[data["_agent"] for _u, data in self.g.nodes(data=True)],
+        )
+
+    def remove_agent(self, agent):
+        self.g.remove_node(agent.id)
+
+    def neighbors(self, agent, data: bool = False):
+
+        temp = AgentList(self.model)
+        for neighbor in self.g.neighbors(agent.id):
+            temp.append(self.g.nodes[neighbor]["_agent"])
+
+        return temp
 
 
 class Location:
-    """The place where agents encounter each other."""
-
-    def __init__(self, model, category: Optional[str] = None, max_size: Optional[int] = None):
-
+    def __init__(self, model, graph_cls=FullGraph) -> None:
         self.model = model
-        self.category = category
-        self.max_size = max_size
+        self.graph = graph_cls(model=model)
+        self.daily_visitors = ap.AgentList(model=self.model)
 
-        self.visitors_of_the_day: List[int] = []
-        self.n_associated_agents: int = 0
+    def add_agent(self, agent, visit_weight: int, visit_weight_mod: Optional[Callable] = None):
+        if agent not in self.graph.agents:
+            self.graph.add_agent(
+                agent,
+                visit_weight=visit_weight,
+                visit_weight_mod=visit_weight_mod,
+            )
 
-    def __repr__(self) -> str:
-        return f"Location(category={self.category}"
+    def remove_agent(self, agent):
+        self.graph.remove_agent(agent)
+
+    def edge_weight(self, agent1, agent2):
+        return 1
+
+    def neighbors(self, agent):
+        return self.graph.neighbors(agent)
 
     def can_visit(self, agent):
-        return True
+        if self.model.is_weekday:
+            return True
+        return False
+
+    def can_affiliate(self, agent):
+        if agent.age < 18:
+            return True
+
+    def groupby(self):
+        pass
 
     def visit(self, agent):
-        if self.can_visit(agent):
-            self.visitors_of_the_day.append(agent)
+        if self.graph.g.nodes[agent.id]["visit_weight_mod"]:
+            self.graph.g.nodes[agent.id]["visit_weight"] = self.graph.g.nodes[agent.id][
+                "visit_weight_mod"
+            ](self.graph.g.nodes[agent.id]["visit_weight"])
 
-    def clear_visitors(self):
-        self.visitors_of_the_day = []
+    # def connect_visitors(self, simultaneous=True):
+    #     for u, v in self.graph.edges():
+    #         visit_weight_u = self.graph.nodes[u]["visit_weight"]
+    #         visit_weight_v = self.graph.nodes[v]["visit_weight"]
 
-    def connect_visitors(self):
-        for i, agent_i in enumerate(list(self.visitors_of_the_day)):
-            for agent_j in list(self.visitors_of_the_day):
-                if agent_i == agent_j:
-                    continue
-                agent_i.add_contact(agent_j)
+    #         if simultaneous:
+    #             edge_weight = min((visit_weight_u, visit_weight_v)) / 24
+    #         else:
+    #             edge_weight = (visit_weight_u * visit_weight_v) / 576
 
-        self.clear_visitors()
+    #         agent_u = self.graph.nodes[u]["visit_weight"]
+    #         agent_u = self.graph.nodes[u]["_agent"]
