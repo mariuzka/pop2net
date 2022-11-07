@@ -13,26 +13,30 @@ def two_locations(model):
     return src.LocationList(
         model,
         [
-            src.Location(model, category="home"),
-            src.Location(model, category="work"),
+            src.Location(model),
+            src.Location(model),
         ],
     )
 
 
 def test_agent_creation(model):
     agent = src.Agent(model)
-    assert agent._model == model
-    assert agent.contact_diary == src.AgentList(model)
-    assert list(agent.contact_diary) == []
+    assert agent.model == model
     assert list(agent.locations) == []
+
+
+def test_agentlist_broadcasting(model):
+    agents = src.AgentList(model, [src.Agent(model), src.Agent(model)])
+    agents.x = 1
+    assert sum(agents.x) == 2
 
 
 def test_agent_locations(model):
 
     agent = src.Agent(model)
 
-    location1 = src.Location(model, category="home")
-    location2 = src.Location(model, category="work")
+    location1 = src.Location(model)
+    location2 = src.Location(model)
 
     agent.add_location(location1)
     exp = src.LocationList(model, [location1])
@@ -54,6 +58,7 @@ def test_agents_error_when_location_is_added_twice(model, two_locations):
         agent.add_location(two_locations[0])
 
 
+@pytest.mark.skip
 def test_agent_visits_single_location(model, two_locations):
 
     agent = src.Agent(model)
@@ -63,6 +68,7 @@ def test_agent_visits_single_location(model, two_locations):
     assert list(two_locations.visitors_of_the_day) == [[agent], []]
 
 
+@pytest.mark.skip
 def test_agent_visits_two_locations(model, two_locations):
 
     agent = src.Agent(model)
