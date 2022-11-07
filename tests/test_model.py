@@ -6,16 +6,36 @@ import src
 
 
 def test_model(dataframe_regression):
+    class HealthyAgent(src.Agent):
+        def setup(self):
+            self.is_infected = False
+
+        def infect(self):
+            for contact in self.contacts():
+                p_infect = 0.1
+                if p_infect < 0.3:
+                    contact.is_infected = 1
+
+    class InfectedAgent(HealthyAgent):
+        def setup(self):
+            self.is_infected = True
+
     class Population:
         def __init__(self, model) -> None:
             self.model = model
-            self.agents = src.AgentList(model, model.p.agents, MyAgent)
+
+            self.agents = src.AgentList(model, 5, HealthyAgent)
+            self.agents.extend(src.AgentList(model, 1, InfectedAgent))
+            self.agents.shuffle()
+
+            self.model.is_weekday = True
+
             self.locations = src.LocationList(
                 self,
                 [
-                    src.Location(self, category="home"),
-                    src.Location(self, category="school"),
-                    src.Location(self, category="home"),
+                    src.Location(self),
+                    src.Location(self),
+                    src.Location(self),
                 ],
             )
 
@@ -35,42 +55,24 @@ def test_model(dataframe_regression):
 
         def update(self) -> None:
             self.agents.visit_locations(self.model)
-            self.locations.connect_visitors()
-
-    class MyAgent(src.Agent):
-        def setup(self):
-            self.n_contacts = 0
-
-        def do_stuff(self):
-            self.n_contacts += 1
-
-        @property
-        def len_contacts(self):
-            return len(self.contact_diary)
 
     class MyModel(src.Model):
         def setup(self):
             self.population = Population(self)
 
         def step(self):
-            self.population.agents.do_stuff()
+            self.population.agents.infect()
 
         def update(self):
-            # record n_contacts
-            self.population.agents.record("contacts")
-            self.population.agents.record("n_contacts")
-            self.population.agents.record("len_contacts")
+            self.population.agents.record("is_infected")
 
         def end(self):
             pass
 
-    model = MyModel(parameters={"agents": 6, "steps": 3})
+    model = MyModel(parameters={"agents": 6, "steps": 2})
     results = model.run()
 
     # multi index not supported by pytest-regressions
-    result = results.variables.MyAgent.reset_index()
+    result = results.variables.HealthyAgent.reset_index()
 
-    # lists cannot be saved in pytest-regressions
-    result["contacts"] = result.contacts.apply(str)
-
-    dataframe_regression.check(result)
+    assert sum(result.is_infected.values) == 10
