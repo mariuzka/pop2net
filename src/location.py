@@ -42,17 +42,31 @@ class Location:
         self.model = model
         self.graph = graph_cls(model=model)
         self.daily_visitors = ap.AgentList(model=self.model)
+        self.n_current_visitors = 0
 
-    def add_agent(self, agent, visit_weight: int, visit_weight_mod: Optional[Callable] = None):
+    def setup(self):
+        self.size: Optional[int] = None
+
+    def add_agent(
+        self,
+        agent,
+        visit_weight: Optional[int] = None,
+        visit_weight_mod: Optional[Callable] = None,
+    ):
         if agent not in self.graph.agents:
             self.graph.add_agent(
                 agent,
                 visit_weight=visit_weight,
                 visit_weight_mod=visit_weight_mod,
             )
+            self.n_current_visitors += 1
+
+            assert self not in agent.locations
+            agent.locations.append(self)
 
     def remove_agent(self, agent):
         self.graph.remove_agent(agent)
+        self.n_current_visitors -= 1
 
     def edge_weight(self, agent1, agent2):
         return 1
@@ -61,16 +75,13 @@ class Location:
         return self.graph.neighbors(agent)
 
     def can_visit(self, agent):
-        if self.model.is_weekday:
-            return True
-        return False
+        return True
 
     def can_affiliate(self, agent):
-        if agent.age < 18:
-            return True
+        return True
 
-    def groupby(self):
-        pass
+    def subtype(self, agent):
+        return None
 
     def visit(self, agent):
         if self.graph.g.nodes[agent.id]["visit_weight_mod"]:
