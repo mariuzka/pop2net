@@ -44,14 +44,12 @@ class PopMaker:
 
             affiliated_agents = [agent for agent in agents if location_dummy.can_affiliate(agent)]
 
-            location_subtypes = {location_dummy.subtype(agent) for agent in affiliated_agents}
+            location_subtypes = {location_dummy.groupby(agent) for agent in affiliated_agents}
 
             for subtype in location_subtypes:
-                print(type(location_dummy))
-                print(subtype)
 
                 subtype_affiliated_agents = [
-                    agent for agent in agents if location_dummy.subtype(agent) == subtype
+                    agent for agent in agents if location_dummy.groupby(agent) == subtype
                 ]
 
                 n_location_subtypes = (
@@ -66,6 +64,7 @@ class PopMaker:
 
                 for location in subtype_locations:
                     location.setup()
+                    location.subtype = subtype
 
                 locations.extend(subtype_locations)
 

@@ -43,6 +43,7 @@ class Location:
         self.graph = graph_cls(model=model)
         self.daily_visitors = ap.AgentList(model=self.model)
         self.n_current_visitors = 0
+        self.subtype = None
 
     def setup(self):
         self.size: Optional[int] = None
@@ -53,6 +54,8 @@ class Location:
         visit_weight: Optional[int] = None,
         visit_weight_mod: Optional[Callable] = None,
     ):
+        if not self.can_affiliate(agent):
+            return
         if agent not in self.graph.agents:
             self.graph.add_agent(
                 agent,
@@ -61,8 +64,13 @@ class Location:
             )
             self.n_current_visitors += 1
 
-            assert self not in agent.locations
-            agent.locations.append(self)
+            if self not in agent.locations:
+                agent.locations.append(self)
+
+    # Should we do this?
+    @property
+    def agents(self):
+        return self.graph.agents
 
     def remove_agent(self, agent):
         self.graph.remove_agent(agent)
@@ -74,16 +82,18 @@ class Location:
     def neighbors(self, agent):
         return self.graph.neighbors(agent)
 
-    def can_visit(self, agent):
+    def can_visit(self, agent) -> bool:
         return True
 
-    def can_affiliate(self, agent):
+    def can_affiliate(self, agent) -> bool:
         return True
 
-    def subtype(self, agent):
+    def groupby(self, agent):
         return None
 
     def visit(self, agent):
+        if not self.can_visit(agent):
+            return
         if self.graph.g.nodes[agent.id]["visit_weight_mod"]:
             self.graph.g.nodes[agent.id]["visit_weight"] = self.graph.g.nodes[agent.id][
                 "visit_weight_mod"
