@@ -3,9 +3,7 @@ from typing import List
 from typing import Literal
 from typing import Tuple
 
-import faker
 import numpy as np
-import pandas as pd
 from faker.providers import BaseProvider
 
 
@@ -86,7 +84,7 @@ class SOEPProvider(BaseProvider):
 
     def work_hours_per_day(self, person: Literal["adult", "child"]) -> float:
 
-        # childs do not work
+        # children do not work
         if person == "child":
             return 0.0
 
