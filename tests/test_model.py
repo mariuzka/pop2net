@@ -1,12 +1,11 @@
 import random
 
 import agentpy as ap
-
-import src
+import popy
 
 
 def test_model(dataframe_regression):
-    class HealthyAgent(src.Agent):
+    class HealthyAgent(popy.Agent):
         def setup(self):
             self.is_infected = False
 
@@ -24,18 +23,18 @@ def test_model(dataframe_regression):
         def __init__(self, model) -> None:
             self.model = model
 
-            self.agents = src.AgentList(model, 5, HealthyAgent)
-            self.agents.extend(src.AgentList(model, 1, InfectedAgent))
+            self.agents = popy.AgentList(model, 5, HealthyAgent)
+            self.agents.extend(popy.AgentList(model, 1, InfectedAgent))
             self.agents.shuffle()
 
             self.model.is_weekday = True
 
-            self.locations = src.LocationList(
+            self.locations = popy.LocationList(
                 self,
                 [
-                    src.Location(self),
-                    src.Location(self),
-                    src.Location(self),
+                    popy.Location(self),
+                    popy.Location(self),
+                    popy.Location(self),
                 ],
             )
 
@@ -56,7 +55,7 @@ def test_model(dataframe_regression):
         def update(self) -> None:
             self.agents.visit_locations(self.model)
 
-    class MyModel(src.Model):
+    class MyModel(popy.Model):
         def setup(self):
             self.population = Population(self)
 

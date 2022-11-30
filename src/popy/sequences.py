@@ -8,7 +8,7 @@ from collections.abc import Sequence
 import agentpy as ap
 import numpy as np
 
-from src.location import Location
+from .location import Location
 
 
 class LocationSequence:

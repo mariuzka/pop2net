@@ -1,10 +1,9 @@
 import agentpy as ap
 import pandas as pd
 import pytest
-
-from src.agent import Agent
-from src.location import Location
-from src.pop_maker import PopMaker
+from popy.agent import Agent
+from popy.location import Location
+from popy.pop_maker import PopMaker
 
 
 class Model(ap.Model):
