@@ -2,5 +2,5 @@ Model
 =====
 
 
-.. autoclass:: src.Model
+.. autoclass:: popy.Model
     :members:

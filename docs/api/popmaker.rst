@@ -1,5 +1,5 @@
 Population Maker
 ================
 
-.. autoclass:: src.pop_maker.PopMaker
+.. autoclass:: popy.pop_maker.PopMaker
     :members:
