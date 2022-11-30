@@ -41,6 +41,7 @@ mypy = "^0.982"
 faker = "^15.1.1"
 pytest-regressions = "^2.4.1"
 sphinx = "^5.3.0"
+sphinx-rtd-theme = "^1.1.1"
 
 [tool.poetry.group.mypy.dependencies]
 tox = "^3.27.0"
