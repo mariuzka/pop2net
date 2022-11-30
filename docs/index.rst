@@ -6,10 +6,18 @@
 Welcome to popy's documentation!
 ================================
 
+**Popy** is a python library that enables agent-based simulations based on a realistic sample.
+
+.. note::
+      This project is under very active development and still in it's early stages.
+
+
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
 
+   agent
+   location
 
 
 Indices and tables
