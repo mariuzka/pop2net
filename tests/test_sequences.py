@@ -1,23 +1,22 @@
+import popy
 import pytest
-
-import src
 
 
 @pytest.fixture
 def simple_location_list():
-    model = src.Model()
-    return src.LocationList(
+    model = popy.Model()
+    return popy.LocationList(
         model,
         [
-            src.Location(model),
-            src.Location(model),
+            popy.Location(model),
+            popy.Location(model),
         ],
     )
 
 
 def test_n_locations_create():
-    model = src.Model()
-    locations = src.LocationList(model, 2, src.Location)
+    model = popy.Model()
+    locations = popy.LocationList(model, 2, popy.Location)
     assert len(locations) == 2
 
 

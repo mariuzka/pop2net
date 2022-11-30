@@ -21,7 +21,7 @@ exclude = ["docs"]
 [tool.poetry]
 name = "popy"
 version = "0.1.0"
-packages = [{include = "src"}]
+packages = [{include = "popy", from="src/"}]
 description = "Creates representative random populations for simulation studies"
 authors = ["Marius Kaffai <marius.kaffai@sowi.uni-stuttgart.de>"]
 license = "MIT"
