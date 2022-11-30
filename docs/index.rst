@@ -16,8 +16,9 @@ Welcome to popy's documentation!
    :maxdepth: 2
    :caption: Contents:
 
-   agent
-   location
+   installation
+   api/index
+   examples/index
 
 
 Indices and tables

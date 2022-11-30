@@ -13,7 +13,13 @@ release = "0.1.0"
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
-extensions = ["sphinx.ext.autodoc", "sphinx.ext.napoleon"]
+extensions = [
+    "sphinx.ext.autodoc",
+    "sphinx.ext.napoleon",
+    "sphinx.ext.viewcode",
+    "sphinx.ext.intersphinx",
+    "nbsphinx",
+]
 
 templates_path = ["_templates"]
 exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
@@ -23,7 +29,7 @@ exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 # For a list of possible configurations, see:
 # https://www.sphinx-doc.org/en/master/usage/extensions/napoleon.html#module-sphinx.ext.napoleon
 napoleon_google_docstring = True
-napoleon_numpy_docstring = True
+napoleon_numpy_docstring = False
 napoleon_include_init_with_doc = False
 napoleon_include_private_with_doc = False
 napoleon_include_special_with_doc = True
@@ -36,6 +42,13 @@ napoleon_use_rtype = True
 napoleon_preprocess_types = False
 napoleon_type_aliases = None
 napoleon_attr_annotations = True
+
+# intersphinx settings
+
+intersphinx_mapping = {
+    "agentpy": ("https://agentpy.readthedocs.io/en/latest/", None),
+    "python": ("https://docs.python.org/3", None),
+}
 
 
 # -- Options for HTML output -------------------------------------------------
