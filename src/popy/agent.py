@@ -5,6 +5,14 @@ from .sequences import LocationList
 
 
 class Agent(ap.Agent):
+    """This is a Base class to represent agents in the simulation.
+
+    Agents' behavior can be implemented in classes that inherit from this.
+
+    :param ap: _description_
+    :type ap: _type_
+    """
+
     def __init__(self, model, *args, **kwargs):
         super().__init__(model, *args, **kwargs)
 
@@ -18,6 +26,15 @@ class Agent(ap.Agent):
         )
 
     def add_location(self, location) -> None:
+        """Assigns a location to this agent.
+
+        Args:
+            location (:doc:`location`):  Location that is to be added to the agent.
+
+        Raises:
+            PopyException: Raised, if the location is already assigned to this agent.
+        """
+
         if location in self.locations:
             raise PopyException("Location already associated with this Agent!")
         self.locations.append(location)

@@ -13,6 +13,10 @@ exclude = '''
   | dist
 )/
 '''
+[tool.mypy]
+ignore_missing_imports = true
+show_error_codes = true
+exclude = ["docs"]
 
 [tool.poetry]
 name = "popy"
@@ -36,6 +40,9 @@ pre-commit = "^2.20.0"
 mypy = "^0.982"
 faker = "^15.1.1"
 pytest-regressions = "^2.4.1"
+sphinx = "^5.3.0"
+sphinx-rtd-theme = "^1.1.1"
+nbsphinx = "^0.8.10"
 
 [tool.poetry.group.mypy.dependencies]
 tox = "^3.27.0"
