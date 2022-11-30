@@ -1,9 +1,8 @@
 import pytest
-
-from src import AgentList
-from src.agent import Agent
-from src.location import Location
-from src.model import Model
+from popy import AgentList
+from popy.agent import Agent
+from popy.location import Location
+from popy.model import Model
 
 
 @pytest.fixture(scope="module")
