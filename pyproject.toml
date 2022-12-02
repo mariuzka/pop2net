@@ -13,6 +13,7 @@ exclude = '''
   | dist
 )/
 '''
+
 [tool.mypy]
 ignore_missing_imports = true
 show_error_codes = true
@@ -23,7 +24,10 @@ name = "popy"
 version = "0.1.0"
 packages = [{include = "popy", from="src/"}]
 description = "Creates representative random populations for simulation studies"
-authors = ["Marius Kaffai <marius.kaffai@sowi.uni-stuttgart.de>"]
+authors = [
+  "Marius Kaffai <marius.kaffai@sowi.uni-stuttgart.de>",
+  "Lukas Erhard <lukas.erhard@sowi.uni-stuttgart.de>",
+]
 license = "MIT"
 readme = "README.md"
 
@@ -40,12 +44,18 @@ pre-commit = "^2.20.0"
 mypy = "^0.982"
 faker = "^15.1.1"
 pytest-regressions = "^2.4.1"
-sphinx = "^5.3.0"
-sphinx-rtd-theme = "^1.1.1"
-nbsphinx = "^0.8.10"
 
 [tool.poetry.group.mypy.dependencies]
 tox = "^3.27.0"
+
+[tool.poetry.group.docs.dependencies]
+ipython = "^8.7.0"
+sphinx = "^5.3.0"
+ipykernel = "^6.17.1"
+seaborn = "^0.12.1"
+ipywidgets = "^8.0.2"
+sphinx-rtd-theme = "^1.1.1"
+nbsphinx = "^0.8.10"
 
 [tool.pytest.ini_options]
 pythonpath = [
