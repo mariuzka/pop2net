@@ -1,1 +1,1 @@
-from .soep_faker import soep
+from .soep.soep_faker import soep
