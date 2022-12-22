@@ -18,9 +18,12 @@ class Model(ap.Model):
     def sim_step(self):
 
         self.t += 1
+
+        self.agents.visit_locations()
         self.step()
-        self.population.update()
+        # self.population.update()
         self.update()
+        self.locations.visit_weights = {}
 
         if self.t >= self._steps:  # type: ignore
             self.running = False
