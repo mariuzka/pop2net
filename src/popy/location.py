@@ -1,5 +1,7 @@
 from typing import Callable
+from typing import Dict
 from typing import Optional
+from typing import Union
 
 import agentpy as ap
 import networkx as nx
@@ -44,9 +46,14 @@ class Location:
         self.daily_visitors = ap.AgentList(model=self.model)
         self.n_current_visitors = 0
         self.subtype = None
+        self.visit_weights: Dict[int, Union[int, float]] = {}
+
+        # attributes that might be changed by customizing Location.setup()
+        self.size: Optional[int] = None
+        self.is_home = False
 
     def setup(self):
-        self.size: Optional[int] = None
+        pass
 
     def add_agent(
         self,
@@ -91,13 +98,14 @@ class Location:
     def groupby(self, agent):
         return None
 
-    def visit(self, agent):
-        if not self.can_visit(agent):
-            return
-        if self.graph.g.nodes[agent.id]["visit_weight_mod"]:
-            self.graph.g.nodes[agent.id]["visit_weight"] = self.graph.g.nodes[agent.id][
-                "visit_weight_mod"
-            ](self.graph.g.nodes[agent.id]["visit_weight"])
+    def get_visit_weight(self, agent) -> Optional[Union[float, int]]:
+        return None
+
+    # def visit_ORI(self, agent):
+    #    if not self.can_visit(agent):
+    #        return
+    #    if self.graph.g.nodes[agent.id]["visit_weight_mod"]:
+    #        self.graph.g.nodes[agent.id]["visit_weight"] = self.graph.g.nodes[agent.id]["visit_weight_mod"](self.graph.g.nodes[agent.id]["visit_weight"])
 
     # def connect_visitors(self, simultaneous=True):
     #     for u, v in self.graph.edges():
