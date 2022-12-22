@@ -130,7 +130,6 @@ class PopMaker:
             ],
         )
 
-        print(self.locations)
         utils.print_header("Number of agents per location")
         print(df_locations.groupby("location_class").describe())
 
