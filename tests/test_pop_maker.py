@@ -15,6 +15,9 @@ class MyAgent(Agent):
 
 
 class Home(Location):
+    def setup(self):
+        self.is_home = True
+
     def groupby(self, agent):
         return agent.hid
 
@@ -46,8 +49,8 @@ simple_fake_data = pd.DataFrame(
 def test_create_agents(soep_fixture, request):
     soep = request.getfixturevalue(soep_fixture)
 
-    pop_maker = PopMaker(df=soep, agent_class=MyAgent, model=Model())
-    agents = pop_maker.create_agents()
+    pop_maker = PopMaker(model=Model())
+    agents = pop_maker.create_agents(df=soep, agent_class=MyAgent)
 
     assert len(agents) == len(soep)
 
@@ -59,14 +62,9 @@ def test_create_agents(soep_fixture, request):
 # @pytest.mark.parametrize("soep_fixture", ["soep100", "soep1000"])
 def test_create_locations():
     soep = simple_fake_data.copy()
-    pop_maker = PopMaker(
-        df=soep,
-        location_classes=[Home, School],
-        agent_class=MyAgent,
-        model=Model(),
-    )
-    agents = pop_maker.create_agents()
-    locations = pop_maker.create_locations(agents=agents)
+    pop_maker = PopMaker(model=Model())
+    agents = pop_maker.create_agents(df=soep, agent_class=MyAgent)
+    locations = pop_maker.create_locations(agents=agents, location_classes=[Home, School])
 
     assert len([location for location in locations if isinstance(location, Home)]) == 4
     assert len([location for location in locations if isinstance(location, School)]) == 2
