@@ -100,22 +100,3 @@ class Location:
 
     def get_visit_weight(self, agent) -> Optional[Union[float, int]]:
         return None
-
-    # def visit_ORI(self, agent):
-    #    if not self.can_visit(agent):
-    #        return
-    #    if self.graph.g.nodes[agent.id]["visit_weight_mod"]:
-    #        self.graph.g.nodes[agent.id]["visit_weight"] = self.graph.g.nodes[agent.id]["visit_weight_mod"](self.graph.g.nodes[agent.id]["visit_weight"])
-
-    # def connect_visitors(self, simultaneous=True):
-    #     for u, v in self.graph.edges():
-    #         visit_weight_u = self.graph.nodes[u]["visit_weight"]
-    #         visit_weight_v = self.graph.nodes[v]["visit_weight"]
-
-    #         if simultaneous:
-    #             edge_weight = min((visit_weight_u, visit_weight_v)) / 24
-    #         else:
-    #             edge_weight = (visit_weight_u * visit_weight_v) / 576
-
-    #         agent_u = self.graph.nodes[u]["visit_weight"]
-    #         agent_u = self.graph.nodes[u]["_agent"]
