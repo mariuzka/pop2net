@@ -1,7 +1,5 @@
 import agentpy as ap
 
-from .sequences import LocationList
-
 
 class Model(ap.Model):
     """Class the encapsulates a full simluation.
