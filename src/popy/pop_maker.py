@@ -164,7 +164,7 @@ class PopMaker:
             if location_dummy.is_home:
                 n_home_locations += 1
 
-        if n_home_locations != 1:
+        if n_home_locations > 1:
             raise PopyException(
-                f"There must be exactly one class of locations that is defined as a home location. Currently there are {n_home_locations}",
+                f"More than one home locations are not allowed. Currently there are {n_home_locations}",
             )
