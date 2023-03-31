@@ -20,6 +20,9 @@ class Model(ap.Model):
         self.t += 1
 
         self.agents.visit_locations()
+
+        self.locations.update()
+
         self.step()
         # self.population.update()
         self.update()
