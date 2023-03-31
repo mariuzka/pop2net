@@ -98,5 +98,5 @@ class Location:
     def groupby(self, agent):
         return None
 
-    def get_visit_weight(self, agent) -> Optional[Union[float, int]]:
-        return None
+    def get_visit_weight(self, agent) -> float:
+        return 1

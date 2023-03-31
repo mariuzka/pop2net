@@ -27,7 +27,7 @@ def test_agent_creation(model):
 def test_agentlist_broadcasting(model):
     agents = popy.AgentList(model, [popy.Agent(model), popy.Agent(model)])
     agents.x = 1
-    assert sum(agents.x) == 2
+    assert sum(agents.x) == 2  # type: ignore
 
 
 def test_agent_locations(model):
@@ -57,22 +57,28 @@ def test_agents_error_when_location_is_added_twice(model, two_locations):
         agent.add_location(two_locations[0])
 
 
-@pytest.mark.skip
-def test_agent_visits_single_location(model, two_locations):
+def test_agent_located_at_single_location(model, two_locations):
+    class Model(popy.Model):
+        def setup(self):
+            self.agents = popy.AgentList(self, 1, popy.Agent)
+            self.locations = popy.LocationList(self, 2, popy.Location)
+            self.agents[0].add_location(self.locations[0])
 
-    agent = popy.Agent(model)
-    agent.add_location(two_locations[0])
-    agent.visit_locations(model)
+    model = Model(parameters={"steps": 1})
+    model.run()
 
-    assert list(two_locations.visitors_of_the_day) == [[agent], []]
+    assert list(model.locations.n_current_visitors) == [1, 0]  # type: ignore
 
 
-@pytest.mark.skip
 def test_agent_visits_two_locations(model, two_locations):
+    class Model(popy.Model):
+        def setup(self):
+            self.agents = popy.AgentList(self, 1, popy.Agent)
+            self.locations = popy.LocationList(self, 2, popy.Location)
+            self.agents[0].add_location(self.locations[0])
+            self.agents[0].add_location(self.locations[1])
 
-    agent = popy.Agent(model)
-    agent.add_location(two_locations[0])
-    agent.add_location(two_locations[1])
-    agent.visit_locations(model)
+    model = Model(parameters={"steps": 1})
+    model.run()
 
-    assert list(two_locations.visitors_of_the_day) == [[agent], [agent]]
+    assert list(model.locations.n_current_visitors) == [1, 1]  # type: ignore
