@@ -55,6 +55,9 @@ class Location:
     def setup(self):
         pass
 
+    def update(self):
+        pass
+
     def add_agent(
         self,
         agent,
@@ -74,7 +77,6 @@ class Location:
             if self not in agent.locations:
                 agent.locations.append(self)
 
-    # Should we do this?
     @property
     def agents(self):
         return self.graph.agents
