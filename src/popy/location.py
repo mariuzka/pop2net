@@ -12,31 +12,32 @@ class FullGraph:
     def __init__(self, model) -> None:
         self.model = model
         self.g = nx.Graph()
+        self.g.add_node("L", bipartite=1)
 
     def add_agent(self, agent, **kwargs):
 
-        self.g.add_node(agent.id, _agent=agent, **kwargs)
-        for node in self.g.nodes():
-            if node != agent.id:
-                self.g.add_edge(agent.id, node)
+        self.g.add_node(agent.id, _agent=agent, bipartite=0, **kwargs)
+        self.g.add_edge(agent.id, "L")
 
     @property
     def agents(self):
         return AgentList(
             model=self.model,
-            objs=[data["_agent"] for _u, data in self.g.nodes(data=True)],
+            objs=[
+                data["_agent"] for _u, data in self.g.nodes(data=True) if data["bipartite"] == 0
+            ],
         )
 
     def remove_agent(self, agent):
         self.g.remove_node(agent.id)
 
-    def neighbors(self, agent, data: bool = False):
+    def neighbors(self, agent) -> AgentList:
+        agents = AgentList(self.model)
+        for neighbor, data in self.g.nodes(data=True):
+            if neighbor != agent.id and data["bipartite"] == 0:
+                agents.append(data["_agent"])
 
-        temp = AgentList(self.model)
-        for neighbor in self.g.neighbors(agent.id):
-            temp.append(self.g.nodes[neighbor]["_agent"])
-
-        return temp
+        return agents
 
 
 class Location:
@@ -85,7 +86,6 @@ class Location:
 
     def remove_agent(self, agent):
         self.graph.remove_agent(agent)
-        self.n_current_visitors -= 1
 
     def edge_weight(self, agent1, agent2):
         return 1
