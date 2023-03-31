@@ -24,9 +24,7 @@ class Model(ap.Model):
         self.locations.update()
 
         self.step()
-        # self.population.update()
         self.update()
-        self.locations.visit_weights = {}
 
         if self.t >= self._steps:  # type: ignore
             self.running = False
