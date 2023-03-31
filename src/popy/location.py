@@ -44,7 +44,6 @@ class Location:
         self.model = model
         self.graph = graph_cls(model=model)
         self.daily_visitors = ap.AgentList(model=self.model)
-        self.n_current_visitors = 0
         self.subtype = None
         self.visit_weights: Dict[int, Union[int, float]] = {}
 
@@ -72,7 +71,6 @@ class Location:
                 visit_weight=visit_weight,
                 visit_weight_mod=visit_weight_mod,
             )
-            self.n_current_visitors += 1
 
             if self not in agent.locations:
                 agent.locations.append(self)
@@ -80,6 +78,10 @@ class Location:
     @property
     def agents(self):
         return self.graph.agents
+
+    @property
+    def n_current_visitors(self):
+        return self.graph.g.number_of_nodes() - 1
 
     def remove_agent(self, agent):
         self.graph.remove_agent(agent)
