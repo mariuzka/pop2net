@@ -40,15 +40,15 @@ HH_N_CHILDREN = {
 
 WORKING_HOURS = {
     # of adults
-    "at_all": 0.5536,
-    "8_hours": 0.188,
+    "at_all": 0.48,
+    "8_hours": 0.2,
     "other": {"loc": 6.429, "scale": 2.92},
 }
 
 
 # only for persons that actually work
 NACE2_DIVISIONS = {
-    -2: 0.1901,
+    -2: 0,
     -1: 0.00409,
     1: 0.00752,
     2: 0.00098,
