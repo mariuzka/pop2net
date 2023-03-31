@@ -19,7 +19,7 @@ class Agent(ap.Agent):
         self.model = model
         self.locations = LocationList(model)
 
-    def contacts(self, weights: bool = False):
+    def get_contacts(self, weights: bool = False):
         return ap.AgentList(
             self.model,
             [i for j in self.locations.neighbors(self) for i in j],
