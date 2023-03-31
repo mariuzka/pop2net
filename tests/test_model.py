@@ -21,15 +21,11 @@ def test_model(dataframe_regression):
         def setup(self):
             self.is_infected = True
 
-    class Population:
-        def __init__(self, model) -> None:
-            self.model = model
-
-            self.agents = popy.AgentList(model, 5, HealthyAgent)
-            self.agents.extend(popy.AgentList(model, 1, InfectedAgent))
+    class MyModel(popy.Model):
+        def setup(self):
+            self.agents = popy.AgentList(self, 5, HealthyAgent)
+            self.agents.extend(popy.AgentList(self, 1, InfectedAgent))
             self.agents.shuffle()
-
-            self.model.is_weekday = True
 
             self.locations = popy.LocationList(
                 self,
@@ -54,18 +50,11 @@ def test_model(dataframe_regression):
             self.agents[4].add_location(self.locations[2])
             self.agents[5].add_location(self.locations[2])
 
-        def update(self) -> None:
-            self.agents.visit_locations(self.model)
-
-    class MyModel(popy.Model):
-        def setup(self):
-            self.population = Population(self)
-
         def step(self):
-            self.population.agents.infect()
+            self.agents.infect()  # type: ignore
 
         def update(self):
-            self.population.agents.record("is_infected")
+            self.agents.record("is_infected")  # type: ignore
 
         def end(self):
             pass
