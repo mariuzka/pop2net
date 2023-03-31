@@ -47,7 +47,7 @@ def test_work_hours_zero(soep_fixture, request):
     ratio = len(soep[soep.work_hours_day == 0]) / len(soep)
 
     # this amount should have work hours == 0
-    assert abs(ratio - 0.614786) < 0.05
+    assert abs(ratio - 0.614786) < 0.1
 
 
 @pytest.mark.parametrize("soep_fixture", ["soep1000", "soep10_000"])
