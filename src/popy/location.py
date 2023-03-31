@@ -5,19 +5,20 @@ from typing import Union
 
 import agentpy as ap
 import networkx as nx
+from agentpy.objects import Object
 from agentpy.sequences import AgentList
 
 
 class FullGraph:
-    def __init__(self, model) -> None:
+    def __init__(self, location_id, model) -> None:
+        self.location_id = location_id
         self.model = model
         self.g = nx.Graph()
-        self.g.add_node("L", bipartite=1)
+        self.g.add_node(f"L{location_id}", bipartite=1)
 
     def add_agent(self, agent, **kwargs):
-
         self.g.add_node(agent.id, _agent=agent, bipartite=0, **kwargs)
-        self.g.add_edge(agent.id, "L")
+        self.g.add_edge(agent.id, f"L{self.location_id}")
 
     @property
     def agents(self):
@@ -40,10 +41,11 @@ class FullGraph:
         return agents
 
 
-class Location:
+class Location(Object):
     def __init__(self, model, graph_cls=FullGraph) -> None:
+        super().__init__(model)
         self.model = model
-        self.graph = graph_cls(model=model)
+        self.graph = graph_cls(self.id, model)
         self.daily_visitors = ap.AgentList(model=self.model)
         self.subtype = None
         self.visit_weights: Dict[int, Union[int, float]] = {}
