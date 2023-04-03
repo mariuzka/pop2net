@@ -84,6 +84,7 @@ class Location:
     def remove_agent(self, agent):
         self.graph.remove_agent(agent)
         self.n_current_visitors -= 1
+        agent.locations.remove(self)
 
     def edge_weight(self, agent1, agent2):
         return 1
