@@ -29,18 +29,18 @@ def test_model(dataframe_regression):
             self.locations = popy.LocationList(self, 3, popy.Location)
 
             # home 1
-            self.agents[0].add_location(self.locations[0])
-            self.agents[1].add_location(self.locations[0])
-            self.agents[2].add_location(self.locations[0])
+            self.locations[0].add_agent(self.agents[0])
+            self.locations[0].add_agent(self.agents[1])
+            self.locations[0].add_agent(self.agents[2])
 
             # school
-            self.agents[2].add_location(self.locations[1])
-            self.agents[3].add_location(self.locations[1])
+            self.locations[1].add_agent(self.agents[2])
+            self.locations[1].add_agent(self.agents[3])
 
             # home 2
-            self.agents[3].add_location(self.locations[2])
-            self.agents[4].add_location(self.locations[2])
-            self.agents[5].add_location(self.locations[2])
+            self.locations[2].add_agent(self.agents[3])
+            self.locations[2].add_agent(self.agents[4])
+            self.locations[2].add_agent(self.agents[5])
 
         def step(self):
             self.agents.infect()  # type: ignore

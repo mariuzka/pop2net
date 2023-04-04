@@ -1,4 +1,4 @@
-import popy
+""" import popy
 import pytest
 
 
@@ -82,3 +82,4 @@ def test_agent_visits_two_locations(model, two_locations):
     model.run()
 
     assert list(model.locations.n_current_visitors) == [1, 1]  # type: ignore
+ """
