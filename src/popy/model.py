@@ -34,7 +34,7 @@ class Model(ap.Model):
         comp_graph = nx.compose_all(location.graph.g for location in self.locations)
         _, agents = bipartite.sets(comp_graph)
 
-        projection = bipartite.projection.project(comp_graph, agents)
+        projection = bipartite.projection.projected_graph(comp_graph, agents)
         for agent_id in projection:
             del projection.nodes[agent_id]["_agent"]
 
