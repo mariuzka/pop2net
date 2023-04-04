@@ -22,7 +22,7 @@ class Agent(ap.Agent):
     def get_contacts(self, weights: bool = False):
         return ap.AgentList(
             self.model,
-            [i for j in self.locations.neighbors(self) for i in j],
+            [agent for neighbors in self.locations.neighbors(self) for agent in neighbors],  # type: ignore
         )
 
     def add_location(self, location) -> None:

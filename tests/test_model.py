@@ -5,14 +5,13 @@ import popy
 import pytest
 
 
-@pytest.mark.skip
 def test_model(dataframe_regression):
     class HealthyAgent(popy.Agent):
         def setup(self):
             self.is_infected = False
 
         def infect(self):
-            for contact in self.contacts():
+            for contact in self.get_contacts():
                 p_infect = 0.1
                 if p_infect < 0.3:
                     contact.is_infected = 1
@@ -27,14 +26,7 @@ def test_model(dataframe_regression):
             self.agents.extend(popy.AgentList(self, 1, InfectedAgent))
             self.agents.shuffle()
 
-            self.locations = popy.LocationList(
-                self,
-                [
-                    popy.Location(self),
-                    popy.Location(self),
-                    popy.Location(self),
-                ],
-            )
+            self.locations = popy.LocationList(self, 3, popy.Location)
 
             # home 1
             self.agents[0].add_location(self.locations[0])
