@@ -38,3 +38,19 @@ def test_create_location():
 
     neighbours = list(loc.neighbors(agent1))
     assert neighbours
+
+
+def test_location_size():
+    model = Model()
+    loc = Location(model=model)
+    agent1 = Agent(model=model)
+    agent2 = Agent(model=model)
+    assert loc.n_current_visitors == 0
+    loc.add_agent(agent1, visit_weight=1)
+    assert loc.n_current_visitors == 1
+    loc.add_agent(agent2, visit_weight=1)
+    assert loc.n_current_visitors == 2
+    loc.remove_agent(agent1)
+    assert loc.n_current_visitors == 1
+    loc.remove_agent(agent2)
+    assert loc.n_current_visitors == 0

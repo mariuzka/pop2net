@@ -1,6 +1,6 @@
 import agentpy as ap
-
-from .sequences import LocationList
+import networkx as nx
+from networkx import bipartite
 
 
 class Model(ap.Model):
@@ -28,3 +28,14 @@ class Model(ap.Model):
 
         if self.t >= self._steps:  # type: ignore
             self.running = False
+
+    def export_network(self) -> nx.Graph:
+
+        comp_graph = nx.compose_all(location.graph.g for location in self.locations)
+        _, agents = bipartite.sets(comp_graph)
+
+        projection = bipartite.projection.projected_graph(comp_graph, agents)
+        for agent_id in projection:
+            del projection.nodes[agent_id]["_agent"]
+
+        return projection
