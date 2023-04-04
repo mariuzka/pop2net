@@ -1,4 +1,15 @@
+import random
+
+import numpy as np
 import pytest
+
+random.seed(42)
+np.random.seed(42)
+
+
+@pytest.fixture(scope="module", autouse=True)
+def faker_seed():
+    return 42
 
 
 @pytest.mark.parametrize(
@@ -10,7 +21,6 @@ import pytest
     ],
 )
 def test_dataframe_size(soep_fixture, size, request):
-    print(soep_fixture)
     soep = request.getfixturevalue(soep_fixture)
     assert len(soep) == size
 
