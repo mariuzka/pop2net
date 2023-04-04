@@ -66,8 +66,7 @@ def test_model_network_export_simple_n_agents(n_agents):
         def move(self):
             # old_location = self.locations[0]
             # old_location.remove_agent(self)
-            new_loc_idx = random.randint(0, len(self.model.locations) - 1)
-            new_location = self.model.locations[new_loc_idx]
+            new_location = random.choice(self.model.locations)
             new_location.add_agent(self)
 
     class MyModel(popy.Model):
@@ -79,8 +78,8 @@ def test_model_network_export_simple_n_agents(n_agents):
             for agent in self.agents:
                 n_loc = random.randint(1, 2)
                 for _ in range(n_loc):
-                    loc_idx = random.randint(0, 2)
-                    self.locations[loc_idx].add_agent(agent)
+                    location = random.choice(self.locations)
+                    location.add_agent(agent)
 
         def step(self):
             self.agents.move()  # type: ignore
