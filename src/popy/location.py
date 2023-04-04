@@ -88,6 +88,7 @@ class Location(Object):
 
     def remove_agent(self, agent):
         self.graph.remove_agent(agent)
+        agent.locations.remove(self)
 
     def edge_weight(self, agent1, agent2):
         return 1
