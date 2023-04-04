@@ -17,7 +17,6 @@ class Agent(ap.Agent):
         super().__init__(model, *args, **kwargs)
 
         self.model = model
-        self.locations = LocationList(model)
 
     def get_contacts(self, weights: bool = False):
         return ap.AgentList(
@@ -25,23 +24,12 @@ class Agent(ap.Agent):
             [agent for neighbors in self.locations.neighbors(self) for agent in neighbors],  # type: ignore
         )
 
-    def add_location(self, location) -> None:
-        """Assigns a location to this agent.
-
-        Args:
-            location (:doc:`location`):  Location that is to be added to the agent.
-
-        Raises:
-            PopyException: Raised, if the location is already assigned to this agent.
-        """
-
-        if location in self.locations:
-            raise PopyException("Location already associated with this Agent!")
-        self.locations.append(location)
-        location.add_agent(self, visit_weight=1)
-
-    # def visit_locations_ORI(self, model) -> None:
-    #    self.locations.visit(self)
+    @property
+    def locations(self):
+        return LocationList(
+            self.model,
+            [location for location in self.model.locations if location.is_affiliated(self)],
+        )
 
     def visit_locations(self):
 
