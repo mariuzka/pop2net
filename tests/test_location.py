@@ -45,12 +45,12 @@ def test_location_size():
     loc = Location(model=model)
     agent1 = Agent(model=model)
     agent2 = Agent(model=model)
-    assert loc.n_current_visitors == 0
+    assert loc.n_affiliated_agents == 0
     loc.add_agent(agent1)
-    assert loc.n_current_visitors == 1
+    assert loc.n_affiliated_agents == 1
     loc.add_agent(agent2)
-    assert loc.n_current_visitors == 2
+    assert loc.n_affiliated_agents == 2
     loc.remove_agent(agent1)
-    assert loc.n_current_visitors == 1
+    assert loc.n_affiliated_agents == 1
     loc.remove_agent(agent2)
-    assert loc.n_current_visitors == 0
+    assert loc.n_affiliated_agents == 0

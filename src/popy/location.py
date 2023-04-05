@@ -78,7 +78,7 @@ class Location(Object):
         return self.graph.agents
 
     @property
-    def n_agents(self) -> int:
+    def n_affiliated_agents(self) -> int:
         return len(self.agents)
 
     def _remove_agent(self, agent) -> None:
@@ -121,8 +121,8 @@ class Location(Object):
         Checks if the given agent is connected to this location.
         """
         return agent.id in self.graph.g.nodes
-        
-        
+
+
 class WeightedLocation(Location):
     def __init__(self, model, graph_cls=FullGraph) -> None:
         super().__init__(model, graph_cls)

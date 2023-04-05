@@ -91,7 +91,7 @@ class PopMaker:
                 for agent in subtype_affiliated_agents:
                     assigned = False
                     for location in subtype_locations:
-                        if location.size is None or location.n_agents < location.size:
+                        if location.size is None or location.n_affiliated_agents < location.size:
                             assert not assigned  # remove later
                             location.add_agent(agent)
                             assigned = True
