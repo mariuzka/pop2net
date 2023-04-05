@@ -1,9 +1,6 @@
-from typing import Callable
 from typing import Dict
 from typing import Optional
-from typing import Union
 
-import agentpy as ap
 import networkx as nx
 from agentpy.objects import Object
 from agentpy.sequences import AgentList
@@ -46,57 +43,83 @@ class Location(Object):
         super().__init__(model)
         self.model = model
         self.graph = graph_cls(self.id, model)
-        self.subtype = None
+        self.subtype: object = None
         self.size: Optional[int] = None
 
-    def setup(self):
+    def setup(self) -> None:
         """
         ~ User interface ~
+
+        This method is called automatically by the population maker after creating an instance.
+        Can be used to set attributes, for instance.
         """
         pass
 
-    def _add_agent(
-        self,
-        agent,
-    ):
+    def _add_agent(self, agent) -> None:
+        """
+        Adds the given agent to the graph.
+        """
         if not self.can_affiliate(agent):
             return
         if agent not in self.graph.agents:
             self.graph.add_agent(agent)
 
-    def add_agent(self, agent):  # todo: new name = add()
+    def add_agent(self, agent) -> None:  # todo: new name = add()
+        """
+        Adds the given agent to the graph.
+        """
         self._add_agent(agent)
 
     @property
-    def agents(self):
+    def agents(self) -> AgentList:
+        """
+        Returns the list of agents affiliated with this location.
+        """
         return self.graph.agents
 
     @property
-    def n_current_visitors(self):
+    def n_current_visitors(self) -> int:  # todo: rename
         return self.graph.g.number_of_nodes() - 1
 
-    def _remove_agent(self, agent):  # todo: new name = remove()
+    def _remove_agent(self, agent) -> None:  # todo: new name = remove()
+        """
+        Removes the given agent from the graph.
+        """
         self.graph.remove_agent(agent)
 
-    def remove_agent(self, agent):
+    def remove_agent(self, agent) -> None:
+        """
+        Removes the given agent from the graph.
+        """
         self._remove_agent(agent)
 
-    def neighbors(self, agent):
+    def neighbors(self, agent) -> AgentList:
+        """
+        Returns a list of agents which are connected to the given agent via this location.
+        """
         return self.graph.neighbors(agent)
 
     def can_affiliate(self, agent) -> bool:  # todo: new name = join()
         """
         ~ User interface ~
+
+        Checks whether the agent is meant to join this type of location.
         """
         return True
 
-    def groupby(self, agent):  # todo: new name = group()
+    def groupby(self, agent) -> object:  # todo: new name = group()
         """
         ~ User interface ~
+
+        Allows to create subtypes of this typ of location if the location instances are create by the population maker.
+        For each unique value of the given agent attribute one subtype of this location type will be created.
         """
         return None
 
     def is_affiliated(self, agent) -> bool:
+        """
+        Checks if the given agent is connected to this location.
+        """
         return agent in self.graph.agents
 
 
