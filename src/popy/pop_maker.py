@@ -161,7 +161,7 @@ class PopMaker:
         for location_cls in location_classes:
             location_dummy = location_cls(model=self.model)
             location_dummy.setup()
-            if location_dummy.is_home:
+            if hasattr(location_dummy, "is_home") and location_dummy.is_home:
                 n_home_locations += 1
 
         if n_home_locations > 1:

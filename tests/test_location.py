@@ -22,8 +22,8 @@ def test_agent_property():
     loc = Location(model=model)
     agent1 = Agent(model=model)
     agent2 = Agent(model=model)
-    loc.add_agent(agent1, visit_weight=1)
-    loc.add_agent(agent2, visit_weight=1)
+    loc.add_agent(agent1)
+    loc.add_agent(agent2)
 
     assert AgentList(model, [agent1, agent2]) == loc.graph.agents
 
@@ -33,8 +33,8 @@ def test_create_location():
     loc = Location(model=model)
     agent1 = Agent(model=model)
     agent2 = Agent(model=model)
-    loc.add_agent(agent1, visit_weight=1)
-    loc.add_agent(agent2, visit_weight=1)
+    loc.add_agent(agent1)
+    loc.add_agent(agent2)
 
     neighbours = list(loc.neighbors(agent1))
     assert neighbours
@@ -46,9 +46,9 @@ def test_location_size():
     agent1 = Agent(model=model)
     agent2 = Agent(model=model)
     assert loc.n_current_visitors == 0
-    loc.add_agent(agent1, visit_weight=1)
+    loc.add_agent(agent1)
     assert loc.n_current_visitors == 1
-    loc.add_agent(agent2, visit_weight=1)
+    loc.add_agent(agent2)
     assert loc.n_current_visitors == 2
     loc.remove_agent(agent1)
     assert loc.n_current_visitors == 1

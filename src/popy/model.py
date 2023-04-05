@@ -19,9 +19,9 @@ class Model(ap.Model):
 
         self.t += 1
 
-        self.agents.visit_locations()
-
-        self.locations.update()
+        for location in self.locations:
+            if hasattr(location, "update_weights"):
+                location.update_weights()
 
         self.step()
         self.update()
