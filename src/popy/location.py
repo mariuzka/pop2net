@@ -64,7 +64,7 @@ class Location(Object):
         if agent not in self.graph.agents:
             self.graph.add_agent(agent)
 
-    def add_agent(self, agent) -> None:  # todo: new name = add()
+    def add_agent(self, agent) -> None:
         """
         Adds the given agent to the graph.
         """
@@ -78,8 +78,8 @@ class Location(Object):
         return self.graph.agents
 
     @property
-    def n_current_visitors(self) -> int:  # todo: rename
-        return self.graph.g.number_of_nodes() - 1
+    def n_agents(self) -> int:
+        return len(self.agents)
 
     def _remove_agent(self, agent) -> None:
         """
