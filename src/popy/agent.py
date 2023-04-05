@@ -18,7 +18,7 @@ class Agent(ap.Agent):
 
         self.model = model
 
-    def get_contacts(self, duplicates=False):  # todo: new name = neighbors()
+    def neighbors(self, duplicates=False):
         neighbors = [
             neighbor for neighbors in self.locations.neighbors(self) for neighbor in neighbors
         ]
