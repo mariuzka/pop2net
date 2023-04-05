@@ -59,7 +59,7 @@ class Location(Object):
         """
         Adds the given agent to the graph.
         """
-        if not self.can_affiliate(agent):
+        if not self.join(agent):
             return
         if agent not in self.graph.agents:
             self.graph.add_agent(agent)
@@ -81,7 +81,7 @@ class Location(Object):
     def n_current_visitors(self) -> int:  # todo: rename
         return self.graph.g.number_of_nodes() - 1
 
-    def _remove_agent(self, agent) -> None:  # todo: new name = remove()
+    def _remove_agent(self, agent) -> None:
         """
         Removes the given agent from the graph.
         """
@@ -99,7 +99,7 @@ class Location(Object):
         """
         return self.graph.neighbors(agent)
 
-    def can_affiliate(self, agent) -> bool:  # todo: new name = join()
+    def join(self, agent) -> bool:
         """
         ~ User interface ~
 

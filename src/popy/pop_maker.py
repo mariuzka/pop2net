@@ -56,7 +56,7 @@ class PopMaker:
             location_dummy.setup()
 
             # get all agents that could be assigned to locations of this type
-            affiliated_agents = [agent for agent in agents if location_dummy.can_affiliate(agent)]
+            affiliated_agents = [agent for agent in agents if location_dummy.join(agent)]
 
             # get all possible subtype-labels of this location class
             location_subtypes = {location_dummy.groupby(agent) for agent in affiliated_agents}

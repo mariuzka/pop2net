@@ -29,7 +29,7 @@ class School(Location):
     def groupby(self, agent):
         return 0 if agent.age <= 14 else 1
 
-    def can_affiliate(self, agent):
+    def join(self, agent):
         return 6 <= agent.age <= 18
 
     def can_visit(self, agent):
