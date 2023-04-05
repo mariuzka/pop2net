@@ -105,4 +105,4 @@ class Location(Object):
         return 1
 
     def is_affiliated(self, agent) -> bool:
-        return agent in self.graph.agents
+        return agent.id in self.graph.g.nodes
