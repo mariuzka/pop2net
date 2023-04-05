@@ -1,8 +1,7 @@
 import popy
 import pytest
 
-# Laufzeit mit ca. 4.3 GHz: ca. 0.03s
-
+# Laufzeit mit ca. 4.3 GHz: ca. 29-30s
 
 def test_affiliation_tracking():
     class Agent(popy.Agent):
@@ -29,8 +28,9 @@ def test_affiliation_tracking():
                 location.add_agent(self.agents[i])
 
         def step(self):
-            self.agents.count_locations()
-            self.locations.count_agents()
+            self.agents.count_locations()  # type: ignore
+            self.locations.count_agents()  # type: ignore
+
 
     model = Model(parameters={"steps": 5})
     model.run()

@@ -75,9 +75,6 @@ class Location(Object):
                 visit_weight_mod=visit_weight_mod,
             )
 
-            if self not in agent.locations:
-                agent.locations.append(self)
-
     @property
     def agents(self):
         return self.graph.agents
@@ -88,7 +85,6 @@ class Location(Object):
 
     def remove_agent(self, agent):
         self.graph.remove_agent(agent)
-        agent.locations.remove(self)
 
     def edge_weight(self, agent1, agent2):
         return 1
@@ -107,3 +103,6 @@ class Location(Object):
 
     def get_visit_weight(self, agent) -> float:
         return 1
+
+    def is_affiliated(self, agent) -> bool:
+        return agent.id in self.graph.g.nodes
