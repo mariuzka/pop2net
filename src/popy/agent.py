@@ -17,7 +17,6 @@ class Agent(ap.Agent):
         super().__init__(model, *args, **kwargs)
 
         self.model = model
-
         self.setup()
 
     def setup(self) -> None:
@@ -26,21 +25,24 @@ class Agent(ap.Agent):
         """
         pass
 
-    def get_contacts(self) -> ap.AgentList:
+    def neighbors(self, duplicates=False) -> ap.AgentList:
         """Convenience method that returns all neighbors over all locations this agent is currently
         located in.
 
         Returns:
             :class:`agentpy.AgentList`: All agents co-located with this agent over all locations.
         """
-        return ap.AgentList(
-            self.model,
-            [
+        neighbors = [
                 agent
                 for neighbors in self.locations.neighbors(self)  # type: ignore
                 for agent in neighbors
-            ],
+            ]
+        neighbors = neighbors if duplicates else list(set(neighbors))
+        return ap.AgentList(
+            self.model,
+            neighbors,
         )
+
 
     @property
     def locations(self):
@@ -48,29 +50,3 @@ class Agent(ap.Agent):
             self.model,
             [location for location in self.model.locations if location.is_affiliated(self)],
         )
-
-
-    def visit_locations(self) -> None:
-
-        time_not_at_home = 0
-
-        for location in self.locations:
-            if not location.is_home:
-                visit_weight = location.get_visit_weight(self) if location.can_visit(self) else 0
-                location.graph.g.nodes[self.id]["visit_weight"] = visit_weight
-                # vielleicht einfach in einem Dict speichern, statt als node-attribute?
-                location.visit_weights[self.id] = visit_weight
-                time_not_at_home += visit_weight
-
-        # HIER MUSS DIE 24 ANPASSBAR SEIN, DA DIE ZEIT NICHT IMMER IN STUNDEN GEMESSEN WIRD UND
-        # AUCH EIN TIMESTEP NICHT IMMER EIN TAG SEIN MUSS
-        time_at_home = 24 - time_not_at_home
-
-        if time_not_at_home > 24:
-            raise PopyException("Unrealistic time not at home.")
-
-        for location in self.locations:
-            if location.is_home:
-                location.graph.g.nodes[self.id]["visit_weight"] = time_at_home
-                location.visit_weights[self.id] = time_at_home
-                break

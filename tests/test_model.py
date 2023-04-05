@@ -11,7 +11,7 @@ def test_model(dataframe_regression):
             self.is_infected = False
 
         def infect(self):
-            for contact in self.get_contacts():
+            for contact in self.neighbors():
                 p_infect = 0.1
                 if p_infect < 0.3:
                     contact.is_infected = 1

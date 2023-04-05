@@ -56,18 +56,16 @@ class PopMaker:
             location_dummy.setup()
 
             # get all agents that could be assigned to locations of this type
-            affiliated_agents = [agent for agent in agents if location_dummy.can_affiliate(agent)]
+            affiliated_agents = [agent for agent in agents if location_dummy.join(agent)]
 
             # get all possible subtype-labels of this location class
-            location_subtypes = {location_dummy.groupby(agent) for agent in affiliated_agents}
+            location_subtypes = {location_dummy.group(agent) for agent in affiliated_agents}
 
             for subtype in location_subtypes:
 
                 # get all agents that could be assigned to locations of this subtype
                 subtype_affiliated_agents = [
-                    agent
-                    for agent in affiliated_agents
-                    if location_dummy.groupby(agent) == subtype
+                    agent for agent in affiliated_agents if location_dummy.group(agent) == subtype
                 ]
 
                 # determine the number of locations needed of this subtype
@@ -93,7 +91,7 @@ class PopMaker:
                 for agent in subtype_affiliated_agents:
                     assigned = False
                     for location in subtype_locations:
-                        if location.size is None or location.n_current_visitors < location.size:
+                        if location.size is None or location.n_affiliated_agents < location.size:
                             assert not assigned  # remove later
                             location.add_agent(agent)
                             assigned = True
@@ -161,7 +159,7 @@ class PopMaker:
         for location_cls in location_classes:
             location_dummy = location_cls(model=self.model)
             location_dummy.setup()
-            if location_dummy.is_home:
+            if hasattr(location_dummy, "is_home") and location_dummy.is_home:
                 n_home_locations += 1
 
         if n_home_locations > 1:

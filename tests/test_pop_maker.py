@@ -18,7 +18,7 @@ class Home(Location):
     def setup(self):
         self.is_home = True
 
-    def groupby(self, agent):
+    def group(self, agent):
         return agent.hid
 
 
@@ -26,10 +26,10 @@ class School(Location):
     def setup(self):
         self.size = 10
 
-    def groupby(self, agent):
+    def group(self, agent):
         return 0 if agent.age <= 14 else 1
 
-    def can_affiliate(self, agent):
+    def join(self, agent):
         return 6 <= agent.age <= 18
 
     def can_visit(self, agent):
@@ -71,7 +71,7 @@ def test_create_locations():
 
     for location in locations:
         for agent in location.agents:
-            assert location.groupby(agent) == location.subtype
+            assert location.group(agent) == location.subtype
 
 
 if __name__ == "__main__":
