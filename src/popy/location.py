@@ -107,7 +107,7 @@ class Location(Object):
         """
         return True
 
-    def groupby(self, agent) -> object:  # todo: new name = group()
+    def group(self, agent) -> object:
         """
         ~ User interface ~
 
