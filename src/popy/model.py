@@ -9,7 +9,7 @@ class Model(ap.Model):
     This very closely follows the logic of the :class:`agentpy.Model` package.
 
     Args:
-        See :agentpy.Model: for more information.
+        See :class:`agentpy.Model` for more information.
     """
 
     def __init__(self, parameters=None, _run_id=None, **kwargs):

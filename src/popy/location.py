@@ -120,9 +120,9 @@ class Location(Object):
         """
         Checks if the given agent is connected to this location.
         """
-        return agent in self.graph.agents
-
-
+        return agent.id in self.graph.g.nodes
+        
+        
 class WeightedLocation(Location):
     def __init__(self, model, graph_cls=FullGraph) -> None:
         super().__init__(model, graph_cls)
