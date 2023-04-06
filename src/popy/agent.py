@@ -17,6 +17,7 @@ class Agent(ap.Agent):
         super().__init__(model, *args, **kwargs)
 
         self.model = model
+        self.model.env.add_agent(self)
         self.setup()
 
     def setup(self) -> None:
@@ -32,21 +33,8 @@ class Agent(ap.Agent):
         Returns:
             :class:`agentpy.AgentList`: All agents co-located with this agent over all locations.
         """
-        neighbors = [
-                agent
-                for neighbors in self.locations.neighbors(self)  # type: ignore
-                for agent in neighbors
-            ]
-        neighbors = neighbors if duplicates else list(set(neighbors))
-        return ap.AgentList(
-            self.model,
-            neighbors,
-        )
-
+        return self.model.env.neighbors_of_agent(self)
 
     @property
     def locations(self):
-        return LocationList(
-            self.model,
-            [location for location in self.model.locations if location.is_affiliated(self)],
-        )
+        return self.model.env.locations_of_agent(self)
