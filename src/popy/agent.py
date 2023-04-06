@@ -1,6 +1,7 @@
 import agentpy as ap
 
 from .exceptions import PopyException
+from .location import Location
 from .sequences import LocationList
 
 
@@ -35,6 +36,9 @@ class Agent(ap.Agent):
         """
         return self.model.env.neighbors_of_agent(self)
 
+    def add_location(self, location: Location) -> None:
+        self.model.env.add_agent_to_location(self, location)
+
     @property
-    def locations(self):
+    def locations(self) -> ap.AgentList:
         return self.model.env.locations_of_agent(self)
