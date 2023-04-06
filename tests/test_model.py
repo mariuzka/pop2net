@@ -60,25 +60,30 @@ def test_model(dataframe_regression):
     assert sum(result.is_infected.values) == 10
 
 
-@pytest.mark.parametrize("n_agents", [10, 23, 41])
-def test_model_network_export_simple_n_agents(n_agents):
+@pytest.mark.parametrize("n_agents,exp_n_edges", [(100, 1832), (111, 2298), (115, 2460)])
+def test_model_network_export_simple_n_agents(n_agents, exp_n_edges):
+    random.seed(42)
+
     class MovingAgent(popy.Agent):
         def move(self):
-            # old_location = self.locations[0]
-            # old_location.remove_agent(self)
-            new_location = random.choice(self.model.locations)
+            old_location = self.locations[0]
+            old_location.remove_agent(self)
+
+            while True:
+                new_location = random.choice(self.model.locations)
+                if new_location not in self.locations:
+                    break
             new_location.add_agent(self)
 
     class MyModel(popy.Model):
         def setup(self):
             self.agents = popy.AgentList(self, n_agents, MovingAgent)
-            self.locations = popy.LocationList(self, 3, popy.Location)
+            self.locations = popy.LocationList(self, 10, popy.Location)
 
             # assign agents to locations
             for agent in self.agents:
-                n_loc = random.randint(1, 2)
-                for _ in range(n_loc):
-                    location = random.choice(self.locations)
+                locations = random.sample(self.locations, 2)
+                for location in locations:
                     location.add_agent(agent)
 
         def step(self):
@@ -89,3 +94,4 @@ def test_model_network_export_simple_n_agents(n_agents):
     graph = model.export_network()
 
     assert graph.number_of_nodes() == n_agents
+    assert graph.number_of_edges() == exp_n_edges
