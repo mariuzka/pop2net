@@ -1,12 +1,13 @@
 import agentpy as ap
 import pandas as pd
+import popy
 import pytest
 from popy.agent import Agent
 from popy.location import Location
 from popy.pop_maker import PopMaker
 
 
-class Model(ap.Model):
+class Model(popy.Model):
     pass
 
 
@@ -62,9 +63,16 @@ def test_create_agents(soep_fixture, request):
 # @pytest.mark.parametrize("soep_fixture", ["soep100", "soep1000"])
 def test_create_locations():
     soep = simple_fake_data.copy()
-    pop_maker = PopMaker(model=Model())
+    model = Model()
+    pop_maker = PopMaker(model=model)
+
     agents = pop_maker.create_agents(df=soep, agent_class=MyAgent)
+    for agent in agents:
+        model.env.add_agent(agent)
+
     locations = pop_maker.create_locations(agents=agents, location_classes=[Home, School])
+    for location in locations:
+        model.env.add_location(location)
 
     assert len([location for location in locations if isinstance(location, Home)]) == 4
     assert len([location for location in locations if isinstance(location, School)]) == 2

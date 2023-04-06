@@ -25,7 +25,7 @@ def test_agent_property():
     loc.add_agent(agent1)
     loc.add_agent(agent2)
 
-    assert AgentList(model, [agent1, agent2]) == loc.graph.agents
+    assert AgentList(model, [agent1, agent2]) == loc.agents
 
 
 def test_create_location():
@@ -45,6 +45,7 @@ def test_location_size():
     loc = Location(model=model)
     agent1 = Agent(model=model)
     agent2 = Agent(model=model)
+
     assert loc.n_affiliated_agents == 0
     loc.add_agent(agent1)
     assert loc.n_affiliated_agents == 1
