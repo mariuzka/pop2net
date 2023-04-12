@@ -45,6 +45,10 @@ jobs:
       - name: Install dependencies
         if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
         run: poetry install --no-interaction --no-root --with docs
+      - name: Install pandoc
+        uses: nikeee/setup-pandoc@v1
+        with:
+          pandoc-version: '2.19.1'
       - name: Build documentation
         run: |
           mkdir gh-pages
