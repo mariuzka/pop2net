@@ -19,9 +19,9 @@ class Environment:
             self.g.add_node(location.id, bipartite=1, _obj=location)
 
     def add_agent_to_location(self, location, agent, **kwargs) -> None:
-        if location.id not in self.g.nodes:
+        if not self.g.has_node(location.id):
             raise Exception("Location {} does not exist in Environment!".format(location))
-        if agent.id not in self.g.nodes:
+        if not self.g.has_node(agent.id):
             raise Exception("Agent {} does not exist in Environment!".format(agent))
 
         if not self.g.has_edge(agent.id, location.id):
@@ -36,9 +36,9 @@ class Environment:
             self.g.remove_node(location.id)
 
     def remove_agent_from_location(self, location, agent) -> None:
-        if location.id not in self.g.nodes:
+        if not self.g.has_node(location.id):
             raise Exception("Location {} does not exist in Environment!".format(location))
-        if agent.id not in self.g.nodes:
+        if not self.g.has_node(agent.id):
             raise Exception("Agent {} does not exist in Environment!".format(agent))
 
         if self.g.has_edge(agent.id, location.id):
