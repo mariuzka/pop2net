@@ -6,45 +6,13 @@ from agentpy.objects import Object
 from agentpy.sequences import AgentList
 
 
-class FullGraph:
-    def __init__(self, location_id, model) -> None:
-        self.location_id = location_id
-        self.model = model
-        self.g = nx.Graph()
-        self.g.add_node(f"L{location_id}", bipartite=1)
-
-    def add_agent(self, agent, **kwargs):
-        self.g.add_node(agent.id, _agent=agent, bipartite=0, **kwargs)
-        self.g.add_edge(agent.id, f"L{self.location_id}")
-
-    @property
-    def agents(self):
-        return AgentList(
-            model=self.model,
-            objs=[
-                data["_agent"] for _u, data in self.g.nodes(data=True) if data["bipartite"] == 0
-            ],
-        )
-
-    def remove_agent(self, agent):
-        self.g.remove_node(agent.id)
-
-    def neighbors(self, agent) -> AgentList:
-        agents = AgentList(self.model)
-        for neighbor, data in self.g.nodes(data=True):
-            if neighbor != agent.id and data["bipartite"] == 0:
-                agents.append(data["_agent"])
-
-        return agents
-
-
 class Location(Object):
-    def __init__(self, model, graph_cls=FullGraph) -> None:
+    def __init__(self, model) -> None:
         super().__init__(model)
         self.model = model
-        self.graph = graph_cls(self.id, model)
         self.subtype: object = None
         self.size: Optional[int] = None
+        self.model.env.add_location(self)
 
     def setup(self) -> None:
         """
@@ -61,8 +29,7 @@ class Location(Object):
         """
         if not self.join(agent):
             return
-        if agent not in self.graph.agents:
-            self.graph.add_agent(agent)
+        self.model.env.add_agent_to_location(self, agent)
 
     def add_agent(self, agent) -> None:
         """
@@ -75,7 +42,7 @@ class Location(Object):
         """
         Returns the list of agents affiliated with this location.
         """
-        return self.graph.agents
+        return self.model.env.agents_of_location(self)
 
     @property
     def n_affiliated_agents(self) -> int:
@@ -85,7 +52,7 @@ class Location(Object):
         """
         Removes the given agent from the graph.
         """
-        self.graph.remove_agent(agent)
+        self.model.env.remove_agent_from_location(self, agent)
 
     def remove_agent(self, agent) -> None:
         """
@@ -97,7 +64,9 @@ class Location(Object):
         """
         Returns a list of agents which are connected to the given agent via this location.
         """
-        return self.graph.neighbors(agent)
+        agents = self.model.env.agents_of_location(self)
+        agents.remove(agent)
+        return agents
 
     def join(self, agent) -> bool:
         """
@@ -120,12 +89,12 @@ class Location(Object):
         """
         Checks if the given agent is connected to this location.
         """
-        return agent.id in self.graph.g.nodes
+        return agent.id in self.model.env.agents_of_location(self)
 
 
 class WeightedLocation(Location):
-    def __init__(self, model, graph_cls=FullGraph) -> None:
-        super().__init__(model, graph_cls)
+    def __init__(self, model) -> None:
+        super().__init__(model)
         self.weights: Dict[int, float] = {}
 
     def weight(self, agent) -> float:

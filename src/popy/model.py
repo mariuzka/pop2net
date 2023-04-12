@@ -1,6 +1,7 @@
 import agentpy as ap
 import networkx as nx
 from networkx import bipartite
+from popy.environment import Environment
 
 
 class Model(ap.Model):
@@ -14,14 +15,15 @@ class Model(ap.Model):
 
     def __init__(self, parameters=None, _run_id=None, **kwargs):
         super().__init__(parameters, _run_id, **kwargs)
+        self.env = Environment(self)
 
     def sim_step(self):
 
         self.t += 1
 
-        for location in self.locations:
-            if hasattr(location, "update_weights"):
-                location.update_weights()
+        # for location in self.locations:
+        #    if hasattr(location, "update_weights"):
+        #        location.update_weights()
 
         self.step()
         self.update()
@@ -31,11 +33,10 @@ class Model(ap.Model):
 
     def export_network(self) -> nx.Graph:
 
-        comp_graph = nx.compose_all(location.graph.g for location in self.locations)
-        _, agents = bipartite.sets(comp_graph)
+        agents, _ = bipartite.sets(self.env.g)
 
-        projection = bipartite.projection.projected_graph(comp_graph, agents)
+        projection = bipartite.projection.projected_graph(self.env.g, agents)
         for agent_id in projection:
-            del projection.nodes[agent_id]["_agent"]
+            del projection.nodes[agent_id]["_obj"]
 
         return projection

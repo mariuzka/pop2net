@@ -19,7 +19,7 @@ class SOEPProvider(BaseProvider):
 
     def __init__(self, generator: Any) -> None:
         self.generator = generator
-        self.rng = np.random.default_rng()
+        self.rng = np.random.default_rng(self.generator._global_seed)
 
         # For hhid
         self.hh_type_dist = lambda: self._multinomial_select(c.HH_TYPE)
