@@ -1,7 +1,7 @@
 on:
   push:
-    branches:
-      - le/docs_gh_pages
+    tags:
+      - "*"
   pull_request:
     branches:
       - main
