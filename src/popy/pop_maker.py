@@ -23,11 +23,51 @@ class PopMaker:
         self.agents: Optional[popy.AgentList] = None
         self.locations: Optional[popy.LocationList] = None
 
+    def draw_sample(
+        self,
+        df,
+        n,
+        sample_level: Optional[str] = None,
+        weight: Optional[str] = None,
+    ) -> pd.DataFrame:
+
+        if sample_level is None:
+            df_sample = df.sample(
+                n=n,
+                replace=False if n <= len(df) and weight is None else True,
+                weights=weight,
+            )
+
+        else:
+            sample_level_ids = list(df[sample_level].drop_duplicates())
+
+            if weight is not None:
+                weights = list(df.drop_duplicates(subset=sample_level)[weight])
+
+            samples = []
+            counter = 0
+            while counter < n:
+                if weight is None:
+                    random_id = random.choice(sample_level_ids)
+                else:
+                    random_id = random.choices(sample_level_ids, weights=weights, k=1)[0]
+
+                sample = df.loc[df[sample_level] == random_id, :]
+                samples.append(df.loc[df[sample_level] == random_id, :])
+
+                counter += len(sample)
+
+            df_sample = pd.concat(samples).reset_index(drop=True)
+
+        return df_sample
+
     def create_agents(self, df, agent_class):
         """
         Creates one agent-instance of the given agent-class for each row of the given df.
         All columns of the df are added as instance attributes containing the row-specific values of the specific column.
         """
+
+        # create one agent for each row in
         agents = []
         for _, row in df.iterrows():
             agent = agent_class(model=self.model)
@@ -44,8 +84,6 @@ class PopMaker:
         agents,
         location_classes,
     ):
-        # check if there is exactly one home location among the given location classes
-        self.check_home_location(location_classes=location_classes)
 
         locations = []
 
@@ -149,20 +187,3 @@ class PopMaker:
             raise PopyException("There are no agents.")
 
         return pd.DataFrame([vars(agent) for agent in self.agents])
-
-    def check_home_location(self, location_classes):
-        # evtl. später entfernen, weil nicht allgemein genug.
-        # Es kann auch Simulationen geben, in denen es keine Homelocation braucht oder
-        # diese für unterschiedliche Agenten jeweils unterschiedliche Locationclasses sind.
-
-        n_home_locations = 0
-        for location_cls in location_classes:
-            location_dummy = location_cls(model=self.model)
-            location_dummy.setup()
-            if hasattr(location_dummy, "is_home") and location_dummy.is_home:
-                n_home_locations += 1
-
-        if n_home_locations > 1:
-            raise PopyException(
-                f"More than one home locations are not allowed. Currently there are {n_home_locations}",
-            )
