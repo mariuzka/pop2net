@@ -1,5 +1,6 @@
 import networkx as nx
 from agentpy import AgentList
+from networkx.algorithms import bipartite
 from popy import Agent
 from popy import Location
 from popy.sequences import LocationList
@@ -76,3 +77,6 @@ class Environment:
                 if agent_id != agent.id
             ),
         )
+
+    def set_edge_attribute(self, location, agent, attr_name: str, attr_value):
+        self.g[agent.id][location.id][attr_name] = attr_value
