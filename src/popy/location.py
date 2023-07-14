@@ -10,8 +10,13 @@ class Location(Object):
     def __init__(self, model) -> None:
         super().__init__(model)
         self.model = model
+
         self.subtype: object = None
         self.size: Optional[int] = None
+        self.static_weight: bool = False
+        self.weight_projection_function: str = "average"
+        self.weight_projection_denominator: float = 1
+
         self.model.env.add_location(self)
 
     def setup(self) -> None:
@@ -23,19 +28,14 @@ class Location(Object):
         """
         pass
 
-    def _add_agent(self, agent) -> None:
+    def add_agent(self, agent) -> None:
         """
         Adds the given agent to the graph.
         """
         if not self.join(agent):
             return
         self.model.env.add_agent_to_location(self, agent)
-
-    def add_agent(self, agent) -> None:
-        """
-        Adds the given agent to the graph.
-        """
-        self._add_agent(agent)
+        self.update_weight(agent)
 
     @property
     def agents(self) -> AgentList:
@@ -48,17 +48,11 @@ class Location(Object):
     def n_affiliated_agents(self) -> int:
         return len(self.agents)
 
-    def _remove_agent(self, agent) -> None:
-        """
-        Removes the given agent from the graph.
-        """
-        self.model.env.remove_agent_from_location(self, agent)
-
     def remove_agent(self, agent) -> None:
         """
         Removes the given agent from the graph.
         """
-        self._remove_agent(agent)
+        self.model.env.remove_agent_from_location(self, agent)
 
     def neighbors(self, agent) -> AgentList:
         """
@@ -80,7 +74,7 @@ class Location(Object):
         """
         ~ User interface ~
 
-        Allows to create subtypes of this typ of location if the location instances are create by the population maker.
+        Allows to create subtypes of this type of location if the location instances are create by the population maker.
         For each unique value of the given agent attribute one subtype of this location type will be created.
         """
         return None
@@ -90,12 +84,6 @@ class Location(Object):
         Checks if the given agent is connected to this location.
         """
         return agent.id in self.model.env.agents_of_location(self)
-
-
-class WeightedLocation(Location):
-    def __init__(self, model) -> None:
-        super().__init__(model)
-        self.weights: Dict[int, float] = {}
 
     def weight(self, agent) -> float:
         """
@@ -107,9 +95,9 @@ class WeightedLocation(Location):
 
     def update_weight(self, agent) -> None:
         """
-        Creates or updates the agent-speific weight in the location-specific dictionary of weights.
+        Creates or updates the agent-speific weight.
         """
-        self.weights[agent.id] = self.weight(agent)
+        self.model.env.g[agent.id][self.id]["weight"] = self.weight(agent)
 
     def update_weights(self) -> None:
         """
@@ -118,32 +106,16 @@ class WeightedLocation(Location):
         for agent in self.agents:
             self.update_weight(agent)
 
-    def add_agent(self, agent) -> None:
-        """
-        Adds an agent to the graph and the corresponding weight to the dictionary of weights.
-        """
-        self._add_agent(agent)
-        self.update_weight(agent)
-
-    def remove_agent(self, agent) -> None:
-        """
-        Removes the agent from the graph and the weight from the dictionary of weights.
-        """
-        self._remove_agent(agent)
-        del self.weights[agent.id]
-
     def get_weight(self, agent) -> float:
         """
         Returns the edge weight between an agent and the location.
         """
-        return self.weights[agent.id]
+        return self.model.env.g[agent.id][self.id]["weight"]
 
-    def edge_weight(
+    def contact_weight(
         self,
         agent1,
         agent2,
-        method: str = "average",
-        denominator: float = 1,
     ) -> float:
         """
         ~ User interface ~
@@ -152,22 +124,30 @@ class WeightedLocation(Location):
         Can be completely rewritten to have location-specific methods of this kind with the same name or can be used as it is in the simulation code.
         """
 
-        if method == "average":
-            return self.edge_weight_random(agent1, agent2, denominator)
+        if self.weight_projection_function == "average":
+            return self.contact_weight_average(agent1, agent2)
 
-        elif method == "simultan":
-            return self.edge_weight_simultan(agent1, agent2, denominator)
+        elif self.weight_projection_function == "simultan":
+            return self.contact_weight_simultan(agent1, agent2)
+
         else:
-            raise Exception(f"There is no method to combine the weights which is called {method}.")
+            raise Exception(
+                f"There is no method to combine the weights which is called {self.weight_projection_function}.",
+            )
 
-    def edge_weight_average(self, agent1, agent2, denominator: float = 1) -> float:
+    def contact_weight_average(self, agent1, agent2) -> float:
         """
         Determines the average amount of time the two agents are at the location simultaneously.
         """
-        return (self.get_weight(agent1) * self.get_weight(agent2)) / (denominator * denominator)
+        return (self.get_weight(agent1) * self.get_weight(agent2)) / (
+            self.weight_projection_denominator * self.weight_projection_denominator
+        )
 
-    def edge_weight_simultan(self, agent1, agent2, denominator: float = 1) -> float:
+    def contact_weight_simultan(self, agent1, agent2) -> float:
         """
         Determines the maximum amount of time which the two agents could be at this location at the same time.
         """
-        return min(self.get_weight(agent1), self.get_weight(agent2)) / denominator
+        return (
+            min(self.get_weight(agent1), self.get_weight(agent2))
+            / self.weight_projection_denominator
+        )
