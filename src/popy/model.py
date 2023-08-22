@@ -1,8 +1,8 @@
 import agentpy as ap
 import networkx as nx
 from networkx import bipartite
-from popy.environment import Environment
 
+from popy.environment import Environment
 
 class Model(ap.Model):
     """Class the encapsulates a full simluation.

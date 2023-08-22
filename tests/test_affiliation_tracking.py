@@ -1,5 +1,4 @@
 import popy
-import pytest
 
 # Laufzeit mit ca. 4.3 GHz: ca. 29-30s
 

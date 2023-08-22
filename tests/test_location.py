@@ -1,9 +1,8 @@
-import pytest
 from popy import AgentList
 from popy.agent import Agent
 from popy.location import Location
 from popy.model import Model
-
+import pytest
 
 @pytest.fixture(scope="module")
 def two_agent_location():

@@ -2,14 +2,9 @@
 Agentpy Lists Module
 Content: Lists for objects, environments, and agents
 """
-import itertools
 from collections.abc import Sequence
 
-import agentpy as ap
-import numpy as np
-
 from .location import Location
-
 
 class LocationSequence:
     """Base class for agenpty sequences."""

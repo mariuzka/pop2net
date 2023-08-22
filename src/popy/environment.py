@@ -1,10 +1,9 @@
-import networkx as nx
 from agentpy import AgentList
-from networkx.algorithms import bipartite
+import networkx as nx
+
 from popy import Agent
 from popy import Location
 from popy.sequences import LocationList
-
 
 class Environment:
     def __init__(self, model) -> None:

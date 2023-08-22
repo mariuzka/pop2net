@@ -1,7 +1,6 @@
 import popy
 import pytest
 
-
 @pytest.fixture
 def model():
     return popy.Model()

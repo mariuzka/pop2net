@@ -3,7 +3,6 @@ import numpy as np
 import pandas as pd
 import seaborn as sns
 
-
 def print_header(text):
     print("")
     print("")

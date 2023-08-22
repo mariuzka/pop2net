@@ -1,16 +1,12 @@
 import random
-from typing import Dict
-from typing import List
 from typing import Optional
-from typing import Union
 
-import agentpy as ap
 import pandas as pd
+
 import popy
-import popy.utils as utils
+from popy import utils
 
 from .exceptions import PopyException
-
 
 class PopMaker:
     def __init__(
@@ -34,7 +30,7 @@ class PopMaker:
         if sample_level is None:
             df_sample = df.sample(
                 n=n,
-                replace=False if n <= len(df) and weight is None else True,
+                replace=not (n <= len(df) and weight is None),
                 weights=weight,
             )
 
@@ -62,11 +58,10 @@ class PopMaker:
         return df_sample
 
     def create_agents(self, df, agent_class):
+        """Creates one agent-instance of the given agent-class for each row of the given df.
+        All columns of the df are added as instance attributes containing the row-specific values
+        of the specific column.
         """
-        Creates one agent-instance of the given agent-class for each row of the given df.
-        All columns of the df are added as instance attributes containing the row-specific values of the specific column.
-        """
-
         # create one agent for each row in
         agents = []
         for _, row in df.iterrows():
@@ -125,7 +120,8 @@ class PopMaker:
                 locations.extend(subtype_locations)
 
                 # Assign agents to locations
-                # Should we keep assigning process here for the sake of efficiency or move it into another method for the sake of modularity?
+                # Should we keep assigning process here for the sake of efficiency or move it into
+                # another method for the sake of modularity?
                 for agent in subtype_affiliated_agents:
                     assigned = False
                     for location in subtype_locations:
@@ -145,16 +141,19 @@ class PopMaker:
         self.locations = popy.LocationList(
             model=self.model,
             objs=locations,
-        )  # Warum gibt es keinen Fehler, wenn man ein Argument falsch schreibt? Habe gerade ewig nach einem Bug gesucht und letzt hatte ich nur das "j" in "objs" vergessen
+        )  # Warum gibt es keinen Fehler, wenn man ein Argument falsch schreibt? Habe gerade ewig
+        # nach einem Bug gesucht und letzt hatte ich nur das "j" in "objs" vergessen
 
         return self.locations
 
     def eval_affiliations(self) -> None:
         if self.agents is None:
-            raise PopyException("You have to create agents first!")
+            msg = "You have to create agents first!"
+            raise PopyException(msg)
 
         if self.locations is None:
-            raise PopyException("You have to create locations first!")
+            msg = "You have to create locations first!"
+            raise PopyException(msg)
 
         df_locations = pd.DataFrame(
             [
@@ -184,6 +183,7 @@ class PopMaker:
 
     def get_df_agents(self) -> pd.DataFrame:
         if self.agents is None:
-            raise PopyException("There are no agents.")
+            msg = "There are no agents."
+            raise PopyException(msg)
 
         return pd.DataFrame([vars(agent) for agent in self.agents])

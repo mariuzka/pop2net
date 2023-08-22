@@ -3,7 +3,6 @@ from typing import Optional
 import numpy as np
 import pandas as pd
 
-
 class DataReader:
     def __init__(
         self,

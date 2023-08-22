@@ -5,11 +5,10 @@ from typing import Literal
 from typing import Set
 from typing import Tuple
 
-import numpy as np
 from faker.providers import BaseProvider
+import numpy as np
 
 from . import constants as c
-
 
 class SOEPProvider(BaseProvider):
     """

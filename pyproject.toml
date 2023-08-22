@@ -60,10 +60,12 @@ pythonpath = [
 ]
 
 [tool.ruff]
+fix = true
 include = ["*.py", "*.pyi", "**/pyproject.toml", "*.ipynb"]
-select = ["E", "F", "I"]
+select = ["E", "F", "I", "Q"]
 target-version = "py311"
 line-length = 100
+ignore-init-module-imports = true
 
 [tool.ruff.isort]
 force-single-line = true

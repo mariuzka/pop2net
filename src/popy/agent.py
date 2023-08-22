@@ -1,9 +1,6 @@
 import agentpy as ap
 
-from .exceptions import PopyException
 from .location import Location
-from .sequences import LocationList
-
 
 class Agent(ap.Agent):
     """This is a Base class to represent agents in the simulation.
@@ -25,13 +22,13 @@ class Agent(ap.Agent):
         """Setup function for the Agent.
         This is executed on the instantiation of each agent.
         """
-        pass
 
     def neighbors(self, duplicates=False) -> ap.AgentList:
         """Convenience method that returns all neighbors over all locations this agent is currently
         located in.
 
-        Returns:
+        Returns
+        -------
             :class:`agentpy.AgentList`: All agents co-located with this agent over all locations.
         """
         return self.model.env.neighbors_of_agent(self)
@@ -44,7 +41,9 @@ class Agent(ap.Agent):
         return self.model.env.locations_of_agent(self)
 
     def contact_weight(self, agent_v: "Agent") -> float:
-        """Returns the contact weight between this agent and a given other agent, summed over all locations shared."""
+        """Returns the contact weight between this agent and a given other agent, summed over all
+        locations shared.
+        """
         contact_weight = 0
         for location in self.locations:
             if agent_v in location.agents:

@@ -6,9 +6,7 @@ import faker
 import numpy as np
 import pandas as pd
 
-from . import constants as c
 from .soep_provider import SOEPProvider
-
 
 def soep(size: int, seed: Optional[int] = None) -> pd.DataFrame:
 

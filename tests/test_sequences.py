@@ -1,7 +1,6 @@
 import popy
 import pytest
 
-
 @pytest.fixture
 def simple_location_list():
     model = popy.Model()
