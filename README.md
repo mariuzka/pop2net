@@ -4,3 +4,6 @@
 # Popy
 
 This is a README
+
+# Documentation
+Detailed documentation of all features and a collection of example analyses can be found [here](https://mariuzka.github.io/popy/).
