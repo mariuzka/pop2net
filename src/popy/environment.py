@@ -8,13 +8,12 @@ import networkx as nx
 
 from popy import Agent
 from popy import Location
-from popy import Model
 from popy.sequences import LocationList
 
 class Environment:
     """The simulation environment."""
 
-    def __init__(self, model: Model) -> None:
+    def __init__(self, model) -> None:
         """Instantiate the environment and add it to its model.
 
         Args:
