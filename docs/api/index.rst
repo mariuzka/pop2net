@@ -4,9 +4,10 @@ API Reference
 .. :caption: Contents
 
 .. toctree::
-   :maxdepth: 3
+   :hidden:
 
    agent
    location
    popmaker
    model
+   utils
