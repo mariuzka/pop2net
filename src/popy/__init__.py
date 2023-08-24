@@ -1,3 +1,5 @@
+"""Popy. An extension package for location-based simulations based on AgentPy."""
+
 from agentpy import AgentList
 
 from .agent import Agent
