@@ -1,12 +1,12 @@
 import popy
 import pytest
 
-@pytest.fixture
+@pytest.fixture()
 def model():
     return popy.Model()
 
 
-@pytest.fixture
+@pytest.fixture()
 def two_locations(model):
     return popy.LocationList(
         model,
@@ -47,7 +47,7 @@ def test_agent_locations(model):
     assert len(agent.locations) == 2
 
 
-def test_agent_located_at_single_location(model, two_locations):
+def test_agent_located_at_single_location(model):
     class Model(popy.Model):
         def setup(self):
             self.agents = popy.AgentList(self, 1, popy.Agent)
@@ -57,10 +57,9 @@ def test_agent_located_at_single_location(model, two_locations):
     model = Model(parameters={"steps": 1})
     model.run()
 
-    assert [len(loc.agents) for loc in model.locations] == [1, 0]  # type: ignore
+    assert [len(loc.agents) for loc in model.locations] == [1, 0]
 
-
-def test_agent_visits_two_locations(model, two_locations):
+def test_agent_visits_two_locations(model):
     class Model(popy.Model):
         def setup(self):
             self.agents = popy.AgentList(self, 1, popy.Agent)
@@ -71,4 +70,4 @@ def test_agent_visits_two_locations(model, two_locations):
     model = Model(parameters={"steps": 1})
     model.run()
 
-    assert [len(loc.agents) for loc in model.locations] == [1, 1]  # type: ignore
+    assert [len(loc.agents) for loc in model.locations] == [1, 1]

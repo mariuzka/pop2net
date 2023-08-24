@@ -11,8 +11,7 @@ import numpy as np
 from . import constants as c
 
 class SOEPProvider(BaseProvider):
-    """
-    Helps to create Fake Data that is as close to the SOEP as possible.
+    """Helps to create Fake Data that is as close to the SOEP as possible.
     Parameters of the random distributions are taken from the original dataset.
     """
 
@@ -57,7 +56,7 @@ class SOEPProvider(BaseProvider):
 
     def _multinomial_select(self, dist: Dict):
         pvals = list(dist.values())
-        labels = {i: label for i, label in enumerate(dist.keys())}
+        labels = dict(enumerate(dist.keys()))
 
         index = int(np.argmax(self.rng.multinomial(n=1, pvals=pvals)))
 
@@ -71,15 +70,15 @@ class SOEPProvider(BaseProvider):
                 return hhid
             counter += 1
             if counter > 1000:
-                raise ValueError("Could not find new hhid after 1000 iterations!")
+                msg = "Could not find new hhid after 1000 iterations!"
+                raise ValueError(msg)
 
     def household(self) -> Tuple[int, str, int, int]:
-        """Create correlated fake numbers on household level
+        """Create correlated fake numbers on household level.
 
         Returns:
             Tuple[int, str, int, int]: [hh_id, hh_type, hh_size, n_children]
         """
-
         hh_type = self.hh_type_dist()
 
         if hh_type == "children":

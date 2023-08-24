@@ -42,9 +42,9 @@ class DataReader:
             sample = id_col.tolist()  # type: ignore
             self.rng.shuffle(sample)
         else:
+            msg = f"Cannot sample size ({size}) larger than dataset ({len(self.df)}) without replacement!"
             raise ValueError(
-                f"Cannot sample size ({size}) larger than dataset ({len(self.df)}) "
-                "without replacement!",
+                msg,
             )
 
         if not with_replacement:

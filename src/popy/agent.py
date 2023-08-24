@@ -27,7 +27,7 @@ class Agent(ap.Agent):
         """Convenience method that returns all neighbors over all locations this agent is currently
         located in.
 
-        Returns
+        Returns:
         -------
             :class:`agentpy.AgentList`: All agents co-located with this agent over all locations.
         """

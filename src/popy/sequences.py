@@ -1,6 +1,5 @@
-"""
-Agentpy Lists Module
-Content: Lists for objects, environments, and agents
+"""Agentpy Lists Module
+Content: Lists for objects, environments, and agents.
 """
 from collections.abc import Sequence
 
@@ -15,7 +14,7 @@ class LocationSequence:
         return f"{type(self).__name__} ({len_} object{s})"
 
     def __getattr__(self, name):
-        """Return callable list of attributes"""
+        """Return callable list of attributes."""
         if name[0] == "_":  # Private variables are looked up normally
             # Gives numpy conversion correct error for __array_struct__ lookup
             super().__getattr__(name)
@@ -28,14 +27,13 @@ class LocationSequence:
     @staticmethod
     def _obj_gen(model, n, cls, *args, **kwargs):
         """Generate objects for sequence."""
-
         if cls is None:
             cls = Location
 
-        if args != tuple():
+        if args != ():
+            msg = f"Sequences no longer accept extra arguments without a keyword. Please assign a keyword to the following arguments: {args}"
             raise Exception(
-                "Sequences no longer accept extra arguments without a keyword."
-                f" Please assign a keyword to the following arguments: {args}",
+                msg,
             )
 
         for i in range(n):
@@ -179,7 +177,6 @@ class LocationList(LocationSequence, list):
             Otherwise, the same value will be assigned to all objects.
 
     Examples:
-
         Prepare an :class:`AgentList` with three agents::
 
             >>> model = ap.Model()
