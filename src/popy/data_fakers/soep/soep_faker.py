@@ -1,3 +1,9 @@
+"""Faker of SOEP Data.
+
+SOEP is the socio-economic panel. A long lifed panel study.
+"""
+# TODO: extend docstring.
+
 from typing import Dict
 from typing import List
 from typing import Optional
@@ -9,7 +15,15 @@ import pandas as pd
 from .soep_provider import SOEPProvider
 
 def soep(size: int, seed: Optional[int] = None) -> pd.DataFrame:
+    """Create a pandas DataFrame with faked SOEP data.
 
+    Args:
+        size (int): Minimum number of people in the dataset.
+        seed (Optional[int], optional): Optional seed. Defaults to None.
+
+    Returns:
+        pd.DataFrame: A fake SEOP dataset.
+    """
     np.random.seed(seed)
     faker.Faker.seed(seed)
     fake = faker.Faker()

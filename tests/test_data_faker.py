@@ -13,7 +13,7 @@ def faker_seed():
 
 
 @pytest.mark.parametrize(
-    "soep_fixture,size",
+    ("soep_fixture", "size"),
     [
         ("soep100", 100),
         ("soep1000", 1000),
