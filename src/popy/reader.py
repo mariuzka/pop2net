@@ -1,15 +1,23 @@
+"""Helper to sample from a dataframe."""
+
 from typing import Optional
 
 import numpy as np
 import pandas as pd
 
 class DataReader:
+    """Helper to sample from a dataframe."""
     def __init__(
         self,
         df: pd.DataFrame,
         seed: Optional[int] = None,
     ) -> None:
+        """_summary_.
 
+        Args:
+            df (pd.DataFrame): _description_
+            seed (Optional[int], optional): _description_. Defaults to None.
+        """
         if seed:
             self.rng = np.random.default_rng(seed)
         else:
@@ -24,7 +32,20 @@ class DataReader:
         weights: Optional[str] = None,
         with_replacement: bool = True,
     ) -> pd.DataFrame:
+        """_summary_.
 
+        Args:
+            by (str): _description_
+            size (int): _description_
+            weights (Optional[str], optional): _description_. Defaults to None.
+            with_replacement (bool, optional): _description_. Defaults to True.
+
+        Raises:
+            ValueError: _description_
+
+        Returns:
+            pd.DataFrame: _description_
+        """
         if weights is None:
             unique_by = self.df[[by]].drop_duplicates(subset=by, keep="first")
             weight_col = None
@@ -42,10 +63,8 @@ class DataReader:
             sample = id_col.tolist()  # type: ignore
             self.rng.shuffle(sample)
         else:
-            msg = f"Cannot sample size ({size}) larger than dataset ({len(self.df)}) without replacement!"
-            raise ValueError(
-                msg,
-            )
+            msg = f"Cannot sample size ({size}) larger than dataset ({len(self.df)}) without replacement!"  # noqa: E501
+            raise ValueError(msg)
 
         if not with_replacement:
             # Faster shortcut that is possible if sampling is done without replacement.
