@@ -1,4 +1,6 @@
-"""Agentpy Lists Module
+# ruff: noqa: D102, D105, D107
+"""Agentpy Lists Module.
+
 Content: Lists for objects, environments, and agents.
 """
 from collections.abc import Sequence
@@ -9,6 +11,11 @@ class LocationSequence:
     """Base class for agenpty sequences."""
 
     def __repr__(self):
+        """Return a REPL representation of LocationSequence.
+
+        Returns:
+            str: REPL representation.
+        """
         len_ = len(list(self))
         s = "s" if len_ != 1 else ""
         return f"{type(self).__name__} ({len_} object{s})"
@@ -31,7 +38,10 @@ class LocationSequence:
             cls = Location
 
         if args != ():
-            msg = f"Sequences no longer accept extra arguments without a keyword. Please assign a keyword to the following arguments: {args}"
+            msg = (
+                "Sequences no longer accept extra arguments without a keyword. "
+                f"Please assign a keyword to the following arguments: {args}"
+            )
             raise Exception(
                 msg,
             )
@@ -49,6 +59,7 @@ class LocationSequence:
 
 class AttrIter(LocationSequence, Sequence):
     """Iterator over an attribute of objects in a sequence.
+
     Length, items access, and representation work like with a normal list.
     Calls are forwarded to each entry and return a list of return values.
     Boolean operators are applied to each entry and return a list of bools.
@@ -60,10 +71,21 @@ class AttrIter(LocationSequence, Sequence):
     """
 
     def __init__(self, source, attr=None):
+        """_summary_.
+
+        Args:
+            source (_type_): _description_
+            attr (_type_, optional): _description_. Defaults to None.
+        """
         self.source = source
         self.attr = attr
 
     def __repr__(self):
+        """Return a REPL representation of LocationSequence.
+
+        Returns:
+            str: REPL representation.
+        """
         return repr(list(self))
 
     @staticmethod
@@ -155,6 +177,7 @@ class AttrIter(LocationSequence, Sequence):
 
 class LocationList(LocationSequence, list):
     """List of agentpy objects.
+
     Attribute calls and assignments are applied to all agents
     and return an :class:`AttrIter` with the attributes of each agent.
     This also works for method calls, which returns a list of return values.
