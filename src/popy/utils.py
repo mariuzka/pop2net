@@ -1,9 +1,18 @@
+"""Various utility functions for popy."""
+
 import networkx as nx
 import numpy as np
 import pandas as pd
 import seaborn as sns
 
 def print_header(text):
+    """_summary_.
+
+    Args:
+        text (_type_): _description_
+    """
+    # TODO: This is weird.... and it should probably not be print-statements cuz no one can catch
+    # them.
     print("")
     print("")
     print("______________________________________")
@@ -13,7 +22,14 @@ def print_header(text):
 
 
 def create_agent_graph(agents) -> nx.Graph:
+    """_summary_.
 
+    Args:
+        agents (_type_): _description_
+
+    Returns:
+        nx.Graph: _description_
+    """
     projection = nx.Graph()
 
     for agent in agents:
@@ -28,7 +44,17 @@ def create_agent_graph(agents) -> nx.Graph:
 
 
 def create_contact_matrix(agents, attr: str = "id", weighted=False, plot=False):
+    """_summary_.
 
+    Args:
+        agents (_type_): _description_
+        attr (str, optional): _description_. Defaults to "id".
+        weighted (bool, optional): _description_. Defaults to False.
+        plot (bool, optional): _description_. Defaults to False.
+
+    Returns:
+        _type_: _description_
+    """
     contact_data = []
     attr_values = []
     pairs = []
@@ -80,7 +106,19 @@ def create_contact_matrix(agents, attr: str = "id", weighted=False, plot=False):
 
 
 def group_it(value, start, step, n_steps, return_value="index", summarize_highest=False):
+    """_summary_.
 
+    Args:
+        value (_type_): _description_
+        start (_type_): _description_
+        step (_type_): _description_
+        n_steps (_type_): _description_
+        return_value (str, optional): _description_. Defaults to "index".
+        summarize_highest (bool, optional): _description_. Defaults to False.
+
+    Returns:
+        _type_: _description_
+    """
     assert type(value) in [int, float], f"{value} has to be a number!"
     assert value >= start, f"The value {value} is smaller than the smallest lower bound {start}."
 
