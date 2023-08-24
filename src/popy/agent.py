@@ -37,7 +37,6 @@ class Agent(ap.Agent):
         located in.
 
         Returns:
-        -------
             :class:`agentpy.AgentList`: All agents co-located with this agent over all locations.
         """
         return self.model.env.neighbors_of_agent(self)
@@ -51,7 +50,6 @@ class Agent(ap.Agent):
         """Return a list of locations that this agent is associated with.
 
         Returns:
-        -------
             :class:`popy.LocationList`: A list of locations.
         """
         return self.model.env.locations_of_agent(self)
@@ -62,7 +60,6 @@ class Agent(ap.Agent):
         This is summed over all shared locations.
 
         Returns:
-        -------
             :float: A weight of the contact between the two agents.
         """
         contact_weight = 0
