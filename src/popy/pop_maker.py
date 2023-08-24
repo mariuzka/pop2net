@@ -1,3 +1,5 @@
+"""Create a population for the simulation."""
+
 import random
 from typing import Optional
 
@@ -9,11 +11,19 @@ from popy import utils
 from .exceptions import PopyException
 
 class PopMaker:
+    """Create a population for the simulation."""
+
     def __init__(
         self,
         model: popy.Model,
         seed: int = 999,
     ) -> None:
+        """_summary_.
+
+        Args:
+            model (popy.Model): _description_
+            seed (int, optional): _description_. Defaults to 999.
+        """
         self.model = model
         self.rng = random.Random(seed)
         self.agents: Optional[popy.AgentList] = None
@@ -26,7 +36,17 @@ class PopMaker:
         sample_level: Optional[str] = None,
         weight: Optional[str] = None,
     ) -> pd.DataFrame:
+        """_summary_.
 
+        Args:
+            df (_type_): _description_
+            n (_type_): _description_
+            sample_level (Optional[str], optional): _description_. Defaults to None.
+            weight (Optional[str], optional): _description_. Defaults to None.
+
+        Returns:
+            pd.DataFrame: _description_
+        """
         if sample_level is None:
             df_sample = df.sample(
                 n=n,
@@ -59,8 +79,16 @@ class PopMaker:
 
     def create_agents(self, df, agent_class):
         """Creates one agent-instance of the given agent-class for each row of the given df.
+
         All columns of the df are added as instance attributes containing the row-specific values
         of the specific column.
+
+        Args:
+            df (_type_): _description_
+            agent_class (_type_): _description_
+
+        Returns:
+            _type_: _description_
         """
         # create one agent for each row in
         agents = []
@@ -79,7 +107,15 @@ class PopMaker:
         agents,
         location_classes,
     ):
+        """_summary_.
 
+        Args:
+            agents (_type_): _description_
+            location_classes (_type_): _description_
+
+        Returns:
+            _type_: _description_
+        """
         locations = []
 
         for location_cls in location_classes:
@@ -147,6 +183,12 @@ class PopMaker:
         return self.locations
 
     def eval_affiliations(self) -> None:
+        """_summary_.
+
+        Raises:
+            PopyException: _description_
+            PopyException: _description_
+        """
         if self.agents is None:
             msg = "You have to create agents first!"
             raise PopyException(msg)
@@ -182,6 +224,14 @@ class PopMaker:
         print(df_agents.n_affiliated_locations.describe())
 
     def get_df_agents(self) -> pd.DataFrame:
+        """_summary_.
+
+        Raises:
+            PopyException: _description_
+
+        Returns:
+            pd.DataFrame: _description_
+        """
         if self.agents is None:
             msg = "There are no agents."
             raise PopyException(msg)
