@@ -3,7 +3,7 @@ import random
 import popy
 import pytest
 
-def test_model(dataframe_regression):
+def test_model():
     class HealthyAgent(popy.Agent):
         def setup(self):
             self.is_infected = False
