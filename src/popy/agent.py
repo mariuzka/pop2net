@@ -1,9 +1,13 @@
 """Base class to create Agent objects."""
+from __future__ import annotations
+
+import typing
 
 import agentpy as ap
 
-from popy.location import Location
-from popy.sequences import LocationList
+if typing.TYPE_CHECKING:
+    from . import location as _location
+    from . import sequences as _sequences
 
 class Agent(ap.Agent):
     """This is a Base class to represent agents in the simulation.
@@ -47,12 +51,16 @@ class Agent(ap.Agent):
         """
         return self.model.env.neighbors_of_agent(self)
 
-    def add_location(self, location: Location) -> None:
-        """Add this Agent to a given location."""
+    def add_location(self, location: _location.Location) -> None:
+        """Add this Agent to a given location.
+
+        Args:
+            location: Add agent to this location.
+        """
         self.model.env.add_agent_to_location(self, location)
 
     @property
-    def locations(self) -> LocationList:
+    def locations(self) -> _sequences.LocationList:
         """Return a list of locations that this agent is associated with.
 
         Returns:
@@ -60,10 +68,13 @@ class Agent(ap.Agent):
         """
         return self.model.env.locations_of_agent(self)
 
-    def contact_weight(self, agent_v: "Agent") -> float:
+    def contact_weight(self, agent_v: Agent) -> float:
         """Return the contact weight between this agent and a given other agent.
 
         This is summed over all shared locations.
+
+        Args:
+            agent_v: The other agent.
 
         Returns:
             A weight of the contact between the two agents.

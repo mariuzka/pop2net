@@ -6,16 +6,17 @@ from typing import Any
 from agentpy.objects import Object
 from agentpy.sequences import AgentList
 
-from . import agent
+from . import agent as _agent
+from . import model as _model
 
 class Location(Object):
     """Base class for location objects."""
 
-    def __init__(self, model) -> None:
+    def __init__(self, model: _model.Model) -> None:
         """Location constructor.
 
         Args:
-            model (Model): Model this Location should be associated with.
+            model: Model this Location should be associated with.
         """
         super().__init__(model)
         self.model = model
@@ -34,7 +35,7 @@ class Location(Object):
         This method is called automatically by the population maker after creating an instance.
         """
 
-    def add_agent(self, agent: agent.Agent) -> None:
+    def add_agent(self, agent: _agent.Agent) -> None:
         """Add the given agent to the graph.
 
         Args:
@@ -63,7 +64,7 @@ class Location(Object):
         """
         return len(self.agents)
 
-    def remove_agent(self, agent: agent.Agent) -> None:
+    def remove_agent(self, agent: _agent.Agent) -> None:
         """Removes the given agent from the graph.
 
         Args:
@@ -71,7 +72,7 @@ class Location(Object):
         """
         self.model.env.remove_agent_from_location(self, agent)
 
-    def neighbors(self, agent: agent.Agent) -> AgentList:
+    def neighbors(self, agent: _agent.Agent) -> AgentList:
         """Returns a list of agents which are connected to the given agent via this location.
 
         Args:
@@ -84,7 +85,7 @@ class Location(Object):
         agents.remove(agent)
         return agents
 
-    def join(self, agent: agent.Agent) -> bool:  # noqa: ARG002
+    def join(self, agent: _agent.Agent) -> bool:  # noqa: ARG002
         """~ User interface ~ Check whether the agent is meant to join this type of location.
 
         This is a boilerplate implementation of this method which always returns True; i.e. all
@@ -101,7 +102,7 @@ class Location(Object):
         # location once the check passes?
         return True
 
-    def group(self, agent: agent.Agent) -> Any:  # noqa: ARG002
+    def group(self, agent: _agent.Agent) -> Any:  # noqa: ARG002
         """~ User interface ~ Allow to create subtypes of this type of location.
 
         Allows to create subtypes of this type of location if the location instances are created by
@@ -111,7 +112,7 @@ class Location(Object):
         location type will be created.
 
         Args:
-            agent (Agent): Agent of which the agent attribute will be used for subtype creation
+            agent: Agent of which the agent attribute will be used for subtype creation
 
         Returns:
             object: _description_
@@ -119,7 +120,7 @@ class Location(Object):
         # TODO: No clue what this return value is supposed to be..
         return None
 
-    def is_affiliated(self, agent: agent.Agent) -> bool:
+    def is_affiliated(self, agent: _agent.Agent) -> bool:
         """Check if the given agent is connected to this location.
 
         Args:
@@ -130,7 +131,7 @@ class Location(Object):
         """
         return agent.id in self.model.env.agents_of_location(self)
 
-    def weight(self, agent: agent.Agent) -> float:  # noqa: ARG002
+    def weight(self, agent: _agent.Agent) -> float:  # noqa: ARG002
         """~ User interface ~ Define the edge weight.
 
         Defines how the edge weight between an agent and the location is determined.
@@ -145,7 +146,7 @@ class Location(Object):
         """
         return 1
 
-    def update_weight(self, agent: agent.Agent) -> None:
+    def update_weight(self, agent: _agent.Agent) -> None:
         """Create or update the agent-speific weight.
 
         Args:
@@ -158,7 +159,7 @@ class Location(Object):
         for agent_ in self.agents:
             self.update_weight(agent_)
 
-    def get_weight(self, agent: agent.Agent) -> float:
+    def get_weight(self, agent: _agent.Agent) -> float:
         """Return the edge weight between an agent and the location.
 
         Args:
@@ -169,7 +170,7 @@ class Location(Object):
         """
         return self.model.env.g[agent.id][self.id]["weight"]
 
-    def contact_weight(self, agent1: agent.Agent, agent2: agent.Agent) -> float:
+    def contact_weight(self, agent1: _agent.Agent, agent2: _agent.Agent) -> float:
         """~ User interface ~ Defines how the weights between two agent are combined.
 
         Defines how the weights are combined when the edge weight between two agents is determined.
@@ -203,7 +204,7 @@ class Location(Object):
                 msg,
             )
 
-    def contact_weight_average(self, agent1: agent.Agent, agent2: agent.Agent) -> float:
+    def contact_weight_average(self, agent1: _agent.Agent, agent2: _agent.Agent) -> float:
         """Determine the average amount of time the two agents are at the location simultaneously.
 
         Args:
@@ -217,7 +218,7 @@ class Location(Object):
             self.weight_projection_denominator * self.weight_projection_denominator
         )
 
-    def contact_weight_simultan(self, agent1: agent.Agent, agent2: agent.Agent) -> float:
+    def contact_weight_simultan(self, agent1: _agent.Agent, agent2: _agent.Agent) -> float:
         """Determine max time two agents could be at this location.
 
         Determine the maximum amount of time which the two agents could be at this location at

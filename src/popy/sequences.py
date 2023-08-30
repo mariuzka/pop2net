@@ -3,9 +3,11 @@
 
 Content: Lists for objects, environments, and agents.
 """
+from __future__ import annotations
+
 from collections.abc import Sequence
 
-from .location import Location
+from . import location
 
 class LocationSequence:
     """Base class for agenpty sequences."""
@@ -35,7 +37,7 @@ class LocationSequence:
     def _obj_gen(model, n, cls, *args, **kwargs):
         """Generate objects for sequence."""
         if cls is None:
-            cls = Location
+            cls = location.Location
 
         if args != ():
             msg = (

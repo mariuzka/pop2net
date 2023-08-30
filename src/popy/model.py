@@ -1,4 +1,5 @@
 """The model class. It encapsulates the full simulation."""
+from __future__ import annotations
 
 import agentpy as ap
 import networkx as nx

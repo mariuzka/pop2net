@@ -2,12 +2,17 @@
 
 This class is the basis for all interactions during the simulation.
 """
+from __future__ import annotations
+
+import typing
 
 from agentpy import AgentList
 import networkx as nx
 
-from popy import Agent
-from popy import Location
+if typing.TYPE_CHECKING:
+    from . import agent as _agent
+    from . import location as _location
+
 from popy.sequences import LocationList
 
 class Environment:
@@ -22,7 +27,7 @@ class Environment:
         self.model = model
         self.g = nx.Graph()
 
-    def add_agent(self, agent: Agent) -> None:
+    def add_agent(self, agent: _agent.Agent) -> None:
         """Add an agent to the environment.
 
         The added agent will have no connections to other agents or locatons by default.
@@ -34,7 +39,7 @@ class Environment:
         if not self.g.has_node(agent.id):
             self.g.add_node(agent.id, bipartite=0, _obj=agent)
 
-    def add_location(self, location: Location) -> None:
+    def add_location(self, location: _location.Location) -> None:
         """Add a location to the environment.
 
         The added location will have no connections to other agents or locatons by default.
@@ -46,7 +51,9 @@ class Environment:
         if not self.g.has_node(location.id):
             self.g.add_node(location.id, bipartite=1, _obj=location)
 
-    def add_agent_to_location(self, location: Location, agent: Agent, **kwargs) -> None:
+    def add_agent_to_location(
+        self, location: _location.Location, agent: _agent.Agent, **kwargs,
+    ) -> None:
         """Add an agent to a specific location.
 
         Both the agent and the location have to be defined beforehand. All additional keyword
@@ -72,7 +79,7 @@ class Environment:
         if not self.g.has_edge(agent.id, location.id):
             self.g.add_edge(agent.id, location.id, **kwargs)
 
-    def remove_agent(self, agent: Agent) -> None:
+    def remove_agent(self, agent: _agent.Agent) -> None:
         """Remove an agent from the environment.
 
         If the agent does not exist in the environment, this method does nothing.
@@ -83,7 +90,7 @@ class Environment:
         if self.g.has_node(agent.id):
             self.g.remove_node(agent.id)
 
-    def remove_location(self, location: Location) -> None:
+    def remove_location(self, location: _location.Location) -> None:
         """Remove a location from the environment.
 
         If the location does not exist in the environment, this method does nothing.
@@ -94,7 +101,9 @@ class Environment:
         if self.g.has_node(location.id):
             self.g.remove_node(location.id)
 
-    def remove_agent_from_location(self, location: Location, agent: Agent) -> None:
+    def remove_agent_from_location(
+        self, location: _location.Location, agent: _agent.Agent,
+    ) -> None:
         """Remove an agent from a location.
 
         Args:
@@ -116,7 +125,7 @@ class Environment:
         if self.g.has_edge(agent.id, location.id):
             self.g.remove_edge(agent.id, location.id)
 
-    def agents_of_location(self, location: Location) -> AgentList:
+    def agents_of_location(self, location: _location.Location) -> AgentList:
         """Return the list of agents associated with a specific location.
 
         Args:
@@ -131,7 +140,7 @@ class Environment:
             (self.g.nodes[node]["_obj"] for node in nodes if self.g.nodes[node]["bipartite"] == 0),
         )
 
-    def locations_of_agent(self, agent: Agent) -> LocationList:
+    def locations_of_agent(self, agent: _agent.Agent) -> LocationList:
         """Return the list of locations associated with a specific agent.
 
         Args:
@@ -146,7 +155,7 @@ class Environment:
             (self.g.nodes[node]["_obj"] for node in nodes if self.g.nodes[node]["bipartite"] == 1),
         )
 
-    def neighbors_of_agent(self, agent: Agent):
+    def neighbors_of_agent(self, agent: _agent.Agent):
         """Return a list of neighboring agents for a specific agent.
 
         Args:
@@ -173,7 +182,9 @@ class Environment:
             ),
         )
 
-    def set_edge_attribute(self, location, agent, attr_name: str, attr_value):
+    def set_edge_attribute(
+        self, location: _location.Location, agent: _agent.Agent, attr_name: str, attr_value,
+    ):
         """Set a specific edge attribute for the connection between an agent and a location.
 
         Args:
