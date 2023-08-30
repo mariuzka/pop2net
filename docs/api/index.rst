@@ -1,10 +1,12 @@
+.. currentmodule:: popy
+
 API Reference
 =============
 
 .. :caption: Contents
 
 .. toctree::
-   :hidden:
+   :maxdepth: 0
 
    agent
    location

@@ -9,10 +9,8 @@ from popy.environment import Environment
 class Model(ap.Model):
     """Class the encapsulates a full simluation.
 
-    This very closely follows the logic of the :class:`agentpy.Model` package.
-
-    Args:
-        See :class:`agentpy.Model` for more information.
+    This very closely follows the logic of the :class:`agentpy.Model` package. See
+    :class:`agentpy.Model` for more information.
     """
 
     def __init__(self, parameters=None, _run_id=None, **kwargs):
@@ -28,7 +26,7 @@ class Model(ap.Model):
         super().__init__(parameters, _run_id, **kwargs)
         self.env = Environment(self)
 
-    def sim_step(self):
+    def sim_step(self) -> None:
         """Do 1 step in the simulation."""
         self.t += 1
 
@@ -47,7 +45,7 @@ class Model(ap.Model):
         This is a projection of the underlying bipartite network between agents and locations.
 
         Returns:
-            nx.Graph: The current agent network as unipartite, unweighted networkx graph.
+            The current agent network as unipartite, unweighted graph.
         """
         agent_nodes = {n for n, d in self.env.g.nodes(data=True) if d["bipartite"] == 0}
 
@@ -63,7 +61,7 @@ class Model(ap.Model):
         This is a projection of the underlying bipartite network between agents and locations.
 
         Returns:
-            nx.Graph: The current agent network as unipartite, weighted networkx graph.
+            The current agent network as unipartite, weighted graph.
         """
         projection = nx.Graph()
 

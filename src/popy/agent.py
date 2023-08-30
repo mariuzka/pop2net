@@ -2,15 +2,21 @@
 
 import agentpy as ap
 
-from .location import Location
+from popy.location import Location
+from popy.sequences import LocationList
 
 class Agent(ap.Agent):
     """This is a Base class to represent agents in the simulation.
 
     Agents' behavior can be implemented in classes that inherit from this.
 
-    :param ap: _description_
-    :type ap: _type_
+    Examples:
+        For instance, agents could all be instatiated with the `is_infected` attribute set to
+        false::
+
+            class InfectionAgent(Agent):
+                def setup(self):
+                    self.is_infected = False
     """
 
     def __init__(self, model, *args, **kwargs) -> None:
@@ -37,7 +43,7 @@ class Agent(ap.Agent):
         located in.
 
         Returns:
-            :class:`agentpy.AgentList`: All agents co-located with this agent over all locations.
+            All agents co-located with this agent over all locations.
         """
         return self.model.env.neighbors_of_agent(self)
 
@@ -46,11 +52,11 @@ class Agent(ap.Agent):
         self.model.env.add_agent_to_location(self, location)
 
     @property
-    def locations(self) -> ap.AgentList:
+    def locations(self) -> LocationList:
         """Return a list of locations that this agent is associated with.
 
         Returns:
-            :class:`popy.LocationList`: A list of locations.
+            A list of locations.
         """
         return self.model.env.locations_of_agent(self)
 
@@ -60,7 +66,7 @@ class Agent(ap.Agent):
         This is summed over all shared locations.
 
         Returns:
-            :float: A weight of the contact between the two agents.
+            A weight of the contact between the two agents.
         """
         contact_weight = 0
         for location in self.locations:

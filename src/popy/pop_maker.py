@@ -18,12 +18,13 @@ class PopMaker:
         model: popy.Model,
         seed: int = 999,
     ) -> None:
-        """_summary_.
+        """Instantiate a population make for a specific model.
 
         Args:
-            model (popy.Model): _description_
-            seed (int, optional): _description_. Defaults to 999.
+            model (popy.Model): Model, for which a population should be created
+            seed (int, optional): A seed for reproducibility. Defaults to 999.
         """
+        # TODO: Seed should default to None.
         self.model = model
         self.rng = random.Random(seed)
         self.agents: Optional[popy.AgentList] = None
@@ -31,21 +32,23 @@ class PopMaker:
 
     def draw_sample(
         self,
-        df,
-        n,
+        df: pd.DataFrame,
+        n: int,
         sample_level: Optional[str] = None,
         weight: Optional[str] = None,
     ) -> pd.DataFrame:
-        """_summary_.
+        """Draw a sample from a base population.
 
         Args:
-            df (_type_): _description_
-            n (_type_): _description_
-            sample_level (Optional[str], optional): _description_. Defaults to None.
-            weight (Optional[str], optional): _description_. Defaults to None.
+            df (:class:`pandas.DataFrame`): DF of the actual population
+            n (int): Target size of the final sample. If this is higher the the size of the input
+                DataFrame, the sampling will occure with replacement. Without otherwise.
+            sample_level (str, optional): A variable the specifies groups in the data. For
+                instance a household ID to sample by households. Defaults to None.
+            weight (str, optional): _description_. Defaults to None.
 
         Returns:
-            pd.DataFrame: _description_
+            The drawn sample.
         """
         if sample_level is None:
             df_sample = df.sample(
@@ -77,18 +80,19 @@ class PopMaker:
 
         return df_sample
 
-    def create_agents(self, df, agent_class):
+    def create_agents(self, df: pd.DataFrame, agent_class) -> popy.AgentList:
         """Creates one agent-instance of the given agent-class for each row of the given df.
 
         All columns of the df are added as instance attributes containing the row-specific values
         of the specific column.
 
         Args:
-            df (_type_): _description_
-            agent_class (_type_): _description_
+            df (:class:`pandas.DataFrame`): _description_
+            agent_class: A class to instantiate all agents with. Every column in the DataFrame will
+                result in an attribute of the agents.
 
         Returns:
-            _type_: _description_
+            A list of agents, created based on the input.
         """
         # create one agent for each row in
         agents = []

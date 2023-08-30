@@ -47,6 +47,8 @@ napoleon_attr_annotations = True
 # intersphinx settings
 
 intersphinx_mapping = {
+    "pandas": ("https://pandas.pydata.org/docs/", None),
+    "networkx": ("https://networkx.org/documentation/stable/", None),
     "agentpy": ("https://agentpy.readthedocs.io/en/latest/", None),
     "python": ("https://docs.python.org/3", None),
 }

@@ -46,7 +46,7 @@ class Location(Object):
         """Return the list of agents affiliated with this location.
 
         Returns:
-            AgentList: List of agents at this location.
+            List of agents at this location.
         """
         return self.model.env.agents_of_location(self)
 
@@ -122,7 +122,7 @@ class Location(Object):
             agent (Agent): Agent to be checked.
 
         Returns:
-            bool: True if agent is affiliated with location, False otherwise
+            True if agent is affiliated with location, False otherwise
         """
         return agent.id in self.model.env.agents_of_location(self)
 
@@ -137,7 +137,7 @@ class Location(Object):
             agent (Agent): Agent for which the weight should be determined
 
         Returns:
-            float: Edge weight
+            The edge weight.
         """
         return 1
 
@@ -161,7 +161,7 @@ class Location(Object):
             agent (Agent): Agent of which the edge weight should be returned.
 
         Returns:
-            float: Edge weight.
+            Edge weight.
         """
         return self.model.env.g[agent.id][self.id]["weight"]
 
@@ -177,11 +177,10 @@ class Location(Object):
             agent2 (Agent): Second agent of the pair.
 
         Raises:
-            Exception: Raised if `self.weight_projection_function` is not in
-            ["average", "simultan"]
+            Exception: Raised if `self.weight_projection_function` is not in ["average", "simultan"]
 
         Returns:
-            float: Combined edge weight.
+            Combined edge weight.
         """
         # TODO: use custom exception
         # TODO: Exception should be raised in __init__ not here... or passed as parameter.
@@ -208,7 +207,7 @@ class Location(Object):
             agent2 (Agent): Second agent of the pair.
 
         Returns:
-            float: Average time.
+            Average time.
         """
         return (self.get_weight(agent1) * self.get_weight(agent2)) / (
             self.weight_projection_denominator * self.weight_projection_denominator
@@ -225,7 +224,7 @@ class Location(Object):
             agent2 (Agent): Second agent of the pair.
 
         Returns:
-            float: Max time.
+            Max time.
         """
         return (
             min(self.get_weight(agent1), self.get_weight(agent2))
