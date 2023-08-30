@@ -14,8 +14,9 @@ release = "0.1.0"
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
 extensions = [
-    "sphinx.ext.autodoc",
     "sphinx.ext.napoleon",
+    "sphinx.ext.autodoc",
+    "sphinx_autodoc_typehints",
     "sphinx.ext.viewcode",
     "sphinx.ext.intersphinx",
     "IPython.sphinxext.ipython_console_highlighting",  # fix for lexer error in nbsphinx

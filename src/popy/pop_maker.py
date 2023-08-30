@@ -87,7 +87,7 @@ class PopMaker:
         of the specific column.
 
         Args:
-            df (:class:`pandas.DataFrame`): _description_
+            df: The DataFrame from which the agents should be created from.
             agent_class: A class to instantiate all agents with. Every column in the DataFrame will
                 result in an attribute of the agents.
 
