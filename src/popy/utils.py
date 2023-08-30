@@ -1,15 +1,22 @@
 """Various utility functions for popy."""
+from __future__ import annotations
+
+import typing
 
 import networkx as nx
 import numpy as np
 import pandas as pd
 import seaborn as sns
 
-def print_header(text):
-    """_summary_.
+if typing.TYPE_CHECKING:
+    from popy import AgentList
+
+
+def print_header(text: object):
+    """Print a header around an object.
 
     Args:
-        text (_type_): _description_
+        text: Object to be printed within the header.
     """
     # TODO: This is weird.... and it should probably not be print-statements cuz no one can catch
     # them.
@@ -21,15 +28,18 @@ def print_header(text):
     print("")
 
 
-def create_agent_graph(agents) -> nx.Graph:
-    """_summary_.
+def create_agent_graph(agents: AgentList) -> nx.Graph:
+    """Create a Graph from a model's agent list.
 
     Args:
-        agents (_type_): _description_
+        agents: A model's agent list
 
     Returns:
-        nx.Graph: _description_
+        A weighted graph created from a model's agent list. Agents are connected if they are
+        neighbors in the model. Their connecting edge include the contact_weight as "weight"
+        attribute.
     """
+    # TODO: Ist das nicht exakt das, was Model.export_network() tut?
     projection = nx.Graph()
 
     for agent in agents:
@@ -43,17 +53,22 @@ def create_agent_graph(agents) -> nx.Graph:
     return projection
 
 
-def create_contact_matrix(agents, attr: str = "id", weighted=False, plot=False):
-    """_summary_.
+def create_contact_matrix(
+    agents,
+    attr: str = "id",
+    weighted: bool = False,
+    plot: bool = False,
+) -> pd.DataFrame:
+    """Create a contact matrix as a DataFrame from a given model's agent list.
 
     Args:
-        agents (_type_): _description_
-        attr (str, optional): _description_. Defaults to "id".
-        weighted (bool, optional): _description_. Defaults to False.
-        plot (bool, optional): _description_. Defaults to False.
+        agents: _description_
+        attr: _description_. Defaults to "id".
+        weighted: _description_. Defaults to False.
+        plot: _description_. Defaults to False.
 
     Returns:
-        _type_: _description_
+        A DataFrame containing a contact matrix based on `attr`.
     """
     contact_data = []
     attr_values = []
@@ -62,7 +77,6 @@ def create_contact_matrix(agents, attr: str = "id", weighted=False, plot=False):
     attr_u_name = f"{attr}_u"
     attr_v_name = f"{attr}_v"
     for agent_u in agents:
-
         for agent_v in agent_u.neighbors():
             attr_u = getattr(agent_u, attr)
             attr_v = getattr(agent_v, attr)
@@ -105,20 +119,28 @@ def create_contact_matrix(agents, attr: str = "id", weighted=False, plot=False):
     return df
 
 
-def group_it(value, start, step, n_steps, return_value="index", summarize_highest=False):
+def group_it(
+    value: int | float,
+    start: int | float,
+    step: int,
+    n_steps: int,
+    return_value: typing.Literal["index", "lower_bound", "range"] = "index",
+    summarize_highest: bool = False,
+) -> int | float | tuple[int | float, int | float]:
     """_summary_.
 
     Args:
-        value (_type_): _description_
-        start (_type_): _description_
-        step (_type_): _description_
-        n_steps (_type_): _description_
-        return_value (str, optional): _description_. Defaults to "index".
-        summarize_highest (bool, optional): _description_. Defaults to False.
+        value: _description_
+        start: _description_
+        step: _description_
+        n_steps: _description_
+        return_value: _description_. Defaults to "index".
+        summarize_highest: _description_. Defaults to False.
 
     Returns:
         _type_: _description_
     """
+    # TODO: something is fishy in this function...
     assert type(value) in [int, float], f"{value} has to be a number!"
     assert value >= start, f"The value {value} is smaller than the smallest lower bound {start}."
 
@@ -131,14 +153,14 @@ def group_it(value, start, step, n_steps, return_value="index", summarize_highes
                 new_value = i
 
             elif return_value == "lower_bound":
-                new_value = lower_bound
+                new_value = lower_bound  # type: ignore
 
             elif return_value == "range":
-                new_value = (lower_bound, upper_bound)
+                new_value = (lower_bound, upper_bound)  # type: ignore
 
         if not summarize_highest:
             if i == n_steps + 1:
                 if value > upper_bound:
                     new_value = np.nan
-
+    # BUG: new_value possibly unbound
     return new_value
