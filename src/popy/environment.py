@@ -12,13 +12,14 @@ import networkx as nx
 if typing.TYPE_CHECKING:
     from . import agent as _agent
     from . import location as _location
+    from . import model as _model
 
 from popy.sequences import LocationList
 
 class Environment:
     """The simulation environment."""
 
-    def __init__(self, model) -> None:
+    def __init__(self, model: _model.Model) -> None:
         """Instantiate the environment and add it to its model.
 
         Args:
@@ -34,7 +35,7 @@ class Environment:
         If the agent is already in the current environment, this methods does nothing.
 
         Args:
-            agent (Agent): Agent to be added to the environment.
+            agent: Agent to be added to the environment.
         """
         if not self.g.has_node(agent.id):
             self.g.add_node(agent.id, bipartite=0, _obj=agent)
@@ -46,7 +47,7 @@ class Environment:
         If the location is already in the current environment, this methods does nothing.
 
         Args:
-            location (Location): Location to be added to the environment.
+            location: Location to be added to the environment.
         """
         if not self.g.has_node(location.id):
             self.g.add_node(location.id, bipartite=1, _obj=location)
@@ -60,8 +61,8 @@ class Environment:
         arguments will be edge attributes for this connection.
 
         Args:
-            location (Location): Location the agent is to be added to.
-            agent (Agent): Agent to be added to the location.
+            location: Location the agent is to be added to.
+            agent: Agent to be added to the location.
             **kwargs: Additional edge attributes.
 
         Raises:
@@ -85,7 +86,7 @@ class Environment:
         If the agent does not exist in the environment, this method does nothing.
 
         Args:
-            agent (Agent): Agent to be removed.
+            agent: Agent to be removed.
         """
         if self.g.has_node(agent.id):
             self.g.remove_node(agent.id)
@@ -96,7 +97,7 @@ class Environment:
         If the location does not exist in the environment, this method does nothing.
 
         Args:
-            location (Location): Location to be removed.
+            location: Location to be removed.
         """
         if self.g.has_node(location.id):
             self.g.remove_node(location.id)
@@ -107,11 +108,11 @@ class Environment:
         """Remove an agent from a location.
 
         Args:
-            location (Location): Location, the agent is to be removed from.
-            agent (Agent): Agent to be disassociated with the location.
+            location: Location, the agent is to be removed from.
+            agent: Agent to be disassociated with the location.
 
         Raises:
-            Exception: Raied if the location does not exist in the environment.
+            Exception: Raised if the location does not exist in the environment.
             Exception: Raised if the agent does not exist in the environment.
         """
         # TODO: use custom exceptions
@@ -129,10 +130,10 @@ class Environment:
         """Return the list of agents associated with a specific location.
 
         Args:
-            location (Location): The desired location.
+            location: The desired location.
 
         Returns:
-            AgentList: A list of agents.
+            A list of agents.
         """
         nodes = self.g.neighbors(location.id)
         return AgentList(
@@ -144,10 +145,10 @@ class Environment:
         """Return the list of locations associated with a specific agent.
 
         Args:
-            agent (Agent): The desired agent.
+            agent: The desired agent.
 
         Returns:
-            LocationList: A list of locations.
+            A list of locations.
         """
         nodes = self.g.neighbors(agent.id)
         return LocationList(
@@ -155,14 +156,14 @@ class Environment:
             (self.g.nodes[node]["_obj"] for node in nodes if self.g.nodes[node]["bipartite"] == 1),
         )
 
-    def neighbors_of_agent(self, agent: _agent.Agent):
+    def neighbors_of_agent(self, agent: _agent.Agent) -> AgentList:
         """Return a list of neighboring agents for a specific agent.
 
         Args:
-            agent (Agent): Agent of whom the neighbors are to be returned.
+            agent: Agent of whom the neighbors are to be returned.
 
         Returns:
-            AgentList: The list of neighbors for the specified agent.
+            The list of neighbors for the specified agent.
         """
         locations = (
             node for node in self.g.neighbors(agent.id) if self.g.nodes[node]["bipartite"] == 1
@@ -184,13 +185,13 @@ class Environment:
 
     def set_edge_attribute(
         self, location: _location.Location, agent: _agent.Agent, attr_name: str, attr_value,
-    ):
+    ) -> None:
         """Set a specific edge attribute for the connection between an agent and a location.
 
         Args:
-            location (Location): Location for the edge.
-            agent (Agent): Agent for the edge.
-            attr_name (str): Name of the edge attribute.
-            attr_value (Any): Value of the edge attribute.
+            location: Location for the edge.
+            agent: Agent for the edge.
+            attr_name: Name of the edge attribute.
+            attr_value: Value of the edge attribute.
         """
         self.g[agent.id][location.id][attr_name] = attr_value
