@@ -1,3 +1,5 @@
+"""Helper class to provide fake SOEP data based on the fakers package."""
+
 from typing import Any
 from typing import Dict
 from typing import List
@@ -5,19 +7,24 @@ from typing import Literal
 from typing import Set
 from typing import Tuple
 
-import numpy as np
 from faker.providers import BaseProvider
+import numpy as np
 
 from . import constants as c
 
-
 class SOEPProvider(BaseProvider):
-    """
-    Helps to create Fake Data that is as close to the SOEP as possible.
+    """Create Fake Data that is as close to the SOEP as possible.
+
     Parameters of the random distributions are taken from the original dataset.
     """
 
     def __init__(self, generator: Any) -> None:
+        """Instatiate the SOEP faker class.
+
+        Args:
+            generator (Any): Can be used to set the seed.
+        """
+        # TODO: loose type hint on generator...
         self.generator = generator
         self.rng = np.random.default_rng(self.generator._global_seed)
 
@@ -58,7 +65,7 @@ class SOEPProvider(BaseProvider):
 
     def _multinomial_select(self, dist: Dict):
         pvals = list(dist.values())
-        labels = {i: label for i, label in enumerate(dist.keys())}
+        labels = dict(enumerate(dist.keys()))
 
         index = int(np.argmax(self.rng.multinomial(n=1, pvals=pvals)))
 
@@ -72,15 +79,15 @@ class SOEPProvider(BaseProvider):
                 return hhid
             counter += 1
             if counter > 1000:
-                raise ValueError("Could not find new hhid after 1000 iterations!")
+                msg = "Could not find new hhid after 1000 iterations!"
+                raise ValueError(msg)
 
     def household(self) -> Tuple[int, str, int, int]:
-        """Create correlated fake numbers on household level
+        """Create correlated fake numbers on household level.
 
         Returns:
             Tuple[int, str, int, int]: [hh_id, hh_type, hh_size, n_children]
         """
-
         hh_type = self.hh_type_dist()
 
         if hh_type == "children":
@@ -100,7 +107,14 @@ class SOEPProvider(BaseProvider):
         return (self._hhid(), hh_type, hh_size, n_children)
 
     def person(self, person: Literal["child", "adult", "senior"]):
+        """Create a simulated single persion.
 
+        Args:
+            person (Literal["child", "adult", "senior"]): Type of person.
+
+        Returns:
+            dict: Attributes of the simulated person.
+        """
         work_hours = self.work_hours_per_day(person=person)
         nace2 = self.nace2_division(work_hours)
         case = {
@@ -112,6 +126,11 @@ class SOEPProvider(BaseProvider):
         return case
 
     def household_persons(self) -> List[Dict]:
+        """Create a household full of simulated persons.
+
+        Returns:
+            List[Dict]: List of dicts with attributes of the simulated persons.
+        """
         hh_id, hh_type, hh_size, n_children = self.household()
 
         if hh_type == "no_children":
@@ -128,8 +147,16 @@ class SOEPProvider(BaseProvider):
 
         return persons
 
-    def age(self, person: Literal["child", "adult", "senior"] = "adult") -> float:
+    def age(self, person: Literal["child", "adult", "senior"] = "adult") -> int:
+        """Draw the age for a specific person type.
 
+        Args:
+            person (Literal["child", "adult", "senior"], optional): Person type that is the basis
+            for the draw. Defaults to "adult".
+
+        Returns:
+            int: The age.
+        """
         if person == "child":
             min_age = 0.0
             max_age = 18
@@ -150,7 +177,16 @@ class SOEPProvider(BaseProvider):
         return round(age, 0)
 
     def work_hours_per_day(self, person: Literal["child", "adult", "senior"]) -> float:
+        """Draw the amount of work hours per day based on the type of person.
 
+        The underlying distributions are roughly equal to the ones discovered in SOEP.
+
+        Args:
+            person (Literal["child", "adult", "senior"]): Type of person.
+
+        Returns:
+            float: Number of work hours per day.
+        """
         # children do not work
         if person != "adult":
             return 0.0
@@ -170,9 +206,24 @@ class SOEPProvider(BaseProvider):
         return round(hours, 6)
 
     def gender(self) -> str:
+        """Draw a gender based on the gender distribution from SOEP.
+
+        Returns:
+            str: The drawn gender. Possible values are: ["female", "male", "other"].
+        """
         return self.gender_dist()
 
-    def nace2_division(self, work_hours: float):
+    def nace2_division(self, work_hours: float) -> int:
+        """Draw a NACE2 division based on SOEP.
+
+        If the work hours are 0, the NACE2 code is always -2.
+
+        Args:
+            work_hours (float): Work hours. If 0 the return value is always -2.
+
+        Returns:
+            int: NACE2 division.
+        """
         if work_hours > 0:
             return self.nace2_dist()
         else:

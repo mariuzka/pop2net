@@ -1,23 +1,30 @@
-import random
-from typing import Dict
-from typing import List
-from typing import Optional
-from typing import Union
+"""Create a population for the simulation."""
 
-import agentpy as ap
+import random
+from typing import Optional
+
 import pandas as pd
+
 import popy
-import popy.utils as utils
+from popy import utils
 
 from .exceptions import PopyException
 
-
 class PopMaker:
+    """Create a population for the simulation."""
+
     def __init__(
         self,
         model: popy.Model,
         seed: int = 999,
     ) -> None:
+        """Instantiate a population make for a specific model.
+
+        Args:
+            model (popy.Model): Model, for which a population should be created
+            seed (int, optional): A seed for reproducibility. Defaults to 999.
+        """
+        # TODO: Seed should default to None.
         self.model = model
         self.rng = random.Random(seed)
         self.agents: Optional[popy.AgentList] = None
@@ -25,16 +32,28 @@ class PopMaker:
 
     def draw_sample(
         self,
-        df,
-        n,
+        df: pd.DataFrame,
+        n: int,
         sample_level: Optional[str] = None,
         weight: Optional[str] = None,
     ) -> pd.DataFrame:
+        """Draw a sample from a base population.
 
+        Args:
+            df (:class:`pandas.DataFrame`): DF of the actual population
+            n (int): Target size of the final sample. If this is higher the the size of the input
+                DataFrame, the sampling will occure with replacement. Without otherwise.
+            sample_level (str, optional): A variable the specifies groups in the data. For
+                instance a household ID to sample by households. Defaults to None.
+            weight (str, optional): _description_. Defaults to None.
+
+        Returns:
+            The drawn sample.
+        """
         if sample_level is None:
             df_sample = df.sample(
                 n=n,
-                replace=False if n <= len(df) and weight is None else True,
+                replace=not (n <= len(df) and weight is None),
                 weights=weight,
             )
 
@@ -61,12 +80,20 @@ class PopMaker:
 
         return df_sample
 
-    def create_agents(self, df, agent_class):
-        """
-        Creates one agent-instance of the given agent-class for each row of the given df.
-        All columns of the df are added as instance attributes containing the row-specific values of the specific column.
-        """
+    def create_agents(self, df: pd.DataFrame, agent_class) -> popy.AgentList:
+        """Creates one agent-instance of the given agent-class for each row of the given df.
 
+        All columns of the df are added as instance attributes containing the row-specific values
+        of the specific column.
+
+        Args:
+            df: The DataFrame from which the agents should be created from.
+            agent_class: A class to instantiate all agents with. Every column in the DataFrame will
+                result in an attribute of the agents.
+
+        Returns:
+            A list of agents, created based on the input.
+        """
         # create one agent for each row in
         agents = []
         for _, row in df.iterrows():
@@ -84,7 +111,15 @@ class PopMaker:
         agents,
         location_classes,
     ):
+        """_summary_.
 
+        Args:
+            agents (_type_): _description_
+            location_classes (_type_): _description_
+
+        Returns:
+            _type_: _description_
+        """
         locations = []
 
         for location_cls in location_classes:
@@ -125,7 +160,8 @@ class PopMaker:
                 locations.extend(subtype_locations)
 
                 # Assign agents to locations
-                # Should we keep assigning process here for the sake of efficiency or move it into another method for the sake of modularity?
+                # Should we keep assigning process here for the sake of efficiency or move it into
+                # another method for the sake of modularity?
                 for agent in subtype_affiliated_agents:
                     assigned = False
                     for location in subtype_locations:
@@ -145,16 +181,25 @@ class PopMaker:
         self.locations = popy.LocationList(
             model=self.model,
             objs=locations,
-        )  # Warum gibt es keinen Fehler, wenn man ein Argument falsch schreibt? Habe gerade ewig nach einem Bug gesucht und letzt hatte ich nur das "j" in "objs" vergessen
+        )  # Warum gibt es keinen Fehler, wenn man ein Argument falsch schreibt? Habe gerade ewig
+        # nach einem Bug gesucht und letzt hatte ich nur das "j" in "objs" vergessen
 
         return self.locations
 
     def eval_affiliations(self) -> None:
+        """_summary_.
+
+        Raises:
+            PopyException: _description_
+            PopyException: _description_
+        """
         if self.agents is None:
-            raise PopyException("You have to create agents first!")
+            msg = "You have to create agents first!"
+            raise PopyException(msg)
 
         if self.locations is None:
-            raise PopyException("You have to create locations first!")
+            msg = "You have to create locations first!"
+            raise PopyException(msg)
 
         df_locations = pd.DataFrame(
             [
@@ -183,7 +228,16 @@ class PopMaker:
         print(df_agents.n_affiliated_locations.describe())
 
     def get_df_agents(self) -> pd.DataFrame:
+        """_summary_.
+
+        Raises:
+            PopyException: _description_
+
+        Returns:
+            pd.DataFrame: _description_
+        """
         if self.agents is None:
-            raise PopyException("There are no agents.")
+            msg = "There are no agents."
+            raise PopyException(msg)
 
         return pd.DataFrame([vars(agent) for agent in self.agents])

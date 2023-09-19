@@ -14,8 +14,9 @@ release = "0.1.0"
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
 extensions = [
-    "sphinx.ext.autodoc",
     "sphinx.ext.napoleon",
+    "sphinx.ext.autodoc",
+    "sphinx_autodoc_typehints",
     "sphinx.ext.viewcode",
     "sphinx.ext.intersphinx",
     "IPython.sphinxext.ipython_console_highlighting",  # fix for lexer error in nbsphinx
@@ -47,6 +48,8 @@ napoleon_attr_annotations = True
 # intersphinx settings
 
 intersphinx_mapping = {
+    "pandas": ("https://pandas.pydata.org/docs/", None),
+    "networkx": ("https://networkx.org/documentation/stable/", None),
     "agentpy": ("https://agentpy.readthedocs.io/en/latest/", None),
     "python": ("https://docs.python.org/3", None),
 }
@@ -57,3 +60,4 @@ intersphinx_mapping = {
 
 html_theme = "sphinx_rtd_theme"
 html_static_path = ["_static"]
+html_css_files = ["custom.css"]

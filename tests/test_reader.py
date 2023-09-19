@@ -1,6 +1,5 @@
-import pytest
 from popy.reader import DataReader
-
+import pytest
 
 def test_reader_small(soep100):
     reader = DataReader(soep100, seed=5)

@@ -1,11 +1,9 @@
 import random
 
-import agentpy as ap
 import popy
 import pytest
 
-
-def test_model(dataframe_regression):
+def test_model():
     class HealthyAgent(popy.Agent):
         def setup(self):
             self.is_infected = False
@@ -60,7 +58,7 @@ def test_model(dataframe_regression):
     assert sum(result.is_infected.values) == 10
 
 
-@pytest.mark.parametrize("n_agents,exp_n_edges", [(100, 1832), (111, 2298), (115, 2460)])
+@pytest.mark.parametrize(("n_agents", "exp_n_edges"), [(100, 1832), (111, 2298), (115, 2460)])
 def test_model_network_export_simple_n_agents(n_agents, exp_n_edges):
     random.seed(42)
 

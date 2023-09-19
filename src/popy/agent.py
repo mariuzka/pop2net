@@ -1,20 +1,33 @@
+"""Base class to create Agent objects."""
+from __future__ import annotations
+
+import typing
+
 import agentpy as ap
 
-from .exceptions import PopyException
-from .location import Location
-from .sequences import LocationList
-
+if typing.TYPE_CHECKING:
+    from . import location as _location
+    from . import sequences as _sequences
 
 class Agent(ap.Agent):
     """This is a Base class to represent agents in the simulation.
 
     Agents' behavior can be implemented in classes that inherit from this.
 
-    :param ap: _description_
-    :type ap: _type_
+    Examples:
+        For instance, agents could all be instatiated with the `is_infected` attribute set to
+        false::
+
+            class InfectionAgent(Agent):
+                def setup(self):
+                    self.is_infected = False
     """
 
     def __init__(self, model, *args, **kwargs) -> None:
+        """Agent Constructor.
+
+        All parameters will be passed to the :class:`agentpy.Agent` parent.
+        """
         super().__init__(model, *args, **kwargs)
 
         self.model = model
@@ -22,29 +35,50 @@ class Agent(ap.Agent):
         self.setup()
 
     def setup(self) -> None:
-        """Setup function for the Agent.
+        """Instantiate an Agent.
+
         This is executed on the instantiation of each agent.
         """
-        pass
 
-    def neighbors(self, duplicates=False) -> ap.AgentList:
-        """Convenience method that returns all neighbors over all locations this agent is currently
+    def neighbors(self) -> ap.AgentList:
+        """Return all neighbors of an agent.
+
+        Convenience method that returns all neighbors over all locations this agent is currently
         located in.
 
         Returns:
-            :class:`agentpy.AgentList`: All agents co-located with this agent over all locations.
+            All agents co-located with this agent over all locations.
         """
         return self.model.env.neighbors_of_agent(self)
 
-    def add_location(self, location: Location) -> None:
+    def add_location(self, location: _location.Location) -> None:
+        """Add this Agent to a given location.
+
+        Args:
+            location: Add agent to this location.
+        """
         self.model.env.add_agent_to_location(self, location)
 
     @property
-    def locations(self) -> ap.AgentList:
+    def locations(self) -> _sequences.LocationList:
+        """Return a list of locations that this agent is associated with.
+
+        Returns:
+            A list of locations.
+        """
         return self.model.env.locations_of_agent(self)
 
-    def contact_weight(self, agent_v: "Agent") -> float:
-        """Returns the contact weight between this agent and a given other agent, summed over all locations shared."""
+    def contact_weight(self, agent_v: Agent) -> float:
+        """Return the contact weight between this agent and a given other agent.
+
+        This is summed over all shared locations.
+
+        Args:
+            agent_v: The other agent.
+
+        Returns:
+            A weight of the contact between the two agents.
+        """
         contact_weight = 0
         for location in self.locations:
             if agent_v in location.agents:
