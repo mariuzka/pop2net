@@ -26,6 +26,7 @@ class PopMaker:
         """
         # TODO: Seed should default to None.
         self.model = model
+        self.seed = seed
         self.rng = random.Random(seed)
         self.agents: Optional[popy.AgentList] = None
         self.locations: Optional[popy.LocationList] = None
@@ -55,6 +56,7 @@ class PopMaker:
                 n=n,
                 replace=not (n <= len(df) and weight is None),
                 weights=weight,
+                random_state=self.seed,
             )
 
         else:
@@ -67,11 +69,12 @@ class PopMaker:
             counter = 0
             while counter < n:
                 if weight is None:
-                    random_id = random.choice(sample_level_ids)
+                    random_id = self.rng.choice(sample_level_ids)
                 else:
-                    random_id = random.choices(sample_level_ids, weights=weights, k=1)[0]
+                    random_id = self.rng.choices(sample_level_ids, weights=weights, k=1)[0]
 
                 sample = df.loc[df[sample_level] == random_id, :]
+                # kann man hier nicht einfach `sample` einsetzen?
                 samples.append(df.loc[df[sample_level] == random_id, :])
 
                 counter += len(sample)
