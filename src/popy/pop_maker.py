@@ -34,7 +34,7 @@ class PopMaker:
     def draw_sample(
         self,
         df: pd.DataFrame,
-        n: int,
+        n: Optional[int] = None,
         sample_level: Optional[str] = None,
         weight: Optional[str] = None,
     ) -> pd.DataFrame:
@@ -43,7 +43,8 @@ class PopMaker:
         Args:
             df (:class:`pandas.DataFrame`): DF of the actual population
             n (int): Target size of the final sample. If this is higher the the size of the input
-                DataFrame, the sampling will occure with replacement. Without otherwise.
+                DataFrame, the sampling will occure with replacement. Without otherwise. If `n` is
+                set to `None`, df is returned as it is.
             sample_level (str, optional): A variable the specifies groups in the data. For
                 instance a household ID to sample by households. Defaults to None.
             weight (str, optional): _description_. Defaults to None.
@@ -51,7 +52,10 @@ class PopMaker:
         Returns:
             The drawn sample.
         """
-        if sample_level is None:
+        if n is None:
+            return df
+
+        elif sample_level is None:
             df_sample = df.sample(
                 n=n,
                 replace=not (n <= len(df) and weight is None),
@@ -188,6 +192,47 @@ class PopMaker:
         # nach einem Bug gesucht und letzt hatte ich nur das "j" in "objs" vergessen
 
         return self.locations
+
+
+    def make(
+        self,
+        df: pd.DataFrame,
+        agent_class,
+        location_classes,
+        n_agents: Optional[int] = None,
+        sample_level: Optional[str] = None,
+        return_df_sample: bool = False,
+    ) -> tuple:
+        """_summary_.
+
+        Creates agents and locations based on a given dataset.
+        Combines the PopMaker-methods `draw_sample()`, `create_agents()` and `create_locations()`.
+
+        Args:
+            df (pd.DataFrame): _description_
+            agent_class (_type_): _description_
+            location_classes (_type_): _description_
+            n_agents (Optional[int], optional): _description_. Defaults to None.
+            sample_level (Optional[int], optional): _description_. Defaults to None.
+            return_df_sample (bool, optional): _description_. Defaults to False.
+
+        Returns:
+            tuple: _description_
+        """
+        # draw a sample from dataset
+        df_sample = self.draw_sample(df=df, n=n_agents, sample_level=sample_level)
+
+        # create agents
+        agents = self.create_agents(df=df_sample, agent_class=agent_class)
+
+        # create locations
+        locations = self.create_locations(agents=agents, location_classes=location_classes)
+
+        if not return_df_sample:
+            return agents, locations
+        else:
+            return agents, locations, df_sample
+
 
     def eval_affiliations(self) -> None:
         """_summary_.
