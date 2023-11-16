@@ -76,12 +76,13 @@ def create_contact_matrix(
 
     attr_u_name = f"{attr}_u"
     attr_v_name = f"{attr}_v"
-    for agent_u in agents:
-        for agent_v in agent_u.neighbors():
-            attr_u = getattr(agent_u, attr)
-            attr_v = getattr(agent_v, attr)
 
-            attr_values.append(attr_u)
+    for agent_u in agents:
+        attr_u = getattr(agent_u, attr)
+        attr_values.append(attr_u)
+
+        for agent_v in agent_u.neighbors():
+            attr_v = getattr(agent_v, attr)
             attr_values.append(attr_v)
 
             pair = {agent_u.id, agent_v.id}
@@ -102,8 +103,11 @@ def create_contact_matrix(
     df = pd.DataFrame(index=sorted(attr_values, reverse=True), columns=sorted(attr_values))
     df = df.fillna(0)
 
+    weight_total = 0
     for contact in contact_data:
         weight = contact["weight"] if weighted else 1
+        weight_total += weight
+
         df.loc[contact[attr_u_name], contact[attr_v_name]] = (
             df.loc[contact[attr_u_name], contact[attr_v_name]] + weight
         )
@@ -111,7 +115,7 @@ def create_contact_matrix(
             df.loc[contact[attr_v_name], contact[attr_u_name]] + weight
         )
 
-    df = df / len(agents)
+    df = df / 2
 
     if plot:
         sns.heatmap(df)
