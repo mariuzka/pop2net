@@ -44,7 +44,7 @@ def create_agent_graph(agents: AgentList) -> nx.Graph:
 
     for agent in agents:
         if not projection.has_node(agent.id):
-            projection.add_node(agent.id)
+            projection.add_node(agent.id, **vars(agent))
 
         for agent_v in agent.neighbors():
             if not projection.has_edge(agent.id, agent_v.id):
