@@ -40,6 +40,7 @@ def create_agent_graph(agents: AgentList) -> nx.Graph:
         attribute.
     """
     # TODO: Ist das nicht exakt das, was Model.export_network() tut?
+    # -> Nein, da hier die kombinierten weights richtig berechnet werden
     projection = nx.Graph()
 
     for agent in agents:
@@ -115,10 +116,11 @@ def create_contact_matrix(
             df.loc[contact[attr_v_name], contact[attr_u_name]] + weight
         )
 
-    df = df / 2
+    #df = df / 2
 
     if plot:
-        sns.heatmap(df)
+        g = sns.heatmap(df, annot=True)
+        g.set(xlabel=attr, ylabel=attr)
 
     return df
 
