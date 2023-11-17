@@ -15,7 +15,7 @@ class PopMaker:
 
     def __init__(
         self,
-        model: popy.Model,
+        model: Optional[popy.Model] = None,
         seed: int = 999,
     ) -> None:
         """Instantiate a population make for a specific model.
@@ -25,7 +25,7 @@ class PopMaker:
             seed (int, optional): A seed for reproducibility. Defaults to 999.
         """
         # TODO: Seed should default to None.
-        self.model = model
+        self.model = model if model is not None else popy.Model()
         self.seed = seed
         self.rng = random.Random(seed)
         self.agents: Optional[popy.AgentList] = None
@@ -101,7 +101,9 @@ class PopMaker:
         Returns:
             A list of agents, created based on the input.
         """
-        # create one agent for each row in
+        # create one agent for each row in df
+
+        # TODO: sicherstellen, dass kein Attribut mit dem Namen `id` erstellt wird
         agents = []
         for _, row in df.iterrows():
             agent = agent_class(model=self.model)
@@ -201,20 +203,26 @@ class PopMaker:
         location_classes,
         n_agents: Optional[int] = None,
         sample_level: Optional[str] = None,
-        return_df_sample: bool = False,
     ) -> tuple:
-        """_summary_.
+        """Creates agents and locations based on a given dataset.
 
-        Creates agents and locations based on a given dataset.
         Combines the PopMaker-methods `draw_sample()`, `create_agents()` and `create_locations()`.
 
         Args:
-            df (pd.DataFrame): _description_
-            agent_class (_type_): _description_
-            location_classes (_type_): _description_
-            n_agents (Optional[int], optional): _description_. Defaults to None.
-            sample_level (Optional[int], optional): _description_. Defaults to None.
-            return_df_sample (bool, optional): _description_. Defaults to False.
+            df (pd.DataFrame): A data set with individual data that forms the basis for
+                the creation of agents. Each row is (potentially) translated into one agent.
+                Each column is translated into one agent attribute.
+            agent_class (_type_): The class from which the agent instances are created.
+            location_classes (_type_): The class from which the location instances are created.
+            n_agents (Optional[int], optional): The number of agents that will be created.
+                If `n_agents` is set to None, each row of `df` is translated into exactly one agent.
+                Otherwise, rows are randomly drawn (with replacement,
+                if `n_agents > len(df)`) from `df` until the number of agents created
+                equals `n_agents`.
+            sample_level (Optional[str], optional): If `sample_level` is None,
+                the rows are sampled individually.
+                Otherwise the rows are sampled as groups. `sample_level` defines
+                which column of `df` contains the group id.
 
         Returns:
             tuple: _description_
@@ -228,14 +236,11 @@ class PopMaker:
         # create locations
         locations = self.create_locations(agents=agents, location_classes=location_classes)
 
-        if not return_df_sample:
-            return agents, locations
-        else:
-            return agents, locations, df_sample
+        return agents, locations
 
 
     def eval_affiliations(self) -> None:
-        """_summary_.
+        """Prints information on the distribution of agents per location and locations per agent.
 
         Raises:
             PopyException: _description_
@@ -276,13 +281,14 @@ class PopMaker:
         print(df_agents.n_affiliated_locations.describe())
 
     def get_df_agents(self) -> pd.DataFrame:
-        """_summary_.
+        """Returns the latest created population of agents as a dataframe.
 
         Raises:
             PopyException: _description_
 
         Returns:
-            pd.DataFrame: _description_
+            pd.DataFrame: A dataframe which contains one row for each
+            agent and one column for each agent attribute.
         """
         if self.agents is None:
             msg = "There are no agents."
