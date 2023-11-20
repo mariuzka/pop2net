@@ -24,9 +24,7 @@ class Location(Object):
         self.subtype: object = None
         self.size: int | None = None
         self.static_weight: bool = False
-        self.weight_projection_function: str = "average"
-        self.weight_projection_denominator: float = 1
-
+        
         self.model.env.add_location(self)
 
     def setup(self) -> None:
@@ -187,51 +185,11 @@ class Location(Object):
         Returns:
             Combined edge weight.
         """
-        # TODO: use custom exception
-        # TODO: Exception should be raised in __init__ not here... or passed as parameter.
-        if self.weight_projection_function == "average":
-            return self.contact_weight_average(agent1, agent2)
+        return (self.get_weight(agent1) + self.get_weight(agent2)) / 2
 
-        elif self.weight_projection_function == "simultan":
-            return self.contact_weight_simultan(agent1, agent2)
 
-        else:
-            msg = (
-                "There is no method to combine the weights which is called "
-                f"{self.weight_projection_function}."
-            )
-            raise Exception(
-                msg,
-            )
-
-    def contact_weight_average(self, agent1: _agent.Agent, agent2: _agent.Agent) -> float:
-        """Determine the average amount of time the two agents are at the location simultaneously.
 
         Args:
-            agent1: First agent of the pair.
-            agent2: Second agent of the pair.
 
         Returns:
-            Average time.
         """
-        return (self.get_weight(agent1) * self.get_weight(agent2)) / (
-            self.weight_projection_denominator * self.weight_projection_denominator
-        )
-
-    def contact_weight_simultan(self, agent1: _agent.Agent, agent2: _agent.Agent) -> float:
-        """Determine max time two agents could be at this location.
-
-        Determine the maximum amount of time which the two agents could be at this location at
-        the same time.
-
-        Args:
-            agent1: First agent of the pair.
-            agent2: Second agent of the pair.
-
-        Returns:
-            Max time.
-        """
-        return (
-            min(self.get_weight(agent1), self.get_weight(agent2))
-            / self.weight_projection_denominator
-        )
