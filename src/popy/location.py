@@ -170,7 +170,7 @@ class Location(Object):
         """
         return self.model.env.g[agent.id][self.id]["weight"]
 
-    def contact_weight(self, agent1: _agent.Agent, agent2: _agent.Agent) -> float:
+    def project_weights(self, agent1: _agent.Agent, agent2: _agent.Agent) -> float:
         """~ User interface ~ Defines how the weights between two agent are combined.
 
         Defines how the weights are combined when the edge weight between two agents is determined.

@@ -82,5 +82,5 @@ class Agent(ap.Agent):
         contact_weight = 0
         for location in self.locations:
             if agent_v in location.agents:
-                contact_weight += location.contact_weight(agent1=self, agent2=agent_v)
+                contact_weight += location.project_weights(agent1=self, agent2=agent_v)
         return contact_weight
