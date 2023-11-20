@@ -188,8 +188,13 @@ class Location(Object):
         return (self.get_weight(agent1) + self.get_weight(agent2)) / 2
 
 
+    def stick_together(self, agent: _agent.Agent) -> Any:
+        """Sticks agents together by attribute.
 
         Args:
+            agent (_agent.Agent): _description_
 
         Returns:
+            Any: _description_
         """
+        return agent.id
