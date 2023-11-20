@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 import typing
-
+from typing import Optional, List
 import networkx as nx
 import numpy as np
 import pandas as pd
@@ -28,7 +28,7 @@ def print_header(text: object):
     print("")
 
 
-def create_agent_graph(agents: AgentList) -> nx.Graph:
+def create_agent_graph(agents: AgentList, node_attrs: List = []) -> nx.Graph:
     """Create a Graph from a model's agent list.
 
     Args:
@@ -39,14 +39,20 @@ def create_agent_graph(agents: AgentList) -> nx.Graph:
         neighbors in the model. Their connecting edge include the contact_weight as "weight"
         attribute.
     """
-    # TODO: Ist das nicht exakt das, was Model.export_network() tut?
-    # -> Nein, da hier die kombinierten weights richtig berechnet werden
+
     projection = nx.Graph()
 
+    # create nodes
     for agent in agents:
         if not projection.has_node(agent.id):
-            projection.add_node(agent.id, **vars(agent))
+            
+            node_attr_dict = {}
+            for node_attr in node_attrs:
+                node_attr_dict.update({node_attr: vars(agent)[node_attr]})
+            projection.add_node(agent.id, **node_attr_dict)
 
+    # create edges
+    for agent in agents:
         for agent_v in agent.neighbors():
             if not projection.has_edge(agent.id, agent_v.id):
                 projection.add_edge(agent.id, agent_v.id, weight=agent.contact_weight(agent_v))
