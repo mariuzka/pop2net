@@ -36,7 +36,7 @@ class PopMaker:
         df: pd.DataFrame,
         n: Optional[int] = None,
         sample_level: Optional[str] = None,
-        weight: Optional[str] = None,
+        sample_weight: Optional[str] = None,
     ) -> pd.DataFrame:
         """Draw a sample from a base population.
 
@@ -47,7 +47,7 @@ class PopMaker:
                 set to `None`, df is returned as it is.
             sample_level (str, optional): A variable the specifies groups in the data. For
                 instance a household ID to sample by households. Defaults to None.
-            weight (str, optional): _description_. Defaults to None.
+            sample_weight (str, optional): _description_. Defaults to None.
 
         Returns:
             The drawn sample.
@@ -58,22 +58,22 @@ class PopMaker:
         elif sample_level is None:
             df_sample = df.sample(
                 n=n,
-                replace=not (n <= len(df) and weight is None),
-                weights=weight,
+                replace=not (n <= len(df) and sample_weight is None),
+                weights=sample_weight,
                 random_state=self.seed,
             )
 
         else:
             sample_level_ids = list(df[sample_level].drop_duplicates())
 
-            if weight is not None:
-                weights = list(df.drop_duplicates(subset=sample_level)[weight])
+            if sample_weight is not None:
+                weights = list(df.drop_duplicates(subset=sample_level)[sample_weight])
 
             samples = []
             counter = 0
             sample_cluster_id = 1
             while counter < n:
-                if weight is None:
+                if sample_weight is None:
                     random_id = self.rng.choice(sample_level_ids)
                 else:
                     random_id = self.rng.choices(sample_level_ids, weights=weights, k=1)[0]
@@ -222,6 +222,8 @@ class PopMaker:
         location_classes,
         n_agents: Optional[int] = None,
         sample_level: Optional[str] = None,
+        sample_weight: Optional[str] = None,
+        replace_sample_level_column: bool = True,
     ) -> tuple:
         """Creates agents and locations based on a given dataset.
 
