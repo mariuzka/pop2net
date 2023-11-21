@@ -8,6 +8,8 @@ import numpy as np
 import pandas as pd
 import seaborn as sns
 
+from . import agent as _agent
+
 if typing.TYPE_CHECKING:
     from popy import AgentList
 
@@ -129,6 +131,9 @@ def create_contact_matrix(
         g.set(xlabel=attr, ylabel=attr)
 
     return df
+
+def get_df_agents(agents: AgentList) -> pd.DataFrame:
+    return pd.DataFrame([vars(agent) for agent in agents])
 
 
 def group_it(
