@@ -191,15 +191,16 @@ class PopMaker:
                             # assign agents
                             for agent in sticky_agents:
                                 location.add_agent(agent)
-                                assigned = True
-
+                            assigned = True
                             break
 
                     # if agents are not assigned and all locations are full
                     # TODO: hier verschiedene Möglichkeiten anbieten, was passieren soll, wenn Agenten übrigen bleiben
                     if not assigned:
                         random_location = self.rng.choice(subtype_locations)
-                        random_location.add_agent(agent)
+                        # assign agents
+                        for agent in sticky_agents:
+                            random_location.add_agent(agent)
                         assigned = True
 
         # TODO:
