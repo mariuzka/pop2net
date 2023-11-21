@@ -71,6 +71,7 @@ class PopMaker:
 
             samples = []
             counter = 0
+            sample_cluster_id = 1
             while counter < n:
                 if weight is None:
                     random_id = self.rng.choice(sample_level_ids)
@@ -78,10 +79,12 @@ class PopMaker:
                     random_id = self.rng.choices(sample_level_ids, weights=weights, k=1)[0]
 
                 sample = df.loc[df[sample_level] == random_id, :]
-                # TODO: kann man hier nicht einfach `sample` einsetzen?
-                samples.append(df.loc[df[sample_level] == random_id, :])
+                sample["sample_cluster_id"] = sample_cluster_id
+
+                samples.append(sample)
 
                 counter += len(sample)
+                sample_cluster_id += 1
 
             df_sample = pd.concat(samples).reset_index(drop=True)
 
@@ -161,7 +164,7 @@ class PopMaker:
                 subtype_locations = [
                     location_cls(model=self.model) for _ in range(n_location_subtypes)
                 ]
-                
+
                 # Run setup-method for each location
                 for location in subtype_locations:
                     location.setup()
@@ -172,7 +175,7 @@ class PopMaker:
                 # Assigning process:
 
                 # get all unique values to stick agents together
-                stick_values = set([location_dummy.stick_together(agent) for agent in subtype_affiliated_agents])
+                stick_values = {location_dummy.stick_together(agent) for agent in subtype_affiliated_agents}
 
                 # for each group of sticky agents
                 for stick_value in stick_values:
@@ -181,33 +184,33 @@ class PopMaker:
 
                     # for each location of this subtype
                     for location in subtype_locations:
-                        
+
                         # if there are still enough free places available
                         if location.size is None or (location.size - location.n_affiliated_agents) >= len(sticky_agents):
-                            
+
                             # assign agents
                             for agent in sticky_agents:
                                 location.add_agent(agent)
                                 assigned = True
-                            
+
                             break
-                    
+
                     # if agents are not assigned and all locations are full
                     # TODO: hier verschiedene Möglichkeiten anbieten, was passieren soll, wenn Agenten übrigen bleiben
-                    if not assigned: 
+                    if not assigned:
                         random_location = self.rng.choice(subtype_locations)
                         random_location.add_agent(agent)
                         assigned = True
 
-        # TODO:          
+        # TODO:
         # Warum gibt es keinen Fehler, wenn man ein Argument falsch schreibt? Habe gerade ewig
         # nach einem Bug gesucht und letzt hatte ich nur das "j" in "objs" vergessen
         self.agents = agents
         self.locations = popy.LocationList(
             model=self.model,
             objs=locations,
-        )  
-        
+        )
+
 
         return self.locations
 
