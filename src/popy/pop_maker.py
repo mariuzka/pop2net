@@ -25,6 +25,7 @@ class PopMaker:
             seed (int, optional): A seed for reproducibility. Defaults to 999.
         """
         # TODO: Seed should default to None.
+        
         self.model = model if model is not None else popy.Model()
         self.seed = seed
         self.rng = random.Random(seed)
@@ -123,7 +124,11 @@ class PopMaker:
                 setattr(agent, col_name, row[col_name])
             agents.append(agent)
 
-        self.agents = popy.AgentList(model=self.model, objs=agents)
+        agents = popy.AgentList(model=self.model, objs=agents)
+        self.agents = agents
+
+        # TODO: is this smart?
+        self.model.agents = agents
 
         return self.agents
 
@@ -153,14 +158,37 @@ class PopMaker:
             affiliated_agents = [agent for agent in agents if location_dummy.join(agent)]
 
             # get all possible subtype-labels of this location class
-            location_subtypes = {location_dummy.group(agent) for agent in affiliated_agents}
+            #location_subtypes = {location_dummy.group(agent) for agent in affiliated_agents} # old
+            
+            location_subtypes = []
+            
+            for agent in affiliated_agents:
+                agent_subtype_value = location_dummy.group(agent)
+                if isinstance(agent_subtype_value, list):
+                    location_subtypes.extend(agent_subtype_value)
+                else:
+                    location_subtypes.append(agent_subtype_value)
+            
+            location_subtypes = set(location_subtypes)
+
 
             for subtype in location_subtypes:
 
                 # get all agents that could be assigned to locations of this subtype
-                subtype_affiliated_agents = [
-                    agent for agent in affiliated_agents if location_dummy.group(agent) == subtype
-                ]
+                #subtype_affiliated_agents = [
+                #    agent for agent in affiliated_agents if location_dummy.group(agent) == subtype
+                #]
+
+                subtype_affiliated_agents = []
+                for agent in affiliated_agents:
+                    agent_subtype_value = location_dummy.group(agent)
+                    if isinstance(agent_subtype_value, list):
+                        if subtype in agent_subtype_value:
+                            subtype_affiliated_agents.append(agent)
+                    
+                    else:
+                        if subtype == agent_subtype_value:
+                            subtype_affiliated_agents.append(agent)
 
                 # determine the number of locations needed of this subtype
                 n_location_subtypes = (
