@@ -37,6 +37,7 @@ class PopMaker:
         n: Optional[int] = None,
         sample_level: Optional[str] = None,
         sample_weight: Optional[str] = None,
+        replace_sample_level_column: bool = True,
     ) -> pd.DataFrame:
         """Draw a sample from a base population.
 
@@ -52,6 +53,9 @@ class PopMaker:
         Returns:
             The drawn sample.
         """
+        
+        # TODO: Möglichkeit einbauen, zu erzwingen n_agents genau zu treffen, falls sample_level an ist
+
         if n is None:
             return df
 
@@ -79,7 +83,12 @@ class PopMaker:
                     random_id = self.rng.choices(sample_level_ids, weights=weights, k=1)[0]
 
                 sample = df.loc[df[sample_level] == random_id, :]
-                sample["sample_cluster_id"] = sample_cluster_id
+                
+                # create new unique ids for sample level variable
+                # TODO: Hinweis/Warnung printen, dass die originale sample_level-Spalte ersetzt wurde
+                if replace_sample_level_column:
+                    sample.loc[:, sample_level + "_original"] = sample.loc[:, sample_level]
+                    sample.loc[:, sample_level] = sample_cluster_id
 
                 samples.append(sample)
 
@@ -250,7 +259,13 @@ class PopMaker:
             tuple: _description_
         """
         # draw a sample from dataset
-        df_sample = self.draw_sample(df=df, n=n_agents, sample_level=sample_level)
+        df_sample = self.draw_sample(
+            df=df, 
+            n=n_agents, 
+            sample_level=sample_level, 
+            sample_weight=sample_weight,
+            replace_sample_level_column=replace_sample_level_column,
+            )
 
         # create agents
         agents = self.create_agents(df=df_sample, agent_class=agent_class)
