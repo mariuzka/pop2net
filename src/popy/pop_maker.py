@@ -8,6 +8,8 @@ import pandas as pd
 import popy
 from popy import utils
 
+import math
+
 from .exceptions import PopyException
 
 class PopMaker:
@@ -140,6 +142,7 @@ class PopMaker:
         self,
         agents,
         location_classes,
+        round_function = math.ceil,
     ):
         """_summary_.
 
@@ -193,7 +196,7 @@ class PopMaker:
                 n_location_groups = (
                     1
                     if location_dummy.size is None
-                    else max(round(len(group_affiliated_agents) / location_dummy.size), 1)
+                    else max(round_function(len(group_affiliated_agents) / location_dummy.size), 1)
                 )
                 
                 group_lists = [[] for _ in range(n_location_groups)]
