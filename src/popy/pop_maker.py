@@ -56,6 +56,8 @@ class PopMaker:
         """
         
         # TODO: Möglichkeit einbauen, zu erzwingen n_agents genau zu treffen, falls sample_level an ist
+        
+        df = df.copy()
 
         if n is None:
             return df
@@ -83,7 +85,7 @@ class PopMaker:
                 else:
                     random_id = self.rng.choices(sample_level_ids, weights=weights, k=1)[0]
 
-                sample = df.loc[df[sample_level] == random_id, :]
+                sample = df.loc[df[sample_level] == random_id, :].copy()
                 
                 # create new unique ids for sample level variable
                 # TODO: Hinweis/Warnung printen, dass die originale sample_level-Spalte ersetzt wurde
@@ -114,6 +116,8 @@ class PopMaker:
         Returns:
             A list of agents, created based on the input.
         """
+        df = df.copy()
+
         # create one agent for each row in df
 
         # TODO: sicherstellen, dass kein Attribut mit dem Namen `id` erstellt wird
@@ -156,89 +160,114 @@ class PopMaker:
 
             # get all agents that could be assigned to locations of this type
             affiliated_agents = [agent for agent in agents if location_dummy.join(agent)]
-
-            # get all possible subtype-labels of this location class
-            #location_subtypes = {location_dummy.group(agent) for agent in affiliated_agents} # old
             
-            location_subtypes = []
-            
+            # get all group values
+            location_groups = []
             for agent in affiliated_agents:
-                agent_subtype_value = location_dummy.group(agent)
-                if isinstance(agent_subtype_value, list):
-                    location_subtypes.extend(agent_subtype_value)
+                agent_group_value = location_dummy.group(agent)
+                if isinstance(agent_group_value, list):
+                    location_groups.extend(agent_group_value)
                 else:
-                    location_subtypes.append(agent_subtype_value)
-            
-            location_subtypes = set(location_subtypes)
+                    location_groups.append(agent_group_value)
+            location_groups = set(location_groups)
 
-
-            for subtype in location_subtypes:
-
-                # get all agents that could be assigned to locations of this subtype
-                #subtype_affiliated_agents = [
-                #    agent for agent in affiliated_agents if location_dummy.group(agent) == subtype
-                #]
-
-                subtype_affiliated_agents = []
+            for group in location_groups:
+                
+                # get all group affiliated agents
+                group_affiliated_agents = []
                 for agent in affiliated_agents:
-                    agent_subtype_value = location_dummy.group(agent)
-                    if isinstance(agent_subtype_value, list):
-                        if subtype in agent_subtype_value:
-                            subtype_affiliated_agents.append(agent)
-                    
+                    agent_group_value = location_dummy.group(agent)
+                    if isinstance(agent_group_value, list):
+                        if group in agent_group_value:
+                            group_affiliated_agents.append(agent)
                     else:
-                        if subtype == agent_subtype_value:
-                            subtype_affiliated_agents.append(agent)
+                        if group == agent_group_value:
+                            group_affiliated_agents.append(agent)
+                
 
-                # determine the number of locations needed of this subtype
-                n_location_subtypes = (
+                #####################################################################################################
+
+                ### get group lists
+
+                # determine the number of groups needed
+                n_location_groups = (
                     1
                     if location_dummy.size is None
-                    else max(round(len(subtype_affiliated_agents) / location_dummy.size), 1)
+                    else max(round(len(group_affiliated_agents) / location_dummy.size), 1)
                 )
-
-                # create the required number of instances of locations of this subtype
-                subtype_locations = [
-                    location_cls(model=self.model) for _ in range(n_location_subtypes)
-                ]
-
-                # Run setup-method for each location
-                for location in subtype_locations:
-                    location.setup()
-                    location.subtype = subtype
-
-                locations.extend(subtype_locations)
-
-                # Assigning process:
-
-                # get all unique values to stick agents together
-                stick_values = {location_dummy.stick_together(agent) for agent in subtype_affiliated_agents}
+                
+                group_lists = [[] for _ in range(n_location_groups)]
+                stick_values = {location_dummy.stick_together(agent) for agent in group_affiliated_agents}
 
                 # for each group of sticky agents
                 for stick_value in stick_values:
-                    sticky_agents = [agent for agent in subtype_affiliated_agents if location_dummy.stick_together(agent) == stick_value]
+                    sticky_agents = [agent for agent in group_affiliated_agents if location_dummy.stick_together(agent) == stick_value]
                     assigned = False
 
-                    # for each location of this subtype
-                    for location in subtype_locations:
+                    # for each location of this group
+                    for group_list in group_lists:
 
                         # if there are still enough free places available
-                        if location.size is None or (location.size - location.n_affiliated_agents) >= len(sticky_agents):
-
+                        if location_dummy.size is None or (location_dummy.size - len(group_list)) >= len(sticky_agents):
                             # assign agents
                             for agent in sticky_agents:
-                                location.add_agent(agent)
+                                group_list.append(agent)
                             assigned = True
                             break
 
                     # if agents are not assigned and all locations are full
                     # TODO: hier verschiedene Möglichkeiten anbieten, was passieren soll, wenn Agenten übrigen bleiben
                     if not assigned:
-                        random_location = self.rng.choice(subtype_locations)
+                        random_group_list = self.rng.choice(group_lists)
                         # assign agents
                         for agent in sticky_agents:
-                            random_location.add_agent(agent)
+                            random_group_list.append(agent)
                         assigned = True
+
+                #####################################################################################################
+
+                
+                for group_list in group_lists:
+
+                    # get all subgroub values
+                    location_subgroups = []
+                    for agent in group_list:
+                        location_dummy.group_list = group_list
+                        agent_subgroup_value = location_dummy.subgroup(agent)
+                        if isinstance(agent_subgroup_value, list):
+                            location_subgroups.extend(agent_subgroup_value)
+                        else:
+                            location_subgroups.append(agent_subgroup_value)
+                    location_subgroups = set(location_subgroups)
+                    
+                    for subgroup in location_subgroups:
+                        
+                        # get all subgroup affiliated agents
+                        subgroup_affiliated_agents = []
+                        #for agent in group_affiliated_agents:
+                        for agent in group_list:
+                            
+                            agent_subgroup_value = location_dummy.subgroup(agent)
+                            
+                            if isinstance(agent_subgroup_value, list):
+                                if subgroup in agent_subgroup_value:
+                                    subgroup_affiliated_agents.append(agent)
+                            else:
+                                if subgroup == agent_subgroup_value:
+                                    subgroup_affiliated_agents.append(agent)
+                        
+                        subgroup_location = location_cls(model=self.model)
+                        subgroup_location.setup()
+                        subgroup_location.group = group
+                        subgroup_location.subgroup = subgroup
+                        
+                        # Assigning process:
+                        for agent in subgroup_affiliated_agents:
+                            subgroup_location.add_agent(agent)
+                        
+                        locations.append(subgroup_location)
+
+                            
 
         # TODO:
         # Warum gibt es keinen Fehler, wenn man ein Argument falsch schreibt? Habe gerade ewig
@@ -248,7 +277,6 @@ class PopMaker:
             model=self.model,
             objs=locations,
         )
-
 
         return self.locations
 

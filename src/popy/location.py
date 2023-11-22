@@ -118,6 +118,9 @@ class Location(Object):
         # TODO: No clue what this return value is supposed to be..
         return None
 
+    def subgroup(self, agent: _agent.Agent) -> Any:
+        return None
+
     def is_affiliated(self, agent: _agent.Agent) -> bool:
         """Check if the given agent is connected to this location.
 
