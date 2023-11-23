@@ -61,12 +61,13 @@ def create_agent_graph(agents: AgentList, node_attrs: List = []) -> nx.Graph:
 
     return projection
 
-
+# TODO: calculate relative freqs
 def create_contact_matrix(
     agents,
     attr: str = "id",
     weighted: bool = False,
     plot: bool = False,
+    annot: bool = False,
 ) -> pd.DataFrame:
     """Create a contact matrix as a DataFrame from a given model's agent list.
 
@@ -127,7 +128,7 @@ def create_contact_matrix(
     #df = df / 2
 
     if plot:
-        g = sns.heatmap(df, annot=True)
+        g = sns.heatmap(df, annot=annot)
         g.set(xlabel=attr, ylabel=attr)
 
     return df
