@@ -24,7 +24,10 @@ class Location(Object):
         self.subtype: object = None
         self.size: int | None = None
         self.static_weight: bool = False
-        
+
+        # TODO: maybe delete after the creation of all locations
+        self.group_agents = []
+
         self.model.env.add_location(self)
 
     def setup(self) -> None:

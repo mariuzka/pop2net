@@ -235,7 +235,7 @@ class PopMaker:
                     # get all subgroub values
                     location_subgroups = []
                     for agent in group_list:
-                        location_dummy.group_list = group_list
+                        location_dummy.group_agents = group_list
                         agent_subgroup_value = location_dummy.subgroup(agent)
                         if isinstance(agent_subgroup_value, list):
                             location_subgroups.extend(agent_subgroup_value)
