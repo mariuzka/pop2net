@@ -270,8 +270,6 @@ class PopMaker:
                         
                         locations.append(subgroup_location)
 
-                            
-
         # TODO:
         # Warum gibt es keinen Fehler, wenn man ein Argument falsch schreibt? Habe gerade ewig
         # nach einem Bug gesucht und letzt hatte ich nur das "j" in "objs" vergessen
@@ -280,6 +278,10 @@ class PopMaker:
             model=self.model,
             objs=locations,
         )
+
+        # execute an action after all locations have been created
+        for location in self.locations:
+            location.do_this_after_creation()
 
         return self.locations
 

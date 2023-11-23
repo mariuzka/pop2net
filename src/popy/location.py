@@ -201,3 +201,7 @@ class Location(Object):
             Any: _description_
         """
         return agent.id
+    
+    # TODO: rename this method
+    def do_this_after_creation(self):
+        pass
