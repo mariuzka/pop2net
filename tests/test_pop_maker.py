@@ -77,7 +77,7 @@ def test_create_locations():
 
     for location in locations:
         for agent in location.agents:
-            assert location.group(agent) == location.subtype
+            assert location.group(agent) == location.group_id
 
 
 if __name__ == "__main__":

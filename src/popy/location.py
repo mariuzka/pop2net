@@ -21,7 +21,8 @@ class Location(Object):
         super().__init__(model)
         self.model = model
 
-        self.subtype: object = None
+        self.group_id: object = None
+        self.subgroup_id: object = None
         self.size: int | None = None
         self.static_weight: bool = False
 

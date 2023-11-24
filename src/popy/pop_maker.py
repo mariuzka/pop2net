@@ -261,8 +261,8 @@ class PopMaker:
                         
                         subgroup_location = location_cls(model=self.model)
                         subgroup_location.setup()
-                        subgroup_location.group = group
-                        subgroup_location.subgroup = subgroup
+                        subgroup_location.group_id = group
+                        subgroup_location.subgroup_id = subgroup
                         
                         # Assigning process:
                         for agent in subgroup_affiliated_agents:
