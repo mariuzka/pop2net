@@ -43,8 +43,6 @@ class Location(Object):
         Args:
             agent: The agent that should be added to the location.
         """
-        if not self.join(agent):
-            return
         self.model.env.add_agent_to_location(self, agent)
         self.update_weight(agent)
 
