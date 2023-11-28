@@ -102,6 +102,7 @@ class Location(Object):
         # location once the check passes?
         return True
 
+    # TODO: Rename to split()
     def group(self, agent: _agent.Agent) -> Any:  # noqa: ARG002
         """~ User interface ~ Allow to create subtypes of this type of location.
 
@@ -120,6 +121,7 @@ class Location(Object):
         # TODO: No clue what this return value is supposed to be..
         return None
 
+    # TODO: Rename to subsplit()
     def subgroup(self, agent: _agent.Agent) -> Any:
         return None
 
