@@ -135,7 +135,7 @@ class PopMaker:
 
         # TODO: is this smart?
         self.model.agents = agents
-
+        
         return self.agents
 
     def create_locations(
@@ -175,7 +175,6 @@ class PopMaker:
             location_groups = set(location_groups)
 
             for group in location_groups:
-                
                 # get all group affiliated agents
                 group_affiliated_agents = []
                 for agent in affiliated_agents:
@@ -228,14 +227,15 @@ class PopMaker:
                         assigned = True
 
                 #####################################################################################################
-
                 
-                for group_list in group_lists:
+                for i, group_list in enumerate(group_lists):
+                    location_dummy = location_cls(model=self.model)
+                    location_dummy.setup()
+                    location_dummy.group_agents = group_list
 
                     # get all subgroub values
                     location_subgroups = []
                     for agent in group_list:
-                        location_dummy.group_agents = group_list
                         agent_subgroup_value = location_dummy.subgroup(agent)
                         if isinstance(agent_subgroup_value, list):
                             location_subgroups.extend(agent_subgroup_value)
@@ -243,13 +243,13 @@ class PopMaker:
                             location_subgroups.append(agent_subgroup_value)
                     location_subgroups = set(location_subgroups)
                     
-                    for subgroup in location_subgroups:
+                    for j, subgroup in enumerate(location_subgroups):
                         
                         # get all subgroup affiliated agents
                         subgroup_affiliated_agents = []
+                        
                         #for agent in group_affiliated_agents:
                         for agent in group_list:
-                            
                             agent_subgroup_value = location_dummy.subgroup(agent)
                             
                             if isinstance(agent_subgroup_value, list):
@@ -261,8 +261,10 @@ class PopMaker:
                         
                         subgroup_location = location_cls(model=self.model)
                         subgroup_location.setup()
-                        subgroup_location.group_id = group
-                        subgroup_location.subgroup_id = subgroup
+                        subgroup_location.group_value = group
+                        subgroup_location.subgroup_value = subgroup
+                        subgroup_location.group_id = i
+                        subgroup_location.subgroup_id = j
                         
                         # Assigning process:
                         for agent in subgroup_affiliated_agents:
@@ -278,6 +280,8 @@ class PopMaker:
             model=self.model,
             objs=locations,
         )
+        # is this smart?
+        self.model.locations = locations
 
         # execute an action after all locations have been created
         for location in self.locations:
