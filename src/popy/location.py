@@ -103,7 +103,7 @@ class Location(Object):
         return True
 
     # TODO: Rename to split()
-    def group(self, agent: _agent.Agent) -> Any:  # noqa: ARG002
+    def group(self, agent: _agent.Agent) -> float | str | list | None:  # noqa: ARG002
         """~ User interface ~ Allow to create subtypes of this type of location.
 
         Allows to create subtypes of this type of location if the location instances are created by
@@ -118,7 +118,6 @@ class Location(Object):
         Returns:
             object: _description_
         """
-        # TODO: No clue what this return value is supposed to be..
         return None
 
     # TODO: Rename to subsplit()
@@ -209,3 +208,6 @@ class Location(Object):
     # TODO: rename this method
     def do_this_after_creation(self):
         pass
+
+    def nest(self):
+        return None

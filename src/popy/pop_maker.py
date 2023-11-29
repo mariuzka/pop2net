@@ -155,6 +155,12 @@ class PopMaker:
         """
         locations = []
 
+        def make_it_a_list_if_it_is_no_list(x):
+            if isinstance(x, list):
+                return x
+            else:
+                return [x]
+
         for location_cls in location_classes:
 
             # create location dummy in order to use the location's methods
@@ -165,26 +171,40 @@ class PopMaker:
             affiliated_agents = [agent for agent in agents if location_dummy.join(agent)]
             
             # get all group values
-            location_groups = []
+            location_group_values = []
             for agent in affiliated_agents:
-                agent_group_value = location_dummy.group(agent)
-                if isinstance(agent_group_value, list):
-                    location_groups.extend(agent_group_value)
-                else:
-                    location_groups.append(agent_group_value)
-            location_groups = set(location_groups)
+                agent_group_values = make_it_a_list_if_it_is_no_list(location_dummy.group(agent))
+                
+                if location_dummy.nest() is not None:
+                    
+                    mother_location = None
+                    
+                    for location in agent.locations:
+                        if isinstance(location, location_dummy.nest()):
+                            mother_location = location
+                            #break
+                    
+                    if mother_location is None:
+                        raise Exception(
+                            f"The mother of {location_dummy} is missing. Are the location classes in the right order?",
+                        )
 
-            for group in location_groups:
+                    for i, value in enumerate(agent_group_values):
+                        agent_group_values[i] = "-".join([str(mother_location.group_value), str(value)])
+                    
+                agent._temp_group_values = agent_group_values
+
+                location_group_values.extend(agent_group_values)
+
+            location_group_values = set(location_group_values)
+
+            for group_value in location_group_values:
                 # get all group affiliated agents
                 group_affiliated_agents = []
                 for agent in affiliated_agents:
-                    agent_group_value = location_dummy.group(agent)
-                    if isinstance(agent_group_value, list):
-                        if group in agent_group_value:
-                            group_affiliated_agents.append(agent)
-                    else:
-                        if group == agent_group_value:
-                            group_affiliated_agents.append(agent)
+                    if group_value in agent._temp_group_values:
+                        group_affiliated_agents.append(agent)
+                        
                 
 
                 #####################################################################################################
@@ -236,39 +256,35 @@ class PopMaker:
                     # get all subgroub values
                     location_subgroups = []
                     for agent in group_list:
-                        agent_subgroup_value = location_dummy.subgroup(agent)
-                        if isinstance(agent_subgroup_value, list):
-                            location_subgroups.extend(agent_subgroup_value)
-                        else:
-                            location_subgroups.append(agent_subgroup_value)
+                        agent_subgroup_value = make_it_a_list_if_it_is_no_list(location_dummy.subgroup(agent))
+                        location_subgroups.extend(agent_subgroup_value)
+    
                     location_subgroups = set(location_subgroups)
                     
-                    for j, subgroup in enumerate(location_subgroups):
+                    for j, subgroup_value in enumerate(location_subgroups):
                         
                         # get all subgroup affiliated agents
                         subgroup_affiliated_agents = []
                         
                         #for agent in group_affiliated_agents:
                         for agent in group_list:
-                            agent_subgroup_value = location_dummy.subgroup(agent)
+                            agent_subgroup_value = make_it_a_list_if_it_is_no_list(location_dummy.subgroup(agent))
+                            if subgroup_value in agent_subgroup_value:
+                                subgroup_affiliated_agents.append(agent)
                             
-                            if isinstance(agent_subgroup_value, list):
-                                if subgroup in agent_subgroup_value:
-                                    subgroup_affiliated_agents.append(agent)
-                            else:
-                                if subgroup == agent_subgroup_value:
-                                    subgroup_affiliated_agents.append(agent)
                         
                         subgroup_location = location_cls(model=self.model)
                         subgroup_location.setup()
-                        subgroup_location.group_value = group
-                        subgroup_location.subgroup_value = subgroup
+                        subgroup_location.group_value = group_value
+                        subgroup_location.subgroup_value = subgroup_value
                         subgroup_location.group_id = i
                         subgroup_location.subgroup_id = j
                         
                         # Assigning process:
                         for agent in subgroup_affiliated_agents:
                             subgroup_location.add_agent(agent)
+                            agent._initial_locations.append(str(type(subgroup_location)).split(".")[1] + "-" + str(subgroup_location.id))
+                            
                         
                         locations.append(subgroup_location)
 
@@ -286,6 +302,11 @@ class PopMaker:
         # execute an action after all locations have been created
         for location in self.locations:
             location.do_this_after_creation()
+        
+        # delete all temporary agent attributes
+        for agent in self.model.agents:
+            if hasattr(agent, "_temp_group_values"):
+                del(agent._temp_group_values)
 
         return self.locations
 
