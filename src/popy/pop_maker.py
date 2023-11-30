@@ -20,7 +20,7 @@ class PopMaker:
         model: Optional[popy.Model] = None,
         seed: int = 999,
     ) -> None:
-        """Instantiate a population make for a specific model.
+        """Instantiate a population maker for a specific model.
 
         Args:
             model (popy.Model): Model, for which a population should be created
@@ -90,7 +90,6 @@ class PopMaker:
                 sample = df.loc[df[sample_level] == random_id, :].copy()
                 
                 # create new unique ids for sample level variable
-                # TODO: Hinweis/Warnung printen, dass die originale sample_level-Spalte ersetzt wurde
                 if replace_sample_level_column:
                     sample.loc[:, sample_level + "_original"] = sample.loc[:, sample_level]
                     sample.loc[:, sample_level] = sample_cluster_id
@@ -121,13 +120,14 @@ class PopMaker:
         df = df.copy()
 
         # create one agent for each row in df
-
-        # TODO: sicherstellen, dass kein Attribut mit dem Namen `id` erstellt wird
         agents = []
         for _, row in df.iterrows():
             agent = agent_class(model=self.model)
             for col_name in df.columns:
-                setattr(agent, col_name, row[col_name])
+                if col_name == "id":
+                    raise Exception("You are not allowed to set an agent attribute called `id`.")
+                else:
+                    setattr(agent, col_name, row[col_name])
             agents.append(agent)
 
         agents = popy.AgentList(model=self.model, objs=agents)
@@ -238,12 +238,13 @@ class PopMaker:
                             break
 
                     # if agents are not assigned and all locations are full
-                    # TODO: hier verschiedene Möglichkeiten anbieten, was passieren soll, wenn Agenten übrigen bleiben
                     if not assigned:
-                        random_group_list = self.rng.choice(group_lists)
-                        # assign agents
+                        # sort by the number of assigned agents
+                        group_lists.sort(key=lambda x: x.len())
+                        
+                        # assign agents to the group_list with the fewest members
                         for agent in sticky_agents:
-                            random_group_list.append(agent)
+                            group_lists[0].append(agent)
                         assigned = True
 
                 #####################################################################################################

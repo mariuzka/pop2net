@@ -100,6 +100,7 @@ class Location(Object):
         """
         # TODO: This method name makes little sense. "join" implies that the agent is added to the
         # location once the check passes?
+        # -> What is a better name?
         return True
 
     # TODO: Rename to split()
