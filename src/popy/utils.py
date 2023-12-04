@@ -55,7 +55,7 @@ def create_agent_graph(agents: AgentList, node_attrs: List = []) -> nx.Graph:
     return projection
 
 
-def export_network(self, env) -> nx.Graph:
+def export_network(env) -> nx.Graph:
     """Export the current agent network (unweighted version).
 
     This is a projection of the underlying bipartite network between agents and locations.
