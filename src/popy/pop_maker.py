@@ -12,6 +12,8 @@ import math
 
 from .exceptions import PopyException
 
+import warnings
+
 class PopMaker:
     """Create a population for the simulation."""
 
@@ -161,13 +163,14 @@ class PopMaker:
             else:
                 return [x]
 
+        # for each location class
         for location_cls in location_classes:
 
             # create location dummy in order to use the location's methods
             location_dummy = location_cls(model=self.model)
             location_dummy.setup()
 
-            # get all agents that could be assigned to locations of this type
+            # get all agents that could be assigned to locations of this class
             affiliated_agents = [agent for agent in agents if location_dummy.join(agent)]
             
             # get all group values
@@ -175,28 +178,42 @@ class PopMaker:
             for agent in affiliated_agents:
                 agent_group_values = make_it_a_list_if_it_is_no_list(location_dummy.group(agent))
                 
+                # if this location is nested into a higher level location
                 if location_dummy.nest() is not None:
-                    
                     mother_location = None
                     
+                    # search for mother location assigned to this agent
+                    n_mother_locations_found = 0
                     for location in agent.locations:
                         if isinstance(location, location_dummy.nest()):
                             mother_location = location
-                            #break
+                            n_mother_locations_found += 1
                     
-                    if mother_location is None:
+                    # Check if the number of mother locations is not 1
+                    if n_mother_locations_found > 1:
+                        warnings.warn(
+                            f"""For agent {agent},
+                            {n_mother_locations_found} locations of class 
+                            {location_dummy.nest()} were found as potential mothers of 
+                            {location_dummy} in the list of locations."""
+                        )
+                    elif n_mother_locations_found == 0:
                         raise Exception(
                             f"The mother of {location_dummy} is missing. Are the location classes in the right order?",
                         )
 
+                    # Add mother location's value to the value of the lower level location
                     for i, value in enumerate(agent_group_values):
                         agent_group_values[i] = "-".join([str(mother_location.group_value), str(value)])
-                    
+                
+                # Temporarely store group values as agent attribute to assign them to the corresponding location group later
                 agent._temp_group_values = agent_group_values
 
+                # 
                 location_group_values.extend(agent_group_values)
 
             location_group_values = set(location_group_values)
+
 
             for group_value in location_group_values:
                 # get all group affiliated agents
@@ -206,7 +223,6 @@ class PopMaker:
                         group_affiliated_agents.append(agent)
                         
                 
-
                 #####################################################################################################
 
                 ### get group lists
@@ -229,7 +245,7 @@ class PopMaker:
                     sticky_agents = [agent for agent in group_affiliated_agents if location_dummy.stick_together(agent) == stick_value]
                     assigned = False
 
-                    # for each location of this group
+                    # for each group
                     for group_list in group_lists:
 
                         # if there are still enough free places available
@@ -240,7 +256,7 @@ class PopMaker:
                             assigned = True
                             break
 
-                    # if agents are not assigned and all locations are full
+                    # if agents are not assigned while all locations are full and overcrowding is enabled
                     if not assigned and location_dummy.allow_overcrowding:
                         # sort by the number of assigned agents
                         group_lists.sort(key=lambda x: len(x))
@@ -364,48 +380,7 @@ class PopMaker:
         locations = self.create_locations(agents=agents, location_classes=location_classes)
 
         return agents, locations
-
-
-    def eval_affiliations(self) -> None:
-        """Prints information on the distribution of agents per location and locations per agent.
-
-        Raises:
-            PopyException: _description_
-            PopyException: _description_
-        """
-        if self.agents is None:
-            msg = "You have to create agents first!"
-            raise PopyException(msg)
-
-        if self.locations is None:
-            msg = "You have to create locations first!"
-            raise PopyException(msg)
-
-        df_locations = pd.DataFrame(
-            [
-                {
-                    "location_class": str(type(location)).split(".")[-1].split("'")[0],
-                    "n_agents": len(location.agents),
-                }
-                for location in self.locations
-            ],
-        )
-
-        utils.print_header("Number of agents per location")
-        print(df_locations.groupby("location_class").describe())
-
-        df_agents = pd.DataFrame(
-            [
-                {
-                    "agent_id": agent.id,
-                    "n_affiliated_locations": len(agent.locations),
-                }
-                for agent in self.agents
-            ],
-        )
-
-        utils.print_header("Number of affiliated locations per agent")
-        print(df_agents.n_affiliated_locations.describe())
+    
 
     def get_df_agents(self) -> pd.DataFrame:
         """Returns the latest created population of agents as a dataframe.

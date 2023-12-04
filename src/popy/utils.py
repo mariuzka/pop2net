@@ -8,27 +8,20 @@ import numpy as np
 import pandas as pd
 import seaborn as sns
 
+import networkx as nx
+from networkx import bipartite
+
 from . import agent as _agent
 
 if typing.TYPE_CHECKING:
     from popy import AgentList
 
+from .exceptions import PopyException
 
-def print_header(text: object):
-    """Print a header around an object.
 
-    Args:
-        text: Object to be printed within the header.
-    """
-    # TODO: This is weird.... and it should probably not be print-statements cuz no one can catch
-    # them.
-    print("")
-    print("")
-    print("______________________________________")
-    print(text)
-    print("______________________________________")
-    print("")
-
+##########################################################################
+# scientific stuff
+##########################################################################
 
 def create_agent_graph(agents: AgentList, node_attrs: List = []) -> nx.Graph:
     """Create a Graph from a model's agent list.
@@ -60,6 +53,24 @@ def create_agent_graph(agents: AgentList, node_attrs: List = []) -> nx.Graph:
                 projection.add_edge(agent.id, agent_v.id, weight=agent.contact_weight(agent_v))
 
     return projection
+
+
+def export_network(self, env) -> nx.Graph:
+    """Export the current agent network (unweighted version).
+
+    This is a projection of the underlying bipartite network between agents and locations.
+
+    Returns:
+        The current agent network as unipartite, unweighted graph.
+    """
+    agent_nodes = {n for n, d in env.g.nodes(data=True) if d["bipartite"] == 0}
+
+    projection = bipartite.projection.projected_graph(env.g, agent_nodes)
+    for agent_id in projection:
+        del projection.nodes[agent_id]["_obj"]
+
+    return projection
+
 
 # TODO: calculate relative freqs
 def create_contact_matrix(
@@ -133,6 +144,54 @@ def create_contact_matrix(
 
     return df
 
+
+def eval_affiliations(agents, locations) -> None:
+    """Prints information on the distribution of agents per location and locations per agent.
+
+    Raises:
+        PopyException: _description_
+        PopyException: _description_
+    """
+    #if self.agents is None:
+    #    msg = "You have to create agents first!"
+    #    raise PopyException(msg)
+
+    #if self.locations is None:
+    #    msg = "You have to create locations first!"
+    #    raise PopyException(msg)
+
+    df_locations = pd.DataFrame(
+        [
+            {
+                "location_class": str(type(location)).split(".")[-1].split("'")[0],
+                "n_agents": len(location.agents),
+            }
+            for location in locations
+        ],
+    )
+
+    print_header("Number of agents per location")
+    print(df_locations.groupby("location_class").describe())
+
+    df_agents = pd.DataFrame(
+        [
+            {
+                "agent_id": agent.id,
+                "n_affiliated_locations": len(agent.locations),
+            }
+            for agent in agents
+        ],
+    )
+
+    print_header("Number of affiliated locations per agent")
+    print(df_agents.n_affiliated_locations.describe())
+
+
+##########################################################################
+# technical helper functions
+##########################################################################
+
+
 def get_df_agents(agents: AgentList) -> pd.DataFrame:
     return pd.DataFrame([vars(agent) for agent in agents])
 
@@ -175,6 +234,10 @@ def group_it(
 
             elif return_value == "range":
                 new_value = (lower_bound, upper_bound)  # type: ignore
+            
+            else:
+                raise Exception("You have entered a non-existing option for `return_value`.")
+
 
         if not summarize_highest:
             if i == n_steps + 1:
@@ -182,3 +245,18 @@ def group_it(
                     new_value = np.nan
     # BUG: new_value possibly unbound
     return new_value
+
+def print_header(text: object):
+    """Print a header around an object.
+
+    Args:
+        text: Object to be printed within the header.
+    """
+    # TODO: This is weird.... and it should probably not be print-statements cuz no one can catch
+    # them.
+    print("")
+    print("")
+    print("______________________________________")
+    print(text)
+    print("______________________________________")
+    print("")
