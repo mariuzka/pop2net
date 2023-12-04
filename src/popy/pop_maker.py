@@ -240,7 +240,7 @@ class PopMaker:
                     # if agents are not assigned and all locations are full
                     if not assigned and location_dummy.allow_overcrowding:
                         # sort by the number of assigned agents
-                        group_lists.sort(key=lambda x: x.len())
+                        group_lists.sort(key=lambda x: len(x))
                         
                         # assign agents to the group_list with the fewest members
                         for agent in sticky_agents:
