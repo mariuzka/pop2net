@@ -238,7 +238,7 @@ class PopMaker:
                             break
 
                     # if agents are not assigned and all locations are full
-                    if not assigned:
+                    if not assigned and location_dummy.allow_overcrowding:
                         # sort by the number of assigned agents
                         group_lists.sort(key=lambda x: x.len())
                         

@@ -25,6 +25,7 @@ class Location(Object):
         self.subgroup_id: object = None
         self.size: int | None = None
         self.static_weight: bool = False
+        self.allow_overcrowding: bool = True
 
         # TODO: maybe delete after the creation of all locations
         self.group_agents = []
