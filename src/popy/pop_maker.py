@@ -212,11 +212,14 @@ class PopMaker:
                 ### get group lists
 
                 # determine the number of groups needed
-                n_location_groups = (
-                    1
-                    if location_dummy.size is None
-                    else max(round_function(len(group_affiliated_agents) / location_dummy.size), 1)
-                )
+                if location_dummy.n_locations is None:
+                    n_location_groups = (
+                        1
+                        if location_dummy.size is None
+                        else max(round_function(len(group_affiliated_agents) / location_dummy.size), 1)
+                    )
+                else:
+                    n_location_groups = location_dummy.n_locations
                 
                 group_lists = [[] for _ in range(n_location_groups)]
                 stick_values = {location_dummy.stick_together(agent) for agent in group_affiliated_agents}

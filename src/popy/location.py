@@ -21,12 +21,16 @@ class Location(Object):
         super().__init__(model)
         self.model = model
 
-        self.group_id: object = None
-        self.subgroup_id: object = None
+        self.group_id: int | None = None
+        self.subgroup_id: int | None = None
+        self.group_value: int | str | None = None
+        self.subgroup_value: int | str | None = None
+        
         self.size: int | None = None
-        self.static_weight: bool = False
         self.allow_overcrowding: bool = True
-
+        self.n_locations: int | None = None
+        self.static_weight: bool = False
+        
         # TODO: maybe delete after the creation of all locations
         self.group_agents = []
 
