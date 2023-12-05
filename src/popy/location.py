@@ -9,6 +9,8 @@ from agentpy.sequences import AgentList
 from . import agent as _agent
 from . import model as _model
 
+import math
+
 class Location(Object):
     """Base class for location objects."""
 
@@ -30,6 +32,9 @@ class Location(Object):
         self.allow_overcrowding: bool = True
         self.n_locations: int | None = None
         self.static_weight: bool = False
+        self.round_function = math.ceil
+
+        self._melted: bool = False
         
         # TODO: maybe delete after the creation of all locations
         self.group_agents = []
@@ -216,4 +221,7 @@ class Location(Object):
         pass
 
     def nest(self):
+        return None
+    
+    def melt(self):
         return None
