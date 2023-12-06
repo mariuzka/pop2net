@@ -198,13 +198,14 @@ class PopMaker:
                             {location_dummy} in the list of locations."""
                         )
                     elif n_mother_locations_found == 0:
-                        raise Exception(
+                        warnings.warn(
                             f"The mother of {location_dummy} is missing. Are the location classes in the right order?",
                         )
 
                     # Add mother location's value to the value of the lower level location
-                    for i, value in enumerate(agent_group_values):
-                        agent_group_values[i] = "-".join([str(mother_location.group_value), str(value)])
+                    if mother_location is not None:
+                        for i, value in enumerate(agent_group_values):
+                            agent_group_values[i] = "-".join([str(mother_location.group_value), str(value)])
                 
                 # Temporarely store group values as agent attribute to assign them to the corresponding location group later
                 agent._temp_group_values = agent_group_values
