@@ -14,6 +14,12 @@ from .exceptions import PopyException
 
 import warnings
 
+def make_it_a_list_if_it_is_no_list(x):
+    if isinstance(x, list):
+        return x
+    else:
+        return [x]
+
 class PopMaker:
     """Create a population for the simulation."""
 
@@ -105,7 +111,12 @@ class PopMaker:
 
         return df_sample
 
-    def create_agents(self, df: pd.DataFrame, agent_class) -> popy.AgentList:
+    def create_agents(
+            self, 
+            agent_class, 
+            df: pd.DataFrame | None = None,
+            n: int | None = None,
+            ) -> popy.AgentList:
         """Creates one agent-instance of the given agent-class for each row of the given df.
 
         All columns of the df are added as instance attributes containing the row-specific values
@@ -119,32 +130,144 @@ class PopMaker:
         Returns:
             A list of agents, created based on the input.
         """
-        df = df.copy()
+        if df is not None:
+            df = df.copy()
 
-        # create one agent for each row in df
-        agents = []
-        for _, row in df.iterrows():
-            agent = agent_class(model=self.model)
-            for col_name in df.columns:
-                if col_name == "id":
-                    raise Exception("You are not allowed to set an agent attribute called `id`.")
-                else:
-                    setattr(agent, col_name, row[col_name])
-            agents.append(agent)
+            # create one agent for each row in df
+            agents = []
+            for _, row in df.iterrows():
+                agent = agent_class(model=self.model)
+                for col_name in df.columns:
+                    if col_name == "id":
+                        raise Exception("You are not allowed to set an agent attribute called `id`.")
+                    else:
+                        setattr(agent, col_name, row[col_name])
+                agents.append(agent)
+
+        else:
+            if n is not None:
+                agents = [agent_class(model=self.model) for _ in range(n)]
+            else:
+                raise Exception("Either `df` or `n` must be not None.")
+
 
         agents = popy.AgentList(model=self.model, objs=agents)
         self.agents = agents
-
+        
         # TODO: is this smart?
-        self.model.agents = agents
+        #self.model.agents = agents
         
         return self.agents
+
+
+    def _get_affiliated_agents(self, agents, location_dummy) -> []:
+        pass
+
+    def _get_group_values(self, affiliated_agents, location_dummy) -> set:
+
+        location_group_values = []
+        for agent in affiliated_agents:
+            agent_group_values = make_it_a_list_if_it_is_no_list(location_dummy.group(agent))
+            
+            # if this location is nested into a higher level location
+            if location_dummy.nest() is not None:
+                mother_location = None
+                
+                # search for mother location assigned to this agent
+                n_mother_locations_found = 0
+                for location in agent.locations:
+                    if isinstance(location, location_dummy.nest()):
+                        mother_location = location
+                        n_mother_locations_found += 1
+                
+                # Check if the number of mother locations is not 1
+                if n_mother_locations_found > 1:
+                    warnings.warn(
+                        f"""For agent {agent},
+                        {n_mother_locations_found} locations of class 
+                        {location_dummy.nest()} were found as potential mothers of 
+                        {location_dummy} in the list of locations."""
+                    )
+                elif n_mother_locations_found == 0:
+                    raise Exception(
+                        f"The mother of {location_dummy} is missing. Are the location classes in the right order?",
+                    )
+
+                # Add mother location's value to the value of the lower level location
+                for i, value in enumerate(agent_group_values):
+                    agent_group_values[i] = "-".join([str(mother_location.group_value), str(value)])
+            
+            # Temporarely store group values as agent attribute to assign them to the corresponding location group later
+            agent._temp_group_values = agent_group_values
+
+            location_group_values.extend(agent_group_values)
+
+        location_group_values = set(location_group_values)
+
+        return location_group_values
+    
+
+    def _get_groups(self, affiliated_agents, group_value, location_dummy) -> [[]]:
+        
+        # get all group affiliated agents
+        group_affiliated_agents = []
+        for agent in affiliated_agents:
+            if group_value in agent._temp_group_values:
+                group_affiliated_agents.append(agent)
+                
+        
+        #####################################################################################################
+
+        ### get group lists
+
+        # determine the number of groups needed
+        if location_dummy.n_locations is None:
+            n_location_groups = (
+                1
+                if location_dummy.size is None
+                else max(location_dummy.round_function(len(group_affiliated_agents) / location_dummy.size), 1)
+            )
+        else:
+            n_location_groups = location_dummy.n_locations
+        
+        group_lists = [[] for _ in range(n_location_groups)]
+        stick_values = {location_dummy.stick_together(agent) for agent in group_affiliated_agents}
+
+        # for each group of sticky agents
+        for stick_value in stick_values:
+            sticky_agents = [agent for agent in group_affiliated_agents if location_dummy.stick_together(agent) == stick_value]
+            assigned = False
+
+            # for each group
+            for group_list in group_lists:
+
+                # if there are still enough free places available
+                if location_dummy.size is None or (location_dummy.size - len(group_list)) >= len(sticky_agents):
+                    # assign agents
+                    for agent in sticky_agents:
+                        group_list.append(agent)
+                    assigned = True
+                    break
+
+            # if agents are not assigned while all locations are full and overcrowding is enabled
+            if not assigned and location_dummy.allow_overcrowding:
+                # sort by the number of assigned agents
+                group_lists.sort(key=lambda x: len(x))
+                
+                # assign agents to the group_list with the fewest members
+                for agent in sticky_agents:
+                    group_lists[0].append(agent)
+                assigned = True
+        
+        return group_lists
+
+
 
     def create_locations(
         self,
         agents,
         location_classes,
-        round_function = math.ceil,
+        #round_function = math.ceil,
     ):
         """_summary_.
 
@@ -155,134 +278,103 @@ class PopMaker:
         Returns:
             _type_: _description_
         """
-        locations = []
+        # TODO: is this smart?
+        self.model.agents = agents
 
-        def make_it_a_list_if_it_is_no_list(x):
-            if isinstance(x, list):
-                return x
-            else:
-                return [x]
+        locations = []
 
         # for each location class
         for location_cls in location_classes:
+
+            str_location_cls = str(location_cls).split(".")[1].split("'")[0]
+            for agent in agents:
+                setattr(agent, str_location_cls, "None_"+str(agent.id))
 
             # create location dummy in order to use the location's methods
             location_dummy = location_cls(model=self.model)
             location_dummy.setup()
 
-            # get all agents that could be assigned to locations of this class
-            affiliated_agents = [agent for agent in agents if location_dummy.join(agent)]
+            #####
+            if location_dummy.melt() is not None:
+                all_locations_to_melt = []
+                
+                for melt_location_cls in location_dummy.melt():
+                    locations_to_melt_of_this_cls = []
+                    
+                    melt_location_dummy = melt_location_cls(model=self.model)
+                    melt_location_dummy.setup()
+                    melt_location_affiliated_agents = [agent for agent in agents if melt_location_dummy.join(agent)]
+                    melt_group_values = self._get_group_values(affiliated_agents=melt_location_affiliated_agents, location_dummy=melt_location_dummy)
+                    
+                    melt_groups = []
+                    for melt_group_value in melt_group_values:
+                        melt_group_lists = self._get_groups(affiliated_agents=melt_location_affiliated_agents, group_value=melt_group_value, location_dummy=melt_location_dummy)
+                        for l in melt_group_lists:
+                            melt_groups.append(l)
+
+                    #for location in locations:
+                    #    if isinstance(location, melt_location_cls):
+                    #        locations_to_melt_of_this_cls.append(location)
+                    
+                    #all_locations_to_melt.append(locations_to_melt_of_this_cls)
+                    all_locations_to_melt.append(melt_groups)
+                
+                all_melted_agents = []
+                for i in range(sorted([len(l) for l in all_locations_to_melt])[0]):
+                    melted_agents = []
+                    for l in all_locations_to_melt:
+                        #melted_agents.extend(l[i].group_agents)
+                        melted_agents.extend(l[i])
+                    
+                    melted_agents = [agent for agent in melted_agents if location_dummy.join(agent)]
+                    all_melted_agents.append(melted_agents)
+
+                    #print(all_melted_agents)
+                
+                
+
+                
+                group_lists = all_melted_agents
+                
             
-            # get all group values
-            location_group_values = []
-            for agent in affiliated_agents:
-                agent_group_values = make_it_a_list_if_it_is_no_list(location_dummy.group(agent))
-                
-                # if this location is nested into a higher level location
-                if location_dummy.nest() is not None:
-                    mother_location = None
-                    
-                    # search for mother location assigned to this agent
-                    n_mother_locations_found = 0
-                    for location in agent.locations:
-                        if isinstance(location, location_dummy.nest()):
-                            mother_location = location
-                            n_mother_locations_found += 1
-                    
-                    # Check if the number of mother locations is not 1
-                    if n_mother_locations_found > 1:
-                        warnings.warn(
-                            f"""For agent {agent},
-                            {n_mother_locations_found} locations of class 
-                            {location_dummy.nest()} were found as potential mothers of 
-                            {location_dummy} in the list of locations."""
-                        )
-                    elif n_mother_locations_found == 0:
-                        warnings.warn(
-                            f"The mother of {location_dummy} is missing. Are the location classes in the right order?",
-                        )
-
-                    # Add mother location's value to the value of the lower level location
-                    if mother_location is not None:
-                        for i, value in enumerate(agent_group_values):
-                            agent_group_values[i] = "-".join([str(mother_location.group_value), str(value)])
-                
-                # Temporarely store group values as agent attribute to assign them to the corresponding location group later
-                agent._temp_group_values = agent_group_values
-
-                # 
-                location_group_values.extend(agent_group_values)
-
-            location_group_values = set(location_group_values)
-
+            else:
+            ###
+                # get all agents that could be assigned to locations of this class
+                affiliated_agents = [agent for agent in agents if location_dummy.join(agent)]
+            
+            if location_dummy.melt() is None:
+                # get all group values
+                location_group_values = self._get_group_values(
+                    affiliated_agents, 
+                    location_dummy=location_dummy,
+                    )
+            else:
+                location_group_values = [None]
 
             for group_value in location_group_values:
-                # get all group affiliated agents
-                group_affiliated_agents = []
-                for agent in affiliated_agents:
-                    if group_value in agent._temp_group_values:
-                        group_affiliated_agents.append(agent)
-                        
                 
-                #####################################################################################################
-
-                ### get group lists
-
-                # determine the number of groups needed
-                if location_dummy.n_locations is None:
-                    n_location_groups = (
-                        1
-                        if location_dummy.size is None
-                        else max(round_function(len(group_affiliated_agents) / location_dummy.size), 1)
-                    )
-                else:
-                    n_location_groups = location_dummy.n_locations
-                
-                group_lists = [[] for _ in range(n_location_groups)]
-                stick_values = {location_dummy.stick_together(agent) for agent in group_affiliated_agents}
-
-                # for each group of sticky agents
-                for stick_value in stick_values:
-                    sticky_agents = [agent for agent in group_affiliated_agents if location_dummy.stick_together(agent) == stick_value]
-                    assigned = False
-
-                    # for each group
-                    for group_list in group_lists:
-
-                        # if there are still enough free places available
-                        if location_dummy.size is None or (location_dummy.size - len(group_list)) >= len(sticky_agents):
-                            # assign agents
-                            for agent in sticky_agents:
-                                group_list.append(agent)
-                            assigned = True
-                            break
-
-                    # if agents are not assigned while all locations are full and overcrowding is enabled
-                    if not assigned and location_dummy.allow_overcrowding:
-                        # sort by the number of assigned agents
-                        group_lists.sort(key=lambda x: len(x))
-                        
-                        # assign agents to the group_list with the fewest members
-                        for agent in sticky_agents:
-                            group_lists[0].append(agent)
-                        assigned = True
-
-                #####################################################################################################
+                if location_dummy.melt() is None:
+                    group_lists = self._get_groups(
+                        affiliated_agents=affiliated_agents, 
+                        group_value=group_value,
+                        location_dummy=location_dummy,
+                        )
                 
                 for i, group_list in enumerate(group_lists):
+                    print(i, location_cls)
                     location_dummy = location_cls(model=self.model)
                     location_dummy.setup()
                     location_dummy.group_agents = group_list
 
                     # get all subgroub values
-                    location_subgroups = []
+                    location_subgroup_values = []
                     for agent in group_list:
                         agent_subgroup_value = make_it_a_list_if_it_is_no_list(location_dummy.subgroup(agent))
-                        location_subgroups.extend(agent_subgroup_value)
+                        location_subgroup_values.extend(agent_subgroup_value)
     
-                    location_subgroups = set(location_subgroups)
+                    location_subgroup_values = set(location_subgroup_values)
                     
-                    for j, subgroup_value in enumerate(location_subgroups):
+                    for j, subgroup_value in enumerate(location_subgroup_values):
                         
                         # get all subgroup affiliated agents
                         subgroup_affiliated_agents = []
@@ -300,14 +392,18 @@ class PopMaker:
                         subgroup_location.subgroup_value = subgroup_value
                         subgroup_location.group_id = i
                         subgroup_location.subgroup_id = j
+
+                        subgroup_location.group_agents = group_list # maybe delete later
                         
                         # Assigning process:
                         for agent in subgroup_affiliated_agents:
                             subgroup_location.add_agent(agent)
                             agent._initial_locations.append(str(type(subgroup_location)).split(".")[1] + "-" + str(subgroup_location.id))
+                            setattr(agent, str_location_cls, f"group_value={subgroup_location.group_value}, group_id={subgroup_location.group_id}")
                             
-                        
                         locations.append(subgroup_location)
+
+        
 
         # TODO:
         # Warum gibt es keinen Fehler, wenn man ein Argument falsch schreibt? Habe gerade ewig
