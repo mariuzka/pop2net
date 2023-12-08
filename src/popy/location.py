@@ -225,3 +225,10 @@ class Location(Object):
     
     def melt(self):
         return None
+
+
+class RingLocation(Location):
+    def subgroup(self, agent):
+        pos = self.group_agents.index(agent)
+        right = (pos + 1) % len(self.group_agents)
+        return [pos, right]
