@@ -118,7 +118,7 @@ class Location(Object):
         return True
 
     # TODO: Rename to split()
-    def group(self, agent: _agent.Agent) -> float | str | list | None:  # noqa: ARG002
+    def split(self, agent: _agent.Agent) -> float | str | list | None:  # noqa: ARG002
         """~ User interface ~ Allow to create subtypes of this type of location.
 
         Allows to create subtypes of this type of location if the location instances are created by
@@ -136,7 +136,7 @@ class Location(Object):
         return None
 
     # TODO: Rename to subsplit()
-    def subgroup(self, agent: _agent.Agent) -> Any:
+    def subsplit(self, agent: _agent.Agent) -> Any:
         return None
 
     def is_affiliated(self, agent: _agent.Agent) -> bool:
@@ -232,21 +232,21 @@ class Location(Object):
 
 
 class LineLocation(Location):
-    def subgroup(self, agent):
+    def subsplit(self, agent):
         pos = self.group_agents.index(agent)
         right = (pos + 1)
         return [pos, right]
     
 
 class RingLocation(Location):
-    def subgroup(self, agent):
+    def subsplit(self, agent):
         pos = self.group_agents.index(agent)
         right = (pos + 1) % len(self.group_agents)
         return [pos, right]
 
 
 class GridLocation(Location):
-    def subgroup(self, agent):
+    def subsplit(self, agent):
         row_len = math.ceil(math.sqrt(self.size))
         right_edge_positions = [row_len * i - 1 for i in range(row_len)]
     
@@ -268,7 +268,7 @@ class GridLocation(Location):
 
 
 class TreeLocation(Location):
-    def subgroup(self, agent):
+    def subsplit(self, agent):
         if isinstance(self, StarLocation):
             self.n_branches = self.size - 1
 

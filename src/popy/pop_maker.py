@@ -195,7 +195,7 @@ class PopMaker:
     def _get_split_values(self, agents: [_agent], location_dummy: _location, allow_nesting: bool = False) -> {int | str}:
         all_values = []
         for agent in agents:
-            agent_values = make_it_a_list_if_it_is_no_list(location_dummy.group(agent))
+            agent_values = make_it_a_list_if_it_is_no_list(location_dummy.split(agent))
             
             if allow_nesting:
                 # Add mother location's value to the value of the lower level location
@@ -420,7 +420,7 @@ class PopMaker:
                         agent_subgroup_value 
                         for agent in group_list 
                         for agent_subgroup_value 
-                        in make_it_a_list_if_it_is_no_list(location_dummy.subgroup(agent))
+                        in make_it_a_list_if_it_is_no_list(location_dummy.subsplit(agent))
                         }
                     
                     # for each group of agents assigned to a specific sublocation
@@ -431,7 +431,7 @@ class PopMaker:
                         
                         #for agent in group_affiliated_agents:
                         for agent in group_list:
-                            agent_subgroup_value = make_it_a_list_if_it_is_no_list(location_dummy.subgroup(agent))
+                            agent_subgroup_value = make_it_a_list_if_it_is_no_list(location_dummy.subsplit(agent))
                             if subgroup_value in agent_subgroup_value:
                                 subgroup_affiliated_agents.append(agent)
                             
