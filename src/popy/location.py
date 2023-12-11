@@ -98,8 +98,7 @@ class Location(Object):
         agents.remove(agent)
         return agents
 
-    # TODO: Rename to filter()
-    def join(self, agent: _agent.Agent) -> bool:  # noqa: ARG002
+    def filter(self, agent: _agent.Agent) -> bool:  # noqa: ARG002
         """~ User interface ~ Check whether the agent is meant to join this type of location.
 
         This is a boilerplate implementation of this method which always returns True; i.e. all
@@ -112,12 +111,8 @@ class Location(Object):
         Returns:
             True if the agent is allowed to join the location, False otherwise.
         """
-        # TODO: This method name makes little sense. "join" implies that the agent is added to the
-        # location once the check passes?
-        # -> What is a better name?
         return True
 
-    # TODO: Rename to split()
     def split(self, agent: _agent.Agent) -> float | str | list | None:  # noqa: ARG002
         """~ User interface ~ Allow to create subtypes of this type of location.
 
@@ -135,7 +130,6 @@ class Location(Object):
         """
         return None
 
-    # TODO: Rename to subsplit()
     def subsplit(self, agent: _agent.Agent) -> Any:
         return None
 

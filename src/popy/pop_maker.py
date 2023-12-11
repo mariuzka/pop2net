@@ -161,7 +161,7 @@ class PopMaker:
 
 
     def _get_affiliated_agents(self, agents, location_dummy) -> []:
-        return [agent for agent in agents if location_dummy.join(agent)]
+        return [agent for agent in agents if location_dummy.filter(agent)]
 
     def _get_mother_group_id(self, agent: _agent, location_dummy: _location) -> str:
         if location_dummy.nest() is None:
