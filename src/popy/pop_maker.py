@@ -6,15 +6,13 @@ from typing import Optional
 import pandas as pd
 
 import popy
-from popy import utils
-
-import math
 
 from .exceptions import PopyException
 
 import warnings
 
 from . import agent as _agent
+from . import location as _location
 
 def make_it_a_list_if_it_is_no_list(x):
     if isinstance(x, list):
@@ -165,7 +163,7 @@ class PopMaker:
     def _get_affiliated_agents(self, agents, location_dummy) -> []:
         return [agent for agent in agents if location_dummy.join(agent)]
 
-    def _get_mother_group_id(self, agent, location_dummy) -> str:
+    def _get_mother_group_id(self, agent: _agent, location_dummy: _location) -> str:
         if location_dummy.nest() is None:
             return "None"
         
@@ -194,7 +192,7 @@ class PopMaker:
             return "-".join([str(mother_location.group_value), str(mother_location.group_id)])
 
 
-    def _get_split_values(self, agents, location_dummy, allow_nesting=False) -> set:
+    def _get_split_values(self, agents: [_agent], location_dummy: _location, allow_nesting: bool = False) -> {int | str}:
         all_values = []
         for agent in agents:
             agent_values = make_it_a_list_if_it_is_no_list(location_dummy.group(agent))
@@ -205,7 +203,7 @@ class PopMaker:
                     agent_values[i] = "-".join([self._get_mother_group_id(agent, location_dummy), str(value)])
             
             # Temporarely store group values as agent attribute to assign them to the corresponding location group later
-            agent._temp_group_values = agent_values
+            agent._TEMP_group_values = agent_values
             all_values.extend(agent_values)
 
         return set(all_values)
@@ -254,72 +252,91 @@ class PopMaker:
         random.shuffle(group_lists)
         return group_lists
 
-    def _get_group_value_affiliated_agents(self, agents, group_value) -> [_agent]:
-        # get all group affiliated agents
-        group_affiliated_agents = []
-        for agent in agents:
-            if group_value in agent._temp_group_values:
-                group_affiliated_agents.append(agent)
+
+    def _get_group_value_affiliated_agents(self, agents: [_agent], group_value: int | str) -> [_agent]:
+        group_affiliated_agents = [agent for agent in agents if group_value in agent._TEMP_group_values]
         random.shuffle(group_affiliated_agents)
         return group_affiliated_agents
 
 
-    def _get_melted_groups(self, agents, location_dummy) -> [[_agent]]:
-
-        all_locations_to_melt = []
-
-        all_melt_group_values = []
-
+    def _get_melted_groups(self, agents: [_agent], location_dummy: _location) -> [[_agent]]:
+        
+        # get all mother locations the agents are nested in
         all_mother_group_ids = {self._get_mother_group_id(agent, location_dummy) for agent in agents}
         
+        # for each mother location
         for mother_group_id in all_mother_group_ids:
+            
+            # get agents that are part of this location
             nested_agents = [
                 agent for agent in agents 
                 if self._get_mother_group_id(agent, location_dummy) == mother_group_id
                 ]
-        
+            
+            # a list that stores a list of groups for each location
+            groups_to_melt_by_location: [
+                [[_agent], [_agent], [_agent]], # groups of location 1
+                [[_agent], [_agent]],           # groups of location 2 
+                                                # ...
+                ] = []
+            
+            # for each location that shall be melted
             for location_cls in location_dummy.melt():
                 
+                # create dummy location
                 melt_location_dummy = location_cls(model=self.model)
                 melt_location_dummy.setup()
+                
+                # get all agents that should be assigned to this location
                 melt_location_affiliated_agents = self._get_affiliated_agents(
                     agents=nested_agents,
                     location_dummy=melt_location_dummy,
                     )
+                
+                # get all values for which seperated groups/locations should be created
                 melt_group_values = self._get_split_values(
                     agents=melt_location_affiliated_agents, 
                     location_dummy=melt_location_dummy, 
                     allow_nesting=False,
                     )
-            
-                melt_groups = []
+
+                # for each split value: get groups and collect them in one list for all values
+                location_groups_to_melt: [[_agent]] = []
                 for melt_group_value in melt_group_values:
                     melt_group_value_affiliated_agents = self._get_group_value_affiliated_agents(
                         agents=melt_location_affiliated_agents,
                         group_value=melt_group_value,
                     )
-                    melt_group_lists = self._get_groups(
-                        agents=melt_group_value_affiliated_agents, 
-                        location_dummy=melt_location_dummy,
-                        )
-                    for l in melt_group_lists:
-                        melt_groups.append(l)
-
-                all_locations_to_melt.append(melt_groups)
+                    location_groups_to_melt.extend(
+                        self._get_groups(
+                            agents=melt_group_value_affiliated_agents, 
+                            location_dummy=melt_location_dummy,
+                            )
+                    )
+                random.shuffle(location_groups_to_melt)
+                groups_to_melt_by_location.append(location_groups_to_melt)
             
-            all_melted_agents = []
-            for i in range(sorted([len(l) for l in all_locations_to_melt], reverse=True)[0]):
-                melted_agents = []
-                for l in all_locations_to_melt:
-                    try:
-                        melted_agents.extend(l[i])
-                    except:
-                        pass
-            
-                #melted_agents = [agent for agent in melted_agents if location_dummy.join(agent)]
-                all_melted_agents.append(melted_agents)
+            # Melt groups
+            all_melted_groups: [[_agent]] = []
+            len_of_longest_list_of_groups_to_melt = sorted([len(l) for l in groups_to_melt_by_location], reverse=True)[0]
+            for i in range(len_of_longest_list_of_groups_to_melt):
+                melted_group = []
+                for groups_to_melt in groups_to_melt_by_location:
+                    if len(groups_to_melt) > 0:
+                        if location_dummy.multi_melt:
+                            melted_group.extend(groups_to_melt[i % len(groups_to_melt)])
+                        else:
+                            try:
+                                melted_group.extend(groups_to_melt[i])
+                            except:
+                                pass
+                                
+                                
+                            
+                all_melted_groups.append(melted_group)
         
-        return all_melted_agents
+        return all_melted_groups
+
 
     def _get_cls_as_str(self, cls):
         return str(cls).split(".")[1].split("'")[0]
@@ -418,14 +435,13 @@ class PopMaker:
                             if subgroup_value in agent_subgroup_value:
                                 subgroup_affiliated_agents.append(agent)
                             
-                        
+                        # Build the final location
                         subgroup_location = location_cls(model=self.model)
                         subgroup_location.setup()
                         subgroup_location.group_value = group_value
                         subgroup_location.subgroup_value = subgroup_value
                         subgroup_location.group_id = i
                         subgroup_location.subgroup_id = j
-
                         subgroup_location.group_agents = group_list # maybe delete later
                         
                         # Assigning process:
@@ -434,13 +450,9 @@ class PopMaker:
 
                             group_info_str = f"gv={subgroup_location.group_value}, gid={subgroup_location.group_id}"
                             
-                            setattr(
-                                agent, 
-                                str_location_cls,
-                                # TODO: shorten the following string
-                                group_info_str,
-                                )
+                            setattr(agent, str_location_cls, group_info_str)
                             
+                            # TODO: DELETE LATER
                             agent._initial_locations.append(
                                 "| " + str_location_cls + ": " + group_info_str,
                                 )
@@ -448,7 +460,6 @@ class PopMaker:
                         locations.append(subgroup_location)
 
         
-
         # TODO:
         # Warum gibt es keinen Fehler, wenn man ein Argument falsch schreibt? Habe gerade ewig
         # nach einem Bug gesucht und letzt hatte ich nur das "j" in "objs" vergessen
@@ -464,11 +475,15 @@ class PopMaker:
         for location in self.locations:
             location.do_this_after_creation()
         
-        # delete all temporary agent attributes
+        # delete temporary agent attributes
         for agent in self.model.agents:
-            if hasattr(agent, "_temp_group_values"):
-                del(agent._temp_group_values)
+            if hasattr(agent, "_TEMP_group_values"):
+                del(agent._TEMP_group_values)
 
+        # delete temporary location attributes
+        for location in locations:
+            del(location.group_agents)
+            
         return self.locations
 
 

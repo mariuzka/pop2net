@@ -35,6 +35,7 @@ class Location(Object):
         self.static_weight: bool = False
         self.round_function = math.ceil
 
+        self.multi_melt: bool = True
 
         self.n_branches = 2
         
