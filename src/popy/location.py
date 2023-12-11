@@ -28,13 +28,15 @@ class Location(Object):
         self.group_value: int | str | None = None
         self.subgroup_value: int | str | None = None
         
-        self.size: int | None = None
+        #self.size: int | None = None
+        self.size = len(self.model.agents)
         self.allow_overcrowding: bool = True
         self.n_locations: int | None = None
         self.static_weight: bool = False
         self.round_function = math.ceil
 
-        self._melted: bool = False
+
+        self.n_branches = 2
         
         # TODO: maybe delete after the creation of all locations
         self.group_agents = []
@@ -95,6 +97,7 @@ class Location(Object):
         agents.remove(agent)
         return agents
 
+    # TODO: Rename to filter()
     def join(self, agent: _agent.Agent) -> bool:  # noqa: ARG002
         """~ User interface ~ Check whether the agent is meant to join this type of location.
 
@@ -227,8 +230,67 @@ class Location(Object):
         return None
 
 
+class LineLocation(Location):
+    def subgroup(self, agent):
+        pos = self.group_agents.index(agent)
+        right = (pos + 1)
+        return [pos, right]
+    
+
 class RingLocation(Location):
     def subgroup(self, agent):
         pos = self.group_agents.index(agent)
         right = (pos + 1) % len(self.group_agents)
         return [pos, right]
+
+
+class GridLocation(Location):
+    def subgroup(self, agent):
+        row_len = math.ceil(math.sqrt(self.size))
+        right_edge_positions = [row_len * i - 1 for i in range(row_len)]
+    
+        pos = self.group_agents.index(agent)
+        right = pos + 1
+        left = pos - 1
+        top = pos - row_len
+        bottom = pos + row_len
+
+        return_list = []
+        return_list.append("-".join(sorted([str(pos), str(left)])))
+        return_list.append("-".join(sorted([str(pos), str(top)])))
+        return_list.append("-".join(sorted([str(pos), str(bottom)])))
+        
+        if pos not in right_edge_positions:
+            return_list.append("-".join(sorted([str(pos), str(right)])))
+        
+        return return_list
+
+
+class TreeLocation(Location):
+    def subgroup(self, agent):
+        if isinstance(self, StarLocation):
+            self.n_branches = self.size - 1
+
+        self._TEMP_infected = True
+        if not hasattr(agent, "_TEMP_contacts"):
+            agent._TEMP_contacts = [agent]
+
+        for a in self.group_agents:
+            if not hasattr(a, "_TEMP_infected") or hasattr(a, "_TEMP_infected") and not a._TEMP_infected:
+                if agent is not a:
+                    agent._TEMP_contacts.append(a)
+                    if hasattr(a, "_TEMP_contacts"):
+                        a._TEMP_contacts.append(agent)
+                    else:
+                        a._TEMP_contacts = [agent]
+                    a._TEMP_infected = True
+            if len(agent._TEMP_contacts) >= self.n_branches + 1:
+                break
+        
+        location_ids = ["-".join(sorted([str(agent.id), str(a.id)])) for a in agent._TEMP_contacts]
+
+        return location_ids
+    
+
+class StarLocation(TreeLocation):
+    pass
