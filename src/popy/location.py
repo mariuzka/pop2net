@@ -33,7 +33,7 @@ class Location(Object):
         self.allow_overcrowding: bool = True
         self.n_locations: int | None = None
         self.static_weight: bool = False
-        self.round_function = math.ceil
+        self.round_function = round
 
         self.multi_melt: bool = True
 
