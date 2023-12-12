@@ -68,6 +68,7 @@ class PopMaker:
         # TODO: Möglichkeit einbauen, zu erzwingen n_agents genau zu treffen, falls sample_level an ist
         
         df = df.copy()
+        df = df.sample(frac=1)
 
         if n is None:
             return df
@@ -379,8 +380,16 @@ class PopMaker:
             location_dummy = location_cls(model=self.model)
             location_dummy.setup()
 
-            # get all agents that could be assigned to locations of this class
-            affiliated_agents = self._get_affiliated_agents(agents=agents, location_dummy=location_dummy)
+            if location_dummy.melt() is None:
+                # get all agents that could be assigned to locations of this class
+                affiliated_agents = self._get_affiliated_agents(agents=agents, location_dummy=location_dummy)
+            
+            else:
+                affiliated_agents = []
+                for melt_location_cls in location_dummy.melt():
+                    melt_location_dummy = melt_location_cls(model=self.model)
+                    melt_location_dummy.setup()
+                    affiliated_agents.extend(self._get_affiliated_agents(agents=agents, location_dummy=melt_location_dummy))
 
             # get all values that are used to split the agents into groups
             group_values = self._get_split_values(
@@ -397,7 +406,7 @@ class PopMaker:
                     group_value=group_value,
                     )
                 
-                # if this location glues together other location
+                # if this location does not glue together other locations
                 if location_dummy.melt() is None:
                     group_lists: [[_agent]] = self._get_groups(
                         agents=group_value_affiliated_agents, 
