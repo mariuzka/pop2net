@@ -7,6 +7,7 @@ import networkx as nx
 import numpy as np
 import pandas as pd
 import seaborn as sns
+from bokehgraph import BokehGraph
 
 import networkx as nx
 from networkx import bipartite
@@ -23,7 +24,7 @@ from .exceptions import PopyException
 # scientific stuff
 ##########################################################################
 
-def create_agent_graph(agents: AgentList, node_attrs: List = []) -> nx.Graph:
+def create_agent_graph(agents: AgentList, node_attrs: List = [], include_0_weights: bool = True) -> nx.Graph:
     """Create a Graph from a model's agent list.
 
     Args:
@@ -50,7 +51,9 @@ def create_agent_graph(agents: AgentList, node_attrs: List = []) -> nx.Graph:
     for agent in agents:
         for agent_v in agent.neighbors():
             if not projection.has_edge(agent.id, agent_v.id):
-                projection.add_edge(agent.id, agent_v.id, weight=agent.contact_weight(agent_v))
+                weight = agent.contact_weight(agent_v)
+                if include_0_weights or weight > 0:
+                    projection.add_edge(agent.id, agent_v.id, weight=weight)
 
     return projection
 
@@ -185,6 +188,18 @@ def eval_affiliations(agents, locations) -> None:
 
     print_header("Number of affiliated locations per agent")
     print(df_agents.n_affiliated_locations.describe())
+
+    
+def plot_network(agents, node_color="red", node_attrs=[], edge_alpha="weight", edge_color="black", include_0_weights = True):
+    graph = create_agent_graph(agents, node_attrs=node_attrs, include_0_weights=include_0_weights)
+    graph_layout = nx.drawing.spring_layout(graph)
+    plot = BokehGraph(graph, width=400, height=400, hover_edges=True)
+    plot.layout(layout=graph_layout)
+    plot.draw(
+        node_color=node_color, 
+        edge_alpha=edge_alpha, 
+        edge_color=edge_color,
+        )
 
 
 ##########################################################################

@@ -42,6 +42,14 @@ class PopMaker:
         self.agents: Optional[popy.AgentList] = None
         self.locations: Optional[popy.LocationList] = None
 
+        
+        
+
+    def _create_dummy_location(self, location_cls) -> popy.Location:
+        location = location_cls(model=self._dummy_model)
+        location.setup()
+        return location
+
     def draw_sample(
         self,
         df: pd.DataFrame,
@@ -114,7 +122,7 @@ class PopMaker:
 
     def create_agents(
             self, 
-            agent_class, 
+            agent_class=popy.Agent, 
             df: pd.DataFrame | None = None,
             n: int | None = None,
             ) -> popy.AgentList:
@@ -161,11 +169,11 @@ class PopMaker:
         return self.agents
 
 
-    def _get_affiliated_agents(self, agents, location_dummy) -> []:
-        return [agent for agent in agents if location_dummy.filter(agent)]
+    def _get_affiliated_agents(self, agents, dummy_location) -> []:
+        return [agent for agent in agents if dummy_location.filter(agent)]
 
-    def _get_mother_group_id(self, agent: _agent, location_dummy: _location) -> str:
-        if location_dummy.nest() is None:
+    def _get_mother_group_id(self, agent: _agent, dummy_location: _location) -> str:
+        if dummy_location.nest() is None:
             return "None"
         
         else:
@@ -174,7 +182,7 @@ class PopMaker:
             # search for mother location assigned to this agent
             n_mother_locations_found = 0
             for location in agent.locations:
-                if isinstance(location, location_dummy.nest()):
+                if isinstance(location, dummy_location.nest()):
                     mother_location = location
                     n_mother_locations_found += 1
             
@@ -183,25 +191,26 @@ class PopMaker:
                 warnings.warn(
                     f"""For agent {agent},
                     {n_mother_locations_found} locations of class 
-                    {location_dummy.nest()} were found as potential mothers of 
-                    {location_dummy} in the list of locations."""
+                    {dummy_location.nest()} were found as potential mothers of 
+                    {dummy_location} in the list of locations."""
                 )
             elif n_mother_locations_found == 0:
-                raise Exception(
-                    f"The mother of {location_dummy} is missing. Are the location classes in the right order?",
-                )
+                #raise Exception(
+                #    f"The mother of {dummy_location} is missing. Are the location classes in the right order?",
+                #)
+                return "None"
             return "-".join([str(mother_location.group_value), str(mother_location.group_id)])
 
 
-    def _get_split_values(self, agents: [_agent], location_dummy: _location, allow_nesting: bool = False) -> {int | str}:
+    def _get_split_values(self, agents: [_agent], dummy_location: _location, allow_nesting: bool = False) -> {int | str}:
         all_values = []
         for agent in agents:
-            agent_values = make_it_a_list_if_it_is_no_list(location_dummy.split(agent))
+            agent_values = make_it_a_list_if_it_is_no_list(dummy_location.split(agent))
             
             if allow_nesting:
                 # Add mother location's value to the value of the lower level location
                 for i, value in enumerate(agent_values):
-                    agent_values[i] = "-".join([self._get_mother_group_id(agent, location_dummy), str(value)])
+                    agent_values[i] = "-".join([self._get_mother_group_id(agent, dummy_location), str(value)])
             
             # Temporarely store group values as agent attribute to assign them to the corresponding location group later
             agent._TEMP_group_values = agent_values
@@ -209,31 +218,37 @@ class PopMaker:
 
         return set(all_values)
     
+    def get_stick_value(self, agent, dummy_location):
+        stick_value = dummy_location.stick_together(agent)
+        if stick_value is None:
+            return "None" + str(agent.id)
+        else:
+            return stick_value
 
-    def _get_groups(self, agents, location_dummy) -> [[_agent]]:
+    def _get_groups_ORI(self, agents, dummy_location) -> [[_agent]]:
         # determine the number of groups needed
-        if location_dummy.n_locations is None:
+        if dummy_location.n_locations is None:
             n_location_groups = (
                 1
-                if location_dummy.size is None
-                else max(location_dummy.round_function(len(agents) / location_dummy.size), 1)
+                if dummy_location.size is None
+                else max(dummy_location.round_function(len(agents) / dummy_location.size), 1)
             )
         else:
-            n_location_groups = location_dummy.n_locations
+            n_location_groups = dummy_location.n_locations
         
         group_lists = [[] for _ in range(n_location_groups)]
-        stick_values = {location_dummy.stick_together(agent) for agent in agents}
+        stick_values = {self.get_stick_value(agent, dummy_location) for agent in agents}
 
         # for each group of sticky agents
         for stick_value in stick_values:
-            sticky_agents = [agent for agent in agents if location_dummy.stick_together(agent) == stick_value]
+            sticky_agents = [agent for agent in agents if self.get_stick_value(agent, dummy_location) == stick_value]
             assigned = False
 
             # for each group
             for group_list in group_lists:
 
                 # if there are still enough free places available
-                if location_dummy.size is None or (location_dummy.size - len(group_list)) >= len(sticky_agents):
+                if dummy_location.size is None or (dummy_location.size - len(group_list)) >= len(sticky_agents):
                     # assign agents
                     for agent in sticky_agents:
                         group_list.append(agent)
@@ -241,7 +256,7 @@ class PopMaker:
                     break
 
             # if agents are not assigned while all locations are full and overcrowding is enabled
-            if not assigned and location_dummy.allow_overcrowding:
+            if not assigned and dummy_location.allow_overcrowding:
                 # sort by the number of assigned agents
                 group_lists.sort(key=lambda x: len(x))
                 
@@ -252,6 +267,69 @@ class PopMaker:
         
         random.shuffle(group_lists)
         return group_lists
+    
+
+
+    def _get_groups(self, agents, location_cls) -> [[_agent]]:
+
+        dummy_location = self._create_dummy_location(location_cls)
+
+        # determine the number of groups needed
+        if dummy_location.n_locations is None:
+            n_location_groups = (
+                1
+                if dummy_location.size is None
+                else max(dummy_location.round_function(len(agents) / dummy_location.size), 1)
+            )
+        else:
+            n_location_groups = dummy_location.n_locations
+
+
+        stick_values = {self.get_stick_value(agent, dummy_location) for agent in agents}
+        groups = [[]]
+        dummy_location = self._create_dummy_location(location_cls)
+        
+        # for each group of sticky agents
+        for stick_value in stick_values:
+            sticky_agents = [agent for agent in agents if self.get_stick_value(agent, dummy_location) == stick_value]
+            
+            assigned = False
+
+            for i, group in enumerate(groups):
+                # if there are still enough free places available
+                if dummy_location.size is None or (dummy_location.size - len(group)) >= len(sticky_agents):
+                    if sum([dummy_location.find(agent) for agent in sticky_agents]) == len(sticky_agents):
+                        # assign agents
+                        for agent in sticky_agents:
+                            group.append(agent)
+                            dummy_location.add_agent(agent)
+                            
+                        assigned = True
+                        break
+            
+            if not assigned:
+                if dummy_location.allow_overcrowding and len(groups) >= n_location_groups:
+                
+                    # sort by the number of assigned agents
+                    groups.sort(key=lambda x: len(x))
+                    
+                    # assign agents to the group_list with the fewest members
+                    for agent in sticky_agents:
+                        groups[0].append(agent)
+                    
+                    random.shuffle(groups)
+                else:
+                    new_group = []
+                    dummy_location = self._create_dummy_location(location_cls)
+                    # assign agents
+                    for agent in sticky_agents:
+                        new_group.append(agent)
+                        dummy_location.add_agent(agent)
+                    
+                    groups.append(new_group)
+
+        random.shuffle(groups)
+        return groups
 
 
     def _get_group_value_affiliated_agents(self, agents: [_agent], group_value: int | str) -> [_agent]:
@@ -260,10 +338,12 @@ class PopMaker:
         return group_affiliated_agents
 
 
-    def _get_melted_groups(self, agents: [_agent], location_dummy: _location) -> [[_agent]]:
+    def _get_melted_groups(self, agents: [_agent], location_cls) -> [[_agent]]:
+
+        dummy_location = self._create_dummy_location(location_cls)
         
         # get all mother locations the agents are nested in
-        all_mother_group_ids = {self._get_mother_group_id(agent, location_dummy) for agent in agents}
+        all_mother_group_ids = {self._get_mother_group_id(agent, dummy_location) for agent in agents}
         
         # for each mother location
         for mother_group_id in all_mother_group_ids:
@@ -271,7 +351,7 @@ class PopMaker:
             # get agents that are part of this location
             nested_agents = [
                 agent for agent in agents 
-                if self._get_mother_group_id(agent, location_dummy) == mother_group_id
+                if self._get_mother_group_id(agent, dummy_location) == mother_group_id
                 ]
             
             # a list that stores a list of groups for each location
@@ -282,22 +362,21 @@ class PopMaker:
                 ] = []
             
             # for each location that shall be melted
-            for location_cls in location_dummy.melt():
+            for location_cls in dummy_location.melt():
                 
                 # create dummy location
-                melt_location_dummy = location_cls(model=self.model)
-                melt_location_dummy.setup()
+                melt_dummy_location = self._create_dummy_location(location_cls)
                 
                 # get all agents that should be assigned to this location
                 melt_location_affiliated_agents = self._get_affiliated_agents(
                     agents=nested_agents,
-                    location_dummy=melt_location_dummy,
+                    dummy_location=melt_dummy_location,
                     )
                 
                 # get all values for which seperated groups/locations should be created
                 melt_group_values = self._get_split_values(
                     agents=melt_location_affiliated_agents, 
-                    location_dummy=melt_location_dummy, 
+                    dummy_location=melt_dummy_location, 
                     allow_nesting=False,
                     )
 
@@ -311,7 +390,7 @@ class PopMaker:
                     location_groups_to_melt.extend(
                         self._get_groups(
                             agents=melt_group_value_affiliated_agents, 
-                            location_dummy=melt_location_dummy,
+                            location_cls=location_cls,
                             )
                     )
                 random.shuffle(location_groups_to_melt)
@@ -319,12 +398,14 @@ class PopMaker:
             
             # Melt groups
             all_melted_groups: [[_agent]] = []
-            len_of_longest_list_of_groups_to_melt = sorted([len(l) for l in groups_to_melt_by_location], reverse=True)[0]
-            for i in range(len_of_longest_list_of_groups_to_melt):
+            z = sorted(
+                [len(l) for l in groups_to_melt_by_location], 
+                reverse=True if dummy_location.multi_melt else False)[0]
+            for i in range(z):
                 melted_group = []
                 for groups_to_melt in groups_to_melt_by_location:
                     if len(groups_to_melt) > 0:
-                        if location_dummy.multi_melt:
+                        if dummy_location.multi_melt:
                             melted_group.extend(groups_to_melt[i % len(groups_to_melt)])
                         else:
                             try:
@@ -332,8 +413,6 @@ class PopMaker:
                             except:
                                 pass
                                 
-                                
-                            
                 all_melted_groups.append(melted_group)
         
         return all_melted_groups
@@ -357,44 +436,43 @@ class PopMaker:
         Returns:
             _type_: _description_
         """
-        # TODO: is this smart?
-        self.model.agents = agents
+        self._dummy_model = popy.Model()
+        self._dummy_model.agents = agents
+        for agent in agents:
+            self._dummy_model.env.add_agent(agent)
 
-        #WaRUM GEHT DAS NICHT???????????????
-        random.shuffle(agents)
+        for location_cls in location_classes:
+            
+            str_location_cls = self._get_cls_as_str(location_cls)
+            for agent in agents:
+                setattr(agent, str_location_cls, None)
 
         locations = []
 
         # for each location class
         for location_cls in location_classes:
+            str_location_cls = self._get_cls_as_str(location_cls)
 
             #WaRUM GEHT DAS NICHT???????????????
             random.shuffle(agents)
             
-            # create an agent attribute for this location class and assign unique dummy values
-            str_location_cls = self._get_cls_as_str(location_cls)
-            for agent in agents:
-                setattr(agent, str_location_cls, "None_"+str(agent.id))
-
             # create location dummy in order to use the location's methods
-            location_dummy = location_cls(model=self.model)
-            location_dummy.setup()
+            dummy_location = self._create_dummy_location(location_cls)
 
-            if location_dummy.melt() is None:
+            if dummy_location.melt() is None:
                 # get all agents that could be assigned to locations of this class
-                affiliated_agents = self._get_affiliated_agents(agents=agents, location_dummy=location_dummy)
+                affiliated_agents = self._get_affiliated_agents(agents=agents, dummy_location=dummy_location)
             
             else:
                 affiliated_agents = []
-                for melt_location_cls in location_dummy.melt():
-                    melt_location_dummy = melt_location_cls(model=self.model)
-                    melt_location_dummy.setup()
-                    affiliated_agents.extend(self._get_affiliated_agents(agents=agents, location_dummy=melt_location_dummy))
+                for melt_location_cls in dummy_location.melt():
+                    melt_dummy_location = self._create_dummy_location(melt_location_cls)
+                    affiliated_agents.extend(self._get_affiliated_agents(agents=agents, dummy_location=melt_dummy_location))
 
             # get all values that are used to split the agents into groups
             group_values = self._get_split_values(
                 agents=affiliated_agents, 
-                location_dummy=location_dummy,
+                dummy_location=dummy_location,
                 allow_nesting=True,
                 )
             
@@ -407,29 +485,29 @@ class PopMaker:
                     )
                 
                 # if this location does not glue together other locations
-                if location_dummy.melt() is None:
+                if dummy_location.melt() is None:
                     group_lists: [[_agent]] = self._get_groups(
                         agents=group_value_affiliated_agents, 
-                        location_dummy=location_dummy,
+                        location_cls=location_cls,
                         )
                 else:
                     group_lists: [[_agent]] = self._get_melted_groups(
                         agents=group_value_affiliated_agents, 
-                        location_dummy=location_dummy,
+                        location_cls=location_cls,
                         )
                 
                 # for each group of agents
                 for i, group_list in enumerate(group_lists):
-                    location_dummy = location_cls(model=self.model)
-                    location_dummy.setup()
-                    location_dummy.group_agents = group_list
+                    dummy_location = self._create_dummy_location(location_cls)
+                   
+                    dummy_location.group_agents = group_list
 
                     # get all subgroub values
                     subgroup_values = {
                         agent_subgroup_value 
                         for agent in group_list 
                         for agent_subgroup_value 
-                        in make_it_a_list_if_it_is_no_list(location_dummy.subsplit(agent))
+                        in make_it_a_list_if_it_is_no_list(dummy_location.subsplit(agent))
                         }
                     
                     # for each group of agents assigned to a specific sublocation
@@ -440,7 +518,7 @@ class PopMaker:
                         
                         #for agent in group_affiliated_agents:
                         for agent in group_list:
-                            agent_subgroup_value = make_it_a_list_if_it_is_no_list(location_dummy.subsplit(agent))
+                            agent_subgroup_value = make_it_a_list_if_it_is_no_list(dummy_location.subsplit(agent))
                             if subgroup_value in agent_subgroup_value:
                                 subgroup_affiliated_agents.append(agent)
                             
@@ -468,7 +546,6 @@ class PopMaker:
                             
                         locations.append(subgroup_location)
 
-        
         # TODO:
         # Warum gibt es keinen Fehler, wenn man ein Argument falsch schreibt? Habe gerade ewig
         # nach einem Bug gesucht und letzt hatte ich nur das "j" in "objs" vergessen
@@ -477,15 +554,15 @@ class PopMaker:
             model=self.model,
             objs=locations,
         )
-        # is this smart?
-        self.model.locations = locations
+
+        self._dummy_model.locations = locations
 
         # execute an action after all locations have been created
         for location in self.locations:
             location.do_this_after_creation()
         
         # delete temporary agent attributes
-        for agent in self.model.agents:
+        for agent in self._dummy_model.agents:
             if hasattr(agent, "_TEMP_group_values"):
                 del(agent._TEMP_group_values)
 
@@ -499,8 +576,8 @@ class PopMaker:
     def make(
         self,
         df: pd.DataFrame,
-        agent_class,
         location_classes,
+        agent_class=popy.Agent,
         n_agents: Optional[int] = None,
         sample_level: Optional[str] = None,
         sample_weight: Optional[str] = None,

@@ -22,25 +22,18 @@ class Location(Object):
         """
         super().__init__(model)
         self.model = model
-
         self.group_id: int | None = None
         self.subgroup_id: int | None = None
         self.group_value: int | str | None = None
         self.subgroup_value: int | str | None = None
         
-        #self.size: int | None = None
-        self.size = len(self.model.agents)
+        self.size: int = 2
         self.allow_overcrowding: bool = True
         self.n_locations: int | None = None
         self.static_weight: bool = False
         self.round_function = round
-
         self.multi_melt: bool = True
-
-        self.n_branches = 2
-        
-        # TODO: maybe delete after the creation of all locations
-        self.group_agents = []
+        self.n_branches: int > 0 = 2
 
         self.model.env.add_location(self)
 
@@ -111,6 +104,9 @@ class Location(Object):
         Returns:
             True if the agent is allowed to join the location, False otherwise.
         """
+        return True
+    
+    def find(self, agent: _agent.Agent) -> bool:
         return True
 
     def split(self, agent: _agent.Agent) -> float | str | list | None:  # noqa: ARG002
@@ -200,8 +196,8 @@ class Location(Object):
         Returns:
             Combined edge weight.
         """
-        return (self.get_weight(agent1) + self.get_weight(agent2)) / 2
-
+        return min([self.get_weight(agent1), self.get_weight(agent2)])
+    
 
     def stick_together(self, agent: _agent.Agent) -> Any:
         """Sticks agents together by attribute.
@@ -221,7 +217,7 @@ class Location(Object):
     def nest(self):
         return None
     
-    def melt(self):
+    def melt(self) -> None | []:
         return None
 
 
