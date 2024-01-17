@@ -2,49 +2,50 @@
 from __future__ import annotations
 
 import typing
-from typing import Optional, List
+
+from bokehgraph import BokehGraph
 import networkx as nx
+from networkx import bipartite
 import numpy as np
 import pandas as pd
 import seaborn as sns
-from bokehgraph import BokehGraph
-
-import networkx as nx
-from networkx import bipartite
-
-from . import agent as _agent
 
 if typing.TYPE_CHECKING:
     from popy import AgentList
 
-from .exceptions import PopyException
 
 
 ##########################################################################
 # scientific stuff
 ##########################################################################
 
-def create_agent_graph(agents: AgentList, node_attrs: List = [], include_0_weights: bool = True) -> nx.Graph:
+def create_agent_graph(
+        agents: AgentList,
+        node_attrs: list | None = None,
+        include_0_weights: bool = True,
+) -> nx.Graph:
     """Create a Graph from a model's agent list.
 
     Args:
         agents: A model's agent list
+        node_attrs: A list of agent attributes
+        include_0_weights: Should edges with weight 0 be displayed?
 
     Returns:
         A weighted graph created from a model's agent list. Agents are connected if they are
         neighbors in the model. Their connecting edge include the contact_weight as "weight"
         attribute.
     """
-
     projection = nx.Graph()
 
     # create nodes
     for agent in agents:
         if not projection.has_node(agent.id):
-            
+
             node_attr_dict = {}
-            for node_attr in node_attrs:
-                node_attr_dict.update({node_attr: vars(agent)[node_attr]})
+            if node_attrs is not None:
+                for node_attr in node_attrs:
+                    node_attr_dict.update({node_attr: vars(agent)[node_attr]})
             projection.add_node(agent.id, **node_attr_dict)
 
     # create edges
@@ -77,7 +78,7 @@ def export_network(env) -> nx.Graph:
 
 # TODO: calculate relative freqs
 def create_contact_matrix(
-    agents,
+    agents: list | AgentList,
     attr: str = "id",
     weighted: bool = False,
     plot: bool = False,
@@ -86,10 +87,11 @@ def create_contact_matrix(
     """Create a contact matrix as a DataFrame from a given model's agent list.
 
     Args:
-        agents: _description_
-        attr: _description_. Defaults to "id".
-        weighted: _description_. Defaults to False.
-        plot: _description_. Defaults to False.
+        agents: A list of agents.
+        attr: The agent attribute which is shown in the matrix.
+        weighted: Should the contacts be weighted? Defaults to False.
+        plot: Should the matrix be plotted? Defaults to False.
+        annot: Should the plottet matrix be annotated? Defaults to False.
 
     Returns:
         A DataFrame containing a contact matrix based on `attr`.
@@ -189,17 +191,34 @@ def eval_affiliations(agents, locations) -> None:
     print_header("Number of affiliated locations per agent")
     print(df_agents.n_affiliated_locations.describe())
 
-    
-def plot_network(agents, node_color="red", node_attrs=[], edge_alpha="weight", edge_color="black", include_0_weights = True):
+
+def plot_network(
+        agents: list | AgentList,
+        node_color: str = "red",
+        node_attrs: list | None = None,
+        edge_alpha: str = "weight",
+        edge_color: str = "black",
+        include_0_weights: bool = True,
+):
+    """_summary_.
+
+    Args:
+        agents (list | AgentList): _description_
+        node_color (str, optional): _description_. Defaults to "red".
+        node_attrs (list | None, optional): _description_. Defaults to None.
+        edge_alpha (str, optional): _description_. Defaults to "weight".
+        edge_color (str, optional): _description_. Defaults to "black".
+        include_0_weights (bool, optional): _description_. Defaults to True.
+    """
     graph = create_agent_graph(agents, node_attrs=node_attrs, include_0_weights=include_0_weights)
     graph_layout = nx.drawing.spring_layout(graph)
-    plot = BokehGraph(graph, width=400, height=400, hover_edges=True)
+    plot = BokehGraph(graph, width=500, height=500, hover_edges=True)
     plot.layout(layout=graph_layout)
     plot.draw(
-        node_color=node_color, 
-        edge_alpha=edge_alpha, 
+        node_color=node_color,
+        edge_alpha=edge_alpha,
         edge_color=edge_color,
-        )
+    )
 
 
 ##########################################################################
@@ -208,6 +227,14 @@ def plot_network(agents, node_color="red", node_attrs=[], edge_alpha="weight", e
 
 
 def get_df_agents(agents: AgentList) -> pd.DataFrame:
+    """_summary_.
+
+    Args:
+        agents (AgentList): _description_
+
+    Returns:
+        pd.DataFrame: _description_
+    """
     return pd.DataFrame([vars(agent) for agent in agents])
 
 
@@ -249,9 +276,10 @@ def group_it(
 
             elif return_value == "range":
                 new_value = (lower_bound, upper_bound)  # type: ignore
-            
+
             else:
-                raise Exception("You have entered a non-existing option for `return_value`.")
+                msg = "You have entered a non-existing option for `return_value`."
+                raise Exception(msg)
 
 
         if not summarize_highest:

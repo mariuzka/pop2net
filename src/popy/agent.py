@@ -33,7 +33,7 @@ class Agent(ap.Agent):
         self.model = model
         self.model.env.add_agent(self)
         self.setup()
-        self._initial_locations = []
+
 
     def setup(self) -> None:
         """Instantiate an Agent.
