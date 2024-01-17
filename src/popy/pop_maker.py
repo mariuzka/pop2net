@@ -1,8 +1,7 @@
 """Create a population for the simulation."""
+from __future__ import annotations
 
 import random
-from typing import List
-from typing import Optional
 import warnings
 
 import pandas as pd
@@ -32,7 +31,7 @@ class PopMaker:
 
     def __init__(
         self,
-        model: Optional[popy.Model] = None,
+        model: popy.Model | None = None,
         seed: int = 999,
     ) -> None:
         """Instantiate a population maker for a specific model.
@@ -46,8 +45,8 @@ class PopMaker:
         self.model = model if model is not None else popy.Model()
         self.seed = seed
         self.rng = random.Random(seed)
-        self.agents: Optional[popy.AgentList] = None
-        self.locations: Optional[popy.LocationList] = None
+        self.agents: popy.AgentList | None = None
+        self.locations: popy.LocationList | None = None
 
     def _create_dummy_location(self, location_cls) -> popy.Location:
         location = location_cls(model=self._dummy_model)
@@ -57,9 +56,9 @@ class PopMaker:
     def draw_sample(
         self,
         df: pd.DataFrame,
-        n: Optional[int] = None,
-        sample_level: Optional[str] = None,
-        sample_weight: Optional[str] = None,
+        n: int | None = None,
+        sample_level: str | None = None,
+        sample_weight: str | None = None,
         replace_sample_level_column: bool = True,
     ) -> pd.DataFrame:
         """Draw a sample from a base population.
@@ -209,7 +208,7 @@ class PopMaker:
 
     def _get_split_values(
             self,
-            agents: List,
+            agents: list,
             dummy_location,
             allow_nesting: bool = False,
     ) -> set[int | str]:
@@ -321,7 +320,7 @@ class PopMaker:
 
     def _get_group_value_affiliated_agents(
             self,
-            agents: List,
+            agents: list,
             group_value: int | str,
     ) -> list:
         group_affiliated_agents = [
@@ -584,9 +583,9 @@ class PopMaker:
         df: pd.DataFrame,
         location_classes: list,
         agent_class=popy.Agent,
-        n_agents: Optional[int] = None,
-        sample_level: Optional[str] = None,
-        sample_weight: Optional[str] = None,
+        n_agents: int | None = None,
+        sample_level: str | None = None,
+        sample_weight: str | None = None,
         replace_sample_level_column: bool = True,
     ) -> tuple:
         """Creates agents and locations based on a given dataset.
