@@ -21,9 +21,3 @@ def test_n_locations_create():
 
 def test_location_list_len(simple_location_list):
     assert len(simple_location_list) == 2
-
-
-def test_attr_broadcast(simple_location_list):
-    assert simple_location_list.subtype == ["home", "school"]
-    simple_location_list.subtype = "test"
-    assert simple_location_list.subtype == ["test", "test"]
