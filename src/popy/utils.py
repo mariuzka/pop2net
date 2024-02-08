@@ -303,3 +303,79 @@ def print_header(text: object):
     print(text)
     print("______________________________________")
     print("")
+
+
+def network_measures(agent_list, node_attrs = None):
+    """Creates nx networkgraph and calculates common network measures.
+
+    If the created network consist of independent groups of nodes
+    subgraphs are created and measures are calculated for each subgraph
+
+    Args:
+        agent_list: A model's agent list
+        node_attrs: A list of agent attributes
+
+    Return:
+        dictionary/or list of dictionaries of the common network
+        measure results
+    """
+    result_dict = {}
+    nx_graph = create_agent_graph(agent_list, node_attrs)
+
+    # make distinction between multiple independent networks and one network
+    if nx.is_connected(nx_graph):
+
+        result_dict["diameter"] = ntw_diameter(nx_graph)
+        result_dict["density"] = ntw_density(nx_graph)
+        result_dict["periphery"] = ntw_periphery(nx_graph)
+        result_dict["center"] = ntw_center(nx_graph)
+        result_dict["centrality"] = ntw_centrality(nx_graph)
+        result_dict["avg_path_length"] = ntw_avg_path_length(nx_graph)
+        return result_dict
+    else:
+        component_list = nx.connected_components(nx_graph)
+
+        result_list = []
+        for component in component_list:
+            result_dict = {}
+            try:
+                nx_subgraph = nx_graph.subgraph(component)
+            except nx.NetworkXError:
+                print("Cant make graph out of component")
+                break
+            result_dict["diameter"] = ntw_diameter(nx_subgraph)
+            result_dict["density"] = ntw_density(nx_subgraph)
+            result_dict["periphery"] = ntw_periphery(nx_subgraph)
+            result_dict["center"] = ntw_center(nx_subgraph)
+            result_dict["centrality"] = ntw_centrality(nx_subgraph)
+            result_dict["avg_path_length"] = ntw_avg_path_length(nx_subgraph)
+            result_list.append(result_dict)
+        return result_list
+
+
+def ntw_diameter(nx_graph) -> int:
+    """Calculates diameter of a graph."""
+    return nx.diameter(nx_graph, weight = "weight")
+
+def ntw_centrality(nx_graph) -> list:
+    """Calculates centrality of a graph."""
+    return nx.degree_centrality(nx_graph)
+
+def ntw_density(nx_graph) -> float:
+    """Calculates density of a graph."""
+    return nx.density(nx_graph)
+
+def ntw_avg_path_length(nx_graph) -> float:
+   """Calculates average path lentgh of a graph."""
+   return nx.average_shortest_path_length(nx_graph, weight = "weight")
+
+def ntw_periphery(nx_graph) -> list:
+    """Calculates periphery of a graph."""
+    return nx.periphery(nx_graph, weight = "weight")
+
+def ntw_center(nx_graph) -> list:
+    """Calculates the center of a graph."""
+    return nx.center(nx_graph, weight = "weight")
+
+### Example for testing in introduction_static_networks (last example):
+#result = utils.network_measures(agent_list=agents, node_attrs= df_school.columns)
