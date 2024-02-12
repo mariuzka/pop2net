@@ -303,3 +303,60 @@ def print_header(text: object):
     print(text)
     print("______________________________________")
     print("")
+
+
+def network_measures(agent_list, node_attrs = None) -> dict | list[dict]:
+    """Creates nx networkgraph and calculates common network measures.
+
+    If the created network consist of independent groups of nodes
+    subgraphs are created and measures are calculated for each subgraph
+
+    Args:
+        agent_list: A model's agent list
+        node_attrs: A list of agent attributes
+
+    Return:
+        dictionary/or list of dictionaries of the common network
+        measure results
+    """
+    result_dict = {}
+    nx_graph = create_agent_graph(agent_list, node_attrs)
+
+    # make distinction between multiple independent networks and one network
+    if nx.is_connected(nx_graph):
+
+        result_dict["diameter"] = nx.diameter(nx_graph, weight = "weight")
+        result_dict["density"] = nx.density(nx_graph)
+        result_dict["periphery"] = nx.periphery(nx_graph, weight = "weight")
+        result_dict["center"] = nx.center(nx_graph, weight = "weight")
+        result_dict["centrality"] = nx.degree_centrality(nx_graph)
+        result_dict["avg_path_length"] = nx.average_shortest_path_length(
+            nx_graph,
+            weight = "weight",
+        )
+        return result_dict
+    else:
+        # sort subgraph component size(=num of nodes) in ascending order
+        component_list = sorted(nx.connected_components(nx_graph),key=len, reverse=False)
+
+        # create graph for each component and calculate network measures
+        result_list = []
+        for component in component_list:
+            result_dict_subgraph = {}
+            try:
+                nx_subgraph = nx_graph.subgraph(component)
+            except nx.NetworkXError:
+                print("Cant make graph out of component")
+                break
+
+            result_dict_subgraph["diameter"] = nx.diameter(nx_subgraph, weight = "weight")
+            result_dict_subgraph["density"] = nx.density(nx_subgraph)
+            result_dict_subgraph["periphery"] = nx.periphery(nx_subgraph, weight = "weight")
+            result_dict_subgraph["center"] = nx.center(nx_subgraph, weight = "weight")
+            result_dict_subgraph["centrality"] = nx.degree_centrality(nx_subgraph)
+            result_dict_subgraph["avg_path_length"] = nx.average_shortest_path_length(
+                nx_subgraph,
+                weight = "weight",
+            )
+            result_list.append(result_dict_subgraph)
+        return result_list
