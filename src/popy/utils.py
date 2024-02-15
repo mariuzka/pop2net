@@ -327,17 +327,25 @@ def network_measures(agent_list, node_attrs = None) -> dict | list[dict]:
 
         result_dict["diameter"] = nx.diameter(nx_graph, weight = "weight")
         result_dict["density"] = nx.density(nx_graph)
-        result_dict["periphery"] = nx.periphery(nx_graph, weight = "weight")
-        result_dict["center"] = nx.center(nx_graph, weight = "weight")
-        result_dict["centrality"] = nx.degree_centrality(nx_graph)
+        result_dict["transitivity"] = nx.transitivity(nx_graph)
+        result_dict["avg_clustering"] = nx.average_clustering(
+            nx_graph,
+            weight= "weight",
+        )
         result_dict["avg_path_length"] = nx.average_shortest_path_length(
             nx_graph,
             weight = "weight",
         )
+        #result_dict["periphery"] = nx.periphery(nx_graph, weight = "weight")
+        #result_dict["center"] = nx.center(nx_graph, weight = "weight")
+        #result_dict["centrality"] = nx.degree_centrality(nx_graph)
         return result_dict
     else:
         # sort subgraph component size(=num of nodes) in ascending order
-        component_list = sorted(nx.connected_components(nx_graph),key=len, reverse=False)
+        component_list = sorted(
+            nx.connected_components(nx_graph),key=len,
+            reverse=False,
+        )
 
         # create graph for each component and calculate network measures
         result_list = []
@@ -349,14 +357,23 @@ def network_measures(agent_list, node_attrs = None) -> dict | list[dict]:
                 print("Cant make graph out of component")
                 break
 
-            result_dict_subgraph["diameter"] = nx.diameter(nx_subgraph, weight = "weight")
+            result_dict_subgraph["diameter"] = nx.diameter(
+                nx_subgraph,
+                weight = "weight",
+            )
             result_dict_subgraph["density"] = nx.density(nx_subgraph)
-            result_dict_subgraph["periphery"] = nx.periphery(nx_subgraph, weight = "weight")
-            result_dict_subgraph["center"] = nx.center(nx_subgraph, weight = "weight")
-            result_dict_subgraph["centrality"] = nx.degree_centrality(nx_subgraph)
+            result_dict_subgraph["transitivity"] = nx.transitivity(nx_subgraph)
+            result_dict_subgraph["avg_clustering"] = nx.average_clustering(
+                nx_subgraph,
+                weight= "weight",
+            )
             result_dict_subgraph["avg_path_length"] = nx.average_shortest_path_length(
                 nx_subgraph,
                 weight = "weight",
             )
+
+            #result_dict_subgraph["centrality"] = nx.degree_centrality(nx_subgraph)
+            #result_dict_subgraph["periphery"] = nx.periphery(nx_subgraph, weight = "weight")
+            #result_dict_subgraph["center"] = nx.center(nx_subgraph, weight = "weight")
             result_list.append(result_dict_subgraph)
         return result_list
