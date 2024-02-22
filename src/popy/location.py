@@ -238,7 +238,7 @@ class Location(Object):
         """
         return None
 
-    def melt(self) -> list | tuple:
+    def melt(self) -> list[Location] | tuple[Location]:
         """_summary_.
 
         Returns:
