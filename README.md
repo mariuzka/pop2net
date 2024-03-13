@@ -3,7 +3,9 @@
 
 # Popy
 
-This is a README
+In agent-based models, the network structure is a crucial element and, thus, needs to be modeled with care.
+When empirical network data are unavailable, simulation models must rely on network models.
+Popy is a new way to quickly create network models ready to use in agent-based models.
 
 # Documentation
 Detailed documentation of all features and a collection of example analyses can be found [here](https://mariuzka.github.io/popy/).
