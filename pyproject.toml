@@ -91,6 +91,7 @@ ignore-init-module-imports = true
 "__init__.py" = ["E402"]
 "docs/**" = ["D"]
 "tests/**" = ["D"]
+"docs/examples/introduction old.ipynb" = ["ALL"]
 
 [tool.ruff.pydocstyle]
 convention = "google"
