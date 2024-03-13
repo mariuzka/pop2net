@@ -19,9 +19,9 @@ def test_affiliation_tracking():
 
     class Model(popy.Model):
         def setup(self):
-            N_AGENTS = 1000
-            self.agents = popy.AgentList(self, N_AGENTS, Agent)
-            self.locations = popy.LocationList(self, N_AGENTS, Location)
+            n_agents = 1000
+            self.agents = popy.AgentList(self, n_agents, Agent)
+            self.locations = popy.LocationList(self, n_agents, Location)
 
             for i, location in enumerate(self.locations):
                 location.add_agent(self.agents[i])
