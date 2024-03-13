@@ -38,7 +38,7 @@ def test_sample_no_replacement_grouped_edgecase(soep100):
 
 def test_sample_no_replacement_too_many(soep100):
     reader = DataReader(soep100, seed=5)
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError, match=r"Cannot sample size (.*?) without replacement!"):
         reader.sample(by="pid", size=101, with_replacement=False)
 
 
