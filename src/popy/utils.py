@@ -9,8 +9,9 @@ from networkx import bipartite
 import numpy as np
 import pandas as pd
 import seaborn as sns
-import popy
 from tabulate import tabulate
+
+import popy
 
 if typing.TYPE_CHECKING:
     from popy import AgentList
