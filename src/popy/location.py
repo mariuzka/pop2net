@@ -214,7 +214,7 @@ class Location(Object):
         return min([self.get_weight(agent1), self.get_weight(agent2)])
 
 
-    def stick_together(self, agent: _agent.Agent) -> Any:
+    def stick_together(self, agent: _agent.Agent) -> float | str:
         """Sticks agents together by attribute.
 
         Args:
