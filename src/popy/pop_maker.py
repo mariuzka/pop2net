@@ -1,12 +1,16 @@
 """Create a population for the simulation."""
 from __future__ import annotations
 
+import copy
 import random
 import warnings
 
+from bokehgraph import BokehGraph
+import networkx as nx
 import pandas as pd
 
 import popy
+import popy.utils as utils
 
 from . import agent as _agent
 from .exceptions import PopyException
@@ -646,3 +650,75 @@ class PopMaker:
             raise PopyException(msg)
 
         return pd.DataFrame([vars(agent) for agent in self.agents])
+
+
+    def _plot_network(
+            self, 
+            network_type,
+            node_color: str,
+            node_attrs: list | None,
+            edge_alpha: str,
+            edge_color: str,
+            include_0_weights: bool,
+            ):
+        
+        if network_type == "bipartite":
+            graph = self.model.env.g.copy()
+            for i in graph:
+                if node_attrs is not None:
+                    for node_attr in node_attrs:
+                        graph.nodes[i][node_attr] = graph.nodes[i]["_obj"][node_attr]
+                del graph.nodes[i]["_obj"]
+            node_color = "bipartite" if node_color is None else node_color
+        
+        elif network_type == "agent":
+            graph = utils.create_agent_graph(
+                agents=self.agents, 
+                node_attrs=node_attrs, 
+                include_0_weights=include_0_weights,
+                )
+            node_color = "firebrick" if node_color is None else node_color
+
+        graph_layout = nx.drawing.spring_layout(graph)
+        plot = BokehGraph(graph, width=500, height=500, hover_edges=True)
+        plot.layout(layout=graph_layout)
+        plot.draw(
+            node_color=node_color,
+            edge_alpha=edge_alpha,
+            edge_color=edge_color,
+        )
+
+    def plot_bipartite_network(
+            self, 
+            node_color: str = None,
+            node_attrs: list | None = None,
+            edge_alpha: str = "weight",
+            edge_color: str = "black",
+            include_0_weights: bool = True,
+            ) -> None:
+        self._plot_network(
+            network_type="bipartite",
+            node_color=node_color,
+            node_attrs=node_attrs,
+            edge_alpha=edge_alpha,
+            edge_color=edge_color,
+            include_0_weights=include_0_weights,
+        )
+        
+    def plot_agent_network(
+            self,
+            node_color: str = "firebrick",
+            node_attrs: list | None = None,
+            edge_alpha: str = "weight",
+            edge_color: str = "black",
+            include_0_weights: bool = True,
+            ) -> None:
+        
+        self._plot_network(
+            network_type="agent",
+            node_color=node_color,
+            node_attrs=node_attrs,
+            edge_alpha=edge_alpha,
+            edge_color=edge_color,
+            include_0_weights=include_0_weights,
+        )

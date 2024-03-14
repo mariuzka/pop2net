@@ -198,35 +198,6 @@ def eval_affiliations(agents, locations) -> None:
     print(df_agents.n_affiliated_locations.describe())
 
 
-def plot_network(
-        agents: list | AgentList,
-        node_color: str = "red",
-        node_attrs: list | None = None,
-        edge_alpha: str = "weight",
-        edge_color: str = "black",
-        include_0_weights: bool = True,
-):
-    """_summary_.
-
-    Args:
-        agents (list | AgentList): _description_
-        node_color (str, optional): _description_. Defaults to "red".
-        node_attrs (list | None, optional): _description_. Defaults to None.
-        edge_alpha (str, optional): _description_. Defaults to "weight".
-        edge_color (str, optional): _description_. Defaults to "black".
-        include_0_weights (bool, optional): _description_. Defaults to True.
-    """
-    graph = create_agent_graph(agents, node_attrs=node_attrs, include_0_weights=include_0_weights)
-    graph_layout = nx.drawing.spring_layout(graph)
-    plot = BokehGraph(graph, width=500, height=500, hover_edges=True)
-    plot.layout(layout=graph_layout)
-    plot.draw(
-        node_color=node_color,
-        edge_alpha=edge_alpha,
-        edge_color=edge_color,
-    )
-
-
 def location_information(
         locations: list[popy.Location],
         select_locations: popy.Location | list[popy.Location] | None = None,
