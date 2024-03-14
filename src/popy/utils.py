@@ -84,8 +84,9 @@ def create_contact_matrix(
     agents: list | AgentList,
     attr: str = "id",
     weighted: bool = False,
-    plot: bool = False,
+    plot: bool = True,
     annot: bool = False,
+    return_df: bool = False
 ) -> pd.DataFrame:
     """Create a contact matrix as a DataFrame from a given model's agent list.
 
@@ -108,27 +109,30 @@ def create_contact_matrix(
 
     for agent_u in agents:
         attr_u = getattr(agent_u, attr)
-        attr_values.append(attr_u)
+        if attr_u is not None:
+            attr_values.append(attr_u)
 
-        for agent_v in agent_u.neighbors():
-            attr_v = getattr(agent_v, attr)
-            attr_values.append(attr_v)
+            for agent_v in agent_u.neighbors():
+                attr_v = getattr(agent_v, attr)
+                if attr_v is not None:
+                    attr_values.append(attr_v)
 
-            pair = {agent_u.id, agent_v.id}
+                    pair = {agent_u.id, agent_v.id}
 
-            if pair not in pairs:
-                contact_data.append(
-                    {
-                        "id_u": agent_u.id,
-                        attr_u_name: attr_u,
-                        "id_v": agent_v.id,
-                        attr_v_name: attr_v,
-                        "weight": agent_u.contact_weight(agent_v),
-                    },
-                )
-                pairs.append(pair)
+                    if pair not in pairs:
+                        contact_data.append(
+                            {
+                                "id_u": agent_u.id,
+                                attr_u_name: attr_u,
+                                "id_v": agent_v.id,
+                                attr_v_name: attr_v,
+                                "weight": agent_u.contact_weight(agent_v),
+                            },
+                        )
+                        pairs.append(pair)
 
     attr_values = list(set(attr_values))
+    
     df = pd.DataFrame(index=sorted(attr_values, reverse=True), columns=sorted(attr_values))
     df = df.fillna(0)
 
@@ -144,13 +148,12 @@ def create_contact_matrix(
             df.loc[contact[attr_v_name], contact[attr_u_name]] + weight
         )
 
-    #df = df / 2
-
     if plot:
-        g = sns.heatmap(df, annot=annot)
+        g = sns.heatmap(df, annot=annot, vmin=0, fmt='g')
         g.set(xlabel=attr, ylabel=attr)
 
-    return df
+    if return_df:
+        return df
 
 
 def eval_affiliations(agents, locations) -> None:
@@ -303,8 +306,6 @@ def location_information(
 
 
 
-
-
 def location_crosstab(
         locations: list[popy.Location],
         select_locations: popy.Location | list[popy.Location],
@@ -414,7 +415,11 @@ def location_crosstab(
 ##########################################################################
 
 
-def get_df_agents(agents: AgentList) -> pd.DataFrame:
+def get_df_agents(
+        agents: AgentList, 
+        columns: None | list[str] = None,
+        agentpy_columns: bool = False,
+        ) -> pd.DataFrame:
     """_summary_.
 
     Args:
@@ -423,8 +428,25 @@ def get_df_agents(agents: AgentList) -> pd.DataFrame:
     Returns:
         pd.DataFrame: _description_
     """
-    return pd.DataFrame([vars(agent) for agent in agents])
-
+    df = pd.DataFrame([vars(agent) for agent in agents])
+    
+    if not agentpy_columns:
+        df = df.drop(
+            columns=[
+                "_var_ignore",
+                "id",
+                "type",
+                "log",
+                "model",
+                "p",
+                ]
+            )
+        
+    if columns is not None:
+        df = df.loc[:,columns]
+    
+    
+    return df
 
 def group_it(
     value: int | float,
