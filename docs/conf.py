@@ -4,6 +4,8 @@
 # https://www.sphinx-doc.org/en/master/usage/configuration.html
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
+from pathlib import Path
+import sys
 
 project = "popy"
 copyright = "2022, Marius Kaffai, Lukas Erhard"
@@ -26,6 +28,7 @@ extensions = [
 templates_path = ["_templates"]
 exclude_patterns = ["_build", "Thumbs.db", ".DS_Store", "**.ipynb_checkpoints"]
 
+sys.path.append(str(Path(__file__).parent.parent / "src"))
 
 # Napoleon settings
 # For a list of possible configurations, see:
