@@ -317,7 +317,7 @@ def location_crosstab(
             for i, location_instance in enumerate(valid_locations):
 
                 title = f'{i+1}.Location: {str(location_instance).split(" ")[0]}'
-                df = get_df_agents(agents=location_instance.agents)
+                df = pd.DataFrame([vars(agent) for agent in location_instance.agents])
                 df = df[list(agent_attributes)]
                 agent_dfs[title] = df
 
