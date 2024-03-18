@@ -635,8 +635,17 @@ class PopMaker:
         return agents, locations
 
 
-    def get_df_agents(self) -> pd.DataFrame:
+    def get_df_agents(
+            self,
+            columns: None | list[str] = None,
+            drop_agentpy_columns: bool =True,
+    ) -> pd.DataFrame:
         """Returns the latest created population of agents as a dataframe.
+
+        Args:
+            columns (list | None): A list of column names that sould be kept.
+                All other columns are deleted.
+            drop_agentpy_columns (bool): Deletes some columns created by AgentPy.
 
         Raises:
             PopyException: _description_
@@ -649,7 +658,24 @@ class PopMaker:
             msg = "There are no agents."
             raise PopyException(msg)
 
-        return pd.DataFrame([vars(agent) for agent in self.agents])
+        df = pd.DataFrame([vars(agent) for agent in self.agents])
+
+        if drop_agentpy_columns:
+            df = df.drop(
+            columns=[
+                "_var_ignore",
+                "id",
+                "type",
+                "log",
+                "model",
+                "p",
+            ],
+            )
+
+        if columns is not None:
+            df = df.loc[:,columns]
+
+        return df
 
 
     def _plot_network(

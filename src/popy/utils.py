@@ -96,6 +96,7 @@ def create_contact_matrix(
         weighted: Should the contacts be weighted? Defaults to False.
         plot: Should the matrix be plotted? Defaults to False.
         annot: Should the plottet matrix be annotated? Defaults to False.
+        return_df: Should the data be returned as pandas.DataFrame?
 
     Returns:
         A DataFrame containing a contact matrix based on `attr`.
@@ -204,16 +205,20 @@ def location_information(
         agent_attributes: str | None | list[str] | None = None,
         output_format:str = "table",
 ) -> None | pd.DataFrame:
-    """Parameter
-    - locations =>  Liste aller location Instanzen des Netzwerkes (streng genommen reicht auch Liste von allen die man sich anschauen will)
-    - select_locations => einzelner Konstruktor oder Liste von Klassen Konstruktoren
-    - agent_attributes => Liste oder einzelnenes Attribute der Agenten, die in der Output-Tabelle erscheinen sollen.
+    """Provides information on the agents assigned to location instances.
 
-    Output: Pro Location Instance der ausgewählten Location Klassen werden
-            Pandas Dataframes (Columns gefiltert durch agent_attributes)
-            mit Hilfe von tabulate als Konsolen print ausgegeben
+    Args:
+        locations (list[popy.Location]): A list of location instances.
+        select_locations (popy.Location | list[popy.Location] | None, optional): A list of 
+            location classes. Defaults to None.
+        agent_attributes (str | None | list[str] | None, optional): A list of agent attributes. 
+            Defaults to None.
+        output_format (str, optional): A str determining what is returned. Defaults to "table".
 
+    Returns:
+        None | pd.DataFrame: A pandas.DataFrame or nothing.
     """
+    
     if select_locations:
         if not isinstance(select_locations, list):
             select_locations = [select_locations]
@@ -244,7 +249,7 @@ def location_information(
             title = f'{i+1}.Location: {str(location_instance).split(" ")[0]}'
             location_type = str(location_instance).split(" ")[0]
             # get all agents per location instance, subset df by agent-attributes
-            df = get_df_agents(agents = location_instance.agents)
+            df = pd.DataFrame([vars(agent) for agent in location_instance.agents])
             df = df[list(agent_attributes)]
             df["location_type"] = location_type
             agent_dfs[title] = df
@@ -253,7 +258,7 @@ def location_information(
         for i, location_instance in enumerate(valid_locations):
             title = f'{i+1}.Location: {str(location_instance).split(" ")[0]}'
             location_type = str(location_instance).split(" ")[0]
-            df = get_df_agents(agents = location_instance.agents)
+            df = pd.DataFrame([vars(agent) for agent in location_instance.agents])
             df.drop(df.iloc[:,0:7], axis = 1, inplace = True)
             df["location_type"] = location_type
             agent_dfs[title] = df
@@ -268,7 +273,7 @@ def location_information(
     if output_format == "df":
         location_id_counter = 0
         df_list = []
-        for title, df in agent_dfs.items():
+        for _, df in agent_dfs.items():
             df.insert(0, "location_id", [location_id_counter]*len(df.index))
             location_id_counter += 1
             df_list.append(df)
@@ -278,11 +283,11 @@ def location_information(
 
 
 def location_crosstab(
-        locations: list[popy.Location],
-        select_locations: popy.Location | list[popy.Location],
-        agent_attributes: str | list[str],
-        output_format = "table",
-)-> list[pd.DataFrame] | None:
+    locations: list[popy.Location],
+    select_locations: popy.Location | list[popy.Location],
+    agent_attributes: str | list[str],
+    output_format = "table",
+    )-> list[pd.DataFrame] | None:
     # Make every Parameter a list
     if select_locations:
         if not isinstance(select_locations, list):
@@ -340,7 +345,7 @@ def location_crosstab(
         for i, location_instance in enumerate(valid_locations):
             title = f'{i+1}.Location: {str(location_instance).split(" ")[0]}'
             location_type = str(location_instance).split(" ")[0]
-            df = get_df_agents(agents=location_instance.agents)
+            df = pd.DataFrame([vars(agent) for agent in location_instance.agents])
 
             # only keep wanted columns (agent attributes)
             df = df[list(agent_attributes)]
@@ -355,7 +360,7 @@ def location_crosstab(
 
             location_id = 0
             df_list_of_attribute = []
-            for title, df in agent_dfs.items():
+            for _, df in agent_dfs.items():
 
                 crosstab_table = pd.crosstab(
                     index= df[agent_attribute],
@@ -385,40 +390,6 @@ def location_crosstab(
 # technical helper functions
 ##########################################################################
 
-
-def get_df_agents(
-        agents: AgentList, 
-        columns: None | list[str] = None,
-        agentpy_columns: bool = False,
-        ) -> pd.DataFrame:
-    """_summary_.
-
-    Args:
-        agents (AgentList): _description_
-
-    Returns:
-        pd.DataFrame: _description_
-    """
-    df = pd.DataFrame([vars(agent) for agent in agents])
-    
-    if not agentpy_columns:
-        df = df.drop(
-            columns=[
-                "_var_ignore",
-                "id",
-                "type",
-                "log",
-                "model",
-                "p",
-                ]
-            )
-        
-    if columns is not None:
-        df = df.loc[:,columns]
-    
-    
-    return df
-
 def group_it(
     value: int | float,
     start: int | float,
@@ -426,7 +397,7 @@ def group_it(
     n_steps: int,
     return_value: typing.Literal["index", "lower_bound", "range"] = "index",
     summarize_highest: bool = False,
-) -> int | float | tuple[int | float, int | float]:
+    ) -> int | float | tuple[int | float, int | float]:
     """_summary_.
 
     Args:
@@ -558,3 +529,9 @@ def network_measures(agent_list, node_attrs = None) -> dict | list[dict]:
             #result_dict_subgraph["center"] = nx.center(nx_subgraph, weight = "weight")
             result_list.append(result_dict_subgraph)
         return result_list
+
+def make_it_a_list_if_it_is_no_list(x: object) -> list:
+    if isinstance(x, list):
+        return x
+    else:
+        return [x]
