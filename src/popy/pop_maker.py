@@ -15,21 +15,6 @@ import popy.utils as utils
 from . import agent as _agent
 from .exceptions import PopyException
 
-def make_it_a_list_if_it_is_no_list(x: object) -> list:
-    """_summary_.
-
-    Args:
-        x (_type_): _description_
-
-    Returns:
-        _type_: _description_
-    """
-    if isinstance(x, list):
-        return x
-    else:
-        return [x]
-
-
 class PopMaker:
     """Create a population for the simulation."""
 
