@@ -31,9 +31,10 @@ jobs:
         uses: snok/install-poetry@v1
         with:
           # circumvent bug python-poetry/poetry#7694 in version 1.4.1
-          version: 1.4.0
+          version: 1.5.1
           virtualenvs-create: true
           virtualenvs-in-project: true
+          installer-parallel: true
       #----------------------------------------------
       #       load cached venv if cache exists
       #----------------------------------------------
