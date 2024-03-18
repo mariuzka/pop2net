@@ -1,7 +1,6 @@
 """Create a population for the simulation."""
 from __future__ import annotations
 
-import copy
 import random
 import warnings
 
@@ -12,11 +11,10 @@ import pandas as pd
 import popy
 import popy.utils as utils
 
-from . import agent as _agent
 from .exceptions import PopyException
 
 class PopMaker:
-    """Create a population for the simulation."""
+    """Creates and connects agents and locations."""
 
     def __init__(
         self,
@@ -50,25 +48,25 @@ class PopMaker:
         sample_weight: str | None = None,
         replace_sample_level_column: bool = True,
     ) -> pd.DataFrame:
-        """Draw a sample from a base population.
+        """Draw a sample from a dataframe.
 
         Args:
-            df (:class:`pandas.DataFrame`): DF of the actual population
-            n (int): Target size of the final sample. If this is higher the the size of the input
+            df (:class:`pandas.DataFrame`): a pandas DataFrame
+            n (int): Target size of the final sample. If this is higher the size of the input
                 DataFrame, the sampling will occure with replacement. Without otherwise. If `n` is
                 set to `None`, df is returned as it is.
-            sample_level (str, optional): A variable the specifies groups in the data. For
-                instance a household ID to sample by households. Defaults to None.
-            sample_weight (str, optional): _description_. Defaults to None.
+            sample_level (str, optional): A variable the specifies sample units,
+                i.e. rows that should always
+            be sampled together. For instance, a household ID to sample by households.
+                Defaults to None.
+            sample_weight (str, optional): The column of df which should be used as
+                probability weight. Defaults to None.
             replace_sample_level_column (bool): Should the original values of the sample level be
                 overwritten by unique values after sampling to avoid duplicates?
 
         Returns:
-            The drawn sample.
+            A pandas DataFrame.
         """
-        # TODO: Möglichkeit einbauen, zu erzwingen n_agents genau zu treffen,
-        # falls sample_level an ist
-
         df = df.copy()
         df = df.sample(frac=1)
 
@@ -120,19 +118,23 @@ class PopMaker:
             df: pd.DataFrame | None = None,
             n: int | None = None,
     ) -> popy.AgentList:
-        """Creates one agent-instance of the given agent-class for each row of the given df.
+        """Creates agents from a pandas DataFrame.
 
+        Creates one agent-instance of the given agent-class for each row of the given df,
+        if df is not None.
         All columns of the df are added as instance attributes containing the row-specific values
         of the specific column.
+        If df is None and n is not None, n default agents without any additional attributes are
+        created.
 
         Args:
-            df: The DataFrame from which the agents should be created from.
             agent_class: A class to instantiate all agents with. Every column in the DataFrame will
                 result in an attribute of the agents.
+            df: The DataFrame from which the agents should be created from.
             n: The number of agents that should be created. Defaults to None.
 
         Returns:
-            A list of agents, created based on the input.
+            A list of agents.
         """
         if df is not None:
             df = df.copy()
@@ -204,7 +206,7 @@ class PopMaker:
 
         all_values = []
         for agent in agents:
-            agent_values = make_it_a_list_if_it_is_no_list(dummy_location.split(agent))
+            agent_values = utils.make_it_a_list_if_it_is_no_list(dummy_location.split(agent))
 
             if allow_nesting:
                 # Add mother location's value to the value of the lower level location
@@ -220,16 +222,7 @@ class PopMaker:
 
         return set(all_values)
 
-    def get_stick_value(self, agent, dummy_location):
-        """_summary_.
-
-        Args:
-            agent (_type_): _description_
-            dummy_location (_type_): _description_
-
-        Returns:
-            _type_: _description_
-        """
+    def _get_stick_value(self, agent, dummy_location):
         stick_value = dummy_location.stick_together(agent)
         if stick_value is None:
             return "None" + str(agent.id)
@@ -238,7 +231,6 @@ class PopMaker:
 
 
     def _get_groups(self, agents, location_cls) -> list[list]:
-
         dummy_location = self._create_dummy_location(location_cls)
 
         # determine the number of groups needed
@@ -252,7 +244,7 @@ class PopMaker:
             n_location_groups = dummy_location.n_locations
 
 
-        stick_values = {self.get_stick_value(agent, dummy_location) for agent in agents}
+        stick_values = {self._get_stick_value(agent, dummy_location) for agent in agents}
         groups: list[list] = [[]]
         dummy_location = self._create_dummy_location(location_cls)
 
@@ -260,7 +252,7 @@ class PopMaker:
         for stick_value in stick_values:
             sticky_agents = [
                 agent for agent in agents
-                if self.get_stick_value(agent, dummy_location) == stick_value
+                if self._get_stick_value(agent, dummy_location) == stick_value
             ]
 
             assigned = False
@@ -410,17 +402,17 @@ class PopMaker:
 
     def create_locations(
         self,
-        agents,
-        location_classes,
-    ):
-        """_summary_.
+        agents: list | popy.AgentList,
+        location_classes: list,
+    ) -> popy.LocationList:
+        """Creates location instances and connects them with the given agent population.
 
         Args:
-            agents (_type_): _description_
-            location_classes (_type_): _description_
+            agents (list | popy.AgentList): A list of agents.
+            location_classes (list): A list of location classes.
 
         Returns:
-            _type_: _description_
+            popy.LocationList: A list of locations.
         """
         self._dummy_model = popy.Model()
         self._dummy_model.agents = agents
@@ -480,12 +472,12 @@ class PopMaker:
 
                 # if this location does not glue together other locations
                 if not dummy_location.melt():
-                    group_lists: [[_agent]] = self._get_groups(
+                    group_lists: list[list] = self._get_groups(
                         agents=group_value_affiliated_agents,
                         location_cls=location_cls,
                     )
                 else:
-                    group_lists: [[_agent]] = self._get_melted_groups(
+                    group_lists = self._get_melted_groups(
                         agents=group_value_affiliated_agents,
                         location_cls=location_cls,
                     )
@@ -501,7 +493,7 @@ class PopMaker:
                         agent_subgroup_value
                         for agent in group_list
                         for agent_subgroup_value
-                        in make_it_a_list_if_it_is_no_list(dummy_location.subsplit(agent))
+                        in utils.make_it_a_list_if_it_is_no_list(dummy_location.subsplit(agent))
                     }
 
                     # for each group of agents assigned to a specific sublocation
@@ -512,7 +504,7 @@ class PopMaker:
 
                         #for agent in group_affiliated_agents:
                         for agent in group_list:
-                            agent_subgroup_value = make_it_a_list_if_it_is_no_list(
+                            agent_subgroup_value = utils.make_it_a_list_if_it_is_no_list(
                                 dummy_location.subsplit(agent),
                             )
                             if subgroup_value in agent_subgroup_value:
@@ -571,7 +563,7 @@ class PopMaker:
         self,
         df: pd.DataFrame,
         location_classes: list,
-        agent_class=popy.Agent,
+        agent_class: type[popy.Agent]=popy.Agent,
         n_agents: int | None = None,
         sample_level: str | None = None,
         sample_weight: str | None = None,
@@ -585,8 +577,9 @@ class PopMaker:
             df (pd.DataFrame): A data set with individual data that forms the basis for
                 the creation of agents. Each row is (potentially) translated into one agent.
                 Each column is translated into one agent attribute.
-            agent_class (_type_): The class from which the agent instances are created.
-            location_classes (_type_): The class from which the location instances are created.
+            agent_class (type[popy.Agent]): The class from which the agent instances are created.
+            location_classes (list): A list of classes from which the location instances are
+                created.
             n_agents (Optional[int], optional): The number of agents that will be created.
                 If `n_agents` is set to None, each row of `df` is translated into exactly one agent.
                 Otherwise, rows are randomly drawn (with replacement,
@@ -596,11 +589,13 @@ class PopMaker:
                 the rows are sampled individually.
                 Otherwise the rows are sampled as groups. `sample_level` defines
                 which column of `df` contains the group id.
-            sample_weight (Optional[str]): <description>
-            replace_sample_level_column (bool): <description>
+            sample_weight (Optional[str]): The column of df in which should be used as probability
+                weight during sampling.
+            replace_sample_level_column (bool): Should the original values of the sample level be
+                overwritten by unique values after sampling to avoid duplicates?
 
         Returns:
-            tuple: _description_
+            tuple: A list of agents and a list of locations.
         """
         # draw a sample from dataset
         df_sample = self.draw_sample(
@@ -664,15 +659,15 @@ class PopMaker:
 
 
     def _plot_network(
-            self, 
+            self,
             network_type,
-            node_color: str,
+            node_color: str | None,
             node_attrs: list | None,
             edge_alpha: str,
             edge_color: str,
             include_0_weights: bool,
-            ):
-        
+    ):
+
         if network_type == "bipartite":
             graph = self.model.env.g.copy()
             for i in graph:
@@ -681,13 +676,13 @@ class PopMaker:
                         graph.nodes[i][node_attr] = graph.nodes[i]["_obj"][node_attr]
                 del graph.nodes[i]["_obj"]
             node_color = "bipartite" if node_color is None else node_color
-        
+
         elif network_type == "agent":
             graph = utils.create_agent_graph(
-                agents=self.agents, 
-                node_attrs=node_attrs, 
+                agents=self.agents,
+                node_attrs=node_attrs,
                 include_0_weights=include_0_weights,
-                )
+            )
             node_color = "firebrick" if node_color is None else node_color
 
         graph_layout = nx.drawing.spring_layout(graph)
@@ -700,13 +695,28 @@ class PopMaker:
         )
 
     def plot_bipartite_network(
-            self, 
-            node_color: str = None,
+            self,
+            node_color: str | None = None,
             node_attrs: list | None = None,
             edge_alpha: str = "weight",
             edge_color: str = "black",
             include_0_weights: bool = True,
-            ) -> None:
+    ) -> None:
+        """Plots the two-mode network of agents and locations.
+
+        Args:
+            node_color (str, optional): The node attribute that determines the
+                color of the nodes. If None, the node color represents whether
+                it is a location or an agent instance.
+            node_attrs (list | None, optional): A list of agent and location attributes that
+                should be shown as node attributes in the network graph. Defaults to None.
+            edge_alpha (str, optional): The node attribute that determines the edges' transparency.
+                Defaults to "weight".
+            edge_color (str, optional): The node attribute that determines the edges' color.
+                Defaults to "black".
+            include_0_weights (bool, optional): Should edges with a weight of zero be included in
+                the plot? Defaults to True.
+        """
         self._plot_network(
             network_type="bipartite",
             node_color=node_color,
@@ -715,16 +725,30 @@ class PopMaker:
             edge_color=edge_color,
             include_0_weights=include_0_weights,
         )
-        
+
     def plot_agent_network(
             self,
-            node_color: str = "firebrick",
+            node_color: str | None = "firebrick",
             node_attrs: list | None = None,
             edge_alpha: str = "weight",
             edge_color: str = "black",
             include_0_weights: bool = True,
-            ) -> None:
-        
+    ) -> None:
+        """Plots the agent network.
+
+        Args:
+            node_color (str, optional): The node attribute that determines the
+                color of the nodes. If None, the node color represents whether
+                it is a location or an agent instance.
+            node_attrs (list | None, optional): A list of agent and location attributes that
+                should be shown as node attributes in the network graph. Defaults to None.
+            edge_alpha (str, optional): The node attribute that determines the edges' transparency.
+                Defaults to "weight".
+            edge_color (str, optional): The node attribute that determines the edges' color.
+                Defaults to "black".
+            include_0_weights (bool, optional): Should edges with a weight of zero be included in
+                the plot? Defaults to True.
+        """
         self._plot_network(
             network_type="agent",
             node_color=node_color,
