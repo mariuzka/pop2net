@@ -2,7 +2,6 @@
 from __future__ import annotations
 
 import math
-from typing import Any
 
 from agentpy.objects import Object
 from agentpy.sequences import AgentList
@@ -11,7 +10,10 @@ from . import agent as _agent
 from . import model as _model
 
 class Location(Object):
-    """Base class for location objects."""
+    """Base class for location objects.
+
+    Serves as an user interface for generating network models.
+    """
 
     def __init__(self, model: _model.Model) -> None:
         """Location constructor.
@@ -37,13 +39,13 @@ class Location(Object):
         self.model.env.add_location(self)
 
     def setup(self) -> None:
-        """~ User interface ~ Use this to set attributes, for instance.
+        """Use this method to set attributes, for instance.
 
         This method is called automatically by the population maker after creating an instance.
         """
 
     def add_agent(self, agent: _agent.Agent) -> None:
-        """Add the given agent to the graph.
+        """Assigns the given agent to this location.
 
         Args:
             agent: The agent that should be added to the location.
@@ -70,7 +72,7 @@ class Location(Object):
         return len(self.agents)
 
     def remove_agent(self, agent: _agent.Agent) -> None:
-        """Removes the given agent from the graph.
+        """Removes the given agent from this location.
 
         Args:
             agent: Agent that is to be removed.
@@ -90,60 +92,6 @@ class Location(Object):
         agents.remove(agent)
         return agents
 
-    def filter(self, agent: _agent.Agent) -> bool:  # noqa: ARG002
-        """~ User interface ~ Check whether the agent is meant to join this type of location.
-
-        This is a boilerplate implementation of this method which always returns True; i.e. all
-        agents will always be allowed at this location. Override this method in your own
-        implementations as you seem fit.
-
-        Args:
-            agent: Agent that should be checked.
-
-        Returns:
-            True if the agent is allowed to join the location, False otherwise.
-        """
-        return True
-
-    def find(self, agent: _agent.Agent) -> bool: # noqa: ARG002
-        """_summary_.
-
-        Args:
-            agent (_agent.Agent): _description_
-
-        Returns:
-            bool: _description_
-        """
-        return True
-
-    def split(self, agent: _agent.Agent) -> float | str | list | None:  # noqa: ARG002
-        """~ User interface ~ Allow to create subtypes of this type of location.
-
-        Allows to create subtypes of this type of location if the location instances are created by
-        the population maker.
-
-        For each unique value of the given agent attribute one subtype of this
-        location type will be created.
-
-        Args:
-            agent: Agent of which the agent attribute will be used for subtype creation
-
-        Returns:
-            object: _description_
-        """
-        return None
-
-    def subsplit(self, agent: _agent.Agent) -> Any: # noqa: ARG002
-        """_summary_.
-
-        Args:
-            agent (_agent.Agent): _description_
-
-        Returns:
-            Any: _description_
-        """
-        return None
-
     def is_affiliated(self, agent: _agent.Agent) -> bool:
         """Check if the given agent is connected to this location.
 
@@ -154,21 +102,6 @@ class Location(Object):
             True if agent is affiliated with location, False otherwise
         """
         return agent.id in self.model.env.agents_of_location(self)
-
-    def weight(self, agent: _agent.Agent) -> float:  # noqa: ARG002
-        """~ User interface ~ Define the edge weight.
-
-        Defines how the edge weight between an agent and the location is determined.
-        This is a boilerplate implementation of this method which always returns 1; i.e. all
-        edge weights will be 1. Override this method in your own implementations as you seem fit.
-
-        Args:
-            agent: Agent for which the weight should be determined
-
-        Returns:
-            The edge weight.
-        """
-        return 1
 
     def update_weight(self, agent: _agent.Agent) -> None:
         """Create or update the agent-speific weight.
@@ -183,6 +116,7 @@ class Location(Object):
         for agent_ in self.agents:
             self.update_weight(agent_)
 
+
     def get_weight(self, agent: _agent.Agent) -> float:
         """Return the edge weight between an agent and the location.
 
@@ -194,8 +128,75 @@ class Location(Object):
         """
         return self.model.env.g[agent.id][self.id]["weight"]
 
+    # INTERFACE METHODS:
+    # (Methods that serve as user interface for defining the network via location classes.)
+
+    def filter(self, agent: _agent.Agent) -> bool:  # noqa: ARG002
+        """Check whether the agent is meant to join this type of location.
+
+        This is a boilerplate implementation of this method which always returns True; i.e. all
+        agents will always be allowed at this location. Override this method in your own
+        implementations as you seem fit.
+
+        Args:
+            agent: The agent that is currently processed by the PopMaker.
+
+        Returns:
+            True if the agent is allowed to join the location, False otherwise.
+        """
+        return True
+
+    def find(self, agent: _agent.Agent) -> bool: # noqa: ARG002
+        """Assigns the agent to a specific location instance that meets the requirements.
+
+        Args:
+            agent (_agent.Agent): The agent that is currently processed by the PopMaker.
+
+        Returns:
+            bool: _description_
+        """
+        return True
+
+    def split(self, agent: _agent.Agent) -> float | str | list | None:  # noqa: ARG002
+        """Creates seperate location instances for each unique returned value.
+
+        Args:
+            agent: The agent that is currently processed by the PopMaker.
+
+        Returns:
+            float | str | list | None: The value(s) that determine(s) to which location instance
+                the agent is assigned.
+        """
+        return None
+
+    def subsplit(self, agent: _agent.Agent) -> str | float | None: # noqa: ARG002
+        """Splits a location instance into sub-instances to create a certain network structure.
+
+        Args:
+            agent (_agent.Agent): The agent that is currently processed by the PopMaker.
+
+        Returns:
+            str | float | None: A value or a list of values that represent specific sub-instances.
+        """
+        return None
+
+    def weight(self, agent: _agent.Agent) -> float:  # noqa: ARG002
+        """Defines the edge weight between the agent and the location instance.
+
+        Defines how the edge weight between an agent and the location is determined.
+        This is a boilerplate implementation of this method which always returns 1; i.e. all
+        edge weights will be 1. Override this method in your own implementations as you seem fit.
+
+        Args:
+            agent: The agent that is currently processed by the PopMaker.
+
+        Returns:
+            The edge weight.
+        """
+        return 1
+
     def project_weights(self, agent1: _agent.Agent, agent2: _agent.Agent) -> float:
-        """~ User interface ~ Defines how the weights between two agent are combined.
+        """Calculates the edge weight between two agents assigned to the same location instance.
 
         Defines how the weights are combined when the edge weight between two agents is determined.
         Can be completely rewritten to have location-specific methods of this kind with the same
@@ -213,38 +214,42 @@ class Location(Object):
         """
         return min([self.get_weight(agent1), self.get_weight(agent2)])
 
-
     def stick_together(self, agent: _agent.Agent) -> float | str:
-        """Sticks agents together by attribute.
+        """Assigns agents with a shared value on an attribute to the same location instance.
 
         Args:
-            agent (_agent.Agent): An agent instance.
+            agent (_agent.Agent): The agent that is currently processed by the PopMaker.
 
         Returns:
-            Any: _description_
+            float | str: A value that defines the groups of agents.
         """
         return agent.id
 
-    # TODO: rename this method
-    def do_this_after_creation(self):
-        """_summary_."""
-        pass
+    def nest(self) -> type[Location] | None:
+        """Nests this location class into another location class.
 
-    def nest(self) -> Location | None:
-        """_summary_.
+        Ensures that the agents assigned to the same instance of this location class
+        are also assigned to the same instance of the returned location class.
 
         Returns:
-            _type_: _description_
+           type[Location] | None: The location class in which this location class should be nested.
         """
         return None
 
     def melt(self) -> list[Location] | tuple[Location]:
-        """_summary_.
+        """Allows to assign agents with different attribute values to the same location.
+
+        Merges the agents assigned to the instances of the returned location classes
+        into one instance of this location class.
 
         Returns:
-            None | list | tuple: _description_
+            None | list | tuple: A list or tuple of location classes.
         """
         return []
+
+    def do_this_after_creation(self):
+        """An action that is performed after all location instances have been created."""
+        pass
 
 
 class LineLocation(Location):
