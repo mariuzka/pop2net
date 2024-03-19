@@ -670,7 +670,7 @@ class PopMaker:
                     for node_attr in node_attrs:
                         graph.nodes[i][node_attr] = graph.nodes[i]["_obj"][node_attr]
                 del graph.nodes[i]["_obj"]
-            node_color = "bipartite" if node_color is None else node_color
+            node_color = "cls" if node_color is None else node_color
 
         elif network_type == "agent":
             graph = utils.create_agent_graph(
@@ -712,6 +712,14 @@ class PopMaker:
             include_0_weights (bool, optional): Should edges with a weight of zero be included in
                 the plot? Defaults to True.
         """
+        if node_attrs is None:
+            node_attrs = ["cls"]
+        elif isinstance(node_attrs, list):
+            if "cls" not in node_attrs:
+                node_attrs.append(node_attrs)
+        else:
+            raise Exception
+
         self._plot_network(
             network_type="bipartite",
             node_color=node_color,

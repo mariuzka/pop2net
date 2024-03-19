@@ -1,6 +1,8 @@
 """Base class to create Location objects."""
 from __future__ import annotations
 
+import popy.utils as utils
+
 import math
 
 from agentpy.objects import Object
@@ -27,6 +29,7 @@ class Location(Object):
         self.subgroup_id: int | None = None
         self.group_value: int | str | None = None
         self.subgroup_value: int | str | None = None
+        self.cls: str = utils._get_cls_as_str(type(self))
 
         self.size: int | None = None
         self.allow_overcrowding: bool = True
