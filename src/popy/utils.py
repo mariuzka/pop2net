@@ -535,3 +535,6 @@ def make_it_a_list_if_it_is_no_list(x: object) -> list:
         return x
     else:
         return [x]
+
+def _get_cls_as_str(cls):
+    return str(cls).split(".")[1].split("'")[0]

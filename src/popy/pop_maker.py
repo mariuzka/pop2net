@@ -395,11 +395,6 @@ class PopMaker:
 
         return all_melted_groups
 
-
-    def _get_cls_as_str(self, cls):
-        return str(cls).split(".")[1].split("'")[0]
-
-
     def create_locations(
         self,
         agents: list | popy.AgentList,
@@ -421,7 +416,7 @@ class PopMaker:
 
         for location_cls in location_classes:
 
-            str_location_cls = self._get_cls_as_str(location_cls)
+            str_location_cls = utils._get_cls_as_str(location_cls)
             for agent in agents:
                 setattr(agent, str_location_cls, None)
 
@@ -429,7 +424,7 @@ class PopMaker:
 
         # for each location class
         for location_cls in location_classes:
-            str_location_cls = self._get_cls_as_str(location_cls)
+            str_location_cls = utils._get_cls_as_str(location_cls)
 
             #WaRUM GEHT DAS NICHT???????????????
             random.shuffle(agents)
