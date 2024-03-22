@@ -548,3 +548,6 @@ def make_it_a_list_if_it_is_no_list(x: object) -> list:
 
 def _get_cls_as_str(cls):
     return str(cls).split(".")[1].split("'")[0]
+
+def _join_positions(pos1, pos2):
+    return "-".join(sorted([str(pos1), str(pos2)]))
