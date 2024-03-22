@@ -4,6 +4,7 @@ from __future__ import annotations
 import popy.utils as utils
 
 import math
+import networkx as nx
 
 from agentpy.objects import Object
 from agentpy.sequences import AgentList
@@ -38,6 +39,7 @@ class Location(Object):
         self.round_function = round
         self.multi_melt: bool = True
         self.n_branches: int = 2
+        self.nxgraph: nx.Graph | None = None
 
         self.model.env.add_location(self)
 
@@ -130,6 +132,7 @@ class Location(Object):
             Edge weight.
         """
         return self.model.env.g[agent.id][self.id]["weight"]
+    
 
     # INTERFACE METHODS:
     # (Methods that serve as user interface for defining the network via location classes.)
@@ -172,7 +175,7 @@ class Location(Object):
         """
         return None
 
-    def subsplit(self, agent: _agent.Agent) -> str | float | None: # noqa: ARG002
+    def subsplit(self, agent: _agent.Agent) -> str | float | list | None: # noqa: ARG002
         """Splits a location instance into sub-instances to create a certain network structure.
 
         Args:
@@ -181,7 +184,15 @@ class Location(Object):
         Returns:
             str | float | None: A value or a list of values that represent specific sub-instances.
         """
-        return None
+        if self.nxgraph is None:
+            return None
+        else:
+            pos = self.group_agents.index(agent)
+            return [
+                utils._join_positions(pos1=pos, pos2=neighbor) 
+                for neighbor 
+                in self.nxgraph.neighbors(pos)
+                ]
 
     def weight(self, agent: _agent.Agent) -> float:  # noqa: ARG002
         """Defines the edge weight between the agent and the location instance.
@@ -253,6 +264,8 @@ class Location(Object):
     def do_this_after_creation(self):
         """An action that is performed after all location instances have been created."""
         pass
+
+
 
 
 class LineLocation(Location):
@@ -338,6 +351,7 @@ class TreeLocation(Location):
             _type_: _description_
         """
         if isinstance(self, StarLocation):
+            self.size = self.size if self.size is not None else len(self.group_agents)
             self.n_branches = self.size - 1
 
         self._TEMP_infected = True
