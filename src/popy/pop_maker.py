@@ -115,6 +115,8 @@ class PopMaker:
     def create_agents(
             self,
             agent_class = popy.Agent,
+            agent_class_attr: None | str = None,
+            agent_class_dict: None | dict = None,
             df: pd.DataFrame | None = None,
             n: int | None = None,
     ) -> popy.AgentList:
@@ -142,7 +144,11 @@ class PopMaker:
             # create one agent for each row in df
             agents = []
             for _, row in df.iterrows():
-                agent = agent_class(model=self.model)
+                if agent_class_dict is None:
+                    agent = agent_class(model=self.model)
+                else:
+                    agent = agent_class_dict[row[agent_class_attr]](model=self.model)
+
                 for col_name in df.columns:
                     if col_name == "id":
                         msg = "You are not allowed to set an agent attribute called `id`."
@@ -559,6 +565,8 @@ class PopMaker:
         df: pd.DataFrame,
         location_classes: list,
         agent_class: type[popy.Agent]=popy.Agent,
+        agent_class_attr: None | str = None,
+        agent_class_dict: None | dict = None,
         n_agents: int | None = None,
         sample_level: str | None = None,
         sample_weight: str | None = None,
@@ -602,7 +610,12 @@ class PopMaker:
         )
 
         # create agents
-        agents = self.create_agents(df=df_sample, agent_class=agent_class)
+        agents = self.create_agents(
+            df=df_sample, 
+            agent_class=agent_class, 
+            agent_class_attr=agent_class_attr,
+            agent_class_dict=agent_class_dict,
+            )
 
         # create locations
         locations = self.create_locations(agents=agents, location_classes=location_classes)
