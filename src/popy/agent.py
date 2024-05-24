@@ -44,16 +44,19 @@ class Agent(ap.Agent):
         This is executed on the instantiation of each agent.
         """
 
-    def neighbors(self) -> ap.AgentList:
+    def neighbors(self, location_classes: list = []) -> ap.AgentList:
         """Return all neighbors of an agent.
 
         Convenience method that returns all neighbors over all locations this agent is currently
-        located in.
+        located in. The locations to be considered can be defined with location_classes.
+
+        Args:
+            location_classes: A list of location_classes. 
 
         Returns:
             All agents co-located with this agent over all locations.
         """
-        return self.model.env.neighbors_of_agent(self)
+        return self.model.env.neighbors_of_agent(self, location_classes=location_classes)
 
     def add_location(self, location: _location.Location) -> None:
         """Add this Agent to a given location.

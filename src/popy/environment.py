@@ -16,6 +16,8 @@ if typing.TYPE_CHECKING:
 
 from popy.sequences import LocationList
 
+import popy.utils as utils
+
 class Environment:
     """The simulation environment."""
 
@@ -156,18 +158,37 @@ class Environment:
             (self.g.nodes[node]["_obj"] for node in nodes if self.g.nodes[node]["bipartite"] == 1),
         )
 
-    def neighbors_of_agent(self, agent: _agent.Agent) -> AgentList:
+    def neighbors_of_agent(self, agent: _agent.Agent, location_classes: list = []) -> AgentList:
         """Return a list of neighboring agents for a specific agent.
+        The locations to be considered can be defined with location_classes.
 
         Args:
             agent: Agent of whom the neighbors are to be returned.
+            location_classes: A list of location_classes. 
 
         Returns:
             The list of neighbors for the specified agent.
         """
-        locations = (
-            node for node in self.g.neighbors(agent.id) if self.g.nodes[node]["bipartite"] == 1
-        )
+        
+        if location_classes:
+            location_classes = [
+                (utils._get_cls_as_str(cls) if not isinstance(cls, str) else cls)
+                for cls in location_classes
+                ]
+            
+            locations = (
+                node 
+                for node in self.g.neighbors(agent.id) 
+                if self.g.nodes[node]["bipartite"] == 1
+                and self.g.nodes[node]["_obj"].cls in location_classes
+            )
+        else:
+            locations = (
+                node 
+                for node in self.g.neighbors(agent.id) 
+                if self.g.nodes[node]["bipartite"] == 1
+            )
+
         neighbor_agents = {
             agent_id
             for location_id in locations
