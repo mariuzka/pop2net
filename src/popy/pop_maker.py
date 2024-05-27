@@ -119,7 +119,7 @@ class PopMaker:
             agent_class_dict: None | dict = None,
             df: pd.DataFrame | None = None,
             n: int | None = None,
-            clear_agents: bool = True,
+            clear_agents: bool = False,
     ) -> popy.AgentList:
         """Creates agents from a pandas DataFrame.
 
@@ -414,7 +414,7 @@ class PopMaker:
         self,
         agents: list | popy.AgentList,
         location_classes: list,
-        clear_locations: bool = True,
+        clear_locations: bool = False,
     ) -> popy.LocationList:
         """Creates location instances and connects them with the given agent population.
 
