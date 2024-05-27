@@ -119,6 +119,7 @@ class PopMaker:
             agent_class_dict: None | dict = None,
             df: pd.DataFrame | None = None,
             n: int | None = None,
+            clear_agents: bool = True,
     ) -> popy.AgentList:
         """Creates agents from a pandas DataFrame.
 
@@ -134,10 +135,18 @@ class PopMaker:
                 result in an attribute of the agents.
             df: The DataFrame from which the agents should be created from.
             n: The number of agents that should be created. Defaults to None.
+            clear_agents: Should existing agents be removed before creating new ones?
 
         Returns:
             A list of agents.
         """
+        # remove agents from environment (network)
+        if clear_agents:
+            agent_nodes = [node for node in self.model.env.g.nodes if self.model.env.g.nodes[node]["bipartite"] == 0]
+            for agent_node in agent_nodes:
+                self.model.env.g.remove_node(agent_node)
+            self.agents = None
+
         if df is not None:
             df = df.copy()
 
@@ -405,16 +414,26 @@ class PopMaker:
         self,
         agents: list | popy.AgentList,
         location_classes: list,
+        clear_locations: bool = True,
     ) -> popy.LocationList:
         """Creates location instances and connects them with the given agent population.
 
         Args:
             agents (list | popy.AgentList): A list of agents.
             location_classes (list): A list of location classes.
+            clear_locations: Should existing locations be removed before creating new ones?
 
         Returns:
             popy.LocationList: A list of locations.
         """
+
+        # remove locations from environment (network)
+        if clear_locations:
+            location_nodes = [node for node in self.model.env.g.nodes if self.model.env.g.nodes[node]["bipartite"] == 1]
+            for location_node in location_nodes:
+                self.model.env.g.remove_node(location_node)
+            self.locations = None
+
         self._dummy_model = popy.Model()
         self._dummy_model.agents = agents
         for agent in agents:
