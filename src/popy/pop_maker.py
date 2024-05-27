@@ -427,6 +427,8 @@ class PopMaker:
             popy.LocationList: A list of locations.
         """
 
+        if agents is None:
+            agents = self.agents
         # remove locations from environment (network)
         if clear_locations:
             location_nodes = [node for node in self.model.env.g.nodes if self.model.env.g.nodes[node]["bipartite"] == 1]
