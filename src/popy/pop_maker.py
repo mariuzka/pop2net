@@ -175,7 +175,12 @@ class PopMaker:
 
 
         agents = popy.AgentList(model=self.model, objs=agents)
-        self.agents = agents
+        
+        # Save agents 
+        if self.agents is None:
+            self.agents = agents
+        else:
+            self.agents.extend(agents)
 
         return self.agents
 
@@ -412,15 +417,15 @@ class PopMaker:
 
     def create_locations(
         self,
-        agents: list | popy.AgentList,
         location_classes: list,
+        agents: list | popy.AgentList | None = None,
         clear_locations: bool = False,
     ) -> popy.LocationList:
         """Creates location instances and connects them with the given agent population.
 
         Args:
-            agents (list | popy.AgentList): A list of agents.
             location_classes (list): A list of location classes.
+            agents (list | popy.AgentList): A list of agents.
             clear_locations: Should existing locations be removed before creating new ones?
 
         Returns:
@@ -429,6 +434,7 @@ class PopMaker:
 
         if agents is None:
             agents = self.agents
+
         # remove locations from environment (network)
         if clear_locations:
             location_nodes = [node for node in self.model.env.g.nodes if self.model.env.g.nodes[node]["bipartite"] == 1]
@@ -557,11 +563,16 @@ class PopMaker:
         # TODO:
         # Warum gibt es keinen Fehler, wenn man ein Argument falsch schreibt? Habe gerade ewig
         # nach einem Bug gesucht und letzt hatte ich nur das "j" in "objs" vergessen
-        self.agents = agents
-        self.locations = popy.LocationList(
+        locations = popy.LocationList(
             model=self.model,
             objs=locations,
         )
+
+        # save locations
+        if self.locations is None:
+            self.locations = locations
+        else:
+            self.locations.extend(locations)
 
         self._dummy_model.locations = locations
 
