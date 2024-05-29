@@ -65,7 +65,15 @@ class Agent(ap.Agent):
             location: Add agent to this location.
         """
         self.model.env.add_agent_to_location(self, location)
+    
+    def leave_location(self, location: _location.Location) -> None:
+        """Remove this Agent from a given location.
 
+        Args:
+            location: Remove agent from this location.
+        """
+        self.model.env.remove_agent_from_location(self, location)
+    
     @property
     def locations(self) -> _sequences.LocationList:
         """Return a list of locations that this agent is associated with.
