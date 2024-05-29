@@ -58,7 +58,7 @@ class Agent(ap.Agent):
         """
         return self.model.env.neighbors_of_agent(self, location_classes=location_classes)
 
-    def add_location(self, location: _location.Location) -> None:
+    def enter_location(self, location: _location.Location) -> None:
         """Add this Agent to a given location.
 
         Args:
