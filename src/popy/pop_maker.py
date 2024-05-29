@@ -182,7 +182,7 @@ class PopMaker:
         else:
             self.agents.extend(agents)
 
-        return self.agents
+        return agents
 
 
     def _get_affiliated_agents(self, agents, dummy_location) -> list:
