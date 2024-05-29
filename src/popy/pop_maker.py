@@ -178,7 +178,7 @@ class PopMaker:
         
         # Save agents 
         if self.agents is None:
-            self.agents = agents
+            self.agents = agents.copy()
         else:
             self.agents.extend(agents)
 
