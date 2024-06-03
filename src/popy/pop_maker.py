@@ -181,6 +181,7 @@ class PopMaker:
             self.agents = agents.copy()
         else:
             self.agents.extend(agents)
+            self.agents = popy.AgentList(model=self.model, objs=self.agents)
 
         return agents
 
