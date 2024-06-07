@@ -12,6 +12,11 @@ from agentpy.sequences import AgentList
 from . import agent as _agent
 from . import model as _model
 
+# Beispielcode für neuen LocationGenerator
+class LocationGenerator:
+    def __init__(self) -> None:
+        self.location_class = Location
+
 class Location(Object):
     """Base class for location objects.
 
@@ -26,6 +31,8 @@ class Location(Object):
         """
         super().__init__(model)
         self.model = model
+        self.env = None
+        
         self.group_id: int | None = None
         self.subgroup_id: int | None = None
         self.group_value: int | str | None = None
@@ -41,7 +48,7 @@ class Location(Object):
         self.n_branches: int = 2
         self.nxgraph: nx.Graph | None = None
 
-        self.model.env.add_location(self)
+        #self.model.env.add_location(self)
 
     def setup(self) -> None:
         """Use this method to set attributes, for instance.
@@ -55,7 +62,10 @@ class Location(Object):
         Args:
             agent: The agent that should be added to the location.
         """
-        self.model.env.add_agent_to_location(self, agent)
+        #TODO: evtl. das IF-statement wegmachen, da ineffizient und unnötig
+        if agent not in self.env.agents:
+            self.env.add_agent(agent)
+        self.env.add_agent_to_location(self, agent)
         self.update_weight(agent)
 
     @property
@@ -65,7 +75,7 @@ class Location(Object):
         Returns:
             List of agents at this location.
         """
-        return self.model.env.agents_of_location(self)
+        return self.env.agents_of_location(self)
 
     @property
     def n_affiliated_agents(self) -> int:
@@ -82,7 +92,7 @@ class Location(Object):
         Args:
             agent: Agent that is to be removed.
         """
-        self.model.env.remove_agent_from_location(self, agent)
+        self.env.remove_agent_from_location(self, agent)
 
     def neighbors(self, agent: _agent.Agent) -> AgentList:
         """Returns a list of agents which are connected to the given agent via this location.
@@ -93,7 +103,7 @@ class Location(Object):
         Returns:
             AgentList: A list of all agents at this location except the passed agent.
         """
-        agents = self.model.env.agents_of_location(self)
+        agents = self.env.agents_of_location(self)
         agents.remove(agent)
         return agents
 
@@ -106,7 +116,7 @@ class Location(Object):
         Returns:
             True if agent is affiliated with location, False otherwise
         """
-        return agent.id in self.model.env.agents_of_location(self)
+        return agent.id in self.env.agents_of_location(self)
 
     def update_weight(self, agent: _agent.Agent) -> None:
         """Create or update the agent-speific weight.
@@ -114,7 +124,7 @@ class Location(Object):
         Args:
             agent: The agent to be updated.
         """
-        self.model.env.g[agent.id][self.id]["weight"] = self.weight(agent)
+        self.env.g[agent.id][self.id]["weight"] = self.weight(agent)
 
     def update_weights(self) -> None:
         """Update the weight of every agent on this location."""
@@ -131,7 +141,7 @@ class Location(Object):
         Returns:
             Edge weight.
         """
-        return self.model.env.g[agent.id][self.id]["weight"]
+        return self.env.g[agent.id][self.id]["weight"]
     
 
     # INTERFACE METHODS:

@@ -33,7 +33,9 @@ class Agent(ap.Agent):
         super().__init__(model, *args, **kwargs)
 
         self.model = model
-        self.model.env.add_agent(self)
+        self.env = None
+
+        #self.model.env.add_agent(self)
         self.setup()
         self.cls = utils._get_cls_as_str(type(self))
 
@@ -56,23 +58,26 @@ class Agent(ap.Agent):
         Returns:
             All agents co-located with this agent over all locations.
         """
-        return self.model.env.neighbors_of_agent(self, location_classes=location_classes)
+        return self.env.neighbors_of_agent(self, location_classes=location_classes)
+    
+    def shared_locations(self, agent):
+        return self.env.locations_between_agents(agent1=self, agent2=agent)
 
-    def enter_location(self, location: _location.Location) -> None:
+    def add_location(self, location: _location.Location) -> None:
         """Add this Agent to a given location.
 
         Args:
             location: Add agent to this location.
         """
-        self.model.env.add_agent_to_location(self, location)
+        self.env.add_agent_to_location(self, location)
     
-    def leave_location(self, location: _location.Location) -> None:
+    def remove_location(self, location: _location.Location) -> None:
         """Remove this Agent from a given location.
 
         Args:
             location: Remove agent from this location.
         """
-        self.model.env.remove_agent_from_location(self, location)
+        self.env.remove_agent_from_location(self, location)
     
     @property
     def locations(self) -> _sequences.LocationList:
@@ -81,7 +86,7 @@ class Agent(ap.Agent):
         Returns:
             A list of locations.
         """
-        return self.model.env.locations_of_agent(self)
+        return self.env.locations_of_agent(self)
 
     def contact_weight(self, agent_v: Agent) -> float:
         """Return the contact weight between this agent and a given other agent.

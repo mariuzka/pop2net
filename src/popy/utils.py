@@ -157,58 +157,6 @@ def create_contact_matrix(
         return df
 
 
-def eval_affiliations(agents, locations, return_data=False) -> None:
-    """Prints information on the distribution of agents per location and locations per agent.
-
-    Raises:
-        PopyException: _description_
-        PopyException: _description_
-    """
-    #if self.agents is None:
-    #    msg = "You have to create agents first!"
-    #    raise PopyException(msg)
-
-    #if self.locations is None:
-    #    msg = "You have to create locations first!"
-    #    raise PopyException(msg)
-
-    df1 = pd.DataFrame(
-        [
-            {
-                "location_class": str(type(location)).split(".")[-1].split("'")[0],
-                "n_agents": len(location.agents),
-            }
-            for location in locations
-        ],
-    )
-
-    df1 = df1.groupby("location_class").describe()
-    df1.columns = df1.columns.droplevel()
-    df1 = df1.drop("count", axis=1)
-    
-
-    print_header("Number of agents per location")
-    print(df1)
-
-    df2 = pd.DataFrame(
-        [
-            {
-                "agent_id": agent.id,
-                "n_affiliated_locations": len(agent.locations),
-            }
-            for agent in agents
-        ],
-    )
-    df2 = df2.n_affiliated_locations.describe()
-    df2 = df2.drop("count", axis=0)
-
-    print_header("Number of affiliated locations per agent")
-    print(df2)
-
-    if return_data:
-        return df1, df2
-
-
 def location_information(
         locations: list[popy.Location],
         select_locations: popy.Location | list[popy.Location] | None = None,

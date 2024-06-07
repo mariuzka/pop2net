@@ -14,14 +14,14 @@ if typing.TYPE_CHECKING:
     from . import location as _location
     from . import model as _model
 
+import popy
 from popy.sequences import LocationList
-
 import popy.utils as utils
 
 class Environment:
     """The simulation environment."""
 
-    def __init__(self, model: _model.Model) -> None:
+    def __init__(self, model: _model.Model | None = None) -> None:
         """Instantiate the environment and add it to its model.
 
         Args:
@@ -29,6 +29,20 @@ class Environment:
         """
         self.model = model
         self.g = nx.Graph()
+
+    @property
+    def agents(self):
+        return AgentList(
+            model=self.model, 
+            objs=[data["_obj"] for _, data in self.g.nodes(data=True) if data["bipartite"] == 0],
+            )
+    
+    @property
+    def locations(self):
+        return LocationList(
+            model=self.model, 
+            objs=[data["_obj"] for _, data in self.g.nodes(data=True) if data["bipartite"] == 1],
+            )
 
     def add_agent(self, agent: _agent.Agent) -> None:
         """Add an agent to the environment.
@@ -39,8 +53,13 @@ class Environment:
         Args:
             agent: Agent to be added to the environment.
         """
+        agent.env = self
         if not self.g.has_node(agent.id):
             self.g.add_node(agent.id, bipartite=0, _obj=agent)
+    
+    def add_agents(self, agents: list) -> None:
+        for agent in agents:
+            self.add_agent(agent)
 
     def add_location(self, location: _location.Location) -> None:
         """Add a location to the environment.
@@ -51,8 +70,14 @@ class Environment:
         Args:
             location: Location to be added to the environment.
         """
+        location.env = self
         if not self.g.has_node(location.id):
             self.g.add_node(location.id, bipartite=1, _obj=location)
+    
+    def add_locations(self, locations: list) -> None:
+        for location in locations:
+            self.add_location(location)
+
 
     def add_agent_to_location(
         self, location: _location.Location, agent: _agent.Agent, **kwargs,
@@ -93,6 +118,10 @@ class Environment:
         if self.g.has_node(agent.id):
             self.g.remove_node(agent.id)
 
+    def remove_agents(self, agents: list) -> None:
+        for agent in agents:
+            self.remove_agent(agent)
+
     def remove_location(self, location: _location.Location) -> None:
         """Remove a location from the environment.
 
@@ -103,7 +132,11 @@ class Environment:
         """
         if self.g.has_node(location.id):
             self.g.remove_node(location.id)
-
+    
+    def remove_locations(self, locations: list) -> None:
+        for location in locations:
+            self.remove_location(location)
+        
     def remove_agent_from_location(
         self, location: _location.Location, agent: _agent.Agent,
     ) -> None:
@@ -202,6 +235,33 @@ class Environment:
                 for agent_id in neighbor_agents
                 if agent_id != agent.id
             ),
+        )
+    
+    #TODO: evlt. filtern nach Klasse oder Key einbauen
+    def objects_between_objects(self, object1, object2):
+        paths = list(
+            nx.all_simple_paths(
+                G=self.g, 
+                source=object1.id, 
+                target=object2.id, 
+                cutoff=2,
+                )
+        )
+        
+        return [
+            self.g.nodes[path[1]]["_obj"] for path in paths
+            ]
+
+    def locations_between_agents(self, agent1, agent2):
+        return LocationList(
+            model=self.model,
+            objs=self.objects_between_objects(agent1, agent2)
+        )
+    
+    def agents_between_locations(self, location1, location2):
+        return AgentList(
+            model=self.model,
+            objs=self.objects_between_objects(location1, location2)
         )
 
     def set_edge_attribute(

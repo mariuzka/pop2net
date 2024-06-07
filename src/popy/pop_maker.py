@@ -4,12 +4,12 @@ from __future__ import annotations
 import random
 import warnings
 
-from bokehgraph import BokehGraph
-import networkx as nx
+
 import pandas as pd
 
 import popy
 import popy.utils as utils
+from popy.environment import Environment
 
 from .exceptions import PopyException
 
@@ -29,14 +29,16 @@ class PopMaker:
         """
         # TODO: Seed should default to None.
 
-        self.model = model if model is not None else popy.Model()
+        self.model = model
         self.seed = seed
         self.rng = random.Random(seed)
-        self.agents: popy.AgentList | None = None
-        self.locations: popy.LocationList | None = None
+        #self.agents: popy.AgentList | None = None
+        #self.locations: popy.LocationList | None = None
 
     def _create_dummy_location(self, location_cls) -> popy.Location:
         location = location_cls(model=self._dummy_model)
+        location.env = Environment(popy.Model())
+        location.env.add_location(location)
         location.setup()
         return location
 
@@ -114,12 +116,12 @@ class PopMaker:
 
     def create_agents(
             self,
+            env,
             agent_class = popy.Agent,
             agent_class_attr: None | str = None,
             agent_class_dict: None | dict = None,
             df: pd.DataFrame | None = None,
             n: int | None = None,
-            clear_agents: bool = False,
     ) -> popy.AgentList:
         """Creates agents from a pandas DataFrame.
 
@@ -140,12 +142,6 @@ class PopMaker:
         Returns:
             A list of agents.
         """
-        # remove agents from environment (network)
-        if clear_agents:
-            agent_nodes = [node for node in self.model.env.g.nodes if self.model.env.g.nodes[node]["bipartite"] == 0]
-            for agent_node in agent_nodes:
-                self.model.env.g.remove_node(agent_node)
-            self.agents = None
 
         if df is not None:
             df = df.copy()
@@ -175,13 +171,14 @@ class PopMaker:
 
 
         agents = popy.AgentList(model=self.model, objs=agents)
+        env.add_agents(agents)
         
         # Save agents 
-        if self.agents is None:
-            self.agents = agents.copy()
-        else:
-            self.agents.extend(agents)
-            self.agents = popy.AgentList(model=self.model, objs=self.agents)
+        #if self.agents is None:
+        #    self.agents = agents.copy()
+        #else:
+        #    self.agents.extend(agents)
+        #    self.agents = popy.AgentList(model=self.model, objs=self.agents)
 
         return agents
 
@@ -418,6 +415,7 @@ class PopMaker:
 
     def create_locations(
         self,
+        env,
         location_classes: list,
         agents: list | popy.AgentList | None = None,
         clear_locations: bool = False,
@@ -434,16 +432,17 @@ class PopMaker:
         """
 
         if agents is None:
-            agents = self.agents
+            agents = env.agents
 
         # remove locations from environment (network)
         if clear_locations:
-            location_nodes = [node for node in self.model.env.g.nodes if self.model.env.g.nodes[node]["bipartite"] == 1]
+            location_nodes = [node for node in env.g.nodes if env.g.nodes[node]["bipartite"] == 1]
             for location_node in location_nodes:
-                self.model.env.g.remove_node(location_node)
+                env.g.remove_node(location_node)
             self.locations = None
 
         self._dummy_model = popy.Model()
+        self._dummy_model.env = Environment(self.model)
         self._dummy_model.agents = agents
         for agent in agents:
             self._dummy_model.env.add_agent(agent)
@@ -541,6 +540,7 @@ class PopMaker:
 
                         # Build the final location
                         subgroup_location = location_cls(model=self.model)
+                        env.add_location(subgroup_location)
                         subgroup_location.setup()
                         subgroup_location.group_value = group_value
                         subgroup_location.subgroup_value = subgroup_value
@@ -570,15 +570,15 @@ class PopMaker:
         )
 
         # save locations
-        if self.locations is None:
-            self.locations = locations
-        else:
-            self.locations.extend(locations)
+        #if self.locations is None:
+        #    self.locations = locations
+        #else:
+        #    self.locations.extend(locations)
 
         self._dummy_model.locations = locations
 
         # execute an action after all locations have been created
-        for location in self.locations:
+        for location in locations:
             location.do_this_after_creation()
 
         # delete temporary agent attributes
@@ -590,7 +590,7 @@ class PopMaker:
         for location in locations:
             del(location.group_agents)
 
-        return self.locations
+        return locations
 
 
     def make(
@@ -699,110 +699,4 @@ class PopMaker:
         return df
 
 
-    def _plot_network(
-            self,
-            network_type,
-            node_color: str | None,
-            node_attrs: list | None,
-            edge_alpha: str,
-            edge_color: str,
-            include_0_weights: bool,
-    ):
-
-        if network_type == "bipartite":
-            graph = self.model.env.g.copy()
-            for i in graph:
-                if node_attrs is not None:
-                    for node_attr in node_attrs:
-                        graph.nodes[i][node_attr] = graph.nodes[i]["_obj"][node_attr]
-                del graph.nodes[i]["_obj"]
-            node_color = "cls" if node_color is None else node_color
-
-        elif network_type == "agent":
-            graph = utils.create_agent_graph(
-                agents=self.agents,
-                node_attrs=node_attrs,
-                include_0_weights=include_0_weights,
-            )
-            node_color = "firebrick" if node_color is None else node_color
-
-        graph_layout = nx.drawing.spring_layout(graph)
-        plot = BokehGraph(graph, width=500, height=500, hover_edges=True)
-        plot.layout(layout=graph_layout)
-        plot.draw(
-            node_color=node_color,
-            edge_alpha=edge_alpha,
-            edge_color=edge_color,
-        )
-
-    def plot_bipartite_network(
-            self,
-            node_color: str | None = None,
-            node_attrs: list | None = None,
-            edge_alpha: str = "weight",
-            edge_color: str = "black",
-            include_0_weights: bool = True,
-    ) -> None:
-        """Plots the two-mode network of agents and locations.
-
-        Args:
-            node_color (str, optional): The node attribute that determines the
-                color of the nodes. If None, the node color represents whether
-                it is a location or an agent instance.
-            node_attrs (list | None, optional): A list of agent and location attributes that
-                should be shown as node attributes in the network graph. Defaults to None.
-            edge_alpha (str, optional): The node attribute that determines the edges' transparency.
-                Defaults to "weight".
-            edge_color (str, optional): The node attribute that determines the edges' color.
-                Defaults to "black".
-            include_0_weights (bool, optional): Should edges with a weight of zero be included in
-                the plot? Defaults to True.
-        """
-        if node_attrs is None:
-            node_attrs = ["cls"]
-        elif isinstance(node_attrs, list):
-            if "cls" not in node_attrs:
-                node_attrs.append(node_attrs)
-        else:
-            raise Exception
-
-        self._plot_network(
-            network_type="bipartite",
-            node_color=node_color,
-            node_attrs=node_attrs,
-            edge_alpha=edge_alpha,
-            edge_color=edge_color,
-            include_0_weights=include_0_weights,
-        )
-
-    def plot_agent_network(
-            self,
-            node_color: str | None = "firebrick",
-            node_attrs: list | None = None,
-            edge_alpha: str = "weight",
-            edge_color: str = "black",
-            include_0_weights: bool = True,
-    ) -> None:
-        """Plots the agent network.
-
-        Args:
-            node_color (str, optional): The node attribute that determines the
-                color of the nodes. If None, the node color represents whether
-                it is a location or an agent instance.
-            node_attrs (list | None, optional): A list of agent and location attributes that
-                should be shown as node attributes in the network graph. Defaults to None.
-            edge_alpha (str, optional): The node attribute that determines the edges' transparency.
-                Defaults to "weight".
-            edge_color (str, optional): The node attribute that determines the edges' color.
-                Defaults to "black".
-            include_0_weights (bool, optional): Should edges with a weight of zero be included in
-                the plot? Defaults to True.
-        """
-        self._plot_network(
-            network_type="agent",
-            node_color=node_color,
-            node_attrs=node_attrs,
-            edge_alpha=edge_alpha,
-            edge_color=edge_color,
-            include_0_weights=include_0_weights,
-        )
+    

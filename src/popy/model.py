@@ -23,12 +23,13 @@ class Model(ap.Model):
             **kwargs: Optional parameters that are all passed to :class:`agentpy.Model`.
         """
         super().__init__(parameters, _run_id, **kwargs)
-        self.env = Environment(self)
+        #self.env = Environment(self)
 
     def sim_step(self) -> None:
         """Do 1 step in the simulation."""
         self.t += 1
-
+        
+        #TODO: evtl. verallgemeinern?
         for location in [location for location in self.locations if not location.static_weight]:
             location.update_weights()
 
