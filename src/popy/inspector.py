@@ -3,13 +3,12 @@ import networkx as nx
 import popy.utils as utils
 import pandas as pd
 
-class EnvInspector:
+class NetworkInspector:
     def __init__(self, model) -> None:
         self.model = model
 
     def _plot_network(
         self,
-        env,
         network_type,
         node_color: str | None,
         node_attrs: list | None,
@@ -19,7 +18,7 @@ class EnvInspector:
     ):
 
         if network_type == "bipartite":
-            graph = env.g.copy()
+            graph = self.model.g.copy()
             for i in graph:
                 if node_attrs is not None:
                     for node_attr in node_attrs:
@@ -29,7 +28,7 @@ class EnvInspector:
 
         elif network_type == "agent":
             graph = utils.create_agent_graph(
-                agents=env.agents,
+                agents=self.model.agents,
                 node_attrs=node_attrs,
                 include_0_weights=include_0_weights,
             )
@@ -46,7 +45,6 @@ class EnvInspector:
 
     def plot_bipartite_network(
             self,
-            env,
             node_color: str | None = None,
             node_attrs: list | None = None,
             edge_alpha: str = "weight",
@@ -77,7 +75,6 @@ class EnvInspector:
             raise Exception
 
         self._plot_network(
-            env=env,
             network_type="bipartite",
             node_color=node_color,
             node_attrs=node_attrs,
@@ -88,7 +85,6 @@ class EnvInspector:
 
     def plot_agent_network(
             self,
-            env,
             node_color: str | None = "firebrick",
             node_attrs: list | None = None,
             edge_alpha: str = "weight",
@@ -111,7 +107,6 @@ class EnvInspector:
                 the plot? Defaults to True.
         """
         self._plot_network(
-            env=env,
             network_type="agent",
             node_color=node_color,
             node_attrs=node_attrs,
@@ -121,7 +116,7 @@ class EnvInspector:
         )
     
 
-    def eval_affiliations(self, env, return_data=False) -> None:
+    def eval_affiliations(self, return_data=False) -> None:
         """Prints information on the distribution of agents per location and locations per agent.
 
         Raises:
@@ -142,7 +137,7 @@ class EnvInspector:
                     "location_class": str(type(location)).split(".")[-1].split("'")[0],
                     "n_agents": len(location.agents),
                 }
-                for location in env.locations
+                for location in self.model.locations
             ],
         )
 
@@ -160,7 +155,7 @@ class EnvInspector:
                     "agent_id": agent.id,
                     "n_affiliated_locations": len(agent.locations),
                 }
-                for agent in env.agents
+                for agent in self.model.agents
             ],
         )
         df2 = df2.n_affiliated_locations.describe()

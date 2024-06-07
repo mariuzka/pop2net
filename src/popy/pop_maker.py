@@ -9,7 +9,6 @@ import pandas as pd
 
 import popy
 import popy.utils as utils
-from popy.environment import Environment
 
 from .exceptions import PopyException
 
@@ -32,13 +31,9 @@ class PopMaker:
         self.model = model
         self.seed = seed
         self.rng = random.Random(seed)
-        #self.agents: popy.AgentList | None = None
-        #self.locations: popy.LocationList | None = None
 
     def _create_dummy_location(self, location_cls) -> popy.Location:
         location = location_cls(model=self._dummy_model)
-        location.env = Environment(popy.Model())
-        location.env.add_location(location)
         location.setup()
         return location
 
@@ -116,7 +111,6 @@ class PopMaker:
 
     def create_agents(
             self,
-            env,
             agent_class = popy.Agent,
             agent_class_attr: None | str = None,
             agent_class_dict: None | dict = None,
@@ -171,7 +165,6 @@ class PopMaker:
 
 
         agents = popy.AgentList(model=self.model, objs=agents)
-        env.add_agents(agents)
         
         # Save agents 
         #if self.agents is None:
@@ -415,7 +408,6 @@ class PopMaker:
 
     def create_locations(
         self,
-        env,
         location_classes: list,
         agents: list | popy.AgentList | None = None,
         clear_locations: bool = False,
@@ -432,20 +424,12 @@ class PopMaker:
         """
 
         if agents is None:
-            agents = env.agents
-
-        # remove locations from environment (network)
-        if clear_locations:
-            location_nodes = [node for node in env.g.nodes if env.g.nodes[node]["bipartite"] == 1]
-            for location_node in location_nodes:
-                env.g.remove_node(location_node)
-            self.locations = None
+            agents = self.model.agents
 
         self._dummy_model = popy.Model()
-        self._dummy_model.env = Environment(self.model)
-        self._dummy_model.agents = agents
+        #self._dummy_model.agents = agents
         for agent in agents:
-            self._dummy_model.env.add_agent(agent)
+            self._dummy_model.add_agent(agent)
 
         for location_cls in location_classes:
 
@@ -540,7 +524,7 @@ class PopMaker:
 
                         # Build the final location
                         subgroup_location = location_cls(model=self.model)
-                        env.add_location(subgroup_location)
+                        self.model.add_location(subgroup_location)
                         subgroup_location.setup()
                         subgroup_location.group_value = group_value
                         subgroup_location.subgroup_value = subgroup_value
@@ -575,7 +559,7 @@ class PopMaker:
         #else:
         #    self.locations.extend(locations)
 
-        self._dummy_model.locations = locations
+        #self._dummy_model.locations = locations
 
         # execute an action after all locations have been created
         for location in locations:
