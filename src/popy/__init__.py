@@ -8,6 +8,7 @@ from .exceptions import PopyException
 from .location import GridLocation
 from .location import LineLocation
 from .location import Location
+from .inspector import NetworkInspector
 from .location import RingLocation
 from .location import StarLocation
 from .location import TreeLocation
@@ -20,6 +21,7 @@ __all__ = [
     "Agent",
     "PopyException",
     "Location",
+    "NetworkInspector",
     #"Environment",
     "LineLocation",
     "RingLocation",

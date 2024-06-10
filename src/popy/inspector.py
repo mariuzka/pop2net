@@ -16,6 +16,7 @@ class NetworkInspector:
         edge_color: str,
         include_0_weights: bool,
     ):
+        
 
         if network_type == "bipartite":
             graph = self.model.g.copy()
@@ -27,6 +28,13 @@ class NetworkInspector:
             node_color = "cls" if node_color is None else node_color
 
         elif network_type == "agent":
+            
+            # TODO: ACHTUNG HACKY MAN FÜGT HIER EINFACH WAS HINZU
+            if node_color is not None:
+                for agent in self.model.agents:
+                    if not hasattr(agent, node_color):
+                        setattr(agent, node_color, "_")
+
             graph = utils.create_agent_graph(
                 agents=self.model.agents,
                 node_attrs=node_attrs,
