@@ -59,10 +59,14 @@ class Agent(ap.Agent):
         """
         return self.model.neighbors_of_agent(self, location_classes=location_classes)
     
-    def shared_locations(self, agent):
-        return self.model.locations_between_agents(agent1=self, agent2=agent)
+    def shared_locations(self, agent, location_classes):
+        return self.model.locations_between_agents(
+            agent1=self, 
+            agent2=agent, 
+            location_classes=location_classes,
+            )
 
-    def add_location(self, location: _location.Location) -> None:
+    def enter_location(self, location: _location.Location) -> None:
         """Add this Agent to a given location.
 
         Args:
@@ -70,13 +74,21 @@ class Agent(ap.Agent):
         """
         self.model.add_agent_to_location(self, location)
     
-    def remove_location(self, location: _location.Location) -> None:
+    def enter_locations(self, locations: list) -> None:
+        for location in locations:
+            self.leave_location(location)
+
+    def leave_location(self, location: _location.Location) -> None:
         """Remove this Agent from a given location.
 
         Args:
             location: Remove agent from this location.
         """
         self.model.remove_agent_from_location(self, location)
+    
+    def leave_locations(self, locations: list) -> None:
+        for location in locations:
+            self.leave_location(location)
     
     @property
     def locations(self) -> _sequences.LocationList:

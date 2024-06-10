@@ -41,7 +41,6 @@ class Model(ap.Model):
         """Do 1 step in the simulation."""
         self.t += 1
         
-        #TODO: evtl. verallgemeinern?
         for location in [location for location in self.locations if not location.static_weight]:
             location.update_weights()
 
@@ -159,8 +158,7 @@ class Model(ap.Model):
         for location in locations:
             self.remove_location(location)
         
-    def remove_agent_from_location(
-        self, location: _location.Location, agent: _agent.Agent,
+    def remove_agent_from_location(self, location: _location.Location, agent: _agent.Agent,
     ) -> None:
         """Remove an agent from a location.
 
@@ -260,7 +258,7 @@ class Model(ap.Model):
         )
     
     #TODO: evlt. filtern nach Klasse oder Key einbauen
-    def objects_between_objects(self, object1, object2):
+    def objects_between_objects(self, object1, object2, object_classes):
         paths = list(
             nx.all_simple_paths(
                 G=self.g, 
@@ -269,19 +267,25 @@ class Model(ap.Model):
                 cutoff=2,
                 )
         )
-        
-        return [
-            self.g.nodes[path[1]]["_obj"] for path in paths
-            ]
 
-    def locations_between_agents(self, agent1, agent2):
+        objects_between = [self.g.nodes[path[1]]["_obj"] for path in paths]
+
+        if object_classes:
+            object_classes = [
+                (utils._get_cls_as_str(cls) if not isinstance(cls, str) else cls)
+                for cls in object_classes
+                ]
+            objects_between = [o for o in objects_between if o.cls in object_classes]
+        return objects_between
+
+    def locations_between_agents(self, agent1, agent2, location_classes=[]):
         return LocationList(
             model=self.model,
-            objs=self.objects_between_objects(agent1, agent2)
+            objs=self.objects_between_objects(agent1, agent2, location_classes)
         )
     
-    def agents_between_locations(self, location1, location2):
+    def agents_between_locations(self, location1, location2, agent_classes=[]):
         return AgentList(
             model=self.model,
-            objs=self.objects_between_objects(location1, location2)
+            objs=self.objects_between_objects(location1, location2, agent_classes)
         )

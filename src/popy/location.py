@@ -63,6 +63,10 @@ class Location(Object):
         """
         self.model.add_agent_to_location(self, agent)
         self.update_weight(agent)
+    
+    def add_agents(self, agents: list) -> None:
+        for agent in agents:
+            self.add_agent(agent)
 
     @property
     def agents(self) -> AgentList:
@@ -88,7 +92,14 @@ class Location(Object):
         Args:
             agent: Agent that is to be removed.
         """
-        self.model.remove_agent_from_location(self, agent)
+        self.model.remove_agent_from_location(
+            location=self, 
+            agent=agent,
+            )
+    
+    def remove_agents(self, agents: list) -> None:
+        for agent in agents:
+            self.remove_agent(agent=agent)
 
     def neighbors(self, agent: _agent.Agent) -> AgentList:
         """Returns a list of agents which are connected to the given agent via this location.
