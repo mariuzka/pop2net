@@ -17,7 +17,6 @@ class NetworkInspector:
         include_0_weights: bool,
     ):
         
-
         if network_type == "bipartite":
             graph = self.model.g.copy()
             for i in graph:
@@ -28,19 +27,12 @@ class NetworkInspector:
             node_color = "cls" if node_color is None else node_color
 
         elif network_type == "agent":
-            
-            # TODO: ACHTUNG HACKY MAN FÜGT HIER EINFACH WAS HINZU
-            if node_color is not None:
-                for agent in self.model.agents:
-                    if not hasattr(agent, node_color):
-                        setattr(agent, node_color, "_")
-
             graph = utils.create_agent_graph(
                 agents=self.model.agents,
                 node_attrs=node_attrs,
                 include_0_weights=include_0_weights,
             )
-            node_color = "firebrick" if node_color is None else node_color
+            node_color = "cls" if node_color is None else node_color
 
         graph_layout = nx.drawing.spring_layout(graph)
         plot = BokehGraph(graph, width=500, height=500, hover_edges=True)
@@ -114,6 +106,7 @@ class NetworkInspector:
             include_0_weights (bool, optional): Should edges with a weight of zero be included in
                 the plot? Defaults to True.
         """
+        
         self._plot_network(
             network_type="agent",
             node_color=node_color,

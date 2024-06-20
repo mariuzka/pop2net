@@ -5,13 +5,13 @@ from agentpy import AgentList
 from .agent import Agent
 from .exceptions import PopyException
 #from .environment import Environment
-from .location import GridLocation
-from .location import LineLocation
-from .location import Location
+#from .location import GridLocation
+#from .location import LineLocation
+from .location import Location, MagicLocation
 from .inspector import NetworkInspector
-from .location import RingLocation
-from .location import StarLocation
-from .location import TreeLocation
+#from .location import RingLocation
+#from .location import StarLocation
+#from .location import TreeLocation
 from .model import Model
 #from .model import FakeModel
 from .sequences import LocationList
@@ -21,13 +21,14 @@ __all__ = [
     "Agent",
     "PopyException",
     "Location",
+    "MagicLocation",
     "NetworkInspector",
     #"Environment",
-    "LineLocation",
-    "RingLocation",
-    "GridLocation",
-    "TreeLocation",
-    "StarLocation",
+    #"LineLocation",
+    #"RingLocation",
+    #"GridLocation",
+    #"TreeLocation",
+    #"StarLocation",
     "Model",
     #"FakeModel",
     "LocationList",

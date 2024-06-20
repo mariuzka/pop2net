@@ -40,9 +40,6 @@ class Model(ap.Model):
     def sim_step(self) -> None:
         """Do 1 step in the simulation."""
         self.t += 1
-        
-        for location in [location for location in self.locations if not location.static_weight]:
-            location.update_weights()
 
         self.step()
         self.update()
@@ -74,7 +71,6 @@ class Model(ap.Model):
         Args:
             agent: Agent to be added to the environment.
         """
-        agent.env = self
         if not self.g.has_node(agent.id):
             self.g.add_node(agent.id, bipartite=0, _obj=agent)
     
@@ -91,7 +87,6 @@ class Model(ap.Model):
         Args:
             location: Location to be added to the environment.
         """
-        location.env = self
         if not self.g.has_node(location.id):
             self.g.add_node(location.id, bipartite=1, _obj=location)
     
@@ -101,7 +96,11 @@ class Model(ap.Model):
 
 
     def add_agent_to_location(
-        self, location: _location.Location, agent: _agent.Agent, **kwargs,
+        self, 
+        location: _location.Location, 
+        agent: _agent.Agent,
+        weight: float = 1,
+        **kwargs,
     ) -> None:
         """Add an agent to a specific location.
 
@@ -124,9 +123,9 @@ class Model(ap.Model):
         if not self.g.has_node(agent.id):
             msg = f"Agent {agent} does not exist in Environment!"
             raise Exception(msg)
-
-        if not self.g.has_edge(agent.id, location.id):
-            self.g.add_edge(agent.id, location.id, **kwargs)
+        
+        self.g.add_edge(agent.id, location.id, **kwargs)
+        self.set_weight(agent=agent, location=location, weight=weight)
 
     def remove_agent(self, agent: _agent.Agent) -> None:
         """Remove an agent from the environment.
@@ -289,3 +288,9 @@ class Model(ap.Model):
             model=self.model,
             objs=self.objects_between_objects(location1, location2, agent_classes)
         )
+    
+    def set_weight(self, agent, location, weight) -> None:
+        self.g[agent.id][location.id]["weight"] = 1 if weight is None else weight
+    
+    def get_weight(self, agent, location) -> int:
+        return self.g[agent.id][location.id]["weight"]

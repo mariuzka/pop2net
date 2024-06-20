@@ -55,7 +55,7 @@ def create_agent_graph(
     for agent in agents:
         for agent_v in agent.neighbors():
             if not projection.has_edge(agent.id, agent_v.id):
-                weight = agent.contact_weight(agent_v)
+                weight = agent.get_agent_weight(agent_v)
                 if include_0_weights or weight > 0:
                     projection.add_edge(agent.id, agent_v.id, weight=weight)
 
@@ -127,7 +127,7 @@ def create_contact_matrix(
                                 attr_u_name: attr_u,
                                 "id_v": agent_v.id,
                                 attr_v_name: attr_v,
-                                "weight": agent_u.contact_weight(agent_v),
+                                "weight": agent_u.get_agent_weight(agent_v),
                             },
                         )
                         pairs.append(pair)

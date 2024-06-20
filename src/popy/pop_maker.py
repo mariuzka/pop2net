@@ -165,13 +165,6 @@ class PopMaker:
 
 
         agents = popy.AgentList(model=self.model, objs=agents)
-        
-        # Save agents 
-        #if self.agents is None:
-        #    self.agents = agents.copy()
-        #else:
-        #    self.agents.extend(agents)
-        #    self.agents = popy.AgentList(model=self.model, objs=self.agents)
 
         return agents
 
@@ -295,7 +288,7 @@ class PopMaker:
                     for agent in sticky_agents:
                         groups[0].append(agent)
 
-                    random.shuffle(groups)
+                    #random.shuffle(groups)
                 else:
                     new_group = []
                     dummy_location = self._create_dummy_location(location_cls)
@@ -306,7 +299,8 @@ class PopMaker:
 
                     groups.append(new_group)
 
-        random.shuffle(groups)
+        if dummy_location.exact_size_only:
+            groups = [group for group in groups if len(group) == dummy_location.size]
         return groups
 
 
@@ -319,8 +313,8 @@ class PopMaker:
             agent for agent in agents
             if group_value in agent._TEMP_group_values
         ]
-        random.shuffle(group_affiliated_agents)
-        return group_affiliated_agents
+        #random.shuffle(group_affiliated_agents)
+        return group_affiliated_agents 
 
 
     def _get_melted_groups(self, agents: list, location_cls) -> list[list]:
@@ -356,9 +350,15 @@ class PopMaker:
                 melt_dummy_location = self._create_dummy_location(location_cls)
 
                 # get all agents that should be assigned to this location
+                # filter by melt_location
                 melt_location_affiliated_agents = self._get_affiliated_agents(
                     agents=nested_agents,
                     dummy_location=melt_dummy_location,
+                )
+                # filter by main_location
+                melt_location_affiliated_agents = self._get_affiliated_agents(
+                    agents=melt_location_affiliated_agents,
+                    dummy_location=dummy_location,
                 )
 
                 # get all values for which seperated groups/locations should be created
@@ -367,6 +367,9 @@ class PopMaker:
                     dummy_location=melt_dummy_location,
                     allow_nesting=False,
                 )
+
+                for agent in melt_location_affiliated_agents:
+                    agent.TEMP_melt_location_weight = melt_dummy_location.weight(agent)
 
                 # for each split value: get groups and collect them in one list for all values
                 location_groups_to_melt: list[list] = []
@@ -381,20 +384,20 @@ class PopMaker:
                             location_cls=location_cls,
                         ),
                     )
-                random.shuffle(location_groups_to_melt)
+                #random.shuffle(location_groups_to_melt)
                 groups_to_melt_by_location.append(location_groups_to_melt)
 
             # Melt groups
             all_melted_groups: list[list] = []
             z = sorted(
                 [len(groups_to_melt) for groups_to_melt in groups_to_melt_by_location],
-                reverse=True if dummy_location.multi_melt else False,
+                reverse=True if dummy_location.recycle else False,
             )[0]
             for i in range(z):
                 melted_group = []
                 for groups_to_melt in groups_to_melt_by_location:
                     if len(groups_to_melt) > 0:
-                        if dummy_location.multi_melt:
+                        if dummy_location.recycle:
                             melted_group.extend(groups_to_melt[i % len(groups_to_melt)])
                         else:
                             try:
@@ -441,10 +444,10 @@ class PopMaker:
 
         # for each location class
         for location_cls in location_classes:
-            str_location_cls = utils._get_cls_as_str(location_cls)
+            for agent in agents:
+                agent.TEMP_melt_location_weight = None
 
-            #WaRUM GEHT DAS NICHT???????????????
-            random.shuffle(agents)
+            str_location_cls = utils._get_cls_as_str(location_cls)
 
             # create location dummy in order to use the location's methods
             dummy_location = self._create_dummy_location(location_cls)
@@ -505,7 +508,7 @@ class PopMaker:
                         agent_subgroup_value
                         for agent in group_list
                         for agent_subgroup_value
-                        in utils.make_it_a_list_if_it_is_no_list(dummy_location.subsplit(agent))
+                        in utils.make_it_a_list_if_it_is_no_list(dummy_location._subsplit(agent))
                     }
 
                     # for each group of agents assigned to a specific sublocation
@@ -517,14 +520,13 @@ class PopMaker:
                         #for agent in group_affiliated_agents:
                         for agent in group_list:
                             agent_subgroup_value = utils.make_it_a_list_if_it_is_no_list(
-                                dummy_location.subsplit(agent),
+                                dummy_location._subsplit(agent),
                             )
                             if subgroup_value in agent_subgroup_value:
                                 subgroup_affiliated_agents.append(agent)
 
                         # Build the final location
                         subgroup_location = location_cls(model=self.model)
-                        self.model.add_location(subgroup_location)
                         subgroup_location.setup()
                         subgroup_location.group_value = group_value
                         subgroup_location.subgroup_value = subgroup_value
@@ -535,6 +537,19 @@ class PopMaker:
                         # Assigning process:
                         for agent in subgroup_affiliated_agents:
                             subgroup_location.add_agent(agent)
+                            
+                            weight = (
+                                agent.TEMP_melt_location_weight
+                                if agent.TEMP_melt_location_weight is not None
+                                else subgroup_location.weight(agent)
+                            )
+
+                            subgroup_location.set_weight(
+                                agent=agent, 
+                                weight=weight,
+                                )
+                            
+
 
                             group_info_str = (
                                 f"gv={subgroup_location.group_value}, \
@@ -545,25 +560,14 @@ class PopMaker:
 
                         locations.append(subgroup_location)
 
-        # TODO:
-        # Warum gibt es keinen Fehler, wenn man ein Argument falsch schreibt? Habe gerade ewig
-        # nach einem Bug gesucht und letzt hatte ich nur das "j" in "objs" vergessen
         locations = popy.LocationList(
             model=self.model,
             objs=locations,
         )
 
-        # save locations
-        #if self.locations is None:
-        #    self.locations = locations
-        #else:
-        #    self.locations.extend(locations)
-
-        #self._dummy_model.locations = locations
-
         # execute an action after all locations have been created
         for location in locations:
-            location.do_this_after_creation()
+            location.refine()
 
         # delete temporary agent attributes
         for agent in self._dummy_model.agents:

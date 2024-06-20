@@ -99,7 +99,7 @@ class Agent(ap.Agent):
         """
         return self.model.locations_of_agent(self)
 
-    def contact_weight(self, agent_v: Agent) -> float:
+    def get_agent_weight(self, agent: Agent, location_classes=[]) -> float:
         """Return the contact weight between this agent and a given other agent.
 
         This is summed over all shared locations.
@@ -110,8 +110,10 @@ class Agent(ap.Agent):
         Returns:
             A weight of the contact between the two agents.
         """
-        contact_weight = 0
-        for location in self.locations:
-            if agent_v in location.agents:
-                contact_weight += location.project_weights(agent1=self, agent2=agent_v)
-        return contact_weight
+        weight = 0
+        for location in self.shared_locations(agent=agent, location_classes=location_classes):
+            weight += location.project_weights(agent1=self, agent2=agent)
+        return weight
+    
+    def get_location_weight(self, location) -> float:
+        return self.model.get_weight(agent=self, location=location)
