@@ -1,21 +1,19 @@
 """Base class to create Location objects."""
 from __future__ import annotations
 
-import popy.utils as utils
-
-import networkx as nx
+import math
 
 from agentpy.objects import Object
 from agentpy.sequences import AgentList
+import networkx as nx
+
+import popy.utils as utils
 
 from . import agent as _agent
 from . import model as _model
 
-import math
-
 class Location(Object):
-    """Base class for location objects.
-    """
+    """Base class for location objects."""
 
     def __init__(self, model: _model.Model) -> None:
         """Location constructor.
@@ -27,7 +25,7 @@ class Location(Object):
         self.model = model
         self.model.add_location(self)
         self.cls: str = utils._get_cls_as_str(type(self))
-    
+
     @property
     def agents(self) -> AgentList:
         """Return the list of agents affiliated with this location.
@@ -45,8 +43,13 @@ class Location(Object):
             agent: The agent that should be added to the location.
         """
         self.model.add_agent_to_location(self, agent)
-    
+
     def add_agents(self, agents: list) -> None:
+        """Add multiple agents at once.
+
+        Args:
+            agents (list): An iterable over agents.
+        """
         for agent in agents:
             self.add_agent(agent)
 
@@ -57,11 +60,16 @@ class Location(Object):
             agent: Agent that is to be removed.
         """
         self.model.remove_agent_from_location(
-            location=self, 
+            location=self,
             agent=agent,
-            )
-    
+        )
+
     def remove_agents(self, agents: list) -> None:
+        """Remove multiple agents at once.
+
+        Args:
+            agents (list): An iterable over agents.
+        """
         for agent in agents:
             self.remove_agent(agent=agent)
 
@@ -79,6 +87,12 @@ class Location(Object):
         return agents
 
     def set_weight(self, agent, weight) -> None:
+        """Set the weight of an agent at the current location.
+
+        Args:
+            agent (Agent): The agent.
+            weight (float): The weight.
+        """
         self.model.set_weight(agent=agent, location=self, weight=weight)
 
     def get_weight(self, agent: _agent.Agent) -> float:
@@ -91,7 +105,7 @@ class Location(Object):
             Edge weight.
         """
         return self.model.get_weight(agent=agent, location=self)
-    
+
     def project_weights(self, agent1: _agent.Agent, agent2: _agent.Agent) -> float:
         """Calculates the edge weight between two agents assigned to the same location instance.
 
@@ -110,9 +124,10 @@ class Location(Object):
             Combined edge weight.
         """
         return min([self.get_weight(agent1), self.get_weight(agent2)])
-    
+
 
 class MagicLocation(Location):
+    """Helper class to create locations from inside the PopMaker."""
     size: int | None = None
     allow_overcrowding: bool = True
     n_locations: int | None = None
@@ -124,12 +139,17 @@ class MagicLocation(Location):
     exact_size_only: bool = False
 
     def __init__(self, model: _model.Model) -> None:
+        """Create a helper class to create locations.
+
+        Args:
+            model (_model.Model):  The model.
+        """
         super().__init__(model)
         self.group_id: int | None = None
         self.subgroup_id: int | None = None
         self.group_value: int | str | None = None
         self.subgroup_value: int | str | None = None
-    
+
     def setup(self) -> None:
         """Use this method to set instance attributes, for instance.
 
@@ -163,7 +183,7 @@ class MagicLocation(Location):
         """
         return None
 
-    def weight(self, agent: _agent.Agent) -> float:  # noqa: ARG002
+    def weight(self, agent: _agent.Agent) -> float | None:  # noqa: ARG002
         """Defines the edge weight between the agent and the location instance.
 
         Defines how the edge weight between an agent and the location is determined.
@@ -253,17 +273,18 @@ class MagicLocation(Location):
         else:
             pos = self.group_agents.index(agent)
             return [
-                utils._join_positions(pos1=pos, pos2=neighbor) 
-                for neighbor 
+                utils._join_positions(pos1=pos, pos2=neighbor)
+                for neighbor
                 in self.nxgraph.neighbors(pos)
-                ]
+            ]
 
 
 class MeltLocation(Location):
+    """Helper class to melt locations."""
     size: int | None = None
     exact_size_only: bool = False
 
-    
+
     def filter(self, agent: _agent.Agent) -> bool:  # noqa: ARG002
         """Check whether the agent is meant to join this type of location.
 
@@ -289,7 +310,7 @@ class MeltLocation(Location):
             float | str: A value that defines the groups of agents.
         """
         return agent.id
-    
+
     def split(self, agent: _agent.Agent) -> float | str | list | None:  # noqa: ARG002
         """Creates seperate location instances for each unique returned value.
 
