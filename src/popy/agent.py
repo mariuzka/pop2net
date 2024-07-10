@@ -1,11 +1,11 @@
 """Base class to create Agent objects."""
 from __future__ import annotations
 
-import popy.utils as utils
-
 import typing
 
 import agentpy as ap
+
+import popy.utils as utils
 
 if typing.TYPE_CHECKING:
     from . import location as _location
@@ -45,26 +45,26 @@ class Agent(ap.Agent):
         This is executed on the instantiation of each agent.
         """
 
-    def neighbors(self, location_classes: list = []) -> ap.AgentList:
+    def neighbors(self, location_classes: list | None = None) -> ap.AgentList:
         """Return all neighbors of an agent.
 
         Convenience method that returns all neighbors over all locations this agent is currently
         located in. The locations to be considered can be defined with location_classes.
 
         Args:
-            location_classes: A list of location_classes. 
+            location_classes: A list of location_classes.
 
         Returns:
             All agents co-located with this agent over all locations.
         """
         return self.model.neighbors_of_agent(self, location_classes=location_classes)
-    
+
     def shared_locations(self, agent, location_classes):
         return self.model.locations_between_agents(
-            agent1=self, 
-            agent2=agent, 
+            agent1=self,
+            agent2=agent,
             location_classes=location_classes,
-            )
+        )
 
     def enter_location(self, location: _location.Location) -> None:
         """Add this Agent to a given location.
@@ -73,7 +73,7 @@ class Agent(ap.Agent):
             location: Add agent to this location.
         """
         self.model.add_agent_to_location(self, location)
-    
+
     def enter_locations(self, locations: list) -> None:
         for location in locations:
             self.leave_location(location)
@@ -85,11 +85,11 @@ class Agent(ap.Agent):
             location: Remove agent from this location.
         """
         self.model.remove_agent_from_location(self, location)
-    
+
     def leave_locations(self, locations: list) -> None:
         for location in locations:
             self.leave_location(location)
-    
+
     @property
     def locations(self) -> _sequences.LocationList:
         """Return a list of locations that this agent is associated with.
@@ -114,6 +114,6 @@ class Agent(ap.Agent):
         for location in self.shared_locations(agent=agent, location_classes=location_classes):
             weight += location.project_weights(agent1=self, agent2=agent)
         return weight
-    
+
     def get_location_weight(self, location) -> float:
         return self.model.get_weight(agent=self, location=location)

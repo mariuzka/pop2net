@@ -1,4 +1,6 @@
+import pandas as pd
 import popy
+from popy.pop_maker import PopMaker
 import pytest
 
 @pytest.fixture()
@@ -30,7 +32,6 @@ def test_agentlist_broadcasting(model):
 
 
 def test_agent_locations(model):
-
     agent = popy.Agent(model)
 
     location1 = popy.Location(model)
@@ -60,6 +61,7 @@ def test_agent_located_at_single_location(model):
 
     assert [len(loc.agents) for loc in model.locations] == [1, 0]
 
+
 def test_agent_visits_two_locations(model):
     class Model(popy.Model):
         def setup(self):
@@ -72,3 +74,194 @@ def test_agent_visits_two_locations(model):
     model.run()
 
     assert [len(loc.agents) for loc in model.locations] == [1, 1]
+
+
+def test_adding_and_removing_agents():
+    model = popy.Model()
+
+    for _ in range(5):
+        popy.Agent(model)
+
+    for _ in range(2):
+        popy.Location(model)
+
+    model.locations[0].add_agents(model.agents[0:3])
+    model.locations[1].add_agents(model.agents[3:5])
+
+    assert len(model.agents) == 5
+    assert len(model.locations) == 2
+    assert len(model.locations[0].agents) == 3
+    assert len(model.locations[1].agents) == 2
+    assert len(model.agents[0].neighbors()) == 2
+    assert len(model.agents[-1].neighbors()) == 1
+
+    # inspector = popy.inspector.NetworkInspector(model)
+    # inspector.plot_bipartite_network()
+
+
+def test_color_agents():
+    class ColorLocation(popy.Location):
+        def __init__(self, model, color) -> None:
+            super().__init__(model)
+            self.color = color
+
+    class ColorAgent(popy.Agent):
+        def __init__(self, model, color) -> None:
+            super().__init__(model)
+            self.color = color
+
+        def change_location(self):
+            for location in self.locations:
+                if location.color != self.color:
+                    self.leave_location(location)
+
+            for location in self.model.locations:
+                if location.color == self.color and location not in self.locations:
+                    self.enter_location(location)
+                    return
+
+            if self.color not in [location.color for location in self.model.locations]:
+                location = ColorLocation(model=self.model, color=self.color)
+                location.add_agent(self)
+
+    class ColorModel(popy.Model):
+        def setup(self):
+            for color in ["red", "green", "red", "blue", "blue", "red"]:
+                ColorAgent(
+                    model=self,
+                    color=color,
+                )
+
+            ColorLocation(self, "blue")
+            ColorLocation(self, "red")
+
+            self.locations[0].add_agents(self.agents[0:3])
+            self.locations[1].add_agents(self.agents[3:6])
+
+            assert len(self.agents) == 6
+            assert len(self.locations) == 2
+            assert len(self.locations[0].agents) == 3
+            assert len(self.locations[1].agents) == 3
+
+            # self.inspector = NetworkInspector(self)
+            # self.inspector.plot_agent_network(node_attrs=["color"], node_color="color")
+
+        def step(self):
+            self.agents.change_location()
+
+        def end(self):
+            assert len(self.agents) == 6
+            assert len(self.locations) == 3
+            assert len(self.locations[0].agents) == 2
+            assert len(self.locations[1].agents) == 3
+            assert len(self.locations[2].agents) == 1
+            # self.inspector.plot_agent_network(node_attrs=["color"], node_color="color")
+
+
+def test_chef_agents():
+    class Town(popy.MagicLocation):
+        size = 4
+
+        def stick_together(self, agent):
+            return agent.couple
+
+        def assert_(self):
+            assert len(self.agents) == 4
+
+
+    class Home(popy.MagicLocation):
+        def split(self, agent):
+            return agent.couple
+
+        def weight(self, agent):
+            return 12
+
+        def assert_(self):
+            assert len({a.couple for a in self.agents}) == 1
+
+
+    class Restaurant(popy.MagicLocation):
+        def setup(self):
+            chef = Chef(self.model)
+            self.add_agent(chef)
+            self.set_weight(agent=chef, weight=8)
+
+        def weight(self, agent):
+            return 2
+
+        def split(self, agent):
+            return agent.food
+
+        def nest(self):
+            return Town
+
+        def assert_(self):
+            # assert that affiliated agents are affiliated with the same Town
+            assert (
+                len(
+                    {
+                        agent.locations.select(agent.locations.cls == "Town")[0]
+                        for agent in self.agents
+                        if isinstance(agent, MyAgent)  # Chef-agents are not affiliated with Towns
+                    },
+                )
+                == 1
+            )
+
+
+    class Chef(popy.Agent):
+        def assert_(self):
+            assert len(self.locations) == 1
+            assert self.locations[0].cls == "Restaurant"
+            assert self.get_location_weight(self.locations[0]) == 8
+            assert (
+                len([1 for a in self.locations[0].neighbors(self) if self.get_agent_weight(a) != 2])
+                == 0
+            )
+
+
+    class MyAgent(popy.Agent):
+        def assert_(self):
+            couple_agent = [
+                agent
+                for agent in self.model.agents.select(self.model.agents.cls == "MyAgent")
+                if agent.couple == self.couple and agent is not self
+            ][0]
+
+            assert self.neighbors(location_classes=[Home])[0] is couple_agent
+
+            assert self.get_agent_weight(couple_agent) == 12 + 1
+
+            assert (
+                self.locations.select(self.locations.cls == "Town")[0]
+                is self.shared_locations(couple_agent, location_classes=[Town])[0]
+            )
+
+
+    df = pd.DataFrame(
+        {
+            "food": ["pizza", "pasta", "pizza", "pasta", "pizza", "pasta", "pizza", "pasta"],
+            "couple": [1, 1, 2, 2, 3, 3, 4, 4],
+            "age": [40, 40, 60, 60, 40, 40, 60, 60],
+        },
+    )
+
+    model = popy.Model()
+    popmaker = PopMaker(model)
+    # inspector = NetworkInspector(model)
+
+    popmaker.create_agents(df=df, agent_class=MyAgent)
+
+    popmaker.create_locations(
+        location_classes=[
+            Town,
+            Home,
+            Restaurant,
+        ],
+    )
+
+    # inspector.plot_bipartite_network()
+    # inspector.plot_agent_network()
+
+    model.agents.assert_()
+    model.locations.assert_()

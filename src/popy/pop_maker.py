@@ -4,7 +4,6 @@ from __future__ import annotations
 import random
 import warnings
 
-
 import pandas as pd
 
 import popy
@@ -136,7 +135,6 @@ class PopMaker:
         Returns:
             A list of agents.
         """
-
         if df is not None:
             df = df.copy()
 
@@ -314,7 +312,7 @@ class PopMaker:
             if group_value in agent._TEMP_group_values
         ]
         #random.shuffle(group_affiliated_agents)
-        return group_affiliated_agents 
+        return group_affiliated_agents
 
 
     def _get_melted_groups(self, agents: list, location_cls) -> list[list]:
@@ -425,7 +423,6 @@ class PopMaker:
         Returns:
             popy.LocationList: A list of locations.
         """
-
         if agents is None:
             agents = self.model.agents
 
@@ -436,7 +433,7 @@ class PopMaker:
 
         for location_cls in location_classes:
 
-            str_location_cls = utils._get_cls_as_str(location_cls)
+            str_location_cls = location_cls.__class__.__name__
             for agent in agents:
                 setattr(agent, str_location_cls, None)
 
@@ -447,7 +444,7 @@ class PopMaker:
             for agent in agents:
                 agent.TEMP_melt_location_weight = None
 
-            str_location_cls = utils._get_cls_as_str(location_cls)
+            str_location_cls = location_cls.__class__.__name__
 
             # create location dummy in order to use the location's methods
             dummy_location = self._create_dummy_location(location_cls)
@@ -537,7 +534,7 @@ class PopMaker:
                         # Assigning process:
                         for agent in subgroup_affiliated_agents:
                             subgroup_location.add_agent(agent)
-                            
+
                             weight = (
                                 agent.TEMP_melt_location_weight
                                 if agent.TEMP_melt_location_weight is not None
@@ -545,10 +542,10 @@ class PopMaker:
                             )
 
                             subgroup_location.set_weight(
-                                agent=agent, 
+                                agent=agent,
                                 weight=weight,
-                                )
-                            
+                            )
+
 
 
                             group_info_str = (
@@ -632,11 +629,11 @@ class PopMaker:
 
         # create agents
         agents = self.create_agents(
-            df=df_sample, 
-            agent_class=agent_class, 
+            df=df_sample,
+            agent_class=agent_class,
             agent_class_attr=agent_class_attr,
             agent_class_dict=agent_class_dict,
-            )
+        )
 
         # create locations
         locations = self.create_locations(agents=agents, location_classes=location_classes)
@@ -685,6 +682,3 @@ class PopMaker:
             df = df.loc[:,columns]
 
         return df
-
-
-    
