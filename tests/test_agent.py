@@ -265,3 +265,82 @@ def test_chef_agents():
 
     model.agents.assert_()
     model.locations.assert_()
+
+
+@pytest.mark.skip()
+def test_table_agents():
+    # TODO: copied from new_structure.ipynb but has no assert statements.
+    # not sure what is being checked here.
+
+    model = popy.Model()
+    popmaker = PopMaker(model)
+
+    df = pd.DataFrame(
+        {
+            "food": ["pizza", "pasta", "pizza", "pasta", "pizza", "pasta", "pizza", "pasta"],
+            "couple": [1, 1, 2, 2, 3, 3, 4, 4],
+            "age": [40, 40, 60, 60, 40, 40, 60, 60],
+        },
+    )
+
+
+    df = popmaker.draw_sample(df=df, n=20)
+
+    popmaker.create_agents(df=df)
+
+
+    class Table(popy.MagicLocation):
+        recycle = True
+
+        def melt(self):
+            class PizzaGroup(popy.MagicLocation):
+                size = 3
+                exact_size_only = False
+
+                def filter(self, agent):
+                    return agent.food == "pizza"
+
+                # def split(self, agent):
+                #    return agent.age
+
+                def weight(self, agent):
+                    return 10
+
+            class PastaGroup(popy.MagicLocation):
+                size = 2
+                exact_size_only = False
+
+                def filter(self, agent):
+                    return agent.food == "pasta"
+
+            return PizzaGroup, PastaGroup
+
+        def nest(self):
+            return Restaurant
+
+        def weight(self, agent):
+            return 5
+
+
+    class Restaurant(popy.MagicLocation):
+        size = 10
+
+        # def stick_together(self, agent):
+        #    return agent.Table
+
+        # def filter(self, agent):
+        #    return agent.Table
+
+
+    popmaker.create_locations(
+        location_classes=[
+            Restaurant,
+            Table,
+        ],
+    )
+
+    raise AssertionError()
+
+    # inspector = popy.inspector.NetworkInspector(model)
+    # inspector.plot_agent_network(node_attrs=["food", "age", "couple"], node_color="food")
+    # inspector.plot_bipartite_network()
