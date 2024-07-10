@@ -1,4 +1,5 @@
 """A module that helps with creating insights into the network."""
+from __future__ import annotations
 
 from bokehgraph import BokehGraph
 import networkx as nx
