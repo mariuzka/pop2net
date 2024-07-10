@@ -54,3 +54,46 @@ def test_location_size():
     assert len(loc.agents) == 1
     loc.remove_agent(agent2)
     assert len(loc.agents) == 0
+
+
+# def test_melt(
+#     size_pizza_group,
+#     size_pasta_group,
+#     recycle_,
+#     exact_size_only_pizza_group,
+#     exact_size_only_pasta_group,
+# ):
+#     class Table(popy.MagicLocation):
+#         recycle = recycle_
+
+#         def melt(self):
+#             class PizzaGroup(popy.MagicLocation):
+#                 size = size_pizza_group
+#                 exact_size_only = exact_size_only_pizza_group
+
+#                 def filter(self, agent):
+#                     return agent.food == "pizza"
+
+#                 # def split(self, agent):
+#                 #    return agent.age
+
+#                 def weight(self, agent):
+#                     return 10
+
+#             class PastaGroup(popy.MagicLocation):
+#                 size = size_pasta_group
+#                 exact_size_only = exact_size_only_pasta_group
+
+#                 def filter(self, agent):
+#                     return agent.food == "pasta"
+
+#             return PizzaGroup, PastaGroup
+
+#     df = pd.DataFrame({"food": ["pizza", "pasta"] * 10})
+#     model = popy.Model()
+
+#     popmaker = PopMaker(model)
+#     popmaker.create_agents(df=df)
+#     popmaker.create_locations(location_classes=[Table])
+
+#     return model
