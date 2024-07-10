@@ -36,11 +36,12 @@ def test_agent_locations(model):
     location1 = popy.Location(model)
     location2 = popy.Location(model)
 
-    agent.add_location(location1)
+    agent.enter_location(location1)
+
     exp = popy.LocationList(model, [location1])
     assert agent.locations == exp
 
-    agent.add_location(location2)
+    agent.enter_location(location2)
     exp = popy.LocationList(model, [location1, location2])
     assert agent.locations == exp
 
@@ -50,9 +51,9 @@ def test_agent_locations(model):
 def test_agent_located_at_single_location(model):
     class Model(popy.Model):
         def setup(self):
-            self.agents = popy.AgentList(self, 1, popy.Agent)
-            self.locations = popy.LocationList(self, 2, popy.Location)
-            self.agents[0].add_location(self.locations[0])
+            popy.AgentList(self, 1, popy.Agent)
+            popy.LocationList(self, 2, popy.Location)
+            self.agents[0].enter_location(self.locations[0])
 
     model = Model(parameters={"steps": 1})
     model.run()
@@ -62,10 +63,10 @@ def test_agent_located_at_single_location(model):
 def test_agent_visits_two_locations(model):
     class Model(popy.Model):
         def setup(self):
-            self.agents = popy.AgentList(self, 1, popy.Agent)
-            self.locations = popy.LocationList(self, 2, popy.Location)
-            self.agents[0].add_location(self.locations[0])
-            self.agents[0].add_location(self.locations[1])
+            popy.AgentList(self, 1, popy.Agent)
+            popy.LocationList(self, 2, popy.Location)
+            self.agents[0].enter_location(self.locations[0])
+            self.agents[0].enter_location(self.locations[1])
 
     model = Model(parameters={"steps": 1})
     model.run()

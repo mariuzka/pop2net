@@ -21,11 +21,11 @@ def test_model():
 
     class MyModel(popy.Model):
         def setup(self):
-            self.agents = popy.AgentList(self, 5, HealthyAgent)
+            popy.AgentList(self, 5, HealthyAgent)
             self.agents.extend(popy.AgentList(self, 1, InfectedAgent))
             self.agents.shuffle()
 
-            self.locations = popy.LocationList(self, 3, popy.Location)
+            popy.LocationList(self, 3, popy.Location)
 
             # home 1
             self.locations[0].add_agent(self.agents[0])
@@ -76,8 +76,8 @@ def test_model_network_export_simple_n_agents(n_agents, exp_n_edges):
 
     class MyModel(popy.Model):
         def setup(self):
-            self.agents = popy.AgentList(self, n_agents, MovingAgent)
-            self.locations = popy.LocationList(self, 10, popy.Location)
+            popy.AgentList(self, n_agents, MovingAgent)
+            popy.LocationList(self, 10, popy.Location)
 
             # assign agents to locations
             for agent in self.agents:
@@ -90,7 +90,7 @@ def test_model_network_export_simple_n_agents(n_agents, exp_n_edges):
 
     model = MyModel(parameters={"steps": 2})
     model.run()
-    graph = utils.export_network(model.env)
+    graph = utils.export_network(model)
 
     assert graph.number_of_nodes() == n_agents
     assert graph.number_of_edges() == exp_n_edges
