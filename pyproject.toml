@@ -96,7 +96,7 @@ ignore-init-module-imports = true
   "E402",
   "F811",
 ]
-"tests/**" = ["D"]
+"tests/**" = ["D", "ARG002", "PT009"]
 "docs/examples/introduction old.ipynb" = ["ALL"]
 
 [tool.ruff.pydocstyle]

@@ -1,9 +1,9 @@
 """Various utility functions for popy."""
 from __future__ import annotations
 
+import inspect
 import typing
 
-from bokehgraph import BokehGraph
 import networkx as nx
 from networkx import bipartite
 import numpy as np
@@ -86,7 +86,7 @@ def create_contact_matrix(
     weighted: bool = False,
     plot: bool = True,
     annot: bool = False,
-    return_df: bool = False
+    return_df: bool = False,
 ) -> pd.DataFrame:
     """Create a contact matrix as a DataFrame from a given model's agent list.
 
@@ -133,7 +133,7 @@ def create_contact_matrix(
                         pairs.append(pair)
 
     attr_values = list(set(attr_values))
-    
+
     df = pd.DataFrame(index=sorted(attr_values, reverse=True), columns=sorted(attr_values))
     df = df.fillna(0)
 
@@ -150,7 +150,7 @@ def create_contact_matrix(
         )
 
     if plot:
-        g = sns.heatmap(df, annot=annot, vmin=0, fmt='g')
+        g = sns.heatmap(df, annot=annot, vmin=0, fmt="g")
         g.set(xlabel=attr, ylabel=attr)
 
     if return_df:
@@ -167,16 +167,15 @@ def location_information(
 
     Args:
         locations (list[popy.Location]): A list of location instances.
-        select_locations (popy.Location | list[popy.Location] | None, optional): A list of 
+        select_locations (popy.Location | list[popy.Location] | None, optional): A list of
             location classes. Defaults to None.
-        agent_attributes (str | None | list[str] | None, optional): A list of agent attributes. 
+        agent_attributes (str | None | list[str] | None, optional): A list of agent attributes.
             Defaults to None.
         output_format (str, optional): A str determining what is returned. Defaults to "table".
 
     Returns:
         None | pd.DataFrame: A pandas.DataFrame or nothing.
     """
-    
     if select_locations:
         if not isinstance(select_locations, list):
             select_locations = [select_locations]
@@ -245,7 +244,7 @@ def location_crosstab(
     select_locations: popy.Location | list[popy.Location],
     agent_attributes: str | list[str],
     output_format = "table",
-    )-> list[pd.DataFrame] | None:
+)-> list[pd.DataFrame] | None:
     # Make every Parameter a list
     if select_locations:
         if not isinstance(select_locations, list):
@@ -355,7 +354,7 @@ def group_it(
     n_steps: int,
     return_value: typing.Literal["index", "lower_bound", "range"] = "index",
     summarize_highest: bool = False,
-    ) -> int | float | tuple[int | float, int | float]:
+) -> int | float | tuple[int | float, int | float]:
     """_summary_.
 
     Args:
@@ -494,8 +493,13 @@ def make_it_a_list_if_it_is_no_list(x: object) -> list:
     else:
         return [x]
 
-def _get_cls_as_str(cls):
-    return str(cls).split(".")[1].split("'")[0]
+def _get_cls_as_str(cls_):
+    if inspect.isclass(cls_):
+        # if cls_ is a class
+        return cls_.__name__
+    else:
+        # if cls_ is an instance
+        return cls_.__class__.__name__
 
 def _join_positions(pos1, pos2):
     return "-".join(sorted([str(pos1), str(pos2)]))

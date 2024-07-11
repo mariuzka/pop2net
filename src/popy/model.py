@@ -1,11 +1,10 @@
 """The model class. It encapsulates the full simulation."""
-from __future__ import annotations
 
-import agentpy as ap
-import networkx as nx
+from __future__ import annotations
 
 import typing
 
+import agentpy as ap
 from agentpy import AgentList
 import networkx as nx
 
@@ -15,7 +14,6 @@ if typing.TYPE_CHECKING:
 
 from popy.sequences import LocationList
 import popy.utils as utils
-
 
 class Model(ap.Model):
     """Class the encapsulates a full simluation.
@@ -46,21 +44,30 @@ class Model(ap.Model):
 
         if self.t >= self._steps:  # type: ignore
             self.running = False
-    
 
     @property
     def agents(self):
+        """Show a iterable view of all agents in the environment.
+
+        Returns:
+            AgentList: A non-mutable AgentList of all agents in the environment.
+        """
         return AgentList(
-            model=self.model, 
+            model=self.model,
             objs=[data["_obj"] for _, data in self.g.nodes(data=True) if data["bipartite"] == 0],
-            )
-    
+        )
+
     @property
     def locations(self):
+        """Show a iterable view of all locations in the environment.
+
+        Returns:
+            LocationList: a non-mutable LocationList of all locations in the environment.
+        """
         return LocationList(
-            model=self.model, 
+            model=self.model,
             objs=[data["_obj"] for _, data in self.g.nodes(data=True) if data["bipartite"] == 1],
-            )
+        )
 
     def add_agent(self, agent: _agent.Agent) -> None:
         """Add an agent to the environment.
@@ -73,8 +80,13 @@ class Model(ap.Model):
         """
         if not self.g.has_node(agent.id):
             self.g.add_node(agent.id, bipartite=0, _obj=agent)
-    
+
     def add_agents(self, agents: list) -> None:
+        """Add agents to the environment.
+
+        Args:
+            agents (list): A list of the agents to be added.
+        """
         for agent in agents:
             self.add_agent(agent)
 
@@ -89,15 +101,19 @@ class Model(ap.Model):
         """
         if not self.g.has_node(location.id):
             self.g.add_node(location.id, bipartite=1, _obj=location)
-    
+
     def add_locations(self, locations: list) -> None:
+        """Add multiple locations to the environment at once.
+
+        Args:
+            locations (list): An iterable over multiple locations.
+        """
         for location in locations:
             self.add_location(location)
 
-
     def add_agent_to_location(
-        self, 
-        location: _location.Location, 
+        self,
+        location: _location.Location,
         agent: _agent.Agent,
         weight: float = 1,
         **kwargs,
@@ -110,6 +126,7 @@ class Model(ap.Model):
         Args:
             location: Location the agent is to be added to.
             agent: Agent to be added to the location.
+            weight: An optional weight for the connection.
             **kwargs: Additional edge attributes.
 
         Raises:
@@ -123,7 +140,7 @@ class Model(ap.Model):
         if not self.g.has_node(agent.id):
             msg = f"Agent {agent} does not exist in Environment!"
             raise Exception(msg)
-        
+
         self.g.add_edge(agent.id, location.id, **kwargs)
         self.set_weight(agent=agent, location=location, weight=weight)
 
@@ -139,6 +156,11 @@ class Model(ap.Model):
             self.g.remove_node(agent.id)
 
     def remove_agents(self, agents: list) -> None:
+        """Remove multiple agents from the environment at once.
+
+        Args:
+            agents (list): An iterable over multiple agents.
+        """
         for agent in agents:
             self.remove_agent(agent)
 
@@ -152,12 +174,20 @@ class Model(ap.Model):
         """
         if self.g.has_node(location.id):
             self.g.remove_node(location.id)
-    
+
     def remove_locations(self, locations: list) -> None:
+        """Remove multiple locations at once.
+
+        Args:
+            locations (list): An iterable over locations.
+        """
         for location in locations:
             self.remove_location(location)
-        
-    def remove_agent_from_location(self, location: _location.Location, agent: _agent.Agent,
+
+    def remove_agent_from_location(
+        self,
+        location: _location.Location,
+        agent: _agent.Agent,
     ) -> None:
         """Remove an agent from a location.
 
@@ -210,35 +240,35 @@ class Model(ap.Model):
             (self.g.nodes[node]["_obj"] for node in nodes if self.g.nodes[node]["bipartite"] == 1),
         )
 
-    def neighbors_of_agent(self, agent: _agent.Agent, location_classes: list = []) -> AgentList:
+    def neighbors_of_agent(
+        self, agent: _agent.Agent, location_classes: list | None = None,
+    ) -> AgentList:
         """Return a list of neighboring agents for a specific agent.
+
         The locations to be considered can be defined with location_classes.
 
         Args:
             agent: Agent of whom the neighbors are to be returned.
-            location_classes: A list of location_classes. 
+            location_classes: A list of location_classes.
 
         Returns:
             The list of neighbors for the specified agent.
         """
-        
         if location_classes:
             location_classes = [
                 (utils._get_cls_as_str(cls) if not isinstance(cls, str) else cls)
                 for cls in location_classes
-                ]
-            
+            ]
+
             locations = (
-                node 
-                for node in self.g.neighbors(agent.id) 
+                node
+                for node in self.g.neighbors(agent.id)
                 if self.g.nodes[node]["bipartite"] == 1
                 and self.g.nodes[node]["_obj"].cls in location_classes
             )
         else:
             locations = (
-                node 
-                for node in self.g.neighbors(agent.id) 
-                if self.g.nodes[node]["bipartite"] == 1
+                node for node in self.g.neighbors(agent.id) if self.g.nodes[node]["bipartite"] == 1
             )
 
         neighbor_agents = {
@@ -255,16 +285,16 @@ class Model(ap.Model):
                 if agent_id != agent.id
             ),
         )
-    
-    #TODO: evlt. filtern nach Klasse oder Key einbauen
-    def objects_between_objects(self, object1, object2, object_classes):
+
+    # TODO: evlt. filtern nach Klasse oder Key einbauen
+    def _objects_between_objects(self, object1, object2, object_classes):
         paths = list(
             nx.all_simple_paths(
-                G=self.g, 
-                source=object1.id, 
-                target=object2.id, 
+                G=self.g,
+                source=object1.id,
+                target=object2.id,
                 cutoff=2,
-                )
+            ),
         )
 
         objects_between = [self.g.nodes[path[1]]["_obj"] for path in paths]
@@ -273,24 +303,62 @@ class Model(ap.Model):
             object_classes = [
                 (utils._get_cls_as_str(cls) if not isinstance(cls, str) else cls)
                 for cls in object_classes
-                ]
+            ]
             objects_between = [o for o in objects_between if o.cls in object_classes]
         return objects_between
 
-    def locations_between_agents(self, agent1, agent2, location_classes=[]):
+    def locations_between_agents(self, agent1, agent2, location_classes=()):
+        """Return all locations the connect two agents.
+
+        Args:
+            agent1 (Agent): Agent 1.
+            agent2 (Agent): Agent 2.
+            location_classes (tuple, optional): Constrain the locations to the following types.
+                Defaults to ().
+
+        Returns:
+            LocationList: A list of locations.
+        """
         return LocationList(
             model=self.model,
-            objs=self.objects_between_objects(agent1, agent2, location_classes)
+            objs=self._objects_between_objects(agent1, agent2, location_classes),
         )
-    
-    def agents_between_locations(self, location1, location2, agent_classes=[]):
+
+    def agents_between_locations(self, location1, location2, agent_classes=()):
+        """Return all agents between two locations.
+
+        Args:
+            location1 (Location): Location 1.
+            location2 (Location): Location 2.
+            agent_classes (tuple, optional): Constrain the agents to the following types.
+                Defaults to ().
+
+        Returns:
+            AgentList: A list of agents.
+        """
         return AgentList(
             model=self.model,
-            objs=self.objects_between_objects(location1, location2, agent_classes)
+            objs=self._objects_between_objects(location1, location2, agent_classes),
         )
-    
+
     def set_weight(self, agent, location, weight) -> None:
+        """Set the weight of an agent at a location.
+
+        Args:
+            agent (Agent): The agent.
+            location (Location): The location.
+            weight (int): The weight
+        """
         self.g[agent.id][location.id]["weight"] = 1 if weight is None else weight
-    
+
     def get_weight(self, agent, location) -> int:
+        """Get the weight of an agent at a location.
+
+        Args:
+            agent (Agent): The agent.
+            location (Location): The location.
+
+        Returns:
+            int: The weight.
+        """
         return self.g[agent.id][location.id]["weight"]
