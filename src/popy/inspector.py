@@ -32,7 +32,7 @@ class NetworkInspector:
             for i in graph:
                 if node_attrs is not None:
                     for node_attr in node_attrs:
-                        graph.nodes[i][node_attr] = graph.nodes[i]["_obj"][node_attr]
+                        graph.nodes[i][node_attr] = getattr(graph.nodes[i]["_obj"], node_attr)
                 del graph.nodes[i]["_obj"]
             node_color = "cls" if node_color is None else node_color
 
@@ -48,9 +48,9 @@ class NetworkInspector:
         plot = BokehGraph(graph, width=500, height=500, hover_edges=True)
         plot.layout(layout=graph_layout)
         plot.draw(
-            node_color=node_color,
-            edge_alpha=edge_alpha,
-            edge_color=edge_color,
+            #node_color="black",
+            #edge_alpha="weight",
+            #edge_color="black",
         )
 
     def plot_bipartite_network(
@@ -80,7 +80,7 @@ class NetworkInspector:
             node_attrs = ["cls"]
         elif isinstance(node_attrs, list):
             if "cls" not in node_attrs:
-                node_attrs.append(node_attrs)
+                node_attrs.append("cls")
         else:
             raise Exception
 
