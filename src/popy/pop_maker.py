@@ -411,14 +411,12 @@ class PopMaker:
         self,
         location_classes: list,
         agents: list | popy.AgentList | None = None,
-        clear_locations: bool = False,
     ) -> popy.LocationList:
         """Creates location instances and connects them with the given agent population.
 
         Args:
             location_classes (list): A list of location classes.
             agents (list | popy.AgentList): A list of agents.
-            clear_locations: Should existing locations be removed before creating new ones?
 
         Returns:
             popy.LocationList: A list of locations.
