@@ -322,3 +322,18 @@ class MeltLocation(Location):
                 the agent is assigned.
         """
         return None
+    
+    def weight(self, agent: _agent.Agent) -> float | None:  # noqa: ARG002
+        """Defines the edge weight between the agent and the location instance.
+
+        Defines how the edge weight between an agent and the location is determined.
+        This is a boilerplate implementation of this method which always returns 1; i.e. all
+        edge weights will be 1. Override this method in your own implementations as you seem fit.
+
+        Args:
+            agent: The agent that is currently processed by the PopMaker.
+
+        Returns:
+            The edge weight.
+        """
+        return None
