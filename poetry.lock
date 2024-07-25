@@ -174,13 +174,13 @@ xyzservices = ">=2021.09.1"
 
 [[package]]
 name = "bokehgraph"
-version = "0.4.1"
+version = "0.4.2"
 description = "Interactive Graph visualization for networkX Graphs"
 optional = false
 python-versions = "<4.0,>=3.8"
 files = [
-    {file = "bokehgraph-0.4.1-py3-none-any.whl", hash = "sha256:0e49726c9476da54d37222ea6460f7900189351eb5686042eed9731c1f013c90"},
-    {file = "bokehgraph-0.4.1.tar.gz", hash = "sha256:05706c41d1b4f3dcdbf2fc90ec4af7e50843503a48c212256169bf25a0e0e97f"},
+    {file = "bokehgraph-0.4.2-py3-none-any.whl", hash = "sha256:aa1bc2e5c0132a5200f686bef1661eebb001204f35e45c4636829ddd3783637b"},
+    {file = "bokehgraph-0.4.2.tar.gz", hash = "sha256:97993bab9a985b921685a9c10fe9dfbd999b065d38cae7bcec378434d1fc4096"},
 ]
 
 [package.dependencies]
@@ -2970,4 +2970,4 @@ testing = ["big-O", "jaraco.functools", "jaraco.itertools", "more-itertools", "p
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.8,<4.0"
-content-hash = "dfe36c07b1ad10a65c68b48ef7126778b82ba57b382eed392d76ce9745b28e96"
+content-hash = "a5d26485d38f97380f24020cf8964792849f4a96efaea49dd86b3f03e9a5060b"
