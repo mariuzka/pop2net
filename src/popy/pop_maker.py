@@ -235,15 +235,30 @@ class PopMaker:
     def _get_groups(self, agents, location_cls) -> list[list]:
         dummy_location = self._create_dummy_location(location_cls)
 
+        n_location_groups_is_fixed = False
+
         # determine the number of groups needed
-        if dummy_location.n_locations is None:
-            n_location_groups = (
-                1
-                if dummy_location.size is None
-                else max(dummy_location.round_function(len(agents) / dummy_location.size), 1)
-            )
-        else:
+        if dummy_location.n_locations is None and dummy_location.size is None:
+            n_location_groups = 1
+        
+        elif dummy_location.n_locations is None and dummy_location.size is not None:
+            n_location_groups = max(
+                dummy_location.round_function(len(agents) / dummy_location.size), 
+                1,
+                )
+        
+        elif dummy_location.n_locations is not None and dummy_location.size is None:
             n_location_groups = dummy_location.n_locations
+            location_cls.size = round(max(len(agents) / n_location_groups, 1))
+            #n_location_groups_is_fixed = True
+        
+        elif dummy_location.n_locations is not None and dummy_location.size is not None:
+            n_location_groups = dummy_location.n_locations
+            n_location_groups_is_fixed = True
+        
+        else:
+            #TODO:
+            raise Exception
 
 
         stick_values = {self._get_stick_value(agent, dummy_location) for agent in agents}
@@ -259,7 +274,7 @@ class PopMaker:
 
             assigned = False
 
-            for _i, group in enumerate(groups):
+            for _, group in enumerate(groups):
                 # if there are still enough free places available
                 if (
                     dummy_location.size is None
@@ -277,17 +292,26 @@ class PopMaker:
                         break
 
             if not assigned:
-                if dummy_location.allow_overcrowding and len(groups) >= n_location_groups:
+                if False:
+                    if dummy_location.allow_overcrowding and len(groups) >= n_location_groups:
+                    #if len(groups) >= n_location_groups:
 
-                    # sort by the number of assigned agents
-                    groups.sort(key=lambda x: len(x))
+                        # sort by the number of assigned agents
+                        groups.sort(key=lambda x: len(x))
 
-                    # assign agents to the group_list with the fewest members
-                    for agent in sticky_agents:
-                        groups[0].append(agent)
+                        # assign agents to the group_list with the fewest members
+                        for agent in sticky_agents:
+                            groups[0].append(agent)
 
-                    #random.shuffle(groups)
-                else:
+                        #random.shuffle(groups)
+                    elif not dummy_location.allow_overcrowding and len(groups) >= n_location_groups:
+                    #elif len(groups) >= n_location_groups:
+                        pass
+
+                    else:
+                        pass
+                
+                if len(groups) < n_location_groups:
                     new_group = []
                     dummy_location = self._create_dummy_location(location_cls)
                     # assign agents
@@ -296,6 +320,16 @@ class PopMaker:
                         dummy_location.add_agent(agent)
 
                     groups.append(new_group)
+                
+                else:
+                    if not dummy_location.exact_size_only and not n_location_groups_is_fixed:
+                        # sort by the number of assigned agents
+                        groups.sort(key=lambda x: len(x))
+
+                        # assign agents to the group_list with the fewest members
+                        for agent in sticky_agents:
+                            groups[0].append(agent)
+
 
         if dummy_location.exact_size_only:
             groups = [group for group in groups if len(group) == dummy_location.size]
