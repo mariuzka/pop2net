@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import random
 import warnings
+import math
 
 import pandas as pd
 
@@ -233,6 +234,8 @@ class PopMaker:
 
 
     def _get_groups(self, agents, location_cls) -> list[list]:
+        overcrowding_i = 0
+
         dummy_location = self._create_dummy_location(location_cls)
 
         n_location_groups_is_fixed = False
@@ -240,21 +243,27 @@ class PopMaker:
         # determine the number of groups needed
         if dummy_location.n_locations is None and dummy_location.size is None:
             n_location_groups = 1
+            groups: list[list] = [[]]
         
         elif dummy_location.n_locations is None and dummy_location.size is not None:
             n_location_groups = max(
                 dummy_location.round_function(len(agents) / dummy_location.size), 
                 1,
                 )
+            groups: list[list] = [[]]
         
         elif dummy_location.n_locations is not None and dummy_location.size is None:
             n_location_groups = dummy_location.n_locations
-            location_cls.size = round(max(len(agents) / n_location_groups, 1))
-            #n_location_groups_is_fixed = True
-        
+            location_cls.size =  max(
+                math.floor(len(agents) / n_location_groups), 
+                1,
+                )
+            groups: list[list] = [[] for _ in range(n_location_groups)]
+            
         elif dummy_location.n_locations is not None and dummy_location.size is not None:
             n_location_groups = dummy_location.n_locations
             n_location_groups_is_fixed = True
+            groups: list[list] = [[]]
         
         else:
             #TODO:
@@ -262,7 +271,7 @@ class PopMaker:
 
 
         stick_values = {self._get_stick_value(agent, dummy_location) for agent in agents}
-        groups: list[list] = [[]]
+        
         dummy_location = self._create_dummy_location(location_cls)
 
         # for each group of sticky agents
@@ -292,25 +301,6 @@ class PopMaker:
                         break
 
             if not assigned:
-                if False:
-                    if dummy_location.allow_overcrowding and len(groups) >= n_location_groups:
-                    #if len(groups) >= n_location_groups:
-
-                        # sort by the number of assigned agents
-                        groups.sort(key=lambda x: len(x))
-
-                        # assign agents to the group_list with the fewest members
-                        for agent in sticky_agents:
-                            groups[0].append(agent)
-
-                        #random.shuffle(groups)
-                    elif not dummy_location.allow_overcrowding and len(groups) >= n_location_groups:
-                    #elif len(groups) >= n_location_groups:
-                        pass
-
-                    else:
-                        pass
-                
                 if len(groups) < n_location_groups:
                     new_group = []
                     dummy_location = self._create_dummy_location(location_cls)
@@ -323,16 +313,14 @@ class PopMaker:
                 
                 else:
                     if not dummy_location.exact_size_only and not n_location_groups_is_fixed:
-                        # sort by the number of assigned agents
-                        groups.sort(key=lambda x: len(x))
-
-                        # assign agents to the group_list with the fewest members
                         for agent in sticky_agents:
-                            groups[0].append(agent)
+                            groups[overcrowding_i].append(agent)
+                        overcrowding_i = (overcrowding_i + 1) % len(groups)
 
 
         if dummy_location.exact_size_only:
             groups = [group for group in groups if len(group) == dummy_location.size]
+
         return groups
 
 
