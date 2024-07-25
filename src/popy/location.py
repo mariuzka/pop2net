@@ -283,6 +283,8 @@ class MeltLocation(Location):
     """Helper class to melt locations."""
     size: int | None = None
     exact_size_only: bool = False
+    n_locations: int | None = None
+    round_function = math.ceil
 
 
     def filter(self, agent: _agent.Agent) -> bool:  # noqa: ARG002
@@ -337,3 +339,14 @@ class MeltLocation(Location):
             The edge weight.
         """
         return None
+
+    def find(self, agent: _agent.Agent) -> bool: # noqa: ARG002
+        """Assigns the agent to a specific location instance that meets the requirements.
+
+        Args:
+            agent (_agent.Agent): The agent that is currently processed by the PopMaker.
+
+        Returns:
+            bool: _description_
+        """
+        return True
