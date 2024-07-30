@@ -1,11 +1,9 @@
 import popy
-from popy.creator import Creator
-import math
 import pandas as pd
 
 def test_1():
     model = popy.Model()
-    creator = Creator(model)
+    creator = popy.Creator(model)
 
     class TestLocation(popy.MagicLocation):
         pass
@@ -19,7 +17,7 @@ def test_1():
 
 def test_2():
     model = popy.Model()
-    creator = Creator(model)
+    creator = popy.Creator(model)
 
     class TestLocation(popy.MagicLocation):
         n_agents = 5
@@ -37,7 +35,7 @@ def test_2():
 
 def test_3():
     model = popy.Model()
-    creator = Creator(model)
+    creator = popy.Creator(model)
 
     class TestLocation(popy.MagicLocation):
         n_agents = 4
@@ -55,7 +53,7 @@ def test_3():
 
 def test_4():
     model = popy.Model()
-    creator = Creator(model)
+    creator = popy.Creator(model)
 
     class TestLocation(popy.MagicLocation):
         n_agents = 4
@@ -73,7 +71,7 @@ def test_4():
 
 def test_5_1():
     model = popy.Model()
-    creator = Creator(model)
+    creator = popy.Creator(model)
 
     class TestLocation(popy.MagicLocation):
         n_agents = 4
@@ -92,7 +90,7 @@ def test_5_1():
 
 def test_5_2():
     model = popy.Model()
-    creator = Creator(model)
+    creator = popy.Creator(model)
 
     class TestLocation(popy.MagicLocation):
         n_agents = 4
@@ -110,7 +108,7 @@ def test_5_2():
 
 def test_6():
     model = popy.Model()
-    creator = Creator(model)
+    creator = popy.Creator(model)
 
     class TestLocation(popy.MagicLocation):
         n_agents = 4
@@ -128,7 +126,7 @@ def test_6():
 
 def test_7():
     model = popy.Model()
-    creator = Creator(model)
+    creator = popy.Creator(model)
 
     class TestLocation(popy.MagicLocation):
         n_agents = None
@@ -146,7 +144,7 @@ def test_7():
 
 def test_8_1():
     model = popy.Model()
-    creator = Creator(model)
+    creator = popy.Creator(model)
 
     class TestLocation(popy.MagicLocation):
         n_agents = None
@@ -165,7 +163,7 @@ def test_8_1():
 
 def test_8_2():
     model = popy.Model()
-    creator = Creator(model)
+    creator = popy.Creator(model)
 
     class TestLocation(popy.MagicLocation):
         n_agents = None
@@ -184,7 +182,7 @@ def test_8_2():
 
 def test_8_3():
     model = popy.Model()
-    creator = Creator(model)
+    creator = popy.Creator(model)
 
     class TestLocation(popy.MagicLocation):
         n_agents = None
@@ -203,7 +201,7 @@ def test_8_3():
 
 def test_9():
     model = popy.Model()
-    creator = Creator(model)
+    creator = popy.Creator(model)
 
     class TestLocation(popy.MagicLocation):
         n_agents = 1
@@ -222,7 +220,7 @@ def test_9():
 
 def test_10():
     model = popy.Model()
-    creator = Creator(model)
+    creator = popy.Creator(model)
 
     class TestLocation(popy.MagicLocation):
         n_agents = 2
@@ -242,7 +240,7 @@ def test_10():
 
 def test_11():
     model = popy.Model()
-    creator = Creator(model)
+    creator = popy.Creator(model)
 
     class TestLocation(popy.MagicLocation):
         n_agents = 5
@@ -260,7 +258,7 @@ def test_11():
 
 def test_12():
     model = popy.Model()
-    creator = Creator(model)
+    creator = popy.Creator(model)
 
     class TestLocation(popy.MagicLocation):
         n_agents = 7
@@ -277,7 +275,7 @@ def test_12():
 
 def test_13():
     model = popy.Model()
-    creator = Creator(model)
+    creator = popy.Creator(model)
     
     class TestLocation(popy.MagicLocation):
         n_agents = 7
@@ -295,7 +293,7 @@ def test_13():
 
 def test_14():
     model = popy.Model()
-    creator = Creator(model)
+    creator = popy.Creator(model)
 
     class TestLocation(popy.MagicLocation):
         n_agents = 7
@@ -311,7 +309,7 @@ def test_14():
 
 def test_15():
     model = popy.Model()
-    creator = Creator(model)
+    creator = popy.Creator(model)
    
     class TestLocation(popy.MagicLocation):
         n_agents = 7
@@ -329,7 +327,7 @@ def test_15():
 
 def test_16():
     model = popy.Model()
-    creator = Creator(model)
+    creator = popy.Creator(model)
 
     class TestLocation(popy.MagicLocation):
         n_agents = 20
@@ -346,7 +344,7 @@ def test_16():
 
 def test_17():
     model = popy.Model()
-    creator = Creator(model)
+    creator = popy.Creator(model)
 
     class TestLocation(popy.MagicLocation):
         n_agents = None
@@ -365,7 +363,7 @@ def test_17():
 
 def test_18():
     model = popy.Model()
-    creator = Creator(model)
+    creator = popy.Creator(model)
 
     class TestLocation(popy.MagicLocation):
         n_agents = None
@@ -384,7 +382,7 @@ def test_18():
 
 def test_19():
     model = popy.Model()
-    creator = Creator(model)
+    creator = popy.Creator(model)
 
     class TestLocation(popy.MagicLocation):
         n_agents = None
@@ -403,7 +401,7 @@ def test_19():
 
 def test_20():
     model = popy.Model()
-    creator = Creator(model)
+    creator = popy.Creator(model)
 
     class TestLocation(popy.MagicLocation):
         n_agents = None
@@ -424,7 +422,7 @@ def test_20():
 
 def test_21():
     model = popy.Model()
-    creator = Creator(model)
+    creator = popy.Creator(model)
     inspector = popy.NetworkInspector(model)
 
 
@@ -450,7 +448,7 @@ def test_21():
 
 def test_split_1():
     model = popy.Model()
-    creator = Creator(model)
+    creator = popy.Creator(model)
     inspector = popy.NetworkInspector(model)
 
 
@@ -481,7 +479,7 @@ def test_split_1():
 
 def test_split_2():
     model = popy.Model()
-    creator = Creator(model)
+    creator = popy.Creator(model)
     inspector = popy.NetworkInspector(model)
 
 
@@ -513,7 +511,7 @@ def test_split_2():
 
 def test_split_3():
     model = popy.Model()
-    creator = Creator(model)
+    creator = popy.Creator(model)
     inspector = popy.NetworkInspector(model)
 
 
@@ -543,7 +541,7 @@ def test_split_3():
 
 def test_overcrowding_1():
     model = popy.Model()
-    creator = Creator(model)
+    creator = popy.Creator(model)
 
     class TestLocation(popy.MagicLocation):
         n_agents = 4
@@ -559,7 +557,7 @@ def test_overcrowding_1():
 
 def test_overcrowding_2():
     model = popy.Model()
-    creator = Creator(model)
+    creator = popy.Creator(model)
 
     class TestLocation(popy.MagicLocation):
         n_agents = 4
@@ -576,7 +574,7 @@ def test_overcrowding_2():
 
 def test_overcrowding_3():
     model = popy.Model()
-    creator = Creator(model)
+    creator = popy.Creator(model)
 
     class TestLocation(popy.MagicLocation):
         n_agents = 4

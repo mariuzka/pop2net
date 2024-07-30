@@ -1,6 +1,5 @@
 import pandas as pd
 import popy
-from popy.creator import Creator
 import pytest
 
 @pytest.fixture()
@@ -247,7 +246,7 @@ def test_chef_agents():
     )
 
     model = popy.Model()
-    creator = Creator(model)
+    creator = popy.Creator(model)
     # inspector = NetworkInspector(model)
 
     creator.create_agents(df=df, agent_class=MyAgent)
@@ -273,7 +272,7 @@ def test_table_agents():
     # not sure what is being checked here.
 
     model = popy.Model()
-    creator = Creator(model)
+    creator = popy.Creator(model)
 
     df = pd.DataFrame(
         {
