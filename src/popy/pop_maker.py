@@ -241,26 +241,26 @@ class PopMaker:
         n_location_groups_is_fixed = False
 
         # determine the number of groups needed
-        if dummy_location.n_locations is None and dummy_location.size is None:
+        if dummy_location.n_locations is None and dummy_location.n_agents is None:
             n_location_groups = 1
             groups: list[list] = [[]]
         
-        elif dummy_location.n_locations is None and dummy_location.size is not None:
+        elif dummy_location.n_locations is None and dummy_location.n_agents is not None:
             n_location_groups = max(
-                dummy_location.round_function(len(agents) / dummy_location.size), 
+                dummy_location.round_function(len(agents) / dummy_location.n_agents), 
                 1,
                 )
             groups: list[list] = [[]]
         
-        elif dummy_location.n_locations is not None and dummy_location.size is None:
+        elif dummy_location.n_locations is not None and dummy_location.n_agents is None:
             n_location_groups = dummy_location.n_locations
-            location_cls.size =  max(
+            location_cls.n_agents =  max(
                 math.floor(len(agents) / n_location_groups), 
                 1,
                 )
             groups: list[list] = [[] for _ in range(n_location_groups)]
             
-        elif dummy_location.n_locations is not None and dummy_location.size is not None:
+        elif dummy_location.n_locations is not None and dummy_location.n_agents is not None:
             n_location_groups = dummy_location.n_locations
             n_location_groups_is_fixed = True
             groups: list[list] = [[]]
@@ -286,8 +286,8 @@ class PopMaker:
             for _, group in enumerate(groups):
                 # if there are still enough free places available
                 if (
-                    dummy_location.size is None
-                    or (dummy_location.size - len(group)) >= len(sticky_agents)
+                    dummy_location.n_agents is None
+                    or (dummy_location.n_agents - len(group)) >= len(sticky_agents)
                 ):
                     if sum(
                         [dummy_location.find(agent) for agent in sticky_agents],
@@ -319,7 +319,7 @@ class PopMaker:
 
 
         if dummy_location.exact_size_only:
-            groups = [group for group in groups if len(group) == dummy_location.size]
+            groups = [group for group in groups if len(group) == dummy_location.n_agents]
 
         return groups
 

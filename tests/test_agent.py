@@ -160,7 +160,7 @@ def test_color_agents():
 
 def test_chef_agents():
     class Town(popy.MagicLocation):
-        size = 4
+        n_agents = 4
 
         def stick_together(self, agent):
             return agent.couple
@@ -294,7 +294,7 @@ def test_table_agents():
 
         def melt(self):
             class PizzaGroup(popy.MagicLocation):
-                size = 3
+                n_agents = 3
                 exact_size_only = False
 
                 def filter(self, agent):
@@ -307,7 +307,7 @@ def test_table_agents():
                     return 10
 
             class PastaGroup(popy.MagicLocation):
-                size = 2
+                n_agents = 2
                 exact_size_only = False
 
                 def filter(self, agent):
@@ -323,7 +323,7 @@ def test_table_agents():
 
 
     class Restaurant(popy.MagicLocation):
-        size = 10
+        n_agents = 10
 
         # def stick_together(self, agent):
         #    return agent.Table

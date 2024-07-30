@@ -22,7 +22,7 @@ def test_2():
     popmaker = PopMaker(model)
 
     class TestLocation(popy.MagicLocation):
-        size = 5
+        n_agents = 5
         n_locations = None
         round_function = math.ceil
         exact_size_only = False
@@ -40,7 +40,7 @@ def test_3():
     popmaker = PopMaker(model)
 
     class TestLocation(popy.MagicLocation):
-        size = 4
+        n_agents = 4
         n_locations = None
         round_function = math.ceil
         exact_size_only = False
@@ -59,7 +59,7 @@ def test_4():
     popmaker = PopMaker(model)
 
     class TestLocation(popy.MagicLocation):
-        size = 4
+        n_agents = 4
         n_locations = None
         round_function = math.floor
         exact_size_only = False
@@ -76,7 +76,7 @@ def test_5():
     popmaker = PopMaker(model)
 
     class TestLocation(popy.MagicLocation):
-        size = 4
+        n_agents = 4
         n_locations = None
         round_function = math.ceil
         exact_size_only = True
@@ -94,7 +94,7 @@ def test_6():
     popmaker = PopMaker(model)
 
     class TestLocation(popy.MagicLocation):
-        size = 4
+        n_agents = 4
         n_locations = None
         round_function = math.floor
         exact_size_only = True
@@ -112,7 +112,7 @@ def test_7():
     popmaker = PopMaker(model)
 
     class TestLocation(popy.MagicLocation):
-        size = None
+        n_agents = None
         n_locations = 2
         round_function = math.ceil
         exact_size_only = False
@@ -130,7 +130,7 @@ def test_8_1():
     popmaker = PopMaker(model)
 
     class TestLocation(popy.MagicLocation):
-        size = None
+        n_agents = None
         n_locations = 3
         round_function = math.ceil
         exact_size_only = False
@@ -149,7 +149,7 @@ def test_8_2():
     popmaker = PopMaker(model)
 
     class TestLocation(popy.MagicLocation):
-        size = None
+        n_agents = None
         n_locations = 3
         round_function = math.floor
         exact_size_only = False
@@ -168,7 +168,7 @@ def test_8_3():
     popmaker = PopMaker(model)
 
     class TestLocation(popy.MagicLocation):
-        size = None
+        n_agents = None
         n_locations = 3
         round_function = round
         exact_size_only = False
@@ -187,7 +187,7 @@ def test_9():
     popmaker = PopMaker(model)
 
     class TestLocation(popy.MagicLocation):
-        size = 1
+        n_agents = 1
         n_locations = 3
         round_function = math.ceil
         exact_size_only = False
@@ -206,7 +206,7 @@ def test_10():
     popmaker = PopMaker(model)
 
     class TestLocation(popy.MagicLocation):
-        size = 2
+        n_agents = 2
         n_locations = 4
         round_function = math.floor
         exact_size_only = False
@@ -226,7 +226,7 @@ def test_11():
     popmaker = PopMaker(model)
 
     class TestLocation(popy.MagicLocation):
-        size = 5
+        n_agents = 5
         n_locations = 2
         round_function = math.floor
         exact_size_only = False
@@ -244,7 +244,7 @@ def test_12():
     popmaker = PopMaker(model)
 
     class TestLocation(popy.MagicLocation):
-        size = 7
+        n_agents = 7
         n_locations = 1
         round_function = math.ceil
         exact_size_only = False
@@ -261,7 +261,7 @@ def test_13():
     popmaker = PopMaker(model)
     
     class TestLocation(popy.MagicLocation):
-        size = 7
+        n_agents = 7
         n_locations = 2
         round_function = math.ceil
         exact_size_only = False
@@ -279,7 +279,7 @@ def test_14():
     popmaker = PopMaker(model)
 
     class TestLocation(popy.MagicLocation):
-        size = 7
+        n_agents = 7
         n_locations = 2
         round_function = math.ceil
         exact_size_only = True
@@ -295,7 +295,7 @@ def test_15():
     popmaker = PopMaker(model)
    
     class TestLocation(popy.MagicLocation):
-        size = 7
+        n_agents = 7
         n_locations = 3
         round_function = math.ceil
         exact_size_only = False
@@ -313,7 +313,7 @@ def test_16():
     popmaker = PopMaker(model)
 
     class TestLocation(popy.MagicLocation):
-        size = 20
+        n_agents = 20
         n_locations = 3
         round_function = math.ceil
         exact_size_only = False
@@ -330,7 +330,7 @@ def test_17():
     popmaker = PopMaker(model)
 
     class TestLocation(popy.MagicLocation):
-        size = None
+        n_agents = None
         n_locations = 3
         round_function = math.ceil
         exact_size_only = False
@@ -349,7 +349,7 @@ def test_18():
     popmaker = PopMaker(model)
 
     class TestLocation(popy.MagicLocation):
-        size = None
+        n_agents = None
         n_locations = 3
         round_function = math.floor
         exact_size_only = False
@@ -368,7 +368,7 @@ def test_19():
     popmaker = PopMaker(model)
 
     class TestLocation(popy.MagicLocation):
-        size = None
+        n_agents = None
         n_locations = 3
         round_function = math.floor
         exact_size_only = True
@@ -387,7 +387,7 @@ def test_20():
     popmaker = PopMaker(model)
 
     class TestLocation(popy.MagicLocation):
-        size = None
+        n_agents = None
         n_locations = 6
         round_function = math.floor
         exact_size_only = True
@@ -410,7 +410,7 @@ def test_21():
 
 
     class TestLocation(popy.MagicLocation):
-        size = None
+        n_agents = None
         n_locations = 6
         round_function = math.floor
         exact_size_only = False
@@ -438,7 +438,7 @@ def test_split_1():
 
 
     class TestLocation(popy.MagicLocation):
-        size = None
+        n_agents = None
         n_locations = None
         round_function = math.floor
         exact_size_only = False
@@ -469,7 +469,7 @@ def test_split_2():
 
 
     class TestLocation(popy.MagicLocation):
-        size = 2
+        n_agents = 2
         n_locations = None
         round_function = math.floor
         exact_size_only = False
@@ -501,7 +501,7 @@ def test_split_3():
 
 
     class TestLocation(popy.MagicLocation):
-        size = 2
+        n_agents = 2
         n_locations = 1
         round_function = math.floor
         exact_size_only = False

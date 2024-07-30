@@ -68,7 +68,7 @@ def test_location_size():
 
 #         def melt(self):
 #             class PizzaGroup(popy.MagicLocation):
-#                 size = size_pizza_group
+#                 n_agents = size_pizza_group
 #                 exact_size_only = exact_size_only_pizza_group
 
 #                 def filter(self, agent):
@@ -81,7 +81,7 @@ def test_location_size():
 #                     return 10
 
 #             class PastaGroup(popy.MagicLocation):
-#                 size = size_pasta_group
+#                 n_agents = size_pasta_group
 #                 exact_size_only = exact_size_only_pasta_group
 
 #                 def filter(self, agent):

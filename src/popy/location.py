@@ -127,8 +127,8 @@ class Location(Object):
 
 class MagicLocation(Location):
     """Helper class to create locations from inside the PopMaker."""
-    size: int | None = None
     allow_overcrowding: bool = True
+    n_agents: int | None = None
     n_locations: int | None = None
     static_weight: bool = False
     round_function = math.ceil
@@ -280,7 +280,7 @@ class MagicLocation(Location):
 
 class MeltLocation(Location):
     """Helper class to melt locations."""
-    size: int | None = None
+    n_agents: int | None = None
     exact_size_only: bool = False
     n_locations: int | None = None
     round_function = math.ceil

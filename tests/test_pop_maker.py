@@ -22,8 +22,7 @@ class Home(Location):
 
 
 class School(Location):
-    def setup(self):
-        self.size = 10
+    n_agents = 10
 
     def group(self, agent):
         return 0 if agent.age <= 14 else 1
