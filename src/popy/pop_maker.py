@@ -246,8 +246,15 @@ class PopMaker:
             groups: list[list] = [[]]
         
         elif dummy_location.n_locations is None and dummy_location.n_agents is not None:
+            if dummy_location.overcrowding is None:
+                round_function = round
+            elif dummy_location.overcrowding is True:
+                round_function = math.floor
+            elif dummy_location.overcrowding is False:
+                round_function = math.ceil
+
             n_location_groups = max(
-                dummy_location.round_function(len(agents) / dummy_location.n_agents), 
+                round_function(len(agents) / dummy_location.n_agents), 
                 1,
                 )
             groups: list[list] = [[]]

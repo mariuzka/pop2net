@@ -128,12 +128,13 @@ class Location(Object):
 class MagicLocation(Location):
     """Helper class to create locations from inside the PopMaker."""
     n_agents: int | None = None
+    overcrowding: bool = None
+    exact_size_only: bool = False
     n_locations: int | None = None
     static_weight: bool = False
-    round_function = math.ceil
     recycle: bool = True
     nxgraph: nx.Graph | None = None
-    exact_size_only: bool = False
+    
 
     def __init__(self, model: _model.Model) -> None:
         """Create a helper class to create locations.
@@ -279,9 +280,9 @@ class MagicLocation(Location):
 class MeltLocation(Location):
     """Helper class to melt locations."""
     n_agents: int | None = None
+    overcrowding: bool | None = None
     exact_size_only: bool = False
     n_locations: int | None = None
-    round_function = math.ceil
 
 
     def filter(self, agent: _agent.Agent) -> bool:  # noqa: ARG002

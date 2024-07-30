@@ -24,7 +24,7 @@ def test_2():
     class TestLocation(popy.MagicLocation):
         n_agents = 5
         n_locations = None
-        round_function = math.ceil
+        overcrowding = None
         exact_size_only = False
 
     popmaker.create_agents(n=10)
@@ -42,7 +42,43 @@ def test_3():
     class TestLocation(popy.MagicLocation):
         n_agents = 4
         n_locations = None
-        round_function = math.ceil
+        overcrowding = None
+        exact_size_only = False
+
+    popmaker.create_agents(n=10)
+    popmaker.create_locations(location_classes=[TestLocation])
+
+    assert len(model.locations) == 2
+    assert len(model.locations[0].agents) == 5
+    assert len(model.locations[1].agents) == 5
+
+
+def test_4():
+    model = popy.Model()
+    popmaker = PopMaker(model)
+
+    class TestLocation(popy.MagicLocation):
+        n_agents = 4
+        n_locations = None
+        overcrowding = True
+        exact_size_only = False
+
+    popmaker.create_agents(n=10)
+    popmaker.create_locations(location_classes=[TestLocation])
+
+    assert len(model.locations) == 2
+    assert len(model.locations[0].agents) == 5
+    assert len(model.locations[1].agents) == 5
+
+
+def test_5_1():
+    model = popy.Model()
+    popmaker = PopMaker(model)
+
+    class TestLocation(popy.MagicLocation):
+        n_agents = 4
+        n_locations = None
+        overcrowding = False
         exact_size_only = False
 
     popmaker.create_agents(n=10)
@@ -54,31 +90,14 @@ def test_3():
     assert len(model.locations[2].agents) == 2
 
 
-def test_4():
+def test_5_2():
     model = popy.Model()
     popmaker = PopMaker(model)
 
     class TestLocation(popy.MagicLocation):
         n_agents = 4
         n_locations = None
-        round_function = math.floor
-        exact_size_only = False
-
-    popmaker.create_agents(n=10)
-    popmaker.create_locations(location_classes=[TestLocation])
-
-    assert len(model.locations) == 2
-    assert len(model.locations[0].agents) == 5
-    assert len(model.locations[1].agents) == 5
-
-def test_5():
-    model = popy.Model()
-    popmaker = PopMaker(model)
-
-    class TestLocation(popy.MagicLocation):
-        n_agents = 4
-        n_locations = None
-        round_function = math.ceil
+        overcrowding = False
         exact_size_only = True
 
     popmaker.create_agents(n=10)
@@ -96,7 +115,7 @@ def test_6():
     class TestLocation(popy.MagicLocation):
         n_agents = 4
         n_locations = None
-        round_function = math.floor
+        overcrowding = None
         exact_size_only = True
 
     popmaker.create_agents(n=10)
@@ -114,7 +133,7 @@ def test_7():
     class TestLocation(popy.MagicLocation):
         n_agents = None
         n_locations = 2
-        round_function = math.ceil
+        overcrowding = None
         exact_size_only = False
 
     popmaker.create_agents(n=10)
@@ -132,7 +151,7 @@ def test_8_1():
     class TestLocation(popy.MagicLocation):
         n_agents = None
         n_locations = 3
-        round_function = math.ceil
+        overcrowding = None
         exact_size_only = False
 
     popmaker.create_agents(n=10)
@@ -151,7 +170,7 @@ def test_8_2():
     class TestLocation(popy.MagicLocation):
         n_agents = None
         n_locations = 3
-        round_function = math.floor
+        overcrowding = None
         exact_size_only = False
 
     popmaker.create_agents(n=10)
@@ -170,7 +189,7 @@ def test_8_3():
     class TestLocation(popy.MagicLocation):
         n_agents = None
         n_locations = 3
-        round_function = round
+        overcrowding = None
         exact_size_only = False
 
     popmaker.create_agents(n=10)
@@ -189,7 +208,7 @@ def test_9():
     class TestLocation(popy.MagicLocation):
         n_agents = 1
         n_locations = 3
-        round_function = math.ceil
+        overcrowding = None
         exact_size_only = False
 
     popmaker.create_agents(n=10)
@@ -208,7 +227,7 @@ def test_10():
     class TestLocation(popy.MagicLocation):
         n_agents = 2
         n_locations = 4
-        round_function = math.floor
+        overcrowding = None
         exact_size_only = False
 
     popmaker.create_agents(n=10)
@@ -228,7 +247,7 @@ def test_11():
     class TestLocation(popy.MagicLocation):
         n_agents = 5
         n_locations = 2
-        round_function = math.floor
+        overcrowding = None
         exact_size_only = False
 
     popmaker.create_agents(n=10)
@@ -246,7 +265,7 @@ def test_12():
     class TestLocation(popy.MagicLocation):
         n_agents = 7
         n_locations = 1
-        round_function = math.ceil
+        overcrowding = None
         exact_size_only = False
 
     popmaker.create_agents(n=10)
@@ -263,7 +282,7 @@ def test_13():
     class TestLocation(popy.MagicLocation):
         n_agents = 7
         n_locations = 2
-        round_function = math.ceil
+        overcrowding = None
         exact_size_only = False
 
     popmaker.create_agents(n=10)
@@ -281,7 +300,7 @@ def test_14():
     class TestLocation(popy.MagicLocation):
         n_agents = 7
         n_locations = 2
-        round_function = math.ceil
+        overcrowding = None
         exact_size_only = True
 
     popmaker.create_agents(n=10)
@@ -297,7 +316,7 @@ def test_15():
     class TestLocation(popy.MagicLocation):
         n_agents = 7
         n_locations = 3
-        round_function = math.ceil
+        overcrowding = None
         exact_size_only = False
 
     popmaker.create_agents(n=10)
@@ -315,7 +334,7 @@ def test_16():
     class TestLocation(popy.MagicLocation):
         n_agents = 20
         n_locations = 3
-        round_function = math.ceil
+        overcrowding = None
         exact_size_only = False
 
     popmaker.create_agents(n=10)
@@ -332,7 +351,7 @@ def test_17():
     class TestLocation(popy.MagicLocation):
         n_agents = None
         n_locations = 3
-        round_function = math.ceil
+        overcrowding = None
         exact_size_only = False
 
     popmaker.create_agents(n=10)
@@ -351,7 +370,7 @@ def test_18():
     class TestLocation(popy.MagicLocation):
         n_agents = None
         n_locations = 3
-        round_function = math.floor
+        overcrowding = None
         exact_size_only = False
 
     popmaker.create_agents(n=10)
@@ -370,7 +389,7 @@ def test_19():
     class TestLocation(popy.MagicLocation):
         n_agents = None
         n_locations = 3
-        round_function = math.floor
+        overcrowding = None
         exact_size_only = True
 
     popmaker.create_agents(n=10)
@@ -389,7 +408,7 @@ def test_20():
     class TestLocation(popy.MagicLocation):
         n_agents = None
         n_locations = 6
-        round_function = math.floor
+        overcrowding = None
         exact_size_only = True
 
     popmaker.create_agents(n=10)
@@ -412,7 +431,7 @@ def test_21():
     class TestLocation(popy.MagicLocation):
         n_agents = None
         n_locations = 6
-        round_function = math.floor
+        overcrowding = None
         exact_size_only = False
 
     popmaker.create_agents(n=10)
@@ -429,8 +448,6 @@ def test_21():
     assert len(model.locations[5].agents) == 1
 
 
-
-
 def test_split_1():
     model = popy.Model()
     popmaker = PopMaker(model)
@@ -440,7 +457,7 @@ def test_split_1():
     class TestLocation(popy.MagicLocation):
         n_agents = None
         n_locations = None
-        round_function = math.floor
+        overcrowding = None
         exact_size_only = False
     
         def split(self, agent):
@@ -471,7 +488,7 @@ def test_split_2():
     class TestLocation(popy.MagicLocation):
         n_agents = 2
         n_locations = None
-        round_function = math.floor
+        overcrowding = None
         exact_size_only = False
     
         def split(self, agent):
@@ -503,7 +520,7 @@ def test_split_3():
     class TestLocation(popy.MagicLocation):
         n_agents = 2
         n_locations = 1
-        round_function = math.floor
+        overcrowding = None
         exact_size_only = False
     
         def split(self, agent):
@@ -522,3 +539,52 @@ def test_split_3():
     assert len(model.locations[0].agents) == 2
     assert len(model.locations[1].agents) == 2
     assert len(model.locations[2].agents) == 2
+
+
+def test_overcrowding_1():
+    model = popy.Model()
+    popmaker = PopMaker(model)
+
+    class TestLocation(popy.MagicLocation):
+        n_agents = 4
+        overcrowding = True
+
+    popmaker.create_agents(n=10)
+    popmaker.create_locations(location_classes=[TestLocation])
+
+    assert len(model.locations) == 2
+    assert len(model.locations[0].agents) == 5
+    assert len(model.locations[1].agents) == 5
+
+
+def test_overcrowding_2():
+    model = popy.Model()
+    popmaker = PopMaker(model)
+
+    class TestLocation(popy.MagicLocation):
+        n_agents = 4
+        overcrowding = False
+
+    popmaker.create_agents(n=10)
+    popmaker.create_locations(location_classes=[TestLocation])
+
+    assert len(model.locations) == 3
+    assert len(model.locations[0].agents) == 4
+    assert len(model.locations[1].agents) == 4
+    assert len(model.locations[2].agents) == 2
+
+
+def test_overcrowding_3():
+    model = popy.Model()
+    popmaker = PopMaker(model)
+
+    class TestLocation(popy.MagicLocation):
+        n_agents = 4
+        overcrowding = None
+
+    popmaker.create_agents(n=10)
+    popmaker.create_locations(location_classes=[TestLocation])
+
+    assert len(model.locations) == 2
+    assert len(model.locations[0].agents) == 5
+    assert len(model.locations[1].agents) == 5
