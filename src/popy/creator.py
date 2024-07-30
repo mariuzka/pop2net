@@ -17,8 +17,8 @@ class Creator:
 
     def __init__(
         self,
-        model: popy.Model | None = None,
-        seed: int = 999,
+        model: popy.Model,
+        seed: int = None,
     ) -> None:
         """Instantiate a population maker for a specific model.
 
@@ -26,8 +26,6 @@ class Creator:
             model (popy.Model): Model, for which a population should be created
             seed (int, optional): A seed for reproducibility. Defaults to 999.
         """
-        # TODO: Seed should default to None.
-
         self.model = model
         self.seed = seed
         self.rng = random.Random(seed)
