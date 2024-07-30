@@ -24,7 +24,6 @@ class Location(Object):
         super().__init__(model)
         self.model = model
         self.model.add_location(self)
-        self.cls: str = utils._get_cls_as_str(type(self))
 
     @property
     def agents(self) -> AgentList:

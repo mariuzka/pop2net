@@ -36,7 +36,6 @@ class Agent(ap.Agent):
 
         self.model.add_agent(self)
         self.setup()
-        self.cls = utils._get_cls_as_str(type(self))
 
 
     def setup(self) -> None:

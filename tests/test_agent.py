@@ -200,7 +200,7 @@ def test_chef_agents():
             assert (
                 len(
                     {
-                        agent.locations.select(agent.locations.cls == "Town")[0]
+                        agent.locations.select(agent.locations.type == "Town")[0]
                         for agent in self.agents
                         if isinstance(agent, MyAgent)  # Chef-agents are not affiliated with Towns
                     },
@@ -212,7 +212,7 @@ def test_chef_agents():
     class Chef(popy.Agent):
         def assert_(self):
             assert len(self.locations) == 1
-            assert self.locations[0].cls == "Restaurant"
+            assert self.locations[0].type == "Restaurant"
             assert self.get_location_weight(self.locations[0]) == 8
             assert (
                 len([1 for a in self.locations[0].neighbors(self) if self.get_agent_weight(a) != 2])
@@ -224,7 +224,7 @@ def test_chef_agents():
         def assert_(self):
             couple_agent = [
                 agent
-                for agent in self.model.agents.select(self.model.agents.cls == "MyAgent")
+                for agent in self.model.agents.select(self.model.agents.type == "MyAgent")
                 if agent.couple == self.couple and agent is not self
             ][0]
 
@@ -233,7 +233,7 @@ def test_chef_agents():
             assert self.get_agent_weight(couple_agent) == 12 + 1
 
             assert (
-                self.locations.select(self.locations.cls == "Town")[0]
+                self.locations.select(self.locations.type == "Town")[0]
                 is self.shared_locations(couple_agent, location_classes=[Town])[0]
             )
 

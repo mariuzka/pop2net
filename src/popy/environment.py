@@ -213,7 +213,7 @@ class Environment:
                 node 
                 for node in self.g.neighbors(agent.id) 
                 if self.g.nodes[node]["bipartite"] == 1
-                and self.g.nodes[node]["_obj"].cls in location_classes
+                and self.g.nodes[node]["_obj"].type in location_classes
             )
         else:
             locations = (

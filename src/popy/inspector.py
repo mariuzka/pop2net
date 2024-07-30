@@ -40,7 +40,7 @@ class NetworkInspector:
                     for node_attr in node_attrs:
                         graph.nodes[i][node_attr] = getattr(graph.nodes[i]["_obj"], node_attr)
                 del graph.nodes[i]["_obj"]
-            node_color = "cls" if node_color is None else node_color
+            node_color = "type" if node_color is None else node_color
 
         elif network_type == "agent":
             graph = utils.create_agent_graph(
@@ -48,7 +48,7 @@ class NetworkInspector:
                 node_attrs=node_attrs,
                 include_0_weights=include_0_weights,
             )
-            node_color = "cls" if node_color is None else node_color
+            node_color = "type" if node_color is None else node_color
 
         graph_layout = nx.drawing.spring_layout(graph)
         plot = BokehGraph(graph, width=500, height=500, hover_edges=True)
@@ -83,10 +83,10 @@ class NetworkInspector:
                 the plot? Defaults to True.
         """
         if node_attrs is None:
-            node_attrs = ["cls"]
+            node_attrs = ["type"]
         elif isinstance(node_attrs, list):
-            if "cls" not in node_attrs:
-                node_attrs.append("cls")
+            if "type" not in node_attrs:
+                node_attrs.append("type")
         else:
             raise Exception
 

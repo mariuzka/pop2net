@@ -264,7 +264,7 @@ class Model(ap.Model):
                 node
                 for node in self.g.neighbors(agent.id)
                 if self.g.nodes[node]["bipartite"] == 1
-                and self.g.nodes[node]["_obj"].cls in location_classes
+                and self.g.nodes[node]["_obj"].type in location_classes
             )
         else:
             locations = (
@@ -304,7 +304,7 @@ class Model(ap.Model):
                 (utils._get_cls_as_str(cls) if not isinstance(cls, str) else cls)
                 for cls in object_classes
             ]
-            objects_between = [o for o in objects_between if o.cls in object_classes]
+            objects_between = [o for o in objects_between if o.type in object_classes]
         return objects_between
 
     def locations_between_agents(self, agent1, agent2, location_classes=()):
