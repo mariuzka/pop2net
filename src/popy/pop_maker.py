@@ -443,6 +443,7 @@ class PopMaker:
         Returns:
             popy.LocationList: A list of locations.
         """
+
         if agents is None:
             agents = self.model.agents
 
@@ -453,7 +454,7 @@ class PopMaker:
 
         for location_cls in location_classes:
 
-            str_location_cls = location_cls.__class__.__name__
+            str_location_cls = utils._get_cls_as_str(location_cls)
             for agent in agents:
                 setattr(agent, str_location_cls, None)
 
@@ -464,7 +465,7 @@ class PopMaker:
             for agent in agents:
                 agent.TEMP_melt_location_weight = None
 
-            str_location_cls = location_cls.__class__.__name__
+            str_location_cls = utils._get_cls_as_str(location_cls)
 
             # create location dummy in order to use the location's methods
             dummy_location = self._create_dummy_location(location_cls)
@@ -572,7 +573,6 @@ class PopMaker:
                                 f"gv={subgroup_location.group_value}, \
                                     gid={subgroup_location.group_id}"
                             )
-
                             setattr(agent, str_location_cls, group_info_str)
 
                         locations.append(subgroup_location)
