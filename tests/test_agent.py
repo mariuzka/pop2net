@@ -295,7 +295,7 @@ def test_table_agents():
         def melt(self):
             class PizzaGroup(popy.MagicLocation):
                 n_agents = 3
-                exact_size_only = False
+                only_exact_n_agents = False
 
                 def filter(self, agent):
                     return agent.food == "pizza"
@@ -308,7 +308,7 @@ def test_table_agents():
 
             class PastaGroup(popy.MagicLocation):
                 n_agents = 2
-                exact_size_only = False
+                only_exact_n_agents = False
 
                 def filter(self, agent):
                     return agent.food == "pasta"

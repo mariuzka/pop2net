@@ -129,7 +129,7 @@ class MagicLocation(Location):
     """Helper class to create locations from inside the Creator."""
     n_agents: int | None = None
     overcrowding: bool = None
-    exact_size_only: bool = False
+    only_exact_n_agents: bool = False
     n_locations: int | None = None
     static_weight: bool = False
     recycle: bool = True
@@ -281,7 +281,7 @@ class MeltLocation(Location):
     """Helper class to melt locations."""
     n_agents: int | None = None
     overcrowding: bool | None = None
-    exact_size_only: bool = False
+    only_exact_n_agents: bool = False
     n_locations: int | None = None
 
 

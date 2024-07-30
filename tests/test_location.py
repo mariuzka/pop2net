@@ -60,8 +60,8 @@ def test_location_size():
 #     size_pizza_group,
 #     size_pasta_group,
 #     recycle_,
-#     exact_size_only_pizza_group,
-#     exact_size_only_pasta_group,
+#     only_exact_n_agents_pizza_group,
+#     only_exact_n_agents_pasta_group,
 # ):
 #     class Table(popy.MagicLocation):
 #         recycle = recycle_
@@ -69,7 +69,7 @@ def test_location_size():
 #         def melt(self):
 #             class PizzaGroup(popy.MagicLocation):
 #                 n_agents = size_pizza_group
-#                 exact_size_only = exact_size_only_pizza_group
+#                 only_exact_n_agents = only_exact_n_agents_pizza_group
 
 #                 def filter(self, agent):
 #                     return agent.food == "pizza"
@@ -82,7 +82,7 @@ def test_location_size():
 
 #             class PastaGroup(popy.MagicLocation):
 #                 n_agents = size_pasta_group
-#                 exact_size_only = exact_size_only_pasta_group
+#                 only_exact_n_agents = only_exact_n_agents_pasta_group
 
 #                 def filter(self, agent):
 #                     return agent.food == "pasta"

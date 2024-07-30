@@ -319,13 +319,13 @@ class Creator:
                     groups.append(new_group)
                 
                 else:
-                    if not dummy_location.exact_size_only and not n_location_groups_is_fixed:
+                    if not dummy_location.only_exact_n_agents and not n_location_groups_is_fixed:
                         for agent in sticky_agents:
                             groups[overcrowding_i].append(agent)
                         overcrowding_i = (overcrowding_i + 1) % len(groups)
 
 
-        if dummy_location.exact_size_only:
+        if dummy_location.only_exact_n_agents:
             groups = [group for group in groups if len(group) == dummy_location.n_agents]
 
         return groups

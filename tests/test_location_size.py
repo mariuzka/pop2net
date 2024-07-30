@@ -25,7 +25,7 @@ def test_2():
         n_agents = 5
         n_locations = None
         overcrowding = None
-        exact_size_only = False
+        only_exact_n_agents = False
 
     creator.create_agents(n=10)
     creator.create_locations(location_classes=[TestLocation])
@@ -43,7 +43,7 @@ def test_3():
         n_agents = 4
         n_locations = None
         overcrowding = None
-        exact_size_only = False
+        only_exact_n_agents = False
 
     creator.create_agents(n=10)
     creator.create_locations(location_classes=[TestLocation])
@@ -61,7 +61,7 @@ def test_4():
         n_agents = 4
         n_locations = None
         overcrowding = True
-        exact_size_only = False
+        only_exact_n_agents = False
 
     creator.create_agents(n=10)
     creator.create_locations(location_classes=[TestLocation])
@@ -79,7 +79,7 @@ def test_5_1():
         n_agents = 4
         n_locations = None
         overcrowding = False
-        exact_size_only = False
+        only_exact_n_agents = False
 
     creator.create_agents(n=10)
     creator.create_locations(location_classes=[TestLocation])
@@ -98,7 +98,7 @@ def test_5_2():
         n_agents = 4
         n_locations = None
         overcrowding = False
-        exact_size_only = True
+        only_exact_n_agents = True
 
     creator.create_agents(n=10)
     creator.create_locations(location_classes=[TestLocation])
@@ -116,7 +116,7 @@ def test_6():
         n_agents = 4
         n_locations = None
         overcrowding = None
-        exact_size_only = True
+        only_exact_n_agents = True
 
     creator.create_agents(n=10)
     creator.create_locations(location_classes=[TestLocation])
@@ -134,7 +134,7 @@ def test_7():
         n_agents = None
         n_locations = 2
         overcrowding = None
-        exact_size_only = False
+        only_exact_n_agents = False
 
     creator.create_agents(n=10)
     creator.create_locations(location_classes=[TestLocation])
@@ -152,7 +152,7 @@ def test_8_1():
         n_agents = None
         n_locations = 3
         overcrowding = None
-        exact_size_only = False
+        only_exact_n_agents = False
 
     creator.create_agents(n=10)
     creator.create_locations(location_classes=[TestLocation])
@@ -171,7 +171,7 @@ def test_8_2():
         n_agents = None
         n_locations = 3
         overcrowding = None
-        exact_size_only = False
+        only_exact_n_agents = False
 
     creator.create_agents(n=10)
     creator.create_locations(location_classes=[TestLocation])
@@ -190,7 +190,7 @@ def test_8_3():
         n_agents = None
         n_locations = 3
         overcrowding = None
-        exact_size_only = False
+        only_exact_n_agents = False
 
     creator.create_agents(n=10)
     creator.create_locations(location_classes=[TestLocation])
@@ -209,7 +209,7 @@ def test_9():
         n_agents = 1
         n_locations = 3
         overcrowding = None
-        exact_size_only = False
+        only_exact_n_agents = False
 
     creator.create_agents(n=10)
     creator.create_locations(location_classes=[TestLocation])
@@ -228,7 +228,7 @@ def test_10():
         n_agents = 2
         n_locations = 4
         overcrowding = None
-        exact_size_only = False
+        only_exact_n_agents = False
 
     creator.create_agents(n=10)
     creator.create_locations(location_classes=[TestLocation])
@@ -248,7 +248,7 @@ def test_11():
         n_agents = 5
         n_locations = 2
         overcrowding = None
-        exact_size_only = False
+        only_exact_n_agents = False
 
     creator.create_agents(n=10)
     creator.create_locations(location_classes=[TestLocation])
@@ -266,7 +266,7 @@ def test_12():
         n_agents = 7
         n_locations = 1
         overcrowding = None
-        exact_size_only = False
+        only_exact_n_agents = False
 
     creator.create_agents(n=10)
     creator.create_locations(location_classes=[TestLocation])
@@ -283,7 +283,7 @@ def test_13():
         n_agents = 7
         n_locations = 2
         overcrowding = None
-        exact_size_only = False
+        only_exact_n_agents = False
 
     creator.create_agents(n=10)
     creator.create_locations(location_classes=[TestLocation])
@@ -301,7 +301,7 @@ def test_14():
         n_agents = 7
         n_locations = 2
         overcrowding = None
-        exact_size_only = True
+        only_exact_n_agents = True
 
     creator.create_agents(n=10)
     creator.create_locations(location_classes=[TestLocation])
@@ -317,7 +317,7 @@ def test_15():
         n_agents = 7
         n_locations = 3
         overcrowding = None
-        exact_size_only = False
+        only_exact_n_agents = False
 
     creator.create_agents(n=10)
     creator.create_locations(location_classes=[TestLocation])
@@ -335,7 +335,7 @@ def test_16():
         n_agents = 20
         n_locations = 3
         overcrowding = None
-        exact_size_only = False
+        only_exact_n_agents = False
 
     creator.create_agents(n=10)
     creator.create_locations(location_classes=[TestLocation])
@@ -352,7 +352,7 @@ def test_17():
         n_agents = None
         n_locations = 3
         overcrowding = None
-        exact_size_only = False
+        only_exact_n_agents = False
 
     creator.create_agents(n=10)
     creator.create_locations(location_classes=[TestLocation])
@@ -371,7 +371,7 @@ def test_18():
         n_agents = None
         n_locations = 3
         overcrowding = None
-        exact_size_only = False
+        only_exact_n_agents = False
 
     creator.create_agents(n=10)
     creator.create_locations(location_classes=[TestLocation])
@@ -390,7 +390,7 @@ def test_19():
         n_agents = None
         n_locations = 3
         overcrowding = None
-        exact_size_only = True
+        only_exact_n_agents = True
 
     creator.create_agents(n=10)
     creator.create_locations(location_classes=[TestLocation])
@@ -409,7 +409,7 @@ def test_20():
         n_agents = None
         n_locations = 6
         overcrowding = None
-        exact_size_only = True
+        only_exact_n_agents = True
 
     creator.create_agents(n=10)
     creator.create_locations(location_classes=[TestLocation])
@@ -432,7 +432,7 @@ def test_21():
         n_agents = None
         n_locations = 6
         overcrowding = None
-        exact_size_only = False
+        only_exact_n_agents = False
 
     creator.create_agents(n=10)
     creator.create_locations(location_classes=[TestLocation])
@@ -458,7 +458,7 @@ def test_split_1():
         n_agents = None
         n_locations = None
         overcrowding = None
-        exact_size_only = False
+        only_exact_n_agents = False
     
         def split(self, agent):
             return agent.age
@@ -489,7 +489,7 @@ def test_split_2():
         n_agents = 2
         n_locations = None
         overcrowding = None
-        exact_size_only = False
+        only_exact_n_agents = False
     
         def split(self, agent):
             return agent.age
@@ -521,7 +521,7 @@ def test_split_3():
         n_agents = 2
         n_locations = 1
         overcrowding = None
-        exact_size_only = False
+        only_exact_n_agents = False
     
         def split(self, agent):
             return agent.age
