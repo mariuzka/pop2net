@@ -2,7 +2,7 @@ import pandas as pd
 import popy
 from popy.agent import Agent
 from popy.location import Location
-from popy.pop_maker import PopMaker
+from popy.creator import Creator
 import pytest
 
 class Model(popy.Model):
@@ -47,8 +47,8 @@ simple_fake_data = pd.DataFrame(
 def test_create_agents(soep_fixture, request):
     soep = request.getfixturevalue(soep_fixture)
 
-    pop_maker = PopMaker(model=Model())
-    agents = pop_maker.create_agents(df=soep, agent_class=MyAgent)
+    creator = Creator(model=Model())
+    agents = creator.create_agents(df=soep, agent_class=MyAgent)
 
     assert len(agents) == len(soep)
 
@@ -62,13 +62,13 @@ def test_create_agents(soep_fixture, request):
 def test_create_locations():
     soep = simple_fake_data.copy()
     model = Model()
-    pop_maker = PopMaker(model=model)
+    creator = Creator(model=model)
 
-    agents = pop_maker.create_agents(df=soep, agent_class=MyAgent)
+    agents = creator.create_agents(df=soep, agent_class=MyAgent)
     for agent in agents:
         model.env.add_agent(agent)
 
-    locations = pop_maker.create_locations(agents=agents, location_classes=[Home, School])
+    locations = creator.create_locations(agents=agents, location_classes=[Home, School])
     for location in locations:
         model.env.add_location(location)
 

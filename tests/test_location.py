@@ -92,8 +92,8 @@ def test_location_size():
 #     df = pd.DataFrame({"food": ["pizza", "pasta"] * 10})
 #     model = popy.Model()
 
-#     popmaker = PopMaker(model)
-#     popmaker.create_agents(df=df)
-#     popmaker.create_locations(location_classes=[Table])
+#     creator = Creator(model)
+#     creator.create_agents(df=df)
+#     creator.create_locations(location_classes=[Table])
 
 #     return model

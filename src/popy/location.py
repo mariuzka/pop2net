@@ -126,7 +126,7 @@ class Location(Object):
 
 
 class MagicLocation(Location):
-    """Helper class to create locations from inside the PopMaker."""
+    """Helper class to create locations from inside the Creator."""
     n_agents: int | None = None
     overcrowding: bool = None
     exact_size_only: bool = False
@@ -162,7 +162,7 @@ class MagicLocation(Location):
         implementations as you seem fit.
 
         Args:
-            agent: The agent that is currently processed by the PopMaker.
+            agent: The agent that is currently processed by the Creator.
 
         Returns:
             True if the agent is allowed to join the location, False otherwise.
@@ -173,7 +173,7 @@ class MagicLocation(Location):
         """Creates seperate location instances for each unique returned value.
 
         Args:
-            agent: The agent that is currently processed by the PopMaker.
+            agent: The agent that is currently processed by the Creator.
 
         Returns:
             float | str | list | None: The value(s) that determine(s) to which location instance
@@ -189,7 +189,7 @@ class MagicLocation(Location):
         edge weights will be 1. Override this method in your own implementations as you seem fit.
 
         Args:
-            agent: The agent that is currently processed by the PopMaker.
+            agent: The agent that is currently processed by the Creator.
 
         Returns:
             The edge weight.
@@ -200,7 +200,7 @@ class MagicLocation(Location):
         """Assigns agents with a shared value on an attribute to the same location instance.
 
         Args:
-            agent (_agent.Agent): The agent that is currently processed by the PopMaker.
+            agent (_agent.Agent): The agent that is currently processed by the Creator.
 
         Returns:
             float | str: A value that defines the groups of agents.
@@ -237,7 +237,7 @@ class MagicLocation(Location):
         """Assigns the agent to a specific location instance that meets the requirements.
 
         Args:
-            agent (_agent.Agent): The agent that is currently processed by the PopMaker.
+            agent (_agent.Agent): The agent that is currently processed by the Creator.
 
         Returns:
             bool: _description_
@@ -261,7 +261,7 @@ class MagicLocation(Location):
         """Splits a location instance into sub-instances to create a certain network structure.
 
         Args:
-            agent (_agent.Agent): The agent that is currently processed by the PopMaker.
+            agent (_agent.Agent): The agent that is currently processed by the Creator.
 
         Returns:
             str | float | None: A value or a list of values that represent specific sub-instances.
@@ -293,7 +293,7 @@ class MeltLocation(Location):
         implementations as you seem fit.
 
         Args:
-            agent: The agent that is currently processed by the PopMaker.
+            agent: The agent that is currently processed by the Creator.
 
         Returns:
             True if the agent is allowed to join the location, False otherwise.
@@ -304,7 +304,7 @@ class MeltLocation(Location):
         """Assigns agents with a shared value on an attribute to the same location instance.
 
         Args:
-            agent (_agent.Agent): The agent that is currently processed by the PopMaker.
+            agent (_agent.Agent): The agent that is currently processed by the Creator.
 
         Returns:
             float | str: A value that defines the groups of agents.
@@ -315,7 +315,7 @@ class MeltLocation(Location):
         """Creates seperate location instances for each unique returned value.
 
         Args:
-            agent: The agent that is currently processed by the PopMaker.
+            agent: The agent that is currently processed by the Creator.
 
         Returns:
             float | str | list | None: The value(s) that determine(s) to which location instance
@@ -331,7 +331,7 @@ class MeltLocation(Location):
         edge weights will be 1. Override this method in your own implementations as you seem fit.
 
         Args:
-            agent: The agent that is currently processed by the PopMaker.
+            agent: The agent that is currently processed by the Creator.
 
         Returns:
             The edge weight.
@@ -342,7 +342,7 @@ class MeltLocation(Location):
         """Assigns the agent to a specific location instance that meets the requirements.
 
         Args:
-            agent (_agent.Agent): The agent that is currently processed by the PopMaker.
+            agent (_agent.Agent): The agent that is currently processed by the Creator.
 
         Returns:
             bool: _description_

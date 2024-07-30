@@ -1,5 +1,5 @@
 import popy
-from popy.pop_maker import PopMaker
+from popy.creator import Creator
 import pandas as pd
 
 def test_1():
@@ -8,7 +8,7 @@ def test_1():
         })
     
     model = popy.Model()
-    popmaker = PopMaker(model)
+    creator = Creator(model)
 
     class TestLocationA(popy.MagicLocation):
         def filter(self, agent):
@@ -18,8 +18,8 @@ def test_1():
         def filter(self, agent):
             return agent.status == "B"
 
-    popmaker.create_agents(df=df)
-    popmaker.create_locations(location_classes=[TestLocationA, TestLocationB])
+    creator.create_agents(df=df)
+    creator.create_locations(location_classes=[TestLocationA, TestLocationB])
 
     assert len(model.locations) == 2
     assert len(model.agents) == 5
@@ -34,7 +34,7 @@ def test_2():
         })
 
     model = popy.Model()
-    popmaker = PopMaker(model)
+    creator = Creator(model)
 
     class TestLocationA(popy.MagicLocation):
         def filter(self, agent):
@@ -44,8 +44,8 @@ def test_2():
         def filter(self, agent):
             return agent.status == "B" and agent.sex == "w"
 
-    popmaker.create_agents(df=df)
-    popmaker.create_locations(location_classes=[TestLocationA, TestLocationB])
+    creator.create_agents(df=df)
+    creator.create_locations(location_classes=[TestLocationA, TestLocationB])
 
     assert len(model.locations) == 2
     assert len(model.agents) == 5

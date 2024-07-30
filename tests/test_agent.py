@@ -1,6 +1,6 @@
 import pandas as pd
 import popy
-from popy.pop_maker import PopMaker
+from popy.creator import Creator
 import pytest
 
 @pytest.fixture()
@@ -247,12 +247,12 @@ def test_chef_agents():
     )
 
     model = popy.Model()
-    popmaker = PopMaker(model)
+    creator = Creator(model)
     # inspector = NetworkInspector(model)
 
-    popmaker.create_agents(df=df, agent_class=MyAgent)
+    creator.create_agents(df=df, agent_class=MyAgent)
 
-    popmaker.create_locations(
+    creator.create_locations(
         location_classes=[
             Town,
             Home,
@@ -273,7 +273,7 @@ def test_table_agents():
     # not sure what is being checked here.
 
     model = popy.Model()
-    popmaker = PopMaker(model)
+    creator = Creator(model)
 
     df = pd.DataFrame(
         {
@@ -284,9 +284,9 @@ def test_table_agents():
     )
 
 
-    df = popmaker.draw_sample(df=df, n=20)
+    df = creator.draw_sample(df=df, n=20)
 
-    popmaker.create_agents(df=df)
+    creator.create_agents(df=df)
 
 
     class Table(popy.MagicLocation):
@@ -332,7 +332,7 @@ def test_table_agents():
         #    return agent.Table
 
 
-    popmaker.create_locations(
+    creator.create_locations(
         location_classes=[
             Restaurant,
             Table,

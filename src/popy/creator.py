@@ -12,7 +12,7 @@ import popy.utils as utils
 
 from .exceptions import PopyException
 
-class PopMaker:
+class Creator:
     """Creates and connects agents and locations."""
 
     def __init__(
@@ -619,7 +619,7 @@ class PopMaker:
     ) -> tuple:
         """Creates agents and locations based on a given dataset.
 
-        Combines the PopMaker-methods `draw_sample()`, `create_agents()` and `create_locations()`.
+        Combines the Creator-methods `draw_sample()`, `create_agents()` and `create_locations()`.
 
         Args:
             df (pd.DataFrame): A data set with individual data that forms the basis for
