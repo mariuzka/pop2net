@@ -594,11 +594,13 @@ class Creator:
         # delete temporary agent attributes
         for agent in self._dummy_model.agents:
             if hasattr(agent, "_TEMP_group_values"):
-                del(agent._TEMP_group_values)
+                del agent._TEMP_group_values
+        
+            del agent.TEMP_melt_location_weight
 
         # delete temporary location attributes
         for location in locations:
-            del(location.group_agents)
+            del location.group_agents
 
         return locations
 

@@ -5,8 +5,6 @@ import typing
 
 import agentpy as ap
 
-import popy.utils as utils
-
 if typing.TYPE_CHECKING:
     from . import location as _location
     from . import sequences as _sequences
