@@ -599,6 +599,10 @@ class Creator:
 
             if hasattr(agent, "TEMP_melt_location_weight"):
                 del agent.TEMP_melt_location_weight
+            
+            for location_class in location_classes:
+                if hasattr(agent, utils._get_cls_as_str(location_class)):
+                    delattr(agent, utils._get_cls_as_str(location_class))
 
         # delete temporary location attributes
         for location in locations:
