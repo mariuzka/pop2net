@@ -201,7 +201,7 @@ class Creator:
             agents: list,
             dummy_location,
             allow_nesting: bool = False,
-    ) -> set[int | str]:
+    ) -> list[int | str]:
 
         all_values = []
         for agent in agents:
@@ -217,9 +217,12 @@ class Creator:
             # Temporarely store group values as agent attribute
             # to assign them to the corresponding location group later
             agent._TEMP_group_values = agent_values
-            all_values.extend(agent_values)
 
-        return set(all_values)
+            for value in agent_values:
+                if value not in all_values:
+                    all_values.append(value)
+
+        return all_values
 
     def _get_stick_value(self, agent, dummy_location):
         stick_value = dummy_location.stick_together(agent)
