@@ -15,10 +15,11 @@ Welcome to Popy's documentation!
 .. toctree::
    :maxdepth: 1
    :caption: Contents:
-   
+
    section_introduction
    installation
    api/index
+   developers
    examples/index
 
 
