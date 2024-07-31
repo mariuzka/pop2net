@@ -11,8 +11,6 @@ import pandas as pd
 import seaborn as sns
 from tabulate import tabulate
 
-import popy
-
 if typing.TYPE_CHECKING:
     from popy import AgentList
 

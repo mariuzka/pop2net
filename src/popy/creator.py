@@ -20,7 +20,7 @@ class Creator:
         model: popy.Model,
         seed: int = None,
     ) -> None:
-        """Instantiate a population maker for a specific model.
+        """Instantiate a creator for a specific model.
 
         Args:
             model (popy.Model): Model, for which a population should be created
@@ -174,8 +174,6 @@ class Creator:
             return "None"
 
         else:
-            #mother_location = None
-
             # search for mother location assigned to this agent
             n_mother_locations_found = 0
             for location in agent.locations:
@@ -203,7 +201,7 @@ class Creator:
             agents: list,
             dummy_location,
             allow_nesting: bool = False,
-    ) -> set[int | str]:
+    ) -> list[int | str]:
 
         all_values = []
         for agent in agents:
@@ -219,9 +217,12 @@ class Creator:
             # Temporarely store group values as agent attribute
             # to assign them to the corresponding location group later
             agent._TEMP_group_values = agent_values
-            all_values.extend(agent_values)
 
-        return set(all_values)
+            for value in agent_values:
+                if value not in all_values:
+                    all_values.append(value)
+
+        return all_values
 
     def _get_stick_value(self, agent, dummy_location):
         stick_value = dummy_location.stick_together(agent)
@@ -250,6 +251,9 @@ class Creator:
                 round_function = math.floor
             elif dummy_location.overcrowding is False:
                 round_function = math.ceil
+            else:
+                # TODO
+                raise Exception
 
             n_location_groups = max(
                 round_function(len(agents) / dummy_location.n_agents), 
@@ -338,7 +342,7 @@ class Creator:
             agent for agent in agents
             if group_value in agent._TEMP_group_values
         ]
-        #random.shuffle(group_affiliated_agents)
+        
         return group_affiliated_agents
 
 
@@ -409,7 +413,7 @@ class Creator:
                             location_cls=location_cls,
                         ),
                     )
-                #random.shuffle(location_groups_to_melt)
+                
                 groups_to_melt_by_location.append(location_groups_to_melt)
 
             # Melt groups
@@ -572,11 +576,8 @@ class Creator:
                                 weight=weight,
                             )
 
-
-
                             group_info_str = (
-                                f"gv={subgroup_location.group_value}, \
-                                    gid={subgroup_location.group_id}"
+                            f"gv={subgroup_location.group_value},gid={subgroup_location.group_id}"
                             )
                             setattr(agent, str_location_cls, group_info_str)
 
@@ -595,8 +596,9 @@ class Creator:
         for agent in self._dummy_model.agents:
             if hasattr(agent, "_TEMP_group_values"):
                 del agent._TEMP_group_values
-        
-            del agent.TEMP_melt_location_weight
+
+            if hasattr(agent, "TEMP_melt_location_weight"):
+                del agent.TEMP_melt_location_weight
 
         # delete temporary location attributes
         for location in locations:
