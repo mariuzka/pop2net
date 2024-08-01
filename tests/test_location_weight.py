@@ -1,6 +1,6 @@
-import popy
-from popy.creator import Creator
 import pandas as pd
+import popy
+
 
 
 def test_1():
@@ -9,7 +9,7 @@ def test_1():
         })
     
     model = popy.Model()
-    creator = Creator(model)
+    creator = popy.Creator(model)
 
     class TestLocation(popy.MagicLocation):
         def weight(self, agent):
@@ -24,7 +24,7 @@ def test_1():
     # sum of weights correct?
     assert sum([model.get_weight(agent, model.locations[0]) for agent in model.locations[0].agents]) == 5
     # inidividual weights correct?
-    assert all([model.get_weight(agent, model.locations[0]) == 1 for agent in model.locations[0].agents])
+    assert all(model.get_weight(agent, model.locations[0]) == 1 for agent in model.locations[0].agents)
     
 
 
@@ -34,7 +34,7 @@ def test_2():
         })
     
     model = popy.Model()
-    creator = Creator(model)
+    creator = popy.Creator(model)
 
     class TestLocation(popy.MagicLocation):
         def weight(self, agent):
@@ -57,9 +57,8 @@ def test_2():
             ]) == 17
     # inidividual weights correct?
     assert all(
-        [
             model.get_weight(agent, model.locations[0]) == 1
             if agent.status =="A"
             else model.get_weight(agent, model.locations[0]) == 5
             for agent in model.locations[0].agents
-            ])
+            )
