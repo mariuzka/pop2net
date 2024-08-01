@@ -30,6 +30,9 @@ exclude_patterns = ["_build", "Thumbs.db", ".DS_Store", "**.ipynb_checkpoints"]
 
 sys.path.append(str(Path(__file__).parent.parent / "src"))
 
+# nbsphinx settings
+nbsphinx_allow_errors = True
+
 # Napoleon settings
 # For a list of possible configurations, see:
 # https://www.sphinx-doc.org/en/master/usage/extensions/napoleon.html#module-sphinx.ext.napoleon

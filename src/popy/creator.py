@@ -3,9 +3,8 @@ from __future__ import annotations
 
 import random
 import warnings
+import math
 
-from bokehgraph import BokehGraph
-import networkx as nx
 import pandas as pd
 
 import popy
@@ -13,27 +12,23 @@ import popy.utils as utils
 
 from .exceptions import PopyException
 
-class PopMaker:
+class Creator:
     """Creates and connects agents and locations."""
 
     def __init__(
         self,
-        model: popy.Model | None = None,
-        seed: int = 999,
+        model: popy.Model,
+        seed: int = None,
     ) -> None:
-        """Instantiate a population maker for a specific model.
+        """Instantiate a creator for a specific model.
 
         Args:
             model (popy.Model): Model, for which a population should be created
             seed (int, optional): A seed for reproducibility. Defaults to 999.
         """
-        # TODO: Seed should default to None.
-
-        self.model = model if model is not None else popy.Model()
+        self.model = model
         self.seed = seed
         self.rng = random.Random(seed)
-        self.agents: popy.AgentList | None = None
-        self.locations: popy.LocationList | None = None
 
     def _create_dummy_location(self, location_cls) -> popy.Location:
         location = location_cls(model=self._dummy_model)
@@ -119,7 +114,6 @@ class PopMaker:
             agent_class_dict: None | dict = None,
             df: pd.DataFrame | None = None,
             n: int | None = None,
-            clear_agents: bool = False,
     ) -> popy.AgentList:
         """Creates agents from a pandas DataFrame.
 
@@ -140,13 +134,6 @@ class PopMaker:
         Returns:
             A list of agents.
         """
-        # remove agents from environment (network)
-        if clear_agents:
-            agent_nodes = [node for node in self.model.env.g.nodes if self.model.env.g.nodes[node]["bipartite"] == 0]
-            for agent_node in agent_nodes:
-                self.model.env.g.remove_node(agent_node)
-            self.agents = None
-
         if df is not None:
             df = df.copy()
 
@@ -175,13 +162,6 @@ class PopMaker:
 
 
         agents = popy.AgentList(model=self.model, objs=agents)
-        
-        # Save agents 
-        if self.agents is None:
-            self.agents = agents.copy()
-        else:
-            self.agents.extend(agents)
-            self.agents = popy.AgentList(model=self.model, objs=self.agents)
 
         return agents
 
@@ -194,8 +174,6 @@ class PopMaker:
             return "None"
 
         else:
-            #mother_location = None
-
             # search for mother location assigned to this agent
             n_mother_locations_found = 0
             for location in agent.locations:
@@ -223,7 +201,7 @@ class PopMaker:
             agents: list,
             dummy_location,
             allow_nesting: bool = False,
-    ) -> set[int | str]:
+    ) -> list[int | str]:
 
         all_values = []
         for agent in agents:
@@ -239,9 +217,12 @@ class PopMaker:
             # Temporarely store group values as agent attribute
             # to assign them to the corresponding location group later
             agent._TEMP_group_values = agent_values
-            all_values.extend(agent_values)
 
-        return set(all_values)
+            for value in agent_values:
+                if value not in all_values:
+                    all_values.append(value)
+
+        return all_values
 
     def _get_stick_value(self, agent, dummy_location):
         stick_value = dummy_location.stick_together(agent)
@@ -252,21 +233,54 @@ class PopMaker:
 
 
     def _get_groups(self, agents, location_cls) -> list[list]:
+        overcrowding_i = 0
+
         dummy_location = self._create_dummy_location(location_cls)
 
+        n_location_groups_is_fixed = False
+
         # determine the number of groups needed
-        if dummy_location.n_locations is None:
-            n_location_groups = (
-                1
-                if dummy_location.size is None
-                else max(dummy_location.round_function(len(agents) / dummy_location.size), 1)
-            )
-        else:
+        if dummy_location.n_locations is None and dummy_location.n_agents is None:
+            n_location_groups = 1
+            groups: list[list] = [[]]
+        
+        elif dummy_location.n_locations is None and dummy_location.n_agents is not None:
+            if dummy_location.overcrowding is None:
+                round_function = round
+            elif dummy_location.overcrowding is True:
+                round_function = math.floor
+            elif dummy_location.overcrowding is False:
+                round_function = math.ceil
+            else:
+                # TODO
+                raise Exception
+
+            n_location_groups = max(
+                round_function(len(agents) / dummy_location.n_agents), 
+                1,
+                )
+            groups: list[list] = [[]]
+        
+        elif dummy_location.n_locations is not None and dummy_location.n_agents is None:
             n_location_groups = dummy_location.n_locations
+            location_cls.n_agents =  max(
+                math.floor(len(agents) / n_location_groups), 
+                1,
+                )
+            groups: list[list] = [[] for _ in range(n_location_groups)]
+            
+        elif dummy_location.n_locations is not None and dummy_location.n_agents is not None:
+            n_location_groups = dummy_location.n_locations
+            n_location_groups_is_fixed = True
+            groups: list[list] = [[]]
+        
+        else:
+            #TODO:
+            raise Exception
 
 
         stick_values = {self._get_stick_value(agent, dummy_location) for agent in agents}
-        groups: list[list] = [[]]
+        
         dummy_location = self._create_dummy_location(location_cls)
 
         # for each group of sticky agents
@@ -278,11 +292,11 @@ class PopMaker:
 
             assigned = False
 
-            for _i, group in enumerate(groups):
+            for _, group in enumerate(groups):
                 # if there are still enough free places available
                 if (
-                    dummy_location.size is None
-                    or (dummy_location.size - len(group)) >= len(sticky_agents)
+                    dummy_location.n_agents is None
+                    or (dummy_location.n_agents - len(group)) >= len(sticky_agents)
                 ):
                     if sum(
                         [dummy_location.find(agent) for agent in sticky_agents],
@@ -296,17 +310,7 @@ class PopMaker:
                         break
 
             if not assigned:
-                if dummy_location.allow_overcrowding and len(groups) >= n_location_groups:
-
-                    # sort by the number of assigned agents
-                    groups.sort(key=lambda x: len(x))
-
-                    # assign agents to the group_list with the fewest members
-                    for agent in sticky_agents:
-                        groups[0].append(agent)
-
-                    random.shuffle(groups)
-                else:
+                if len(groups) < n_location_groups:
                     new_group = []
                     dummy_location = self._create_dummy_location(location_cls)
                     # assign agents
@@ -315,8 +319,17 @@ class PopMaker:
                         dummy_location.add_agent(agent)
 
                     groups.append(new_group)
+                
+                else:
+                    if not dummy_location.only_exact_n_agents and not n_location_groups_is_fixed:
+                        for agent in sticky_agents:
+                            groups[overcrowding_i].append(agent)
+                        overcrowding_i = (overcrowding_i + 1) % len(groups)
 
-        random.shuffle(groups)
+
+        if dummy_location.only_exact_n_agents:
+            groups = [group for group in groups if len(group) == dummy_location.n_agents]
+
         return groups
 
 
@@ -329,7 +342,7 @@ class PopMaker:
             agent for agent in agents
             if group_value in agent._TEMP_group_values
         ]
-        random.shuffle(group_affiliated_agents)
+        
         return group_affiliated_agents
 
 
@@ -366,9 +379,15 @@ class PopMaker:
                 melt_dummy_location = self._create_dummy_location(location_cls)
 
                 # get all agents that should be assigned to this location
+                # filter by melt_location
                 melt_location_affiliated_agents = self._get_affiliated_agents(
                     agents=nested_agents,
                     dummy_location=melt_dummy_location,
+                )
+                # filter by main_location
+                melt_location_affiliated_agents = self._get_affiliated_agents(
+                    agents=melt_location_affiliated_agents,
+                    dummy_location=dummy_location,
                 )
 
                 # get all values for which seperated groups/locations should be created
@@ -377,6 +396,9 @@ class PopMaker:
                     dummy_location=melt_dummy_location,
                     allow_nesting=False,
                 )
+
+                for agent in melt_location_affiliated_agents:
+                    agent.TEMP_melt_location_weight = melt_dummy_location.weight(agent)
 
                 # for each split value: get groups and collect them in one list for all values
                 location_groups_to_melt: list[list] = []
@@ -391,20 +413,20 @@ class PopMaker:
                             location_cls=location_cls,
                         ),
                     )
-                random.shuffle(location_groups_to_melt)
+                
                 groups_to_melt_by_location.append(location_groups_to_melt)
 
             # Melt groups
             all_melted_groups: list[list] = []
             z = sorted(
                 [len(groups_to_melt) for groups_to_melt in groups_to_melt_by_location],
-                reverse=True if dummy_location.multi_melt else False,
+                reverse=True if dummy_location.recycle else False,
             )[0]
             for i in range(z):
                 melted_group = []
                 for groups_to_melt in groups_to_melt_by_location:
                     if len(groups_to_melt) > 0:
-                        if dummy_location.multi_melt:
+                        if dummy_location.recycle:
                             melted_group.extend(groups_to_melt[i % len(groups_to_melt)])
                         else:
                             try:
@@ -420,33 +442,24 @@ class PopMaker:
         self,
         location_classes: list,
         agents: list | popy.AgentList | None = None,
-        clear_locations: bool = False,
     ) -> popy.LocationList:
         """Creates location instances and connects them with the given agent population.
 
         Args:
             location_classes (list): A list of location classes.
             agents (list | popy.AgentList): A list of agents.
-            clear_locations: Should existing locations be removed before creating new ones?
 
         Returns:
             popy.LocationList: A list of locations.
         """
 
         if agents is None:
-            agents = self.agents
-
-        # remove locations from environment (network)
-        if clear_locations:
-            location_nodes = [node for node in self.model.env.g.nodes if self.model.env.g.nodes[node]["bipartite"] == 1]
-            for location_node in location_nodes:
-                self.model.env.g.remove_node(location_node)
-            self.locations = None
+            agents = self.model.agents
 
         self._dummy_model = popy.Model()
-        self._dummy_model.agents = agents
+        #self._dummy_model.agents = agents
         for agent in agents:
-            self._dummy_model.env.add_agent(agent)
+            self._dummy_model.add_agent(agent)
 
         for location_cls in location_classes:
 
@@ -458,10 +471,10 @@ class PopMaker:
 
         # for each location class
         for location_cls in location_classes:
-            str_location_cls = utils._get_cls_as_str(location_cls)
+            for agent in agents:
+                agent.TEMP_melt_location_weight = None
 
-            #WaRUM GEHT DAS NICHT???????????????
-            random.shuffle(agents)
+            str_location_cls = utils._get_cls_as_str(location_cls)
 
             # create location dummy in order to use the location's methods
             dummy_location = self._create_dummy_location(location_cls)
@@ -522,7 +535,7 @@ class PopMaker:
                         agent_subgroup_value
                         for agent in group_list
                         for agent_subgroup_value
-                        in utils.make_it_a_list_if_it_is_no_list(dummy_location.subsplit(agent))
+                        in utils.make_it_a_list_if_it_is_no_list(dummy_location._subsplit(agent))
                     }
 
                     # for each group of agents assigned to a specific sublocation
@@ -534,7 +547,7 @@ class PopMaker:
                         #for agent in group_affiliated_agents:
                         for agent in group_list:
                             agent_subgroup_value = utils.make_it_a_list_if_it_is_no_list(
-                                dummy_location.subsplit(agent),
+                                dummy_location._subsplit(agent),
                             )
                             if subgroup_value in agent_subgroup_value:
                                 subgroup_affiliated_agents.append(agent)
@@ -552,45 +565,50 @@ class PopMaker:
                         for agent in subgroup_affiliated_agents:
                             subgroup_location.add_agent(agent)
 
-                            group_info_str = (
-                                f"gv={subgroup_location.group_value}, \
-                                    gid={subgroup_location.group_id}"
+                            weight = (
+                                agent.TEMP_melt_location_weight
+                                if agent.TEMP_melt_location_weight is not None
+                                else subgroup_location.weight(agent)
                             )
 
+                            subgroup_location.set_weight(
+                                agent=agent,
+                                weight=weight,
+                            )
+
+                            group_info_str = (
+                            f"gv={subgroup_location.group_value},gid={subgroup_location.group_id}"
+                            )
                             setattr(agent, str_location_cls, group_info_str)
 
                         locations.append(subgroup_location)
 
-        # TODO:
-        # Warum gibt es keinen Fehler, wenn man ein Argument falsch schreibt? Habe gerade ewig
-        # nach einem Bug gesucht und letzt hatte ich nur das "j" in "objs" vergessen
         locations = popy.LocationList(
             model=self.model,
             objs=locations,
         )
 
-        # save locations
-        if self.locations is None:
-            self.locations = locations
-        else:
-            self.locations.extend(locations)
-
-        self._dummy_model.locations = locations
-
         # execute an action after all locations have been created
-        for location in self.locations:
-            location.do_this_after_creation()
+        for location in locations:
+            location.refine()
 
         # delete temporary agent attributes
         for agent in self._dummy_model.agents:
             if hasattr(agent, "_TEMP_group_values"):
-                del(agent._TEMP_group_values)
+                del agent._TEMP_group_values
+
+            if hasattr(agent, "TEMP_melt_location_weight"):
+                del agent.TEMP_melt_location_weight
+            
+            for location_class in location_classes:
+                if hasattr(agent, utils._get_cls_as_str(location_class)):
+                    delattr(agent, utils._get_cls_as_str(location_class))
 
         # delete temporary location attributes
         for location in locations:
-            del(location.group_agents)
+            del location.group_agents
 
-        return self.locations
+        return locations
 
 
     def make(
@@ -607,7 +625,7 @@ class PopMaker:
     ) -> tuple:
         """Creates agents and locations based on a given dataset.
 
-        Combines the PopMaker-methods `draw_sample()`, `create_agents()` and `create_locations()`.
+        Combines the Creator-methods `draw_sample()`, `create_agents()` and `create_locations()`.
 
         Args:
             df (pd.DataFrame): A data set with individual data that forms the basis for
@@ -644,11 +662,11 @@ class PopMaker:
 
         # create agents
         agents = self.create_agents(
-            df=df_sample, 
-            agent_class=agent_class, 
+            df=df_sample,
+            agent_class=agent_class,
             agent_class_attr=agent_class_attr,
             agent_class_dict=agent_class_dict,
-            )
+        )
 
         # create locations
         locations = self.create_locations(agents=agents, location_classes=location_classes)
@@ -697,112 +715,3 @@ class PopMaker:
             df = df.loc[:,columns]
 
         return df
-
-
-    def _plot_network(
-            self,
-            network_type,
-            node_color: str | None,
-            node_attrs: list | None,
-            edge_alpha: str,
-            edge_color: str,
-            include_0_weights: bool,
-    ):
-
-        if network_type == "bipartite":
-            graph = self.model.env.g.copy()
-            for i in graph:
-                if node_attrs is not None:
-                    for node_attr in node_attrs:
-                        graph.nodes[i][node_attr] = graph.nodes[i]["_obj"][node_attr]
-                del graph.nodes[i]["_obj"]
-            node_color = "cls" if node_color is None else node_color
-
-        elif network_type == "agent":
-            graph = utils.create_agent_graph(
-                agents=self.agents,
-                node_attrs=node_attrs,
-                include_0_weights=include_0_weights,
-            )
-            node_color = "firebrick" if node_color is None else node_color
-
-        graph_layout = nx.drawing.spring_layout(graph)
-        plot = BokehGraph(graph, width=500, height=500, hover_edges=True)
-        plot.layout(layout=graph_layout)
-        plot.draw(
-            node_color=node_color,
-            edge_alpha=edge_alpha,
-            edge_color=edge_color,
-        )
-
-    def plot_bipartite_network(
-            self,
-            node_color: str | None = None,
-            node_attrs: list | None = None,
-            edge_alpha: str = "weight",
-            edge_color: str = "black",
-            include_0_weights: bool = True,
-    ) -> None:
-        """Plots the two-mode network of agents and locations.
-
-        Args:
-            node_color (str, optional): The node attribute that determines the
-                color of the nodes. If None, the node color represents whether
-                it is a location or an agent instance.
-            node_attrs (list | None, optional): A list of agent and location attributes that
-                should be shown as node attributes in the network graph. Defaults to None.
-            edge_alpha (str, optional): The node attribute that determines the edges' transparency.
-                Defaults to "weight".
-            edge_color (str, optional): The node attribute that determines the edges' color.
-                Defaults to "black".
-            include_0_weights (bool, optional): Should edges with a weight of zero be included in
-                the plot? Defaults to True.
-        """
-        if node_attrs is None:
-            node_attrs = ["cls"]
-        elif isinstance(node_attrs, list):
-            if "cls" not in node_attrs:
-                node_attrs.append(node_attrs)
-        else:
-            raise Exception
-
-        self._plot_network(
-            network_type="bipartite",
-            node_color=node_color,
-            node_attrs=node_attrs,
-            edge_alpha=edge_alpha,
-            edge_color=edge_color,
-            include_0_weights=include_0_weights,
-        )
-
-    def plot_agent_network(
-            self,
-            node_color: str | None = "firebrick",
-            node_attrs: list | None = None,
-            edge_alpha: str = "weight",
-            edge_color: str = "black",
-            include_0_weights: bool = True,
-    ) -> None:
-        """Plots the agent network.
-
-        Args:
-            node_color (str, optional): The node attribute that determines the
-                color of the nodes. If None, the node color represents whether
-                it is a location or an agent instance.
-            node_attrs (list | None, optional): A list of agent and location attributes that
-                should be shown as node attributes in the network graph. Defaults to None.
-            edge_alpha (str, optional): The node attribute that determines the edges' transparency.
-                Defaults to "weight".
-            edge_color (str, optional): The node attribute that determines the edges' color.
-                Defaults to "black".
-            include_0_weights (bool, optional): Should edges with a weight of zero be included in
-                the plot? Defaults to True.
-        """
-        self._plot_network(
-            network_type="agent",
-            node_color=node_color,
-            node_attrs=node_attrs,
-            edge_alpha=edge_alpha,
-            edge_color=edge_color,
-            include_0_weights=include_0_weights,
-        )
