@@ -34,7 +34,7 @@ class SOEPProvider(BaseProvider):
         self.hh_size_dist = lambda: self.rng.poisson(lam=c.HH_SIZE["lam"])
         self.hh_n_children_dist = lambda: self._multinomial_select(c.HH_N_CHILDREN)
         self.hh_cur = 0
-        self.used_hhids: Set[int] = set()
+        self.used_hhids: set[int] = set()
 
         # For age
         self.age_child_dist = lambda: self.rng.normal(
@@ -64,7 +64,7 @@ class SOEPProvider(BaseProvider):
         # type of work
         self.nace2_dist = lambda: self._multinomial_select(c.NACE2_DIVISIONS)
 
-    def _multinomial_select(self, dist: Dict):
+    def _multinomial_select(self, dist: dict):
         pvals = list(dist.values())
         labels = dict(enumerate(dist.keys()))
 
@@ -83,7 +83,7 @@ class SOEPProvider(BaseProvider):
                 msg = "Could not find new hhid after 1000 iterations!"
                 raise ValueError(msg)
 
-    def household(self) -> Tuple[int, str, int, int]:
+    def household(self) -> tuple[int, str, int, int]:
         """Create correlated fake numbers on household level.
 
         Returns:
@@ -126,7 +126,7 @@ class SOEPProvider(BaseProvider):
         }
         return case
 
-    def household_persons(self) -> List[Dict]:
+    def household_persons(self) -> list[dict]:
         """Create a household full of simulated persons.
 
         Returns:

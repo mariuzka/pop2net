@@ -1,6 +1,6 @@
+import pandas as pd
 import popy
 from popy.creator import Creator
-import pandas as pd
 
 
 def test_1():

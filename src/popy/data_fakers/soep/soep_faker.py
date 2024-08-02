@@ -31,7 +31,7 @@ def soep(size: int, seed: Optional[int] = None) -> pd.DataFrame:
     fake.add_provider(SOEPProvider)
 
     # create correlated variables, dependent on child vs. adult
-    cases: List[Dict] = []
+    cases: list[dict] = []
     try:
         while len(cases) < size:
             for person in fake.household_persons():

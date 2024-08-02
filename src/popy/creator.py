@@ -2,9 +2,9 @@
 
 from __future__ import annotations
 
+import math
 import random
 import warnings
-import math
 
 import pandas as pd
 
@@ -441,7 +441,6 @@ class Creator:
         Returns:
             popy.LocationList: A list of locations.
         """
-
         if agents is None:
             agents = self.model.agents
 

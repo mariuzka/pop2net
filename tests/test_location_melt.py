@@ -1,5 +1,5 @@
-import popy
 import pandas as pd
+import popy
 
 df = pd.DataFrame(
     {

@@ -265,8 +265,7 @@ class NetworkInspector:
         agent_attributes: str | list[str],
         output_format="table",
     ) -> list[pd.DataFrame] | None:
-        """crosstable for specified location classes and agent attribute"""
-
+        """Crosstable for specified location classes and agent attribute."""
         # Make every Parameter a list
         if select_locations:
             if not isinstance(select_locations, list):
