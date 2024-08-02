@@ -296,16 +296,25 @@ class Model(ap.Model):
                 cutoff=2,
             ),
         )
-
+        
         objects_between = [self.g.nodes[path[1]]["_obj"] for path in paths]
 
         if object_classes is not None:
+            if len(object_classes) < 1:
+                # TODO
+                raise Exception
+            
             object_classes = [
                 (utils._get_cls_as_str(cls) if not isinstance(cls, str) else cls)
                 for cls in object_classes
             ]
-            objects_between = [o for o in objects_between if o.type in object_classes]
-        return objects_between
+            filtered_objects_between = [o for o in objects_between if o.type in object_classes]
+            return filtered_objects_between
+        else:
+            return objects_between
+            
+            
+        
 
     def locations_between_agents(self, agent1, agent2, location_classes: list | None = None):
         """Return all locations the connect two agents.
