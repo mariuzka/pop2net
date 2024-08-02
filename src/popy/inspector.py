@@ -51,10 +51,10 @@ class NetworkInspector:
             node_color = "type" if node_color is None else node_color
 
         graph_layout = nx.drawing.spring_layout(graph)
-        plot = BokehGraph(graph, width=500, height=500, hover_edges=True)
+        plot = BokehGraph(graph, width=400, height=400, hover_edges=True)
         plot.layout(layout=graph_layout)
         plot.draw(
-            node_color=node_color if network_type == "agent" else "type",
+            node_color="firebrick", #node_color if network_type == "agent" else "type",
             edge_alpha="weight",
             edge_color="black",
             node_palette="random",
