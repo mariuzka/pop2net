@@ -10,7 +10,6 @@ from networkx import bipartite
 import numpy as np
 import pandas as pd
 import seaborn as sns
-from tabulate import tabulate
 
 if typing.TYPE_CHECKING:
     from popy import AgentList

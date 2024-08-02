@@ -4,8 +4,6 @@ SOEP is the socio-economic panel. A long lifed panel study.
 """
 # TODO: extend docstring.
 
-from typing import Dict
-from typing import List
 from typing import Optional
 
 import faker

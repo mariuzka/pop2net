@@ -1,11 +1,7 @@
 """Helper class to provide fake SOEP data based on the fakers package."""
 
 from typing import Any
-from typing import Dict
-from typing import List
 from typing import Literal
-from typing import Set
-from typing import Tuple
 
 from faker.providers import BaseProvider
 import numpy as np

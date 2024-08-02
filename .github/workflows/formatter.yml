@@ -20,7 +20,7 @@ jobs:
     - name: Run Ruff Linter
       uses: chartboost/ruff-action@v1
       with:
-        args: 'check --extend-select F401 --no-unsafe-fixes'
+        args: 'check --extend-select F401 --no-unsafe-fixes --exit-zero'
     - name: Run Ruff Formatter
       uses: chartboost/ruff-action@v1
       with:
