@@ -2,8 +2,6 @@
 
 from __future__ import annotations
 
-import math
-
 from agentpy.objects import Object
 from agentpy.sequences import AgentList
 import networkx as nx

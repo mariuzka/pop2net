@@ -56,7 +56,7 @@ class NetworkInspector:
         plot = BokehGraph(graph, width=400, height=400, hover_edges=True)
         plot.layout(layout=graph_layout)
         plot.draw(
-            node_color="firebrick", #node_color if network_type == "agent" else "type",
+            node_color="firebrick",  # node_color if network_type == "agent" else "type",
             edge_alpha="weight",
             edge_color="black",
             node_palette="random",
@@ -336,7 +336,9 @@ class NetworkInspector:
                         columns="count",
                     )
                     crosstab_table.insert(
-                        0, "location_id", [location_id] * len(crosstab_table.index),
+                        0,
+                        "location_id",
+                        [location_id] * len(crosstab_table.index),
                     )
                     crosstab_table["location_type"] = df["location_type"][0]
 
