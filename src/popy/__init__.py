@@ -3,12 +3,15 @@
 from agentpy import AgentList
 
 from .agent import Agent
+from .creator import Creator
 from .exceptions import PopyException
-from .location import Location, MagicLocation, MeltLocation
 from .inspector import NetworkInspector
+from .location import Location
+from .location import MagicLocation
+from .location import MeltLocation
 from .model import Model
 from .sequences import LocationList
-from .creator import Creator
+
 __all__ = [
     "AgentList",
     "Agent",

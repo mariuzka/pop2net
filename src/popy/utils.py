@@ -1,4 +1,5 @@
 """Various utility functions for popy."""
+
 from __future__ import annotations
 
 import inspect
@@ -15,15 +16,15 @@ if typing.TYPE_CHECKING:
     from popy import AgentList
 
 
-
 ##########################################################################
 # scientific stuff
 ##########################################################################
 
+
 def create_agent_graph(
-        agents: AgentList,
-        node_attrs: list | None = None,
-        include_0_weights: bool = True,
+    agents: AgentList,
+    node_attrs: list | None = None,
+    include_0_weights: bool = True,
 ) -> nx.Graph:
     """Create a Graph from a model's agent list.
 
@@ -42,7 +43,6 @@ def create_agent_graph(
     # create nodes
     for agent in agents:
         if not projection.has_node(agent.id):
-
             node_attr_dict = {}
             if node_attrs is not None:
                 for node_attr in node_attrs:
@@ -159,6 +159,7 @@ def create_contact_matrix(
 # technical helper functions
 ##########################################################################
 
+
 def group_it(
     value: int | float,
     start: int | float,
@@ -202,13 +203,13 @@ def group_it(
                 msg = "You have entered a non-existing option for `return_value`."
                 raise Exception(msg)
 
-
         if not summarize_highest:
             if i == n_steps + 1:
                 if value > upper_bound:
                     new_value = np.nan
     # BUG: new_value possibly unbound
     return new_value
+
 
 def print_header(text: object):
     """Print a header around an object.
@@ -232,6 +233,7 @@ def make_it_a_list_if_it_is_no_list(x: object) -> list:
     else:
         return [x]
 
+
 def _get_cls_as_str(cls_):
     if inspect.isclass(cls_):
         # if cls_ is a class
@@ -239,6 +241,7 @@ def _get_cls_as_str(cls_):
     else:
         # if cls_ is an instance
         return cls_.__class__.__name__
+
 
 def _join_positions(pos1, pos2):
     return "-".join(sorted([str(pos1), str(pos2)]))

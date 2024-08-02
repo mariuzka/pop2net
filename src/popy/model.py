@@ -15,6 +15,7 @@ if typing.TYPE_CHECKING:
 from popy.sequences import LocationList
 import popy.utils as utils
 
+
 class Model(ap.Model):
     """Class the encapsulates a full simluation.
 
@@ -241,7 +242,9 @@ class Model(ap.Model):
         )
 
     def neighbors_of_agent(
-        self, agent: _agent.Agent, location_classes: list | None = None,
+        self,
+        agent: _agent.Agent,
+        location_classes: list | None = None,
     ) -> AgentList:
         """Return a list of neighboring agents for a specific agent.
 
@@ -296,14 +299,14 @@ class Model(ap.Model):
                 cutoff=2,
             ),
         )
-        
+
         objects_between = [self.g.nodes[path[1]]["_obj"] for path in paths]
 
         if object_classes is not None:
             if len(object_classes) < 1:
                 # TODO
                 raise Exception
-            
+
             object_classes = [
                 (utils._get_cls_as_str(cls) if not isinstance(cls, str) else cls)
                 for cls in object_classes
@@ -312,9 +315,6 @@ class Model(ap.Model):
             return filtered_objects_between
         else:
             return objects_between
-            
-            
-        
 
     def locations_between_agents(self, agent1, agent2, location_classes: list | None = None):
         """Return all locations the connect two agents.
