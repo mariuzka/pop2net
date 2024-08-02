@@ -54,9 +54,10 @@ class NetworkInspector:
         plot = BokehGraph(graph, width=500, height=500, hover_edges=True)
         plot.layout(layout=graph_layout)
         plot.draw(
-            node_color=node_color if network_type == "agent" else "firebrick",
+            node_color=node_color if network_type == "agent" else "type",
             edge_alpha="weight",
             edge_color="black",
+            node_palette="random",
         )
 
     def plot_bipartite_network(
