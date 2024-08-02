@@ -56,7 +56,7 @@ class Agent(ap.Agent):
         """
         return self.model.neighbors_of_agent(self, location_classes=location_classes)
 
-    def shared_locations(self, agent, location_classes):
+    def shared_locations(self, agent, location_classes: list | None = None):
         return self.model.locations_between_agents(
             agent1=self,
             agent2=agent,
