@@ -14,6 +14,7 @@ import pandas as pd
 
 from .soep_provider import SOEPProvider
 
+
 def soep(size: int, seed: Optional[int] = None) -> pd.DataFrame:
     """Create a pandas DataFrame with faked SOEP data.
 

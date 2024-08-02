@@ -12,6 +12,7 @@ import numpy as np
 
 from . import constants as c
 
+
 class SOEPProvider(BaseProvider):
     """Create Fake Data that is as close to the SOEP as possible.
 

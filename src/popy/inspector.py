@@ -1,4 +1,5 @@
 """A module that helps with creating insights into the network."""
+
 from __future__ import annotations
 
 import typing
@@ -13,8 +14,10 @@ import popy.utils as utils
 if typing.TYPE_CHECKING:
     from . import location as _location
 
+
 class NetworkInspector:
     """Helper class that contains functions to inspect the network of a popy model."""
+
     def __init__(self, model) -> None:
         """Initiate a NetworkInspector.
 
@@ -32,7 +35,6 @@ class NetworkInspector:
         edge_color: str,
         include_0_weights: bool,
     ):
-
         if network_type == "bipartite":
             graph = self.model.g.copy()
             for i in graph:
@@ -61,12 +63,12 @@ class NetworkInspector:
         )
 
     def plot_bipartite_network(
-            self,
-            node_color: str | None = None,
-            node_attrs: list | None = None,
-            edge_alpha: str = "weight",
-            edge_color: str = "black",
-            include_0_weights: bool = True,
+        self,
+        node_color: str | None = None,
+        node_attrs: list | None = None,
+        edge_alpha: str = "weight",
+        edge_color: str = "black",
+        include_0_weights: bool = True,
     ) -> None:
         """Plots the two-mode network of agents and locations.
 
@@ -101,12 +103,12 @@ class NetworkInspector:
         )
 
     def plot_agent_network(
-            self,
-            node_color: str | None = "firebrick",
-            node_attrs: list | None = None,
-            edge_alpha: str = "weight",
-            edge_color: str = "black",
-            include_0_weights: bool = True,
+        self,
+        node_color: str | None = "firebrick",
+        node_attrs: list | None = None,
+        edge_alpha: str = "weight",
+        edge_color: str = "black",
+        include_0_weights: bool = True,
     ) -> None:
         """Plots the agent network.
 
@@ -132,7 +134,6 @@ class NetworkInspector:
             include_0_weights=include_0_weights,
         )
 
-
     def eval_affiliations(self, return_data=False) -> tuple[pd.DataFrame, pd.DataFrame] | None:
         """Prints information on the distribution of agents per location and locations per agent.
 
@@ -140,11 +141,11 @@ class NetworkInspector:
             PopyException: _description_
             PopyException: _description_
         """
-        #if self.agents is None:
+        # if self.agents is None:
         #    msg = "You have to create agents first!"
         #    raise PopyException(msg)
 
-        #if self.locations is None:
+        # if self.locations is None:
         #    msg = "You have to create locations first!"
         #    raise PopyException(msg)
 
@@ -161,7 +162,6 @@ class NetworkInspector:
         df1 = df1.groupby("location_class").describe()
         df1.columns = df1.columns.droplevel()
         df1 = df1.drop("count", axis=1)
-
 
         utils.print_header("Number of agents per location")
         print(df1)
@@ -186,7 +186,7 @@ class NetworkInspector:
         return None
 
     #### Ported from utils #####
-    def network_measures(self, node_attrs = None) -> dict | list[dict]:
+    def network_measures(self, node_attrs=None) -> dict | list[dict]:
         """Creates nx networkgraph and calculates common network measures.
 
         If the created network consist of independent groups of nodes
@@ -204,26 +204,26 @@ class NetworkInspector:
 
         # make distinction between multiple independent networks and one network
         if nx.is_connected(nx_graph):
-
-            result_dict["diameter"] = nx.diameter(nx_graph, weight = "weight")
+            result_dict["diameter"] = nx.diameter(nx_graph, weight="weight")
             result_dict["density"] = nx.density(nx_graph)
             result_dict["transitivity"] = nx.transitivity(nx_graph)
             result_dict["avg_clustering"] = nx.average_clustering(
                 nx_graph,
-                weight= "weight",
+                weight="weight",
             )
             result_dict["avg_path_length"] = nx.average_shortest_path_length(
                 nx_graph,
-                weight = "weight",
+                weight="weight",
             )
-            #result_dict["periphery"] = nx.periphery(nx_graph, weight = "weight")
-            #result_dict["center"] = nx.center(nx_graph, weight = "weight")
-            #result_dict["centrality"] = nx.degree_centrality(nx_graph)
+            # result_dict["periphery"] = nx.periphery(nx_graph, weight = "weight")
+            # result_dict["center"] = nx.center(nx_graph, weight = "weight")
+            # result_dict["centrality"] = nx.degree_centrality(nx_graph)
             return result_dict
         else:
             # sort subgraph component size(=num of nodes) in ascending order
             component_list = sorted(
-                nx.connected_components(nx_graph),key=len,
+                nx.connected_components(nx_graph),
+                key=len,
                 reverse=False,
             )
 
@@ -239,37 +239,33 @@ class NetworkInspector:
 
                 result_dict_subgraph["diameter"] = nx.diameter(
                     nx_subgraph,
-                    weight = "weight",
+                    weight="weight",
                 )
                 result_dict_subgraph["density"] = nx.density(nx_subgraph)
                 result_dict_subgraph["transitivity"] = nx.transitivity(nx_subgraph)
                 result_dict_subgraph["avg_clustering"] = nx.average_clustering(
                     nx_subgraph,
-                    weight= "weight",
+                    weight="weight",
                 )
                 result_dict_subgraph["avg_path_length"] = nx.average_shortest_path_length(
                     nx_subgraph,
-                    weight = "weight",
+                    weight="weight",
                 )
 
-                #result_dict_subgraph["centrality"] = nx.degree_centrality(nx_subgraph)
-                #result_dict_subgraph["periphery"] = nx.periphery(nx_subgraph, weight = "weight")
-                #result_dict_subgraph["center"] = nx.center(nx_subgraph, weight = "weight")
+                # result_dict_subgraph["centrality"] = nx.degree_centrality(nx_subgraph)
+                # result_dict_subgraph["periphery"] = nx.periphery(nx_subgraph, weight = "weight")
+                # result_dict_subgraph["center"] = nx.center(nx_subgraph, weight = "weight")
                 result_list.append(result_dict_subgraph)
             return result_list
 
-
-
     ## TODO wie gebe ich hier den richtigen Datentyp an???
     def location_crosstab(
-            self,
-            select_locations: _location.location | list[_location.Location],
-            agent_attributes: str | list[str],
-            output_format = "table",
-    )-> list[pd.DataFrame] | None:
-        """crosstable for specified location classes and agent attribute
-        
-        """
+        self,
+        select_locations: _location.location | list[_location.Location],
+        agent_attributes: str | list[str],
+        output_format="table",
+    ) -> list[pd.DataFrame] | None:
+        """crosstable for specified location classes and agent attribute"""
 
         # Make every Parameter a list
         if select_locations:
@@ -284,32 +280,26 @@ class NetworkInspector:
         valid_locations = []
         if select_locations:
             for location_instance in self.model.locations:
-
                 for locationtype in select_locations:
                     if isinstance(location_instance, locationtype):
                         valid_locations.append(location_instance)
         else:
             valid_locations = list(self.model.locations)
 
-
         # create agent df per location instance
         if output_format == "table":
             agent_dfs = {}
             if agent_attributes:
-
                 for i, location_instance in enumerate(valid_locations):
-
                     title = f'{i+1}.Location: {str(location_instance).split(" ")[0]}'
                     df = pd.DataFrame([vars(agent) for agent in location_instance.agents])
                     df = df[list(agent_attributes)]
                     agent_dfs[title] = df
 
             for title, df in agent_dfs.items():
-
                 for agent_attribute in agent_attributes:
-
                     crosstab_table = pd.crosstab(
-                        index= df[agent_attribute],
+                        index=df[agent_attribute],
                         columns="count",
                     )
 
@@ -338,18 +328,17 @@ class NetworkInspector:
 
                 agent_dfs[title] = df
 
-
             for agent_attribute in agent_attributes:
-
                 location_id = 0
                 df_list_of_attribute = []
                 for _, df in agent_dfs.items():
-
                     crosstab_table = pd.crosstab(
-                        index= df[agent_attribute],
+                        index=df[agent_attribute],
                         columns="count",
                     )
-                    crosstab_table.insert(0, "location_id", [location_id]*len(crosstab_table.index))
+                    crosstab_table.insert(
+                        0, "location_id", [location_id] * len(crosstab_table.index),
+                    )
                     crosstab_table["location_type"] = df["location_type"][0]
 
                     df_list_of_attribute.append(crosstab_table)
@@ -368,14 +357,11 @@ class NetworkInspector:
             return result_list
         return None
 
-
-
-
     def location_information(
-            self,
-            select_locations: _location.Location | list[_location.Location] | None = None,
-            agent_attributes: str | None | list[str] | None = None,
-            output_format:str = "table",
+        self,
+        select_locations: _location.Location | list[_location.Location] | None = None,
+        agent_attributes: str | None | list[str] | None = None,
+        output_format: str = "table",
     ) -> None | pd.DataFrame:
         """Provides information on the agents assigned to location instances.
 
@@ -404,20 +390,16 @@ class NetworkInspector:
         valid_locations = []
         if select_locations:
             for location_instance in self.model.locations:
-
                 for locationtype in select_locations:
                     if isinstance(location_instance, locationtype):
                         valid_locations.append(location_instance)
         else:
             valid_locations = list(self.model.locations)
 
-
         # create agent df per location instance
         agent_dfs = {}
         if agent_attributes:
-
             for i, location_instance in enumerate(valid_locations):
-
                 # Create the title of printout
                 title = f'{i+1}.Location: {str(location_instance).split(" ")[0]}'
                 location_type = str(location_instance).split(" ")[0]
@@ -427,18 +409,17 @@ class NetworkInspector:
                 df["location_type"] = location_type
                 agent_dfs[title] = df
         else:
-
             for i, location_instance in enumerate(valid_locations):
                 title = f'{i+1}.Location: {str(location_instance).split(" ")[0]}'
                 location_type = str(location_instance).split(" ")[0]
                 df = pd.DataFrame([vars(agent) for agent in location_instance.agents])
-                df.drop(df.iloc[:,0:7], axis = 1, inplace = True)
+                df.drop(df.iloc[:, 0:7], axis=1, inplace=True)
                 df["location_type"] = location_type
                 agent_dfs[title] = df
 
         if output_format == "table":
-        #### Print Part "Basic"
-            for  title, df in agent_dfs.items():
+            #### Print Part "Basic"
+            for title, df in agent_dfs.items():
                 print(f"{title} \n")
                 print(tabulate(df, headers="keys", tablefmt="fancy_grid"))
                 print("\n")
@@ -447,7 +428,7 @@ class NetworkInspector:
             location_id_counter = 0
             df_list = []
             for _, df in agent_dfs.items():
-                df.insert(0, "location_id", [location_id_counter]*len(df.index))
+                df.insert(0, "location_id", [location_id_counter] * len(df.index))
                 location_id_counter += 1
                 df_list.append(df)
             return pd.concat(df_list, ignore_index=True)

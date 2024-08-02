@@ -2,6 +2,7 @@ import pandas as pd
 import popy
 import pytest
 
+
 @pytest.fixture()
 def model():
     return popy.Model()
@@ -163,7 +164,6 @@ def test_chef_agents():
         def assert_(self):
             assert len(self.agents) == 4
 
-
     class Home(popy.MagicLocation):
         def split(self, agent):
             return agent.couple
@@ -173,7 +173,6 @@ def test_chef_agents():
 
         def assert_(self):
             assert len({a.couple for a in self.agents}) == 1
-
 
     class Restaurant(popy.MagicLocation):
         def setup(self):
@@ -203,7 +202,6 @@ def test_chef_agents():
                 == 1
             )
 
-
     class Chef(popy.Agent):
         def assert_(self):
             assert len(self.locations) == 1
@@ -213,7 +211,6 @@ def test_chef_agents():
                 len([1 for a in self.locations[0].neighbors(self) if self.get_agent_weight(a) != 2])
                 == 0
             )
-
 
     class MyAgent(popy.Agent):
         def assert_(self):
@@ -231,7 +228,6 @@ def test_chef_agents():
                 self.locations.select(self.locations.type == "Town")[0]
                 is self.shared_locations(couple_agent, location_classes=[Town])[0]
             )
-
 
     df = pd.DataFrame(
         {
@@ -278,11 +274,9 @@ def test_table_agents():
         },
     )
 
-
     df = creator.draw_sample(df=df, n=20)
 
     creator.create_agents(df=df)
-
 
     class Table(popy.MagicLocation):
         recycle = True
@@ -316,7 +310,6 @@ def test_table_agents():
         def weight(self, agent):
             return 5
 
-
     class Restaurant(popy.MagicLocation):
         n_agents = 10
 
@@ -325,7 +318,6 @@ def test_table_agents():
 
         # def filter(self, agent):
         #    return agent.Table
-
 
     creator.create_locations(
         location_classes=[

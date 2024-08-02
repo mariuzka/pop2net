@@ -1,6 +1,7 @@
 import popy
 import pandas as pd
 
+
 def test_1():
     model = popy.Model()
     creator = popy.Creator(model)
@@ -230,7 +231,7 @@ def test_10():
 
     creator.create_agents(n=10)
     creator.create_locations(location_classes=[TestLocation])
-    
+
     assert len(model.locations) == 4
     assert len(model.locations[0].agents) == 2
     assert len(model.locations[1].agents) == 2
@@ -250,7 +251,7 @@ def test_11():
 
     creator.create_agents(n=10)
     creator.create_locations(location_classes=[TestLocation])
-    
+
     assert len(model.locations) == 2
     assert len(model.locations[0].agents) == 5
     assert len(model.locations[1].agents) == 5
@@ -276,7 +277,7 @@ def test_12():
 def test_13():
     model = popy.Model()
     creator = popy.Creator(model)
-    
+
     class TestLocation(popy.MagicLocation):
         n_agents = 7
         n_locations = 2
@@ -307,10 +308,11 @@ def test_14():
     assert len(model.locations) == 1
     assert len(model.locations[0].agents) == 7
 
+
 def test_15():
     model = popy.Model()
     creator = popy.Creator(model)
-   
+
     class TestLocation(popy.MagicLocation):
         n_agents = 7
         n_locations = 3
@@ -337,7 +339,7 @@ def test_16():
 
     creator.create_agents(n=10)
     creator.create_locations(location_classes=[TestLocation])
-    
+
     assert len(model.locations) == 1
     assert len(model.locations[0].agents) == 10
 
@@ -354,7 +356,7 @@ def test_17():
 
     creator.create_agents(n=10)
     creator.create_locations(location_classes=[TestLocation])
-    
+
     assert len(model.locations) == 3
     assert len(model.locations[0].agents) == 4
     assert len(model.locations[1].agents) == 3
@@ -373,7 +375,7 @@ def test_18():
 
     creator.create_agents(n=10)
     creator.create_locations(location_classes=[TestLocation])
-    
+
     assert len(model.locations) == 3
     assert len(model.locations[0].agents) == 4
     assert len(model.locations[1].agents) == 3
@@ -392,7 +394,7 @@ def test_19():
 
     creator.create_agents(n=10)
     creator.create_locations(location_classes=[TestLocation])
-    
+
     assert len(model.locations) == 3
     assert len(model.locations[0].agents) == 3
     assert len(model.locations[1].agents) == 3
@@ -411,7 +413,7 @@ def test_20():
 
     creator.create_agents(n=10)
     creator.create_locations(location_classes=[TestLocation])
-    
+
     assert len(model.locations) == 6
     assert len(model.locations[0].agents) == 1
     assert len(model.locations[1].agents) == 1
@@ -425,7 +427,6 @@ def test_21():
     creator = popy.Creator(model)
     inspector = popy.NetworkInspector(model)
 
-
     class TestLocation(popy.MagicLocation):
         n_agents = None
         n_locations = 6
@@ -434,7 +435,7 @@ def test_21():
 
     creator.create_agents(n=10)
     creator.create_locations(location_classes=[TestLocation])
-    
+
     inspector.plot_bipartite_network()
 
     assert len(model.locations) == 6
@@ -451,23 +452,24 @@ def test_split_1():
     creator = popy.Creator(model)
     inspector = popy.NetworkInspector(model)
 
-
     class TestLocation(popy.MagicLocation):
         n_agents = None
         n_locations = None
         overcrowding = None
         only_exact_n_agents = False
-    
+
         def split(self, agent):
             return agent.age
 
-    df = pd.DataFrame({
-        "age": [10,10,10,10,20,20,20,20,30,30],
-    })
+    df = pd.DataFrame(
+        {
+            "age": [10, 10, 10, 10, 20, 20, 20, 20, 30, 30],
+        },
+    )
 
     creator.create_agents(df=df)
     creator.create_locations(location_classes=[TestLocation])
-    
+
     inspector.plot_bipartite_network()
 
     assert len(model.locations) == 3
@@ -477,28 +479,30 @@ def test_split_1():
         else:
             assert len(location.agents) == 2
 
+
 def test_split_2():
     model = popy.Model()
     creator = popy.Creator(model)
     inspector = popy.NetworkInspector(model)
-
 
     class TestLocation(popy.MagicLocation):
         n_agents = 2
         n_locations = None
         overcrowding = None
         only_exact_n_agents = False
-    
+
         def split(self, agent):
             return agent.age
 
-    df = pd.DataFrame({
-        "age": [10,10,10,10,20,20,20,20,30,30],
-    })
+    df = pd.DataFrame(
+        {
+            "age": [10, 10, 10, 10, 20, 20, 20, 20, 30, 30],
+        },
+    )
 
     creator.create_agents(df=df)
     creator.create_locations(location_classes=[TestLocation])
-    
+
     inspector.plot_bipartite_network()
 
     assert len(model.locations) == 5
@@ -514,23 +518,24 @@ def test_split_3():
     creator = popy.Creator(model)
     inspector = popy.NetworkInspector(model)
 
-
     class TestLocation(popy.MagicLocation):
         n_agents = 2
         n_locations = 1
         overcrowding = None
         only_exact_n_agents = False
-    
+
         def split(self, agent):
             return agent.age
 
-    df = pd.DataFrame({
-        "age": [10,10,10,10,20,20,20,20,30,30],
-    })
+    df = pd.DataFrame(
+        {
+            "age": [10, 10, 10, 10, 20, 20, 20, 20, 30, 30],
+        },
+    )
 
     creator.create_agents(df=df)
     creator.create_locations(location_classes=[TestLocation])
-    
+
     inspector.plot_bipartite_network()
 
     assert len(model.locations) == 3

@@ -1,4 +1,5 @@
 """Base class to create Agent objects."""
+
 from __future__ import annotations
 
 import typing
@@ -8,6 +9,7 @@ import agentpy as ap
 if typing.TYPE_CHECKING:
     from . import location as _location
     from . import sequences as _sequences
+
 
 class Agent(ap.Agent):
     """This is a Base class to represent agents in the simulation.
@@ -34,7 +36,6 @@ class Agent(ap.Agent):
 
         self.model.add_agent(self)
         self.setup()
-
 
     def setup(self) -> None:
         """Instantiate an Agent.

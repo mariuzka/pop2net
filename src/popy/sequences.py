@@ -3,11 +3,13 @@
 
 Content: Lists for objects, environments, and agents.
 """
+
 from __future__ import annotations
 
 from collections.abc import Sequence
 
 from . import location
+
 
 class LocationSequence:
     """Base class for agenpty sequences."""

@@ -9,6 +9,7 @@ from .inspector import NetworkInspector
 from .model import Model
 from .sequences import LocationList
 from .creator import Creator
+
 __all__ = [
     "AgentList",
     "Agent",
