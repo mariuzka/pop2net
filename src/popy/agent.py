@@ -63,7 +63,7 @@ class Agent(ap.Agent):
             location_classes=location_classes,
         )
 
-    def enter_location(self, location: _location.Location) -> None:
+    def add_location(self, location: _location.Location) -> None:
         """Add this Agent to a given location.
 
         Args:
@@ -71,11 +71,11 @@ class Agent(ap.Agent):
         """
         self.model.add_agent_to_location(self, location)
 
-    def enter_locations(self, locations: list) -> None:
+    def add_locations(self, locations: list) -> None:
         for location in locations:
-            self.leave_location(location)
+            self.add_location(location)
 
-    def leave_location(self, location: _location.Location) -> None:
+    def remove_location(self, location: _location.Location) -> None:
         """Remove this Agent from a given location.
 
         Args:
@@ -83,9 +83,9 @@ class Agent(ap.Agent):
         """
         self.model.remove_agent_from_location(self, location)
 
-    def leave_locations(self, locations: list) -> None:
+    def remove_locations(self, locations: list) -> None:
         for location in locations:
-            self.leave_location(location)
+            self.remove_location(location)
 
     @property
     def locations(self) -> _sequences.LocationList:
@@ -96,7 +96,7 @@ class Agent(ap.Agent):
         """
         return self.model.locations_of_agent(self)
 
-    def get_agent_weight(self, agent: Agent, location_classes=[]) -> float:
+    def get_agent_weight(self, agent: Agent, location_classes: list | None = None) -> float:
         """Return the contact weight between this agent and a given other agent.
 
         This is summed over all shared locations.

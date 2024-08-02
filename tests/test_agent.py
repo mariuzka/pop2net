@@ -36,12 +36,12 @@ def test_agent_locations(model):
     location1 = popy.Location(model)
     location2 = popy.Location(model)
 
-    agent.enter_location(location1)
+    agent.add_location(location1)
 
     exp = popy.LocationList(model, [location1])
     assert agent.locations == exp
 
-    agent.enter_location(location2)
+    agent.add_location(location2)
     exp = popy.LocationList(model, [location1, location2])
     assert agent.locations == exp
 
@@ -53,7 +53,7 @@ def test_agent_located_at_single_location(model):
         def setup(self):
             popy.AgentList(self, 1, popy.Agent)
             popy.LocationList(self, 2, popy.Location)
-            self.agents[0].enter_location(self.locations[0])
+            self.agents[0].add_location(self.locations[0])
 
     model = Model(parameters={"steps": 1})
     model.run()
@@ -66,8 +66,8 @@ def test_agent_visits_two_locations(model):
         def setup(self):
             popy.AgentList(self, 1, popy.Agent)
             popy.LocationList(self, 2, popy.Location)
-            self.agents[0].enter_location(self.locations[0])
-            self.agents[0].enter_location(self.locations[1])
+            self.agents[0].add_location(self.locations[0])
+            self.agents[0].add_location(self.locations[1])
 
     model = Model(parameters={"steps": 1})
     model.run()
@@ -112,11 +112,11 @@ def test_color_agents():
         def change_location(self):
             for location in self.locations:
                 if location.color != self.color:
-                    self.leave_location(location)
+                    self.remove_location(location)
 
             for location in self.model.locations:
                 if location.color == self.color and location not in self.locations:
-                    self.enter_location(location)
+                    self.add_location(location)
                     return
 
             if self.color not in [location.color for location in self.model.locations]:
@@ -142,9 +142,6 @@ def test_color_agents():
             assert len(self.locations[0].agents) == 3
             assert len(self.locations[1].agents) == 3
 
-            # self.inspector = NetworkInspector(self)
-            # self.inspector.plot_agent_network(node_attrs=["color"], node_color="color")
-
         def step(self):
             self.agents.change_location()
 
@@ -154,7 +151,6 @@ def test_color_agents():
             assert len(self.locations[0].agents) == 2
             assert len(self.locations[1].agents) == 3
             assert len(self.locations[2].agents) == 1
-            # self.inspector.plot_agent_network(node_attrs=["color"], node_color="color")
 
 
 def test_chef_agents():
