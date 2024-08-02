@@ -66,6 +66,7 @@ pythonpath = [
 
 [tool.ruff]
 fix = true
+unsafe-fixes = true
 include = ["*.py", "*.pyi", "**/pyproject.toml", "*.ipynb"]
 target-version = "py39"
 line-length = 100
