@@ -19,8 +19,8 @@ Welcome to Popy's documentation!
    section_introduction
    installation
    api/index
-   developers
    examples/index
+   developers
 
 
 Indices and tables
