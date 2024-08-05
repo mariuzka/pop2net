@@ -268,10 +268,14 @@ class MagicLocation(Location):
         if self.nxgraph is None:
             return None
         else:
-            pos = self.group_agents.index(agent)
+        
+            node_indices = list(self.nxgraph.nodes)
+            agent_pos = self.group_agents.index(agent)
+            node_index = node_indices[agent_pos]
+            
             return [
-                utils._join_positions(pos1=pos, pos2=neighbor)
-                for neighbor in self.nxgraph.neighbors(pos)
+                utils._join_positions(pos1=node_index, pos2=neighbor)
+                for neighbor in self.nxgraph.neighbors(node_index)
             ]
 
 
