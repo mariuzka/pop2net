@@ -23,7 +23,7 @@ Popy also offers tools to create populations of agents based on empirical micro-
    section_introduction
    installation
    api/index
-   examples/index
+   section_examples
 
 
 Indices and tables
