@@ -1,19 +1,22 @@
+import pandas as pd
 import popy
 from popy.creator import Creator
-import pandas as pd
+
 
 def test_1():
-    df = pd.DataFrame({
-        "status": ["A", "B", "B", "A", "B"],
-        })
-    
+    df = pd.DataFrame(
+        {
+            "status": ["A", "B", "B", "A", "B"],
+        },
+    )
+
     model = popy.Model()
     creator = Creator(model)
 
     class TestLocationA(popy.MagicLocation):
         def filter(self, agent):
             return agent.status == "A"
-        
+
     class TestLocationB(popy.MagicLocation):
         def filter(self, agent):
             return agent.status == "B"
@@ -30,10 +33,12 @@ def test_1():
 
 
 def test_2():
-    df = pd.DataFrame({
-        "status": ["A", "B", "B", "A", "B"],
-        "sex":    ["w", "m", "m", "m", "w"],
-        })
+    df = pd.DataFrame(
+        {
+            "status": ["A", "B", "B", "A", "B"],
+            "sex": ["w", "m", "m", "m", "w"],
+        },
+    )
 
     model = popy.Model()
     creator = Creator(model)
@@ -41,7 +46,7 @@ def test_2():
     class TestLocationA(popy.MagicLocation):
         def filter(self, agent):
             return agent.status == "A" and agent.sex == "w"
-        
+
     class TestLocationB(popy.MagicLocation):
         def filter(self, agent):
             return agent.status == "B" and agent.sex == "w"
@@ -53,11 +58,5 @@ def test_2():
     assert len(model.agents) == 5
     assert len(model.locations[0].agents) == 1
     assert len(model.locations[1].agents) == 1
-    assert all(
-        agent.status == "A"
-        and agent.sex == "w"
-        for agent in model.locations[0].agents)
-    assert all(
-        agent.status == "B"
-        and agent.sex == "w"
-        for agent in model.locations[1].agents)
+    assert all(agent.status == "A" and agent.sex == "w" for agent in model.locations[0].agents)
+    assert all(agent.status == "B" and agent.sex == "w" for agent in model.locations[1].agents)

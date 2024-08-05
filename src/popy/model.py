@@ -15,6 +15,7 @@ if typing.TYPE_CHECKING:
 from popy.sequences import LocationList
 import popy.utils as utils
 
+
 class Model(ap.Model):
     """Class the encapsulates a full simluation.
 
@@ -241,7 +242,9 @@ class Model(ap.Model):
         )
 
     def neighbors_of_agent(
-        self, agent: _agent.Agent, location_classes: list | None = None,
+        self,
+        agent: _agent.Agent,
+        location_classes: list | None = None,
     ) -> AgentList:
         """Return a list of neighboring agents for a specific agent.
 
@@ -287,7 +290,7 @@ class Model(ap.Model):
         )
 
     # TODO: evlt. filtern nach Klasse oder Key einbauen
-    def _objects_between_objects(self, object1, object2, object_classes):
+    def _objects_between_objects(self, object1, object2, object_classes: list | None = None):
         paths = list(
             nx.all_simple_paths(
                 G=self.g,
@@ -299,15 +302,21 @@ class Model(ap.Model):
 
         objects_between = [self.g.nodes[path[1]]["_obj"] for path in paths]
 
-        if object_classes:
+        if object_classes is not None:
+            if len(object_classes) < 1:
+                # TODO
+                raise Exception
+
             object_classes = [
                 (utils._get_cls_as_str(cls) if not isinstance(cls, str) else cls)
                 for cls in object_classes
             ]
-            objects_between = [o for o in objects_between if o.type in object_classes]
-        return objects_between
+            filtered_objects_between = [o for o in objects_between if o.type in object_classes]
+            return filtered_objects_between
+        else:
+            return objects_between
 
-    def locations_between_agents(self, agent1, agent2, location_classes=()):
+    def locations_between_agents(self, agent1, agent2, location_classes: list | None = None):
         """Return all locations the connect two agents.
 
         Args:
@@ -324,7 +333,7 @@ class Model(ap.Model):
             objs=self._objects_between_objects(agent1, agent2, location_classes),
         )
 
-    def agents_between_locations(self, location1, location2, agent_classes=()):
+    def agents_between_locations(self, location1, location2, agent_classes: list | None = None):
         """Return all agents between two locations.
 
         Args:

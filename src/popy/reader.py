@@ -5,8 +5,10 @@ from typing import Optional
 import numpy as np
 import pandas as pd
 
+
 class DataReader:
     """Helper to sample from a dataframe."""
+
     def __init__(
         self,
         df: pd.DataFrame,
@@ -75,7 +77,6 @@ class DataReader:
             subset_dfs = []
             len_counter = 0
             for sample_id in sample:
-
                 subset = self.df[self.df[by] == sample_id]
                 subset_dfs.append(subset)
 

@@ -1,6 +1,7 @@
 from popy.data_fakers import soep
 import pytest
 
+
 @pytest.fixture(scope="session")
 def soep10():
     return soep(size=10, seed=10)
