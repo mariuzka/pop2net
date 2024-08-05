@@ -167,6 +167,20 @@ class MagicLocation(Location):
             True if the agent is allowed to join the location, False otherwise.
         """
         return True
+    
+    def bridge(self, agent: _agent.Agent) -> float | str | list | None:  # noqa: ARG002
+        """Create locations with one agent for each unique value returned.
+
+        Cannot be used in combination with melt().
+
+        Args:
+            agent (_agent.Agent): The agent that is currently processed by the Creator.
+
+        Returns:
+            float | str | list | None: The value which is used to assign agents 
+                to location instances.
+        """
+        return None
 
     def split(self, agent: _agent.Agent) -> float | str | list | None:  # noqa: ARG002
         """Creates seperate location instances for each unique returned value.

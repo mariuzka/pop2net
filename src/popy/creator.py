@@ -363,9 +363,11 @@ class Creator:
             groups_to_melt_by_location: list[list[list]] = []
 
             # for each location that shall be melted
-            for location_cls in dummy_location.melt():
+            for melt_location_cls in dummy_location.melt():
                 # create dummy location
-                melt_dummy_location = self._create_dummy_location(location_cls)
+                melt_dummy_location = self._create_dummy_location(melt_location_cls)
+                if melt_location_cls.n_locations is None:
+                    melt_location_cls.n_locations = location_cls.n_locations
 
                 # get all agents that should be assigned to this location
                 # filter by melt_location
@@ -399,7 +401,7 @@ class Creator:
                     location_groups_to_melt.extend(
                         self._get_groups(
                             agents=melt_group_value_affiliated_agents,
-                            location_cls=location_cls,
+                            location_cls=melt_location_cls,
                         ),
                     )
 
@@ -466,6 +468,42 @@ class Creator:
             # create location dummy in order to use the location's methods
             dummy_location = self._create_dummy_location(location_cls)
 
+
+            # bridge
+            if not dummy_location.melt():
+                bridge_values = {dummy_location.bridge(agent) for agent in agents}
+
+                if len(bridge_values) > 1:
+                    
+                    melt_list = []
+
+                    # create one MeltLocation for each bridge_value
+                    for bridge_value in bridge_values:
+
+                        def filter(self, agent):
+                            return dummy_location.bridge(agent) == self.bridge_value
+                        
+                        dummy_melt_class = type(
+                                f"dummy_meltlocation{str(bridge_value)}",
+                                (popy.MeltLocation,),
+                                {
+                                    "filter": filter,
+                                    "n_agents": 1,
+                                    "bridge_value": bridge_value,
+                                    }
+                                )
+                        
+                        melt_list.append(dummy_melt_class)
+                        
+                    # set the created MeltLocations as return values of melt()
+                    def melt(self):
+                        return melt_list
+                    
+                    location_cls.melt = melt
+                    dummy_location = self._create_dummy_location(location_cls)
+
+            
+
             if not dummy_location.melt():
                 # get all agents that could be assigned to locations of this class
                 affiliated_agents = self._get_affiliated_agents(
@@ -475,7 +513,9 @@ class Creator:
 
             else:
                 affiliated_agents = []
+              
                 for melt_location_cls in dummy_location.melt():
+                    
                     melt_dummy_location = self._create_dummy_location(melt_location_cls)
                     affiliated_agents.extend(
                         self._get_affiliated_agents(
