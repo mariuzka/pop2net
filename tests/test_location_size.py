@@ -591,3 +591,123 @@ def test_overcrowding_3():
     assert len(model.locations) == 2
     assert len(model.locations[0].agents) == 5
     assert len(model.locations[1].agents) == 5
+
+
+def test_melt_1():
+    model = popy.Model()
+    creator = popy.Creator(model)
+
+    class TestLocation(popy.MagicLocation):
+
+        def melt(self):
+            class TestMeltLocation0(popy.MeltLocation):
+                n_agents = 1
+                
+                def filter(self, agent):
+                    return agent.opinion == 0
+            
+            class TestMeltLocation1(popy.MeltLocation):
+                n_agents = 1
+                
+                def filter(self, agent):
+                    return agent.opinion == 1
+        
+            return TestMeltLocation0, TestMeltLocation1
+
+
+    for _ in range(5):
+        agent = popy.Agent(model)
+        agent.opinion = 0
+
+    for _ in range(5):
+        agent = popy.Agent(model)
+        agent.opinion = 1
+
+    creator.create_locations(location_classes=[TestLocation])
+
+    assert len(model.locations) == 5
+    assert len(model.locations[0].agents) == 2
+    assert len(model.locations[1].agents) == 2
+    assert len(model.locations[2].agents) == 2
+    assert len(model.locations[3].agents) == 2
+    assert len(model.locations[4].agents) == 2
+
+
+def test_melt_2():
+    model = popy.Model()
+    creator = popy.Creator(model)
+
+    class TestLocation(popy.MagicLocation):
+
+        def melt(self):
+            class TestMeltLocation0(popy.MeltLocation):
+                n_agents = 1
+                n_locations = 3
+                
+                def filter(self, agent):
+                    return agent.opinion == 0
+            
+            class TestMeltLocation1(popy.MeltLocation):
+                n_agents = 1
+                n_locations = 3
+                
+                def filter(self, agent):
+                    return agent.opinion == 1
+        
+            return TestMeltLocation0, TestMeltLocation1
+
+
+    for _ in range(5):
+        agent = popy.Agent(model)
+        agent.opinion = 0
+
+    for _ in range(5):
+        agent = popy.Agent(model)
+        agent.opinion = 1
+
+    creator.create_locations(location_classes=[TestLocation])
+
+    assert len(model.locations) == 3
+    assert len(model.locations[0].agents) == 2
+    assert len(model.locations[1].agents) == 2
+    assert len(model.locations[2].agents) == 2
+
+
+def test_melt_3():
+    model = popy.Model()
+    creator = popy.Creator(model)
+
+    class TestLocation(popy.MagicLocation):
+        n_locations = 4
+
+        def melt(self):
+            class TestMeltLocation0(popy.MeltLocation):
+                n_agents = 1
+                
+                def filter(self, agent):
+                    return agent.opinion == 0
+            
+            class TestMeltLocation1(popy.MeltLocation):
+                n_agents = 1
+                
+                def filter(self, agent):
+                    return agent.opinion == 1
+        
+            return TestMeltLocation0, TestMeltLocation1
+
+
+    for _ in range(5):
+        agent = popy.Agent(model)
+        agent.opinion = 0
+
+    for _ in range(5):
+        agent = popy.Agent(model)
+        agent.opinion = 1
+
+    creator.create_locations(location_classes=[TestLocation])
+
+    assert len(model.locations) == 4
+    assert len(model.locations[0].agents) == 2
+    assert len(model.locations[1].agents) == 2
+    assert len(model.locations[2].agents) == 2
+    assert len(model.locations[3].agents) == 2
