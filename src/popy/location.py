@@ -167,7 +167,7 @@ class MagicLocation(Location):
             True if the agent is allowed to join the location, False otherwise.
         """
         return True
-    
+
     def bridge(self, agent: _agent.Agent) -> float | str | list | None:  # noqa: ARG002
         """Create locations with one agent for each unique value returned.
 
@@ -177,7 +177,7 @@ class MagicLocation(Location):
             agent (_agent.Agent): The agent that is currently processed by the Creator.
 
         Returns:
-            float | str | list | None: The value which is used to assign agents 
+            float | str | list | None: The value which is used to assign agents
                 to location instances.
         """
         return None
@@ -282,15 +282,19 @@ class MagicLocation(Location):
         if self.nxgraph is None:
             return None
         else:
-        
             node_indices = list(self.nxgraph.nodes)
             agent_pos = self.group_agents.index(agent)
-            node_index = node_indices[agent_pos]
-            
-            return [
-                utils._join_positions(pos1=node_index, pos2=neighbor)
-                for neighbor in self.nxgraph.neighbors(node_index)
-            ]
+
+            if agent_pos <= len(node_indices) - 1:
+                node_index = node_indices[agent_pos]
+
+                return [
+                    utils._join_positions(pos1=node_index, pos2=neighbor)
+                    for neighbor in self.nxgraph.neighbors(node_index)
+                ]
+
+            else:
+                return None
 
 
 class MeltLocation(Location):
