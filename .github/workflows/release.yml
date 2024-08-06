@@ -18,9 +18,11 @@ on:
 jobs:
   test:
     uses: ./.github/workflows/tox.yml
+  build_docs:
+    uses: ./.github/workflows/docs_pages.yml
   release:
     name: Release
-    needs: [test]
+    needs: [test, build_docs]
     runs-on: ubuntu-latest
     steps:
       # Set up environment
