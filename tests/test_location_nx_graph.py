@@ -1,5 +1,5 @@
-import popy
 import networkx as nx
+import popy
 
 
 def test_line_1():
