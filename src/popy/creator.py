@@ -455,11 +455,17 @@ class Creator:
             str_location_cls = utils._get_cls_as_str(location_cls)
             for agent in agents:
                 setattr(agent, str_location_cls, None)
+                setattr(agent, str_location_cls + "_index", None)
+                setattr(agent, str_location_cls + "_position", None)
+                setattr(agent, str_location_cls + "_head", None)
+                setattr(agent, str_location_cls + "_tail", None)
 
         locations = []
 
         # for each location class
         for location_cls in location_classes:
+            
+
             for agent in agents:
                 agent.TEMP_melt_location_weight = None
 
@@ -531,8 +537,11 @@ class Creator:
                 allow_nesting=True,
             )
 
+            group_count = 0
+
             # for each group split value
             for group_value in group_values:
+                
                 # get all agents with that value
                 group_value_affiliated_agents = self._get_group_value_affiliated_agents(
                     agents=affiliated_agents,
@@ -553,6 +562,8 @@ class Creator:
 
                 # for each group of agents
                 for i, group_list in enumerate(group_lists):
+                    group_count += 1
+
                     dummy_location = self._create_dummy_location(location_cls)
 
                     dummy_location.group_agents = group_list
@@ -588,8 +599,11 @@ class Creator:
                         subgroup_location.subgroup_id = j
                         subgroup_location.group_agents = group_list  # maybe delete later
 
+                        
+
                         # Assigning process:
                         for agent in subgroup_affiliated_agents:
+                            
                             subgroup_location.add_agent(agent)
 
                             weight = (
@@ -605,8 +619,29 @@ class Creator:
 
                             group_info_str = f"gv={subgroup_location.group_value},gid={subgroup_location.group_id}"
                             setattr(agent, str_location_cls, group_info_str)
+                            setattr(agent, str_location_cls + "_index", group_count - 1)
+                            setattr(agent, str_location_cls + "_position", group_list.index(agent))
+                            
+                            setattr(
+                                agent, 
+                                str_location_cls + "_head", 
+                                True if group_list.index(agent) == 0 else False,
+                                )
+                            setattr(
+                                agent, 
+                                str_location_cls + "_tail", 
+                                True if group_list.index(agent) == (len(group_list) - 1) else False,
+                                )
+
+
+                            #setattr(agent, str_location_cls + "_index", group_list.index(agent))
 
                         locations.append(subgroup_location)
+                    
+                    
+                    
+                    
+
 
         locations = popy.LocationList(
             model=self.model,
@@ -625,9 +660,9 @@ class Creator:
             if hasattr(agent, "TEMP_melt_location_weight"):
                 del agent.TEMP_melt_location_weight
 
-            for location_class in location_classes:
-                if hasattr(agent, utils._get_cls_as_str(location_class)):
-                    delattr(agent, utils._get_cls_as_str(location_class))
+            #for location_class in location_classes:
+            #    if hasattr(agent, utils._get_cls_as_str(location_class)):
+            #        delattr(agent, utils._get_cls_as_str(location_class))
 
         # delete temporary location attributes
         for location in locations:
