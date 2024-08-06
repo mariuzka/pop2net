@@ -598,22 +598,20 @@ def test_melt_1():
     creator = popy.Creator(model)
 
     class TestLocation(popy.MagicLocation):
-
         def melt(self):
             class TestMeltLocation0(popy.MeltLocation):
                 n_agents = 1
-                
+
                 def filter(self, agent):
                     return agent.opinion == 0
-            
+
             class TestMeltLocation1(popy.MeltLocation):
                 n_agents = 1
-                
+
                 def filter(self, agent):
                     return agent.opinion == 1
-        
-            return TestMeltLocation0, TestMeltLocation1
 
+            return TestMeltLocation0, TestMeltLocation1
 
     for _ in range(5):
         agent = popy.Agent(model)
@@ -638,24 +636,22 @@ def test_melt_2():
     creator = popy.Creator(model)
 
     class TestLocation(popy.MagicLocation):
-
         def melt(self):
             class TestMeltLocation0(popy.MeltLocation):
                 n_agents = 1
                 n_locations = 3
-                
+
                 def filter(self, agent):
                     return agent.opinion == 0
-            
+
             class TestMeltLocation1(popy.MeltLocation):
                 n_agents = 1
                 n_locations = 3
-                
+
                 def filter(self, agent):
                     return agent.opinion == 1
-        
-            return TestMeltLocation0, TestMeltLocation1
 
+            return TestMeltLocation0, TestMeltLocation1
 
     for _ in range(5):
         agent = popy.Agent(model)
@@ -683,18 +679,17 @@ def test_melt_3():
         def melt(self):
             class TestMeltLocation0(popy.MeltLocation):
                 n_agents = 1
-                
+
                 def filter(self, agent):
                     return agent.opinion == 0
-            
+
             class TestMeltLocation1(popy.MeltLocation):
                 n_agents = 1
-                
+
                 def filter(self, agent):
                     return agent.opinion == 1
-        
-            return TestMeltLocation0, TestMeltLocation1
 
+            return TestMeltLocation0, TestMeltLocation1
 
     for _ in range(5):
         agent = popy.Agent(model)
