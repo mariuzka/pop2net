@@ -455,7 +455,8 @@ class Creator:
             str_location_cls = utils._get_cls_as_str(location_cls)
             for agent in agents:
                 setattr(agent, str_location_cls, None)
-                setattr(agent, str_location_cls + "_index", None)
+                setattr(agent, str_location_cls + "_assigned", False)
+                setattr(agent, str_location_cls + "_id", None)
                 setattr(agent, str_location_cls + "_position", None)
                 setattr(agent, str_location_cls + "_head", None)
                 setattr(agent, str_location_cls + "_tail", None)
@@ -464,8 +465,6 @@ class Creator:
 
         # for each location class
         for location_cls in location_classes:
-            
-
             for agent in agents:
                 agent.TEMP_melt_location_weight = None
 
@@ -495,7 +494,6 @@ class Creator:
                 bridge_values = {dummy_location.bridge(agent) for agent in agents}
 
                 if len(bridge_values) > 1:
-                    
                     melt_list = []
 
                     # create one MeltLocation for each bridge_value
@@ -503,27 +501,25 @@ class Creator:
 
                         def filter(self, agent):
                             return dummy_location.bridge(agent) == self.bridge_value
-                        
+
                         dummy_melt_class = type(
-                                f"dummy_meltlocation{str(bridge_value)}",
-                                (popy.MeltLocation,),
-                                {
-                                    "filter": filter,
-                                    "n_agents": 1,
-                                    "bridge_value": bridge_value,
-                                    }
-                                )
-                        
+                            f"dummy_meltlocation{str(bridge_value)}",
+                            (popy.MeltLocation,),
+                            {
+                                "filter": filter,
+                                "n_agents": 1,
+                                "bridge_value": bridge_value,
+                            },
+                        )
+
                         melt_list.append(dummy_melt_class)
-                        
+
                     # set the created MeltLocations as return values of melt()
                     def melt(self):
                         return melt_list
-                    
+
                     location_cls.melt = melt
                     dummy_location = self._create_dummy_location(location_cls)
-
-            
 
             if not dummy_location.melt():
                 # get all agents that could be assigned to locations of this class
@@ -534,9 +530,8 @@ class Creator:
 
             else:
                 affiliated_agents = []
-              
+
                 for melt_location_cls in dummy_location.melt():
-                    
                     melt_dummy_location = self._create_dummy_location(melt_location_cls)
                     affiliated_agents.extend(
                         self._get_affiliated_agents(
@@ -556,7 +551,6 @@ class Creator:
 
             # for each group split value
             for group_value in group_values:
-                
                 # get all agents with that value
                 group_value_affiliated_agents = self._get_group_value_affiliated_agents(
                     agents=affiliated_agents,
@@ -614,11 +608,8 @@ class Creator:
                         subgroup_location.subgroup_id = j
                         subgroup_location.group_agents = group_list  # maybe delete later
 
-                        
-
                         # Assigning process:
                         for agent in subgroup_affiliated_agents:
-                            
                             subgroup_location.add_agent(agent)
 
                             weight = (
@@ -634,29 +625,21 @@ class Creator:
 
                             group_info_str = f"gv={subgroup_location.group_value},gid={subgroup_location.group_id}"
                             setattr(agent, str_location_cls, group_info_str)
-                            setattr(agent, str_location_cls + "_index", group_count - 1)
+                            setattr(agent, str_location_cls + "_assigned", True)
+                            setattr(agent, str_location_cls + "_id", group_count - 1)
                             setattr(agent, str_location_cls + "_position", group_list.index(agent))
-                            
                             setattr(
-                                agent, 
-                                str_location_cls + "_head", 
+                                agent,
+                                str_location_cls + "_head",
                                 True if group_list.index(agent) == 0 else False,
-                                )
+                            )
                             setattr(
-                                agent, 
-                                str_location_cls + "_tail", 
+                                agent,
+                                str_location_cls + "_tail",
                                 True if group_list.index(agent) == (len(group_list) - 1) else False,
-                                )
-
-
-                            #setattr(agent, str_location_cls + "_index", group_list.index(agent))
+                            )
 
                         locations.append(subgroup_location)
-                    
-                    
-                    
-                    
-
 
         locations = popy.LocationList(
             model=self.model,
@@ -675,7 +658,7 @@ class Creator:
             if hasattr(agent, "TEMP_melt_location_weight"):
                 del agent.TEMP_melt_location_weight
 
-            #for location_class in location_classes:
+            # for location_class in location_classes:
             #    if hasattr(agent, utils._get_cls_as_str(location_class)):
             #        delattr(agent, utils._get_cls_as_str(location_class))
 
