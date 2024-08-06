@@ -474,6 +474,21 @@ class Creator:
             # create location dummy in order to use the location's methods
             dummy_location = self._create_dummy_location(location_cls)
 
+            # If nxgraph is used do some checks
+            if dummy_location.nxgraph is not None:
+                if dummy_location.n_agents is not None:
+                    msg = """You cannot define location.n_agents if location.nxgraph is used. 
+                        It will be set to the number of nodes in location.nxgraph automatically."""
+                    warnings.warn(msg)
+                location_cls.n_agents = len(list(dummy_location.nxgraph.nodes))
+                dummy_location.n_agents = len(list(dummy_location.nxgraph.nodes))
+
+                if dummy_location.overcrowding is True:
+                    msg = """You cannot define location.overcrowding if location.nxgraph is used. 
+                        It will be set to `False` automatically."""
+                    warnings.warn(msg)
+                location_cls.overcrowding = False
+                dummy_location.n_agents = False
 
             # bridge
             if not dummy_location.melt():
