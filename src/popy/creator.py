@@ -1,9 +1,10 @@
 """Create a population for the simulation."""
+
 from __future__ import annotations
 
+import math
 import random
 import warnings
-import math
 
 import pandas as pd
 
@@ -11,6 +12,7 @@ import popy
 import popy.utils as utils
 
 from .exceptions import PopyException
+
 
 class Creator:
     """Creates and connects agents and locations."""
@@ -108,12 +110,12 @@ class Creator:
         return df_sample
 
     def create_agents(
-            self,
-            agent_class = popy.Agent,
-            agent_class_attr: None | str = None,
-            agent_class_dict: None | dict = None,
-            df: pd.DataFrame | None = None,
-            n: int | None = None,
+        self,
+        agent_class=popy.Agent,
+        agent_class_attr: None | str = None,
+        agent_class_dict: None | dict = None,
+        df: pd.DataFrame | None = None,
+        n: int | None = None,
     ) -> popy.AgentList:
         """Creates agents from a pandas DataFrame.
 
@@ -160,11 +162,9 @@ class Creator:
                 msg = "Either `df` or `n` must be not None."
                 raise Exception(msg)
 
-
         agents = popy.AgentList(model=self.model, objs=agents)
 
         return agents
-
 
     def _get_affiliated_agents(self, agents, dummy_location) -> list:
         return [agent for agent in agents if dummy_location.filter(agent)]
@@ -195,14 +195,12 @@ class Creator:
 
             return "-".join([str(mother_location.group_value), str(mother_location.group_id)])
 
-
     def _get_split_values(
-            self,
-            agents: list,
-            dummy_location,
-            allow_nesting: bool = False,
+        self,
+        agents: list,
+        dummy_location,
+        allow_nesting: bool = False,
     ) -> list[int | str]:
-
         all_values = []
         for agent in agents:
             agent_values = utils.make_it_a_list_if_it_is_no_list(dummy_location.split(agent))
@@ -231,7 +229,6 @@ class Creator:
         else:
             return stick_value
 
-
     def _get_groups(self, agents, location_cls) -> list[list]:
         overcrowding_i = 0
 
@@ -243,7 +240,7 @@ class Creator:
         if dummy_location.n_locations is None and dummy_location.n_agents is None:
             n_location_groups = 1
             groups: list[list] = [[]]
-        
+
         elif dummy_location.n_locations is None and dummy_location.n_agents is not None:
             if dummy_location.overcrowding is None:
                 round_function = round
@@ -256,37 +253,37 @@ class Creator:
                 raise Exception
 
             n_location_groups = max(
-                round_function(len(agents) / dummy_location.n_agents), 
+                round_function(len(agents) / dummy_location.n_agents),
                 1,
-                )
+            )
             groups: list[list] = [[]]
-        
+
         elif dummy_location.n_locations is not None and dummy_location.n_agents is None:
             n_location_groups = dummy_location.n_locations
-            location_cls.n_agents =  max(
-                math.floor(len(agents) / n_location_groups), 
+            location_cls.n_agents = max(
+                math.floor(len(agents) / n_location_groups),
                 1,
-                )
+            )
             groups: list[list] = [[] for _ in range(n_location_groups)]
-            
+
         elif dummy_location.n_locations is not None and dummy_location.n_agents is not None:
             n_location_groups = dummy_location.n_locations
             n_location_groups_is_fixed = True
             groups: list[list] = [[]]
-        
+
         else:
-            #TODO:
+            # TODO:
             raise Exception
 
-
         stick_values = {self._get_stick_value(agent, dummy_location) for agent in agents}
-        
+
         dummy_location = self._create_dummy_location(location_cls)
 
         # for each group of sticky agents
         for stick_value in stick_values:
             sticky_agents = [
-                agent for agent in agents
+                agent
+                for agent in agents
                 if self._get_stick_value(agent, dummy_location) == stick_value
             ]
 
@@ -294,9 +291,8 @@ class Creator:
 
             for _, group in enumerate(groups):
                 # if there are still enough free places available
-                if (
-                    dummy_location.n_agents is None
-                    or (dummy_location.n_agents - len(group)) >= len(sticky_agents)
+                if dummy_location.n_agents is None or (dummy_location.n_agents - len(group)) >= len(
+                    sticky_agents,
                 ):
                     if sum(
                         [dummy_location.find(agent) for agent in sticky_agents],
@@ -319,35 +315,30 @@ class Creator:
                         dummy_location.add_agent(agent)
 
                     groups.append(new_group)
-                
+
                 else:
                     if not dummy_location.only_exact_n_agents and not n_location_groups_is_fixed:
                         for agent in sticky_agents:
                             groups[overcrowding_i].append(agent)
                         overcrowding_i = (overcrowding_i + 1) % len(groups)
 
-
         if dummy_location.only_exact_n_agents:
             groups = [group for group in groups if len(group) == dummy_location.n_agents]
 
         return groups
 
-
     def _get_group_value_affiliated_agents(
-            self,
-            agents: list,
-            group_value: int | str,
+        self,
+        agents: list,
+        group_value: int | str,
     ) -> list:
         group_affiliated_agents = [
-            agent for agent in agents
-            if group_value in agent._TEMP_group_values
+            agent for agent in agents if group_value in agent._TEMP_group_values
         ]
-        
+
         return group_affiliated_agents
 
-
     def _get_melted_groups(self, agents: list, location_cls) -> list[list]:
-
         dummy_location = self._create_dummy_location(location_cls)
 
         # get all mother locations the agents are nested in
@@ -357,26 +348,26 @@ class Creator:
 
         # for each mother location
         for mother_group_id in all_mother_group_ids:
-
             # get agents that are part of this location
             nested_agents = [
-                agent for agent in agents
+                agent
+                for agent in agents
                 if self._get_mother_group_id(agent, dummy_location) == mother_group_id
             ]
 
             # a list that stores a list of groups for each location
-            #[
-            #[[_agent], [_agent], [_agent]], # groups of location 1
-            #[[_agent], [_agent]],           # groups of location 2
-            #]
+            # [
+            # [[_agent], [_agent], [_agent]], # groups of location 1
+            # [[_agent], [_agent]],           # groups of location 2
+            # ]
             groups_to_melt_by_location: list[list[list]] = []
 
-
             # for each location that shall be melted
-            for location_cls in dummy_location.melt():
-
+            for melt_location_cls in dummy_location.melt():
                 # create dummy location
-                melt_dummy_location = self._create_dummy_location(location_cls)
+                melt_dummy_location = self._create_dummy_location(melt_location_cls)
+                if melt_location_cls.n_locations is None:
+                    melt_location_cls.n_locations = location_cls.n_locations
 
                 # get all agents that should be assigned to this location
                 # filter by melt_location
@@ -410,10 +401,10 @@ class Creator:
                     location_groups_to_melt.extend(
                         self._get_groups(
                             agents=melt_group_value_affiliated_agents,
-                            location_cls=location_cls,
+                            location_cls=melt_location_cls,
                         ),
                     )
-                
+
                 groups_to_melt_by_location.append(location_groups_to_melt)
 
             # Melt groups
@@ -452,20 +443,23 @@ class Creator:
         Returns:
             popy.LocationList: A list of locations.
         """
-
         if agents is None:
             agents = self.model.agents
 
         self._dummy_model = popy.Model()
-        #self._dummy_model.agents = agents
+        # self._dummy_model.agents = agents
         for agent in agents:
             self._dummy_model.add_agent(agent)
 
         for location_cls in location_classes:
-
             str_location_cls = utils._get_cls_as_str(location_cls)
             for agent in agents:
                 setattr(agent, str_location_cls, None)
+                setattr(agent, str_location_cls + "_assigned", False)
+                setattr(agent, str_location_cls + "_id", None)
+                setattr(agent, str_location_cls + "_position", None)
+                setattr(agent, str_location_cls + "_head", None)
+                setattr(agent, str_location_cls + "_tail", None)
 
         locations = []
 
@@ -479,6 +473,54 @@ class Creator:
             # create location dummy in order to use the location's methods
             dummy_location = self._create_dummy_location(location_cls)
 
+            # If nxgraph is used do some checks
+            if dummy_location.nxgraph is not None:
+                if dummy_location.n_agents is not None:
+                    msg = """You cannot define location.n_agents if location.nxgraph is used. 
+                        It will be set to the number of nodes in location.nxgraph automatically."""
+                    warnings.warn(msg)
+                location_cls.n_agents = len(list(dummy_location.nxgraph.nodes))
+                dummy_location.n_agents = len(list(dummy_location.nxgraph.nodes))
+
+                if dummy_location.overcrowding is True:
+                    msg = """You cannot define location.overcrowding if location.nxgraph is used. 
+                        It will be set to `False` automatically."""
+                    warnings.warn(msg)
+                location_cls.overcrowding = False
+                dummy_location.n_agents = False
+
+            # bridge
+            if not dummy_location.melt():
+                bridge_values = {dummy_location.bridge(agent) for agent in agents}
+
+                if len(bridge_values) > 1:
+                    melt_list = []
+
+                    # create one MeltLocation for each bridge_value
+                    for bridge_value in bridge_values:
+
+                        def filter(self, agent):
+                            return dummy_location.bridge(agent) == self.bridge_value
+
+                        dummy_melt_class = type(
+                            f"dummy_meltlocation{str(bridge_value)}",
+                            (popy.MeltLocation,),
+                            {
+                                "filter": filter,
+                                "n_agents": 1,
+                                "bridge_value": bridge_value,
+                            },
+                        )
+
+                        melt_list.append(dummy_melt_class)
+
+                    # set the created MeltLocations as return values of melt()
+                    def melt(self):
+                        return melt_list
+
+                    location_cls.melt = melt
+                    dummy_location = self._create_dummy_location(location_cls)
+
             if not dummy_location.melt():
                 # get all agents that could be assigned to locations of this class
                 affiliated_agents = self._get_affiliated_agents(
@@ -488,6 +530,7 @@ class Creator:
 
             else:
                 affiliated_agents = []
+
                 for melt_location_cls in dummy_location.melt():
                     melt_dummy_location = self._create_dummy_location(melt_location_cls)
                     affiliated_agents.extend(
@@ -503,6 +546,8 @@ class Creator:
                 dummy_location=dummy_location,
                 allow_nesting=True,
             )
+
+            group_count = 0
 
             # for each group split value
             for group_value in group_values:
@@ -526,6 +571,8 @@ class Creator:
 
                 # for each group of agents
                 for i, group_list in enumerate(group_lists):
+                    group_count += 1
+
                     dummy_location = self._create_dummy_location(location_cls)
 
                     dummy_location.group_agents = group_list
@@ -534,17 +581,17 @@ class Creator:
                     subgroup_values = {
                         agent_subgroup_value
                         for agent in group_list
-                        for agent_subgroup_value
-                        in utils.make_it_a_list_if_it_is_no_list(dummy_location._subsplit(agent))
+                        for agent_subgroup_value in utils.make_it_a_list_if_it_is_no_list(
+                            dummy_location._subsplit(agent),
+                        )
                     }
 
                     # for each group of agents assigned to a specific sublocation
                     for j, subgroup_value in enumerate(subgroup_values):
-
                         # get all subgroup affiliated agents
                         subgroup_affiliated_agents = []
 
-                        #for agent in group_affiliated_agents:
+                        # for agent in group_affiliated_agents:
                         for agent in group_list:
                             agent_subgroup_value = utils.make_it_a_list_if_it_is_no_list(
                                 dummy_location._subsplit(agent),
@@ -559,7 +606,7 @@ class Creator:
                         subgroup_location.subgroup_value = subgroup_value
                         subgroup_location.group_id = i
                         subgroup_location.subgroup_id = j
-                        subgroup_location.group_agents = group_list # maybe delete later
+                        subgroup_location.group_agents = group_list  # maybe delete later
 
                         # Assigning process:
                         for agent in subgroup_affiliated_agents:
@@ -576,10 +623,21 @@ class Creator:
                                 weight=weight,
                             )
 
-                            group_info_str = (
-                            f"gv={subgroup_location.group_value},gid={subgroup_location.group_id}"
-                            )
+                            group_info_str = f"gv={subgroup_location.group_value},gid={subgroup_location.group_id}"
                             setattr(agent, str_location_cls, group_info_str)
+                            setattr(agent, str_location_cls + "_assigned", True)
+                            setattr(agent, str_location_cls + "_id", group_count - 1)
+                            setattr(agent, str_location_cls + "_position", group_list.index(agent))
+                            setattr(
+                                agent,
+                                str_location_cls + "_head",
+                                True if group_list.index(agent) == 0 else False,
+                            )
+                            setattr(
+                                agent,
+                                str_location_cls + "_tail",
+                                True if group_list.index(agent) == (len(group_list) - 1) else False,
+                            )
 
                         locations.append(subgroup_location)
 
@@ -599,10 +657,10 @@ class Creator:
 
             if hasattr(agent, "TEMP_melt_location_weight"):
                 del agent.TEMP_melt_location_weight
-            
-            for location_class in location_classes:
-                if hasattr(agent, utils._get_cls_as_str(location_class)):
-                    delattr(agent, utils._get_cls_as_str(location_class))
+
+            # for location_class in location_classes:
+            #    if hasattr(agent, utils._get_cls_as_str(location_class)):
+            #        delattr(agent, utils._get_cls_as_str(location_class))
 
         # delete temporary location attributes
         for location in locations:
@@ -610,12 +668,11 @@ class Creator:
 
         return locations
 
-
-    def make(
+    def create(
         self,
         df: pd.DataFrame,
         location_classes: list,
-        agent_class: type[popy.Agent]=popy.Agent,
+        agent_class: type[popy.Agent] = popy.Agent,
         agent_class_attr: None | str = None,
         agent_class_dict: None | dict = None,
         n_agents: int | None = None,
@@ -673,11 +730,10 @@ class Creator:
 
         return agents, locations
 
-
     def get_df_agents(
-            self,
-            columns: None | list[str] = None,
-            drop_agentpy_columns: bool =True,
+        self,
+        columns: None | list[str] = None,
+        drop_agentpy_columns: bool = True,
     ) -> pd.DataFrame:
         """Returns the latest created population of agents as a dataframe.
 
@@ -701,17 +757,17 @@ class Creator:
 
         if drop_agentpy_columns:
             df = df.drop(
-            columns=[
-                "_var_ignore",
-                "id",
-                "type",
-                "log",
-                "model",
-                "p",
-            ],
+                columns=[
+                    "_var_ignore",
+                    "id",
+                    "type",
+                    "log",
+                    "model",
+                    "p",
+                ],
             )
 
         if columns is not None:
-            df = df.loc[:,columns]
+            df = df.loc[:, columns]
 
         return df

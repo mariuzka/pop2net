@@ -4,6 +4,7 @@ from popy.agent import Agent
 from popy.location import Location
 import pytest
 
+
 class Model(popy.Model):
     pass
 

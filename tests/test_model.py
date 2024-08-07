@@ -4,6 +4,7 @@ import popy
 from popy import utils
 import pytest
 
+
 def test_model():
     class HealthyAgent(popy.Agent):
         def setup(self):

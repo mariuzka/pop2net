@@ -1,16 +1,13 @@
 """Helper class to provide fake SOEP data based on the fakers package."""
 
 from typing import Any
-from typing import Dict
-from typing import List
 from typing import Literal
-from typing import Set
-from typing import Tuple
 
 from faker.providers import BaseProvider
 import numpy as np
 
 from . import constants as c
+
 
 class SOEPProvider(BaseProvider):
     """Create Fake Data that is as close to the SOEP as possible.
@@ -33,7 +30,7 @@ class SOEPProvider(BaseProvider):
         self.hh_size_dist = lambda: self.rng.poisson(lam=c.HH_SIZE["lam"])
         self.hh_n_children_dist = lambda: self._multinomial_select(c.HH_N_CHILDREN)
         self.hh_cur = 0
-        self.used_hhids: Set[int] = set()
+        self.used_hhids: set[int] = set()
 
         # For age
         self.age_child_dist = lambda: self.rng.normal(
@@ -63,7 +60,7 @@ class SOEPProvider(BaseProvider):
         # type of work
         self.nace2_dist = lambda: self._multinomial_select(c.NACE2_DIVISIONS)
 
-    def _multinomial_select(self, dist: Dict):
+    def _multinomial_select(self, dist: dict):
         pvals = list(dist.values())
         labels = dict(enumerate(dist.keys()))
 
@@ -82,7 +79,7 @@ class SOEPProvider(BaseProvider):
                 msg = "Could not find new hhid after 1000 iterations!"
                 raise ValueError(msg)
 
-    def household(self) -> Tuple[int, str, int, int]:
+    def household(self) -> tuple[int, str, int, int]:
         """Create correlated fake numbers on household level.
 
         Returns:
@@ -125,7 +122,7 @@ class SOEPProvider(BaseProvider):
         }
         return case
 
-    def household_persons(self) -> List[Dict]:
+    def household_persons(self) -> list[dict]:
         """Create a household full of simulated persons.
 
         Returns:

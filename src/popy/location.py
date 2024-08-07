@@ -1,7 +1,6 @@
 """Base class to create Location objects."""
-from __future__ import annotations
 
-import math
+from __future__ import annotations
 
 from agentpy.objects import Object
 from agentpy.sequences import AgentList
@@ -11,6 +10,7 @@ import popy.utils as utils
 
 from . import agent as _agent
 from . import model as _model
+
 
 class Location(Object):
     """Base class for location objects."""
@@ -33,7 +33,6 @@ class Location(Object):
             List of agents at this location.
         """
         return self.model.agents_of_location(self)
-
 
     def add_agent(self, agent: _agent.Agent) -> None:
         """Assigns the given agent to this location.
@@ -127,6 +126,7 @@ class Location(Object):
 
 class MagicLocation(Location):
     """Helper class to create locations from inside the Creator."""
+
     n_agents: int | None = None
     overcrowding: bool = None
     only_exact_n_agents: bool = False
@@ -134,7 +134,6 @@ class MagicLocation(Location):
     static_weight: bool = False
     recycle: bool = True
     nxgraph: nx.Graph | None = None
-    
 
     def __init__(self, model: _model.Model) -> None:
         """Create a helper class to create locations.
@@ -168,6 +167,20 @@ class MagicLocation(Location):
             True if the agent is allowed to join the location, False otherwise.
         """
         return True
+
+    def bridge(self, agent: _agent.Agent) -> float | str | list | None:  # noqa: ARG002
+        """Create locations with one agent for each unique value returned.
+
+        Cannot be used in combination with melt().
+
+        Args:
+            agent (_agent.Agent): The agent that is currently processed by the Creator.
+
+        Returns:
+            float | str | list | None: The value which is used to assign agents
+                to location instances.
+        """
+        return None
 
     def split(self, agent: _agent.Agent) -> float | str | list | None:  # noqa: ARG002
         """Creates seperate location instances for each unique returned value.
@@ -233,7 +246,7 @@ class MagicLocation(Location):
         """An action that is performed after all location instances have been created."""
         pass
 
-    def find(self, agent: _agent.Agent) -> bool: # noqa: ARG002
+    def find(self, agent: _agent.Agent) -> bool:  # noqa: ARG002
         """Assigns the agent to a specific location instance that meets the requirements.
 
         Args:
@@ -250,14 +263,14 @@ class MagicLocation(Location):
         Args:
             agent: The agent to be updated.
         """
-        self.model.g[agent.id][self.id]["weight"] = self.weight(agent)
+        self.set_weight(agent, self.weight(agent))
 
     def _update_weights(self) -> None:
         """Update the weight of every agent on this location."""
         for agent_ in self.agents:
-            self.update_weight(agent_)
+            self._update_weight(agent_)
 
-    def _subsplit(self, agent: _agent.Agent) -> str | float | list | None: # noqa: ARG002
+    def _subsplit(self, agent: _agent.Agent) -> str | float | list | None:  # noqa: ARG002
         """Splits a location instance into sub-instances to create a certain network structure.
 
         Args:
@@ -269,21 +282,28 @@ class MagicLocation(Location):
         if self.nxgraph is None:
             return None
         else:
-            pos = self.group_agents.index(agent)
-            return [
-                utils._join_positions(pos1=pos, pos2=neighbor)
-                for neighbor
-                in self.nxgraph.neighbors(pos)
-            ]
+            node_indices = list(self.nxgraph.nodes)
+            agent_pos = self.group_agents.index(agent)
+
+            if agent_pos <= len(node_indices) - 1:
+                node_index = node_indices[agent_pos]
+
+                return [
+                    utils._join_positions(pos1=node_index, pos2=neighbor)
+                    for neighbor in self.nxgraph.neighbors(node_index)
+                ]
+
+            else:
+                return None
 
 
 class MeltLocation(Location):
     """Helper class to melt locations."""
+
     n_agents: int | None = None
     overcrowding: bool | None = None
     only_exact_n_agents: bool = False
     n_locations: int | None = None
-
 
     def filter(self, agent: _agent.Agent) -> bool:  # noqa: ARG002
         """Check whether the agent is meant to join this type of location.
@@ -322,7 +342,7 @@ class MeltLocation(Location):
                 the agent is assigned.
         """
         return None
-    
+
     def weight(self, agent: _agent.Agent) -> float | None:  # noqa: ARG002
         """Defines the edge weight between the agent and the location instance.
 
@@ -338,7 +358,7 @@ class MeltLocation(Location):
         """
         return None
 
-    def find(self, agent: _agent.Agent) -> bool: # noqa: ARG002
+    def find(self, agent: _agent.Agent) -> bool:  # noqa: ARG002
         """Assigns the agent to a specific location instance that meets the requirements.
 
         Args:

@@ -2,6 +2,7 @@ import pandas as pd
 import popy
 import pytest
 
+
 @pytest.fixture()
 def model():
     return popy.Model()
@@ -36,12 +37,12 @@ def test_agent_locations(model):
     location1 = popy.Location(model)
     location2 = popy.Location(model)
 
-    agent.enter_location(location1)
+    agent.add_location(location1)
 
     exp = popy.LocationList(model, [location1])
     assert agent.locations == exp
 
-    agent.enter_location(location2)
+    agent.add_location(location2)
     exp = popy.LocationList(model, [location1, location2])
     assert agent.locations == exp
 
@@ -53,7 +54,7 @@ def test_agent_located_at_single_location(model):
         def setup(self):
             popy.AgentList(self, 1, popy.Agent)
             popy.LocationList(self, 2, popy.Location)
-            self.agents[0].enter_location(self.locations[0])
+            self.agents[0].add_location(self.locations[0])
 
     model = Model(parameters={"steps": 1})
     model.run()
@@ -66,8 +67,8 @@ def test_agent_visits_two_locations(model):
         def setup(self):
             popy.AgentList(self, 1, popy.Agent)
             popy.LocationList(self, 2, popy.Location)
-            self.agents[0].enter_location(self.locations[0])
-            self.agents[0].enter_location(self.locations[1])
+            self.agents[0].add_location(self.locations[0])
+            self.agents[0].add_location(self.locations[1])
 
     model = Model(parameters={"steps": 1})
     model.run()
@@ -112,11 +113,11 @@ def test_color_agents():
         def change_location(self):
             for location in self.locations:
                 if location.color != self.color:
-                    self.leave_location(location)
+                    self.remove_location(location)
 
             for location in self.model.locations:
                 if location.color == self.color and location not in self.locations:
-                    self.enter_location(location)
+                    self.add_location(location)
                     return
 
             if self.color not in [location.color for location in self.model.locations]:
@@ -142,9 +143,6 @@ def test_color_agents():
             assert len(self.locations[0].agents) == 3
             assert len(self.locations[1].agents) == 3
 
-            # self.inspector = NetworkInspector(self)
-            # self.inspector.plot_agent_network(node_attrs=["color"], node_color="color")
-
         def step(self):
             self.agents.change_location()
 
@@ -154,7 +152,6 @@ def test_color_agents():
             assert len(self.locations[0].agents) == 2
             assert len(self.locations[1].agents) == 3
             assert len(self.locations[2].agents) == 1
-            # self.inspector.plot_agent_network(node_attrs=["color"], node_color="color")
 
 
 def test_chef_agents():
@@ -167,7 +164,6 @@ def test_chef_agents():
         def assert_(self):
             assert len(self.agents) == 4
 
-
     class Home(popy.MagicLocation):
         def split(self, agent):
             return agent.couple
@@ -177,7 +173,6 @@ def test_chef_agents():
 
         def assert_(self):
             assert len({a.couple for a in self.agents}) == 1
-
 
     class Restaurant(popy.MagicLocation):
         def setup(self):
@@ -207,7 +202,6 @@ def test_chef_agents():
                 == 1
             )
 
-
     class Chef(popy.Agent):
         def assert_(self):
             assert len(self.locations) == 1
@@ -217,7 +211,6 @@ def test_chef_agents():
                 len([1 for a in self.locations[0].neighbors(self) if self.get_agent_weight(a) != 2])
                 == 0
             )
-
 
     class MyAgent(popy.Agent):
         def assert_(self):
@@ -235,7 +228,6 @@ def test_chef_agents():
                 self.locations.select(self.locations.type == "Town")[0]
                 is self.shared_locations(couple_agent, location_classes=[Town])[0]
             )
-
 
     df = pd.DataFrame(
         {
@@ -282,11 +274,9 @@ def test_table_agents():
         },
     )
 
-
     df = creator.draw_sample(df=df, n=20)
 
     creator.create_agents(df=df)
-
 
     class Table(popy.MagicLocation):
         recycle = True
@@ -320,7 +310,6 @@ def test_table_agents():
         def weight(self, agent):
             return 5
 
-
     class Restaurant(popy.MagicLocation):
         n_agents = 10
 
@@ -329,7 +318,6 @@ def test_table_agents():
 
         # def filter(self, agent):
         #    return agent.Table
-
 
     creator.create_locations(
         location_classes=[

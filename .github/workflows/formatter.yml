@@ -1,0 +1,31 @@
+name: Code Formatting
+
+on:
+  push:
+    branches:
+      - main
+      - dev
+  pull_request:
+    types: [opened, reopened]
+    branches:
+      - main
+      - dev
+
+jobs:
+  format:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check out repository
+      uses: actions/checkout@v4
+    - name: Run Ruff Linter
+      uses: chartboost/ruff-action@v1
+      with:
+        args: 'check --extend-select F401 --no-unsafe-fixes --exit-zero'
+    - name: Run Ruff Formatter
+      uses: chartboost/ruff-action@v1
+      with:
+        args: 'format'
+    - name: Auto commit
+      uses: stefanzweifel/git-auto-commit-action@v4
+      with:
+        commit_message: 'auto-commit: fixes by ruff'

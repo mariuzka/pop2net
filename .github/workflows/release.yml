@@ -1,0 +1,94 @@
+name: Release New Version
+
+on:
+  workflow_dispatch:
+    inputs:
+      version_increase:
+        description: "Increase Version Number By"
+        required: true
+        default: "prerelease"
+        type: choice
+        options:
+        - "prerelease"
+        - "patch"
+        - "minor"
+        - "major"
+
+
+jobs:
+  test:
+    uses: ./.github/workflows/tox.yml
+  build_docs:
+    uses: ./.github/workflows/docs_pages.yml
+  release:
+    name: Release
+    needs: [test, build_docs]
+    runs-on: ubuntu-latest
+    steps:
+      # Set up environment
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Enable Poetry
+        uses: abatilo/actions-poetry@v2
+      # Increase Version
+      - name: Increase Version
+        id: increase-version
+        run: |
+          poetry version ${{ inputs.version_increase }}
+          echo version=$(poetry version --short) >> $GITHUB_OUTPUT
+      - name: Check Version
+        id: check-version
+        run: |
+          if [[ ${{ steps.increase-version.outputs.version }} =~ [a-zA-Z] ]]; then echo "prerelease=true" >> "$GITHUB_OUTPUT"; else echo "prerelease=false" >> "$GITHUB_OUTPUT"; fi
+          echo "IS PRERELEASE $GITHUB_OUTPUT"
+      # Create and merge PR to increase version in main
+      - name: Create Pull Request
+        id: create-pr
+        uses: peter-evans/create-pull-request@v6
+        with:
+          base: main
+          branch: gh-action/bump-version
+          title: bump version ${{ inputs.version_increase }} to ${{ steps.increase-version.outputs.version }}
+          delete-branch: true
+          commit-message: bump version to ${{ steps.increase-version.outputs.version }}
+      - name: Merge PR
+        uses: juliangruber/merge-pull-request-action@v1
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          number: ${{ steps.create-pr.outputs.pull-request-number }}
+          method: merge
+          repo: luerhard/bokehgraph
+      # Pull to refresh and build
+      - run: git pull
+      - name: Build Project
+        run: poetry build
+      # Actually release
+      - name: Create Release
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: "dist/*"
+          token: ${{ secrets.GITHUB_TOKEN }}
+          tag: ${{ steps.increase-version.outputs.version }}
+          draft: false
+          generateReleaseNotes: true
+          prerelease: ${{ steps.check-version.outputs.prerelease }}
+        # -------------------------------------------------------------
+        # if you want to test on test-pipy use these commands instead
+        # poetry config repositories.test-pypi https://test.pypi.org/legacy/
+        # poetry config pypi-token.test-pypi ${{ secrets.TESTPYPI_TOKEN }}
+        # poetry publish -r test-pypi
+        # -------------------------------------------------------------
+      - name: Publish to PyPI
+        if: steps.check-version.outputs.prerelease == 'false'
+        env:
+          POETRY_PYPI_TOKEN_PYPI: ${{ secrets.PYPI_TOKEN }}
+        run: poetry publish
+      # merge main to dev to have up-to-date version number there
+      - name: Merge main to dev
+        uses: devmasx/merge-branch@master
+        with:
+          type: now
+          from_branch: main
+          target_branch: dev
+          message: merge main to dev
+          github_token: ${{ secrets.GITHUB_TOKEN }}
