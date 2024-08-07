@@ -263,12 +263,12 @@ class MagicLocation(Location):
         Args:
             agent: The agent to be updated.
         """
-        self.model.g[agent.id][self.id]["weight"] = self.weight(agent)
+        self.set_weight(agent, self.weight(agent))
 
     def _update_weights(self) -> None:
         """Update the weight of every agent on this location."""
         for agent_ in self.agents:
-            self.update_weight(agent_)
+            self._update_weight(agent_)
 
     def _subsplit(self, agent: _agent.Agent) -> str | float | list | None:  # noqa: ARG002
         """Splits a location instance into sub-instances to create a certain network structure.
