@@ -40,6 +40,12 @@ class Model(ap.Model):
         """Do 1 step in the simulation."""
         self.t += 1
 
+        # TODO: Rethink the following:
+        for location in self.locations:
+            if hasattr(location, "static_weight") and hasattr(location, "_update_weights"):
+                if not location.static_weight:
+                    location._update_weights()
+
         self.step()
         self.update()
 
