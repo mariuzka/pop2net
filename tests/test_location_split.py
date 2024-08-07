@@ -4,7 +4,7 @@ import pandas as pd
 import popy
 
 
-def test_1(
+def test_1():
     df = pd.DataFrame(
         {
             "status": ["A", "B", "B", "A", "B", "C"],
