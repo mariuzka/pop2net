@@ -668,7 +668,7 @@ class Creator:
 
         return locations
 
-    def make(
+    def create(
         self,
         df: pd.DataFrame,
         location_classes: list,
