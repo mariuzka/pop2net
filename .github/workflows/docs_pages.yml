@@ -65,7 +65,6 @@ jobs:
       # deploy to gh-pages
       #----------------------------------------------
       - name: Deploy documentation
-        if: ${{ github.event_name == 'push' }}
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           branch: gh-pages
