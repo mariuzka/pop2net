@@ -24,7 +24,7 @@ def test_1():
     assert len(model.locations) == 3
     assert len(model.agents) == 6
     for location in model.locations:
-        if len(location.agents) == "A":
+        if location.agents[0].status == "A":
             assert len(location.agents) == 2
             assert all(agent.status == "A" for agent in location.agents)
         if location.agents[0].status == "B":
