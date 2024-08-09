@@ -21,11 +21,10 @@ def test_1():
 
 # all in one location
 def test_2():
-
     model = popy.Model()
     creator = popy.Creator(model)
     inspector = popy.NetworkInspector(model)
-    
+
     class Max(popy.Agent):
         pass
 
@@ -38,10 +37,10 @@ def test_2():
     class WebexMeeting(popy.MagicLocation):
         pass
 
-    _max = creator.create_agents(agent_class=Max, n = 1)[0]
-    _marius = creator.create_agents(agent_class=Marius, n = 1)[0]
-    _lukas = creator.create_agents(agent_class=Lukas, n = 1)[0]
-    creator.create_locations(location_classes = [WebexMeeting])
+    _max = creator.create_agents(agent_class=Max, n=1)[0]
+    _marius = creator.create_agents(agent_class=Marius, n=1)[0]
+    _lukas = creator.create_agents(agent_class=Lukas, n=1)[0]
+    creator.create_locations(location_classes=[WebexMeeting])
     # TODO soll das drinnen bleiben?
     inspector.plot_bipartite_network()
 
@@ -57,7 +56,6 @@ def test_2():
 
 # two Locations
 def test_3():
-
     model = popy.Model()
     creator = popy.Creator(model)
     inspector = popy.NetworkInspector(model)
@@ -73,24 +71,22 @@ def test_3():
 
     class Meeting1(popy.MagicLocation):
         def filter(self, agent):
-            return (agent.type in  ["Max", "Marius"])
+            return agent.type in ["Max", "Marius"]
 
     class Meeting2(popy.MagicLocation):
         def filter(self, agent):
-            return (agent.type in ["Marius", "Lukas"])
-    
-    
+            return agent.type in ["Marius", "Lukas"]
 
-    _max = creator.create_agents(agent_class=Max, n = 1)
-    _marius = creator.create_agents(agent_class=Marius, n = 1)
-    _lukas = creator.create_agents(agent_class=Lukas, n = 1)
-    creator.create_locations(location_classes = [Meeting1, Meeting2])
+    _max = creator.create_agents(agent_class=Max, n=1)
+    _marius = creator.create_agents(agent_class=Marius, n=1)
+    _lukas = creator.create_agents(agent_class=Lukas, n=1)
+    creator.create_locations(location_classes=[Meeting1, Meeting2])
     # TODO soll das drinnen bleiben?
     inspector.plot_bipartite_network()
 
     assert len(model.locations) == 2
     assert len(model.agents) == 3
-    assert _max.neighbors(location_classes = [Meeting1])[0][0].type == "Marius"
-    assert _marius.neighbors(location_classes = [Meeting1])[0][0].type == "Max"
-    assert _marius.neighbors(location_classes = [Meeting2])[0][0].type == "Lukas"
-    assert _lukas.neighbors(location_classes = [Meeting2])[0][0].type == "Marius"
+    assert _max.neighbors(location_classes=[Meeting1])[0][0].type == "Marius"
+    assert _marius.neighbors(location_classes=[Meeting1])[0][0].type == "Max"
+    assert _marius.neighbors(location_classes=[Meeting2])[0][0].type == "Lukas"
+    assert _lukas.neighbors(location_classes=[Meeting2])[0][0].type == "Marius"
