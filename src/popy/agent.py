@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import typing
+import warnings
 
 import agentpy as ap
 
@@ -155,12 +156,35 @@ class Agent(ap.Agent):
             agent=neighbor,
             location_classes=location_classes,
         )
+
         for location in shared_locations:
+            warn = False
+            for agent in location.agents:
+                if agent not in [self, neighbor]:
+                    warn = True
+                    break
+
             if remove_self:
                 location.remove_agent(self)
+
+                if warn:
+                    msg = (
+                        "There are other agents at the location from which you have removed agents."
+                    )
+                    warnings.warn(msg)
 
             if remove_neighbor:
                 location.remove_agent(neighbor)
 
+                if warn:
+                    msg = (
+                        "There are other agents at the location from which you have removed agents."
+                    )
+                    warnings.warn(msg)
+
             if remove_locations:
                 self.model.remove_location(location)
+
+                if warn:
+                    msg = "You have removed a location to which other agents were still connected."
+                    warnings.warn(msg)
