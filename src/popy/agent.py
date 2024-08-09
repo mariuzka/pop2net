@@ -115,3 +115,52 @@ class Agent(ap.Agent):
 
     def get_location_weight(self, location) -> float:
         return self.model.get_weight(agent=self, location=location)
+
+    def connect(self, agent: Agent, location_cls: type):
+        """Connects this agent with a given other agent via an instance of a given location class.
+
+        Args:
+            agents (list): An agent to connect with.
+            location_cls (type): The location class that is used to create a location instance.
+        """
+        self.model.connect_agents(agents=[self, agent], location_cls=location_cls)
+
+    def disconnect(
+        self,
+        neighbor: Agent,
+        location_classes: list | None = None,
+        remove_self=True,
+        remove_neighbor=True,
+        remove_locations: bool = False,
+    ):
+        """Disconnects this agent from a given other agent by removing them from shared locations.
+
+        If a list of location types is given, only shared locations of the given types are
+        considered. Turn on `remove_locations` in order to not only remove the agents from the
+        given location instance but also to remove the location instance from the model.  Keep in
+        mind that this may affect other agents that are still connected with the location instance.
+
+        Args:
+            neighbor (Agent): An agent to disconnect from.
+            location_classes (list | None, optional): A list of location types to specify which
+            shared locations are considered. Defaults to None.
+            remove_self (bool): Should the agent be removed from the shared locations?
+                Defaults to True.
+            remove_neighbor (bool): Should the neighbor be removed from the shared locations?
+                Defaults to True.
+            remove_locations (bool, optional): A bool that determines whether the shared locations
+                shall be removed from the model. Defaults to False.
+        """
+        shared_locations = self.shared_locations(
+            agent=neighbor,
+            location_classes=location_classes,
+        )
+        for location in shared_locations:
+            if remove_self:
+                location.remove_agent(self)
+
+            if remove_neighbor:
+                location.remove_agent(neighbor)
+
+            if remove_locations:
+                self.model.remove_location(location)
