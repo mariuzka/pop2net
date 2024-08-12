@@ -491,9 +491,30 @@ class Creator:
 
             # bridge
             if not dummy_location.melt():
-                bridge_values = {dummy_location.bridge(agent) for agent in agents}
+                bridge_values = {
+                    dummy_location.bridge(agent)
+                    for agent in agents
+                    if dummy_location.bridge(agent) is not None
+                }
 
-                if len(bridge_values) > 1:
+                if len(bridge_values) == 0:
+                    pass
+
+                elif len(bridge_values) == 1:
+                    msg = f"""{str_location_cls}.bridge() returned only one unique value.
+                    {str_location_cls}.bridge() must return at least two unique values in order 
+                    to create locations that bring together agents with different values on the 
+                    same attribute.
+                    """
+                    warnings.warn(msg)
+
+                elif len(bridge_values) > 1:
+                    if dummy_location.n_agents is not None:
+                        msg = f"""You cannot use {str_location_cls}.n_agents and 
+                        {str_location_cls}.bridge() at the same time. {str_location_cls}.n_agents
+                        is ignored."""
+                        warnings.warn(msg)
+
                     melt_list = []
 
                     # create one MeltLocation for each bridge_value
