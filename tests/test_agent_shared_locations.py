@@ -29,10 +29,13 @@ def test_1a():
 
     assert len(model.locations) == 2
     assert len(model.agents) == 3
+    
     assert agent_max.shared_locations(agent=agent_marius)[0].type == "Meeting1"
     assert not bool(agent_max.shared_locations(agent=agent_lukas))
+   
     assert agent_marius.shared_locations(agent=agent_max)[0].type == "Meeting1"
     assert agent_marius.shared_locations(agent=agent_lukas)[0].type == "Meeting2"
+    
     assert agent_lukas.shared_locations(agent=agent_marius)[0].type == "Meeting2"
     assert not bool(agent_lukas.shared_locations(agent=agent_max))
 
@@ -66,9 +69,12 @@ def test_1b():
 
     assert len(model.locations) == 2
     assert len(model.agents) == 3
+    
     assert _max.shared_locations(agent=_marius)[0].type == "Meeting1"
     assert not bool(_max.shared_locations(agent=_lukas))
+    
     assert _marius.shared_locations(agent=_max)[0].type == "Meeting1"
     assert _marius.shared_locations(agent=_lukas)[0].type == "Meeting2"
+    
     assert _lukas.shared_locations(agent=_marius)[0].type == "Meeting2"
     assert not bool(_lukas.shared_locations(agent=_max))

@@ -43,17 +43,15 @@ def test_2a():
     
     assert len(model.locations) == 1
     assert len(model.agents) == 3
+    
     assert agent_max.neighbors()[0].type == "Marius"
     assert agent_max.neighbors()[1].type == "Lukas"
+    
     assert agent_marius.neighbors()[0].type == "Max"
     assert agent_marius.neighbors()[1].type == "Lukas"
+    
     assert agent_lukas.neighbors()[0].type == "Max"
     assert agent_lukas.neighbors()[1].type == "Marius"
-
-
-
-
-
 
 
 # all in one location
@@ -79,18 +77,18 @@ def test_2b():
     _marius = creator.create_agents(agent_class=Marius, n=1)[0]
     _lukas = creator.create_agents(agent_class=Lukas, n=1)[0]
     creator.create_locations(location_classes=[WebexMeeting])
-    # TODO soll das drinnen bleiben?
-    inspector.plot_bipartite_network()
 
     assert len(model.locations) == 1
     assert len(model.agents) == 3
+    
     assert _max.neighbors()[0].type == "Marius"
     assert _max.neighbors()[1].type == "Lukas"
+    
     assert _marius.neighbors()[0].type == "Max"
     assert _marius.neighbors()[1].type == "Lukas"
+    
     assert _lukas.neighbors()[0].type == "Max"
     assert _lukas.neighbors()[1].type == "Marius"
-
 
 
 def test_3a():
@@ -121,10 +119,14 @@ def test_3a():
 
     assert len(model.locations) == 2
     assert len(model.agents) == 3
+    
     assert agent_max.neighbors(location_classes = [Meeting1])[0].type == "Marius"
+    
     assert agent_marius.neighbors(location_classes = [Meeting1])[0].type == "Max"
     assert agent_marius.neighbors(location_classes = [Meeting2])[0].type == "Lukas"
+    
     assert agent_lukas.neighbors(location_classes = [Meeting2])[0].type == "Marius"
+
 
 # two Locations
 def test_3b():
@@ -154,12 +156,13 @@ def test_3b():
     _marius = creator.create_agents(agent_class=Marius, n=1)
     _lukas = creator.create_agents(agent_class=Lukas, n=1)
     creator.create_locations(location_classes=[Meeting1, Meeting2])
-    # TODO soll das drinnen bleiben?
-    inspector.plot_bipartite_network()
 
     assert len(model.locations) == 2
     assert len(model.agents) == 3
+    
     assert _max.neighbors(location_classes=[Meeting1])[0][0].type == "Marius"
+    
     assert _marius.neighbors(location_classes=[Meeting1])[0][0].type == "Max"
     assert _marius.neighbors(location_classes=[Meeting2])[0][0].type == "Lukas"
+    
     assert _lukas.neighbors(location_classes=[Meeting2])[0][0].type == "Marius"
