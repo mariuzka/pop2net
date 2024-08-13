@@ -56,8 +56,7 @@ def test_2a():
 def test_2b():
     model = popy.Model()
     creator = popy.Creator(model)
-    inspector = popy.NetworkInspector(model)
-
+    
     class Max(popy.Agent):
         pass
 
@@ -128,7 +127,6 @@ def test_3a():
 def test_3b():
     model = popy.Model()
     creator = popy.Creator(model)
-    inspector = popy.NetworkInspector(model)
 
     class Max(popy.Agent):
         pass
