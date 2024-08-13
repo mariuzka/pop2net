@@ -31,6 +31,7 @@ class Creator:
         self.model = model
         self.seed = seed
         self.rng = random.Random(seed)
+        self._dummy_model = popy.Model()
 
     def _create_dummy_location(self, location_cls) -> popy.Location:
         location = location_cls(model=self._dummy_model)
@@ -446,10 +447,8 @@ class Creator:
         if agents is None:
             agents = self.model.agents
 
-        self._dummy_model = popy.Model()
-        # self._dummy_model.agents = agents
-        for agent in agents:
-            self._dummy_model.add_agent(agent)
+        # self._dummy_model = popy.Model()
+        self._dummy_model.add_agents(agents)
 
         for location_cls in location_classes:
             dummy_location = self._create_dummy_location(location_cls)
@@ -596,56 +595,58 @@ class Creator:
                     group_count += 1
 
                     dummy_location = self._create_dummy_location(location_cls)
+                    dummy_location.agents_ = group_list
+                    # dummy_location.add_agents(agents)
 
-                    dummy_location.group_agents = group_list
+                    # dummy_location.group_agents = group_list
 
                     # get all subgroub values
-                    subgroup_values = {
-                        agent_subgroup_value
+                    subsplit_values = {
+                        agent_subsplit_value
                         for agent in group_list
-                        for agent_subgroup_value in utils.make_it_a_list_if_it_is_no_list(
+                        for agent_subsplit_value in utils.make_it_a_list_if_it_is_no_list(
                             dummy_location._subsplit(agent),
                         )
                     }
 
                     # for each group of agents assigned to a specific sublocation
-                    for j, subgroup_value in enumerate(subgroup_values):
-                        # get all subgroup affiliated agents
-                        subgroup_affiliated_agents = []
+                    for j, subsplit_value in enumerate(subsplit_values):
+                        # get all subsplit affiliated agents
+                        subsplit_affiliated_agents = []
 
                         # for agent in group_affiliated_agents:
                         for agent in group_list:
-                            agent_subgroup_value = utils.make_it_a_list_if_it_is_no_list(
+                            agent_subsplit_value = utils.make_it_a_list_if_it_is_no_list(
                                 dummy_location._subsplit(agent),
                             )
-                            if subgroup_value in agent_subgroup_value:
-                                subgroup_affiliated_agents.append(agent)
-                        print(split_value)
+                            if subsplit_value in agent_subsplit_value:
+                                subsplit_affiliated_agents.append(agent)
+
                         # Build the final location
-                        subgroup_location = location_cls(model=self.model)
-                        subgroup_location.setup()
-                        subgroup_location.split_value = split_value
-                        subgroup_location.subgroup_value = subgroup_value
-                        subgroup_location.group_id = i
-                        subgroup_location.subgroup_id = j
-                        subgroup_location.group_agents = group_list  # maybe delete later
+                        location = location_cls(model=self.model)
+                        location.setup()
+                        location.split_value = split_value
+                        location.subsplit_value = subsplit_value
+                        location.group_id = i
+                        location.subgroup_id = j
+                        # location.group_agents = group_list  # maybe delete later
 
                         # Assigning process:
-                        for agent in subgroup_affiliated_agents:
-                            subgroup_location.add_agent(agent)
+                        for agent in subsplit_affiliated_agents:
+                            location.add_agent(agent)
 
                             weight = (
                                 agent._TEMP_melt_location_weight
                                 if agent._TEMP_melt_location_weight is not None
-                                else subgroup_location.weight(agent)
+                                else location.weight(agent)
                             )
 
-                            subgroup_location.set_weight(
+                            location.set_weight(
                                 agent=agent,
                                 weight=weight,
                             )
 
-                            group_info_str = f"gv={subgroup_location.split_value},gid={subgroup_location.group_id}"
+                            group_info_str = f"gv={location.split_value},gid={location.group_id}"
                             setattr(agent, str_location_cls, group_info_str)
                             setattr(agent, str_location_cls + "_assigned", True)
                             setattr(agent, str_location_cls + "_id", group_count - 1)
@@ -661,7 +662,7 @@ class Creator:
                                 True if group_list.index(agent) == (len(group_list) - 1) else False,
                             )
 
-                        locations.append(subgroup_location)
+                        locations.append(location)
 
         locations = popy.LocationList(
             model=self.model,
@@ -685,8 +686,8 @@ class Creator:
             #        delattr(agent, utils._get_cls_as_str(location_class))
 
         # delete temporary location attributes
-        for location in locations:
-            del location.group_agents
+        # for location in locations:
+        #    del location.group_agents
 
         return locations
 
