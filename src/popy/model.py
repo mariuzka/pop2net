@@ -67,6 +67,24 @@ class Model(ap.Model):
         )
 
     @property
+    def agents_by_id(self) -> dict:
+        """Returns a dictionary which stores the model's agents by their id.
+
+        Returns:
+            dict: A dictionary which stores the model's agents by their id.
+        """
+        return {agent.id: agent for agent in self.agents}
+
+    @property
+    def locations_by_id(self) -> dict:
+        """Returns a dictionary which stores the model's locations by their id.
+
+        Returns:
+            dict: A dictionary which stores the model's locations by their id.
+        """
+        return {location.id: location for location in self.locations}
+
+    @property
     def locations(self):
         """Show a iterable view of all locations in the environment.
 

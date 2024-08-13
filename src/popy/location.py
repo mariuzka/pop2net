@@ -283,7 +283,7 @@ class MagicLocation(Location):
             return None
         else:
             node_indices = list(self.nxgraph.nodes)
-            agent_pos = self.group_agents.index(agent)
+            agent_pos = self.agents_.index(agent)
 
             if agent_pos <= len(node_indices) - 1:
                 node_index = node_indices[agent_pos]
