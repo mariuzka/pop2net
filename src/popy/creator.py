@@ -684,10 +684,9 @@ class Creator:
                             location.group_id = None
                             location.subgroup_id = None
 
-        locations = popy.LocationList(
-            model=self.model,
-            objs=locations,
-        )
+                            locations.append(location)
+
+        locations = popy.LocationList(model=self.model, objs=locations)
 
         # execute an action after all locations have been created
         for location in locations:
