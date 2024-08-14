@@ -56,7 +56,7 @@ def test_2a():
 def test_2b():
     model = popy.Model()
     creator = popy.Creator(model)
-    
+
     class Max(popy.Agent):
         pass
 
