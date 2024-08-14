@@ -322,9 +322,10 @@ def test_15():
     creator.create_agents(n=10)
     creator.create_locations(location_classes=[TestLocation])
 
-    assert len(model.locations) == 2
+    assert len(model.locations) == 3
     assert len(model.locations[0].agents) == 7
     assert len(model.locations[1].agents) == 3
+    assert len(model.locations[2].agents) == 0
 
 
 def test_16():
@@ -340,8 +341,10 @@ def test_16():
     creator.create_agents(n=10)
     creator.create_locations(location_classes=[TestLocation])
 
-    assert len(model.locations) == 1
+    assert len(model.locations) == 3
     assert len(model.locations[0].agents) == 10
+    assert len(model.locations[1].agents) == 0
+    assert len(model.locations[2].agents) == 0
 
 
 def test_17():
