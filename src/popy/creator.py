@@ -66,7 +66,6 @@ class Creator:
             A pandas DataFrame.
         """
         df = df.copy()
-        df = df.sample(frac=1)
 
         if n is None:
             return df
