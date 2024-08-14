@@ -291,8 +291,8 @@ class Creator:
 
             for _, group in enumerate(groups):
                 # if there are still enough free places available
-                if dummy_location.n_agents is None or (dummy_location.n_agents - len(group)) >= len(
-                    sticky_agents,
+                if (dummy_location.n_agents is None) or dummy_location.n_agents - len(group) >= len(
+                    sticky_agents
                 ):
                     if sum(
                         [dummy_location.find(agent) for agent in sticky_agents],
@@ -567,10 +567,15 @@ class Creator:
                 allow_nesting=True,
             )
 
+            if len(split_values) == 0:
+                split_values.append("dummy_split_value")
+
             group_count = 0
 
             # for each group split value
             for split_value in split_values:
+                split_value_locations = []
+
                 # get all agents with that value
                 split_value_affiliated_agents = self._get_split_value_affiliated_agents(
                     agents=affiliated_agents,
@@ -628,7 +633,8 @@ class Creator:
                         location.subsplit_value = subsplit_value
                         location.group_id = i
                         location.subgroup_id = j
-                        # location.group_agents = group_list  # maybe delete later
+
+                        split_value_locations.append(location)
 
                         # Assigning process:
                         for agent in subsplit_affiliated_agents:
@@ -662,6 +668,21 @@ class Creator:
                             )
 
                         locations.append(location)
+
+                if (
+                    dummy_location.n_locations is not None
+                    and not dummy_location.only_exact_n_agents
+                ):
+                    if len(split_value_locations) < dummy_location.n_locations:
+                        for _ in range(
+                            int(dummy_location.n_locations - len(split_value_locations))
+                        ):
+                            location = location_cls(model=self.model)
+                            location.setup()
+                            location.split_value = split_value
+                            location.subsplit_value = None
+                            location.group_id = None
+                            location.subgroup_id = None
 
         locations = popy.LocationList(
             model=self.model,
