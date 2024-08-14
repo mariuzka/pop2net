@@ -16,6 +16,7 @@ def test_1():
 
     assert len(model.locations) == 3
     assert len(model.agents) == 3
+
     for location in model.locations:
         assert len(location.agents) == 1
 

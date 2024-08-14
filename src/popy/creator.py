@@ -277,7 +277,7 @@ class Creator:
 
         stick_values = {self._get_stick_value(agent, dummy_location) for agent in agents}
 
-        dummy_location = self._create_dummy_location(location_cls)
+        # dummy_location = self._create_dummy_location(location_cls)
 
         # for each group of sticky agents
         for stick_value in stick_values:
@@ -294,16 +294,16 @@ class Creator:
                 if (dummy_location.n_agents is None) or dummy_location.n_agents - len(group) >= len(
                     sticky_agents
                 ):
-                    if sum(
-                        [dummy_location.find(agent) for agent in sticky_agents],
-                    ) == len(sticky_agents):
-                        # assign agents
-                        for agent in sticky_agents:
-                            group.append(agent)
-                            dummy_location.add_agent(agent)
+                    # if sum(
+                    #    [dummy_location.find(agent) for agent in sticky_agents],
+                    # ) == len(sticky_agents):
+                    #    # assign agents
+                    for agent in sticky_agents:
+                        group.append(agent)
+                        dummy_location.add_agent(agent)
 
-                        assigned = True
-                        break
+                    assigned = True
+                    break
 
             if not assigned:
                 if len(groups) < n_location_groups:
