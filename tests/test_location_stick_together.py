@@ -3,7 +3,6 @@ import pandas as pd
 import popy
 
 
-# TODO nur Blaupauise von nest test
 def test_1():
     
     df = pd.DataFrame(
@@ -81,14 +80,14 @@ def test_2():
 
 
 
-# stick_together vs filter
+# stick_together with split
 def test_3():
 
     df = pd.DataFrame(
         {
-            "status": ["pupil", "pupil", "pupil", "pupil"],
-            "class_id":[1,2,1,2],
-            "friends": [1,1,2,2],
+            "status": ["pupil", "pupil", "pupil", "pupil","pupil", "pupil"],
+            "class_id":[1,1,1,2,2,2],
+            "friends": [1,2,1,2,1,2],
         }
     )
 
@@ -109,22 +108,19 @@ def test_3():
     inspector.plot_bipartite_network()
     inspector.plot_agent_network(node_attrs=df.columns, node_color="class_id")
 
-    # assert len(model.agents) == 5
-    # assert len(model.locations) == 2
+    assert len(model.agents) == 6
+    assert len(model.locations) == 4
 
-    # expected_loc_lens = [2,3]
-    # for location in model.locations:
-    #     assert len(location.agents) in expected_loc_lens
-    #     del expected_loc_lens[expected_loc_lens.index(len(location.agents))]
+    expected_loc_lens = [1,1,2,2]
+    for location in model.locations:
+        assert len(location.agents) in expected_loc_lens
+        del expected_loc_lens[expected_loc_lens.index(len(location.agents))]
     
-    # for agent in model.agents:
-    #     for agent in model.agents:
-    #         assert all(nghbr.class_id == agent.class_id for nghbr in agent.neighbors())
-
-
-
-#test_1()
-#test_2()
+    for agent in model.agents:
+        for agent in model.agents:
+            # TODO warum läuft das durch ohne  if agent.neighbors(). 
+            # Zwei agents dürften keine Neighbors haben? 
+            # müsste nghbr.class_id == agent.class_id dann nicht Exception werfen?
+            assert all(nghbr.class_id == agent.class_id for nghbr in agent.neighbors())
 test_3()
-#%%
     
