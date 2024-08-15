@@ -58,8 +58,7 @@ def test_2():
         del expected_loc_lens[expected_loc_lens.index(len(location.agents))]
 
     for agent in model.agents:
-        for agent in model.agents:
-            assert all(nghbr.class_id == agent.class_id for nghbr in agent.neighbors())
+        assert all(nghbr.class_id == agent.class_id for nghbr in agent.neighbors())
 
 
 # stick_together with split
@@ -97,11 +96,7 @@ def test_3():
         del expected_loc_lens[expected_loc_lens.index(len(location.agents))]
 
     for agent in model.agents:
-        for agent in model.agents:
-            # TODO warum läuft das durch ohne  if agent.neighbors().
-            # Zwei agents dürften keine Neighbors haben?
-            # müsste nghbr.class_id == agent.class_id dann nicht Exception werfen?
-            assert all(nghbr.class_id == agent.class_id for nghbr in agent.neighbors())
+        assert all(nghbr.class_id == agent.class_id for nghbr in agent.neighbors())
 
 
 test_3()
