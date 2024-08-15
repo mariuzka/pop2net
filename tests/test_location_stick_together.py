@@ -134,6 +134,7 @@ def test_4():
 
     model = popy.Model()
     creator = popy.Creator(model=model)
+    inspector = popy.NetworkInspector(model=model)
 
     # location with stick_together()
     class TestLocation(popy.MagicLocation):
@@ -155,3 +156,8 @@ def test_4():
         for agent_j in model.agents
         if agent_i.group == agent_j.group
     )
+
+    inspector.plot_agent_network(node_attrs=["group"])
+
+
+test_4()
