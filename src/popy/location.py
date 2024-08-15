@@ -246,17 +246,6 @@ class MagicLocation(Location):
         """An action that is performed after all location instances have been created."""
         pass
 
-    # def find(self, agent: _agent.Agent) -> bool:  # noqa: ARG002
-    #    """Assigns the agent to a specific location instance that meets the requirements.
-
-    #    Args:
-    #        agent (_agent.Agent): The agent that is currently processed by the Creator.
-
-    #    Returns:
-    #        bool: _description_
-    #    """
-    #    return True
-
     def _update_weight(self, agent: _agent.Agent) -> None:
         """Create or update the agent-speific weight.
 
@@ -357,14 +346,3 @@ class MeltLocation(Location):
             The edge weight.
         """
         return None
-
-    def find(self, agent: _agent.Agent) -> bool:  # noqa: ARG002
-        """Assigns the agent to a specific location instance that meets the requirements.
-
-        Args:
-            agent (_agent.Agent): The agent that is currently processed by the Creator.
-
-        Returns:
-            bool: _description_
-        """
-        return True
