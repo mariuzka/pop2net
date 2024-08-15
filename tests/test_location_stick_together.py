@@ -100,3 +100,58 @@ def test_3():
 
 
 test_3()
+
+# %%
+
+
+def test_4():
+    # A test with many stick_together-values
+
+    model = popy.Model()
+    creator = popy.Creator(model=model)
+
+    df = pd.DataFrame(
+        {"group": [1, 1, 1, 2, 2, 3, 3, 3, 3, 4, 3, 2, 3, 4, 5, 6, 6, 6, 6, 6, 10, 23, 10, 1, 1, 1]}
+    )
+
+    # location without stick_together()
+    class TestLocation(popy.MagicLocation):
+        n_locations = 5
+
+    creator.create_agents(df=df)
+    creator.create_locations(location_classes=[TestLocation])
+
+    assert len(model.locations) == 5
+    assert len(model.agents) == 26
+
+    # assert that not all members of a group are in the same location
+    assert not all(
+        agent_i.TestLocation == agent_j.TestLocation
+        for agent_i in model.agents
+        for agent_j in model.agents
+        if agent_i.group == agent_j.group
+    )
+
+    model = popy.Model()
+    creator = popy.Creator(model=model)
+
+    # location with stick_together()
+    class TestLocation(popy.MagicLocation):
+        n_locations = 5
+
+        def stick_together(self, agent):
+            return agent.group
+
+    creator.create_agents(df=df)
+    creator.create_locations(location_classes=[TestLocation])
+
+    assert len(model.locations) == 5
+    assert len(model.agents) == 26
+
+    # assert that all members of a group are in the same location
+    assert all(
+        agent_i.TestLocation == agent_j.TestLocation
+        for agent_i in model.agents
+        for agent_j in model.agents
+        if agent_i.group == agent_j.group
+    )
