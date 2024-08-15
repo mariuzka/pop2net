@@ -1,14 +1,15 @@
 import pandas as pd
-import popy
 import pytest
 
+import popy
 
-@pytest.fixture()
+
+@pytest.fixture
 def model():
     return popy.Model()
 
 
-@pytest.fixture()
+@pytest.fixture
 def two_locations(model):
     return popy.LocationList(
         model,
@@ -258,7 +259,7 @@ def test_chef_agents():
     model.locations.assert_()
 
 
-@pytest.mark.skip()
+@pytest.mark.skip
 def test_table_agents():
     # TODO: copied from new_structure.ipynb but has no assert statements.
     # not sure what is being checked here.
