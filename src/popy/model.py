@@ -55,7 +55,7 @@ class Model(ap.Model):
             self.running = False
 
     @property
-    def agents(self):
+    def agents(self) -> AgentList:
         """Show a iterable view of all agents in the environment.
 
         Returns:
@@ -85,7 +85,7 @@ class Model(ap.Model):
         return {location.id: location for location in self.locations}
 
     @property
-    def locations(self):
+    def locations(self) -> LocationList:
         """Show a iterable view of all locations in the environment.
 
         Returns:
