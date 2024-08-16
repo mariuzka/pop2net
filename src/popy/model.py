@@ -465,7 +465,7 @@ class Model(ap.Model):
                 if warn:
                     msg = "You have removed a location to which other agents were still connected."
                     warnings.warn(msg)
-    
+
     def export_bipartite_network(self, node_attrs: list | None = None):
         graph = self.g.copy()
         for i in graph:
@@ -479,7 +479,7 @@ class Model(ap.Model):
         self,
         node_attrs: list | None = None,
         include_0_weights: bool = True,
-        ) -> nx.Graph:
+    ) -> nx.Graph:
         """Creates a projection of the model's bipartite network.
 
         Args:
@@ -497,10 +497,10 @@ class Model(ap.Model):
         for agent in self.agents:
             if not graph.has_node(agent.id):
                 node_attr_dict = (
-                    {node_attr: vars(agent)[node_attr] for node_attr in node_attrs} 
-                    if node_attrs is not None 
+                    {node_attr: vars(agent)[node_attr] for node_attr in node_attrs}
+                    if node_attrs is not None
                     else {}
-                    )
+                )
                 graph.add_node(agent.id, **node_attr_dict)
 
         # create edges

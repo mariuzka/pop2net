@@ -5,8 +5,6 @@ from __future__ import annotations
 import inspect
 import typing
 
-import networkx as nx
-from networkx import bipartite
 import numpy as np
 import pandas as pd
 import seaborn as sns

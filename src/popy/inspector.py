@@ -54,9 +54,9 @@ class NetworkInspector:
             node_attrs = list(node_attrs)
             if "type" not in node_attrs:
                 node_attrs.append("type")
-        
+
         graph = self.model.export_bipartite_network(node_attrs=node_attrs)
-        
+
         graph_layout = nx.drawing.spring_layout(graph)
         plot = BokehGraph(graph, width=400, height=400, hover_edges=True)
         plot.layout(layout=graph_layout)
@@ -98,10 +98,10 @@ class NetworkInspector:
                 node_attrs.append("type")
 
         graph = self.model.export_agent_network(
-            node_attrs=node_attrs, 
+            node_attrs=node_attrs,
             include_0_weights=include_0_weights,
-            )
-        
+        )
+
         graph_layout = nx.drawing.spring_layout(graph)
         plot = BokehGraph(graph, width=400, height=400, hover_edges=True)
         plot.layout(layout=graph_layout)
