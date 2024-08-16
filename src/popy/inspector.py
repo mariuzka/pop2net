@@ -26,49 +26,12 @@ class NetworkInspector:
         """
         self.model = model
 
-    def _plot_network(
-        self,
-        network_type,
-        node_color: str | None,
-        node_attrs: list | None,
-        edge_alpha: str,
-        edge_color: str,
-        include_0_weights: bool,
-    ):
-        if network_type == "bipartite":
-            graph = self.model.g.copy()
-            for i in graph:
-                if node_attrs is not None:
-                    for node_attr in node_attrs:
-                        graph.nodes[i][node_attr] = getattr(graph.nodes[i]["_obj"], node_attr)
-                del graph.nodes[i]["_obj"]
-            node_color = "type" if node_color is None else node_color
-
-        elif network_type == "agent":
-            graph = utils.create_agent_graph(
-                agents=self.model.agents,
-                node_attrs=node_attrs,
-                include_0_weights=include_0_weights,
-            )
-            node_color = "type" if node_color is None else node_color
-
-        graph_layout = nx.drawing.spring_layout(graph)
-        plot = BokehGraph(graph, width=400, height=400, hover_edges=True)
-        plot.layout(layout=graph_layout)
-        plot.draw(
-            node_color="firebrick",  # node_color if network_type == "agent" else "type",
-            edge_alpha="weight",
-            edge_color="black",
-            node_palette="random",
-        )
-
     def plot_bipartite_network(
         self,
         node_color: str | None = None,
         node_attrs: list | None = None,
         edge_alpha: str = "weight",
         edge_color: str = "black",
-        include_0_weights: bool = True,
     ) -> None:
         """Plots the two-mode network of agents and locations.
 
@@ -87,19 +50,21 @@ class NetworkInspector:
         """
         if node_attrs is None:
             node_attrs = ["type"]
-        elif isinstance(node_attrs, list):
+        else:
+            node_attrs = list(node_attrs)
             if "type" not in node_attrs:
                 node_attrs.append("type")
-        else:
-            raise Exception
-
-        self._plot_network(
-            network_type="bipartite",
-            node_color=node_color,
-            node_attrs=node_attrs,
-            edge_alpha=edge_alpha,
-            edge_color=edge_color,
-            include_0_weights=include_0_weights,
+        
+        graph = self.model.export_bipartite_network(node_attrs=node_attrs)
+        
+        graph_layout = nx.drawing.spring_layout(graph)
+        plot = BokehGraph(graph, width=400, height=400, hover_edges=True)
+        plot.layout(layout=graph_layout)
+        plot.draw(
+            node_color="type" if node_color is None else node_color,
+            edge_alpha="weight",
+            edge_color="black",
+            node_palette="random",
         )
 
     def plot_agent_network(
@@ -125,13 +90,26 @@ class NetworkInspector:
             include_0_weights (bool, optional): Should edges with a weight of zero be included in
                 the plot? Defaults to True.
         """
-        self._plot_network(
-            network_type="agent",
+        if node_attrs is None:
+            node_attrs = ["type"]
+        else:
+            node_attrs = list(node_attrs)
+            if "type" not in node_attrs:
+                node_attrs.append("type")
+
+        graph = self.model.export_agent_network(
+            node_attrs=node_attrs, 
+            include_0_weights=include_0_weights,
+            )
+        
+        graph_layout = nx.drawing.spring_layout(graph)
+        plot = BokehGraph(graph, width=400, height=400, hover_edges=True)
+        plot.layout(layout=graph_layout)
+        plot.draw(
             node_color=node_color,
-            node_attrs=node_attrs,
             edge_alpha=edge_alpha,
             edge_color=edge_color,
-            include_0_weights=include_0_weights,
+            node_palette="random",
         )
 
     def eval_affiliations(self, return_data=False) -> tuple[pd.DataFrame, pd.DataFrame] | None:
