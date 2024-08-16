@@ -120,7 +120,6 @@ class NetworkInspector:
             PopyException: _description_
             PopyException: _description_
         """
-
         df1 = pd.DataFrame(
             [
                 {
@@ -156,7 +155,7 @@ class NetworkInspector:
         if return_data:
             return df1, df2
         return None
-    
+
     # TODO: calculate relative freqs
     def create_contact_matrix(
         self,
@@ -238,7 +237,6 @@ class NetworkInspector:
         if return_df:
             return df
 
-    
     def network_measures(self, node_attrs=None) -> dict | list[dict]:
         """Creates nx networkgraph and calculates common network measures.
 
