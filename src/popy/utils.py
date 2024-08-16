@@ -20,62 +20,6 @@ if typing.TYPE_CHECKING:
 ##########################################################################
 
 
-def create_agent_graph(
-    agents: AgentList,
-    node_attrs: list | None = None,
-    include_0_weights: bool = True,
-) -> nx.Graph:
-    """Create a Graph from a model's agent list.
-
-    Args:
-        agents: A model's agent list
-        node_attrs: A list of agent attributes
-        include_0_weights: Should edges with weight 0 be displayed?
-
-    Returns:
-        A weighted graph created from a model's agent list. Agents are connected if they are
-        neighbors in the model. Their connecting edge include the contact_weight as "weight"
-        attribute.
-    """
-    projection = nx.Graph()
-
-    # create nodes
-    for agent in agents:
-        if not projection.has_node(agent.id):
-            node_attr_dict = {}
-            if node_attrs is not None:
-                for node_attr in node_attrs:
-                    node_attr_dict.update({node_attr: vars(agent)[node_attr]})
-            projection.add_node(agent.id, **node_attr_dict)
-
-    # create edges
-    for agent in agents:
-        for agent_v in agent.neighbors():
-            if not projection.has_edge(agent.id, agent_v.id):
-                weight = agent.get_agent_weight(agent_v)
-                if include_0_weights or weight > 0:
-                    projection.add_edge(agent.id, agent_v.id, weight=weight)
-
-    return projection
-
-
-def export_network(env) -> nx.Graph:
-    """Export the current agent network (unweighted version).
-
-    This is a projection of the underlying bipartite network between agents and locations.
-
-    Returns:
-        The current agent network as unipartite, unweighted graph.
-    """
-    agent_nodes = {n for n, d in env.g.nodes(data=True) if d["bipartite"] == 0}
-
-    projection = bipartite.projection.projected_graph(env.g, agent_nodes)
-    for agent_id in projection:
-        del projection.nodes[agent_id]["_obj"]
-
-    return projection
-
-
 # TODO: calculate relative freqs
 def create_contact_matrix(
     agents: list | AgentList,

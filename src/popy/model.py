@@ -465,3 +465,50 @@ class Model(ap.Model):
                 if warn:
                     msg = "You have removed a location to which other agents were still connected."
                     warnings.warn(msg)
+    
+    def export_bipartite_network(self, node_attrs: list | None = None):
+        graph = self.g.copy()
+        for i in graph:
+            if node_attrs is not None:
+                for node_attr in node_attrs:
+                    graph.nodes[i][node_attr] = getattr(graph.nodes[i]["_obj"], node_attr)
+            del graph.nodes[i]["_obj"]
+        return graph
+
+    def export_agent_network(
+        self,
+        node_attrs: list | None = None,
+        include_0_weights: bool = True,
+        ) -> nx.Graph:
+        """Creates a projection of the model's bipartite network.
+
+        Args:
+            node_attrs: A list of agent attributes
+            include_0_weights: Should edges with weight 0 be displayed?
+
+        Returns:
+            A weighted graph created from a model's agent list. Agents are connected if they are
+            neighbors in the model. Their connecting edge include the contact_weight as "weight"
+            attribute.
+        """
+        graph = nx.Graph()
+
+        # create nodes
+        for agent in self.agents:
+            if not graph.has_node(agent.id):
+                node_attr_dict = (
+                    {node_attr: vars(agent)[node_attr] for node_attr in node_attrs} 
+                    if node_attrs is not None 
+                    else {}
+                    )
+                graph.add_node(agent.id, **node_attr_dict)
+
+        # create edges
+        for agent in self.agents:
+            for agent_v in agent.neighbors():
+                if not graph.has_edge(agent.id, agent_v.id):
+                    weight = agent.get_agent_weight(agent_v)
+                    if include_0_weights or weight > 0:
+                        graph.add_edge(agent.id, agent_v.id, weight=weight)
+
+        return graph
