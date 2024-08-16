@@ -29,33 +29,32 @@ def group_it(
     Returns:
         _type_: _description_
     """
-    # TODO: something is fishy in this function...
     assert type(value) in [int, float], f"{value} has to be a number!"
-    assert value >= start, f"The value {value} is smaller than the smallest lower bound {start}."
 
-    for i in range(n_steps):
-        lower_bound = start + step * i
-        upper_bound = lower_bound + step
+    if value < start:
+        new_value = np.nan
 
-        if lower_bound <= value:
-            if return_value == "index":
-                new_value = i
+    else:
+        for i in range(n_steps):
+            lower_bound = start + step * i
+            upper_bound = lower_bound + step
 
-            elif return_value == "lower_bound":
-                new_value = lower_bound  # type: ignore
+            if lower_bound <= value < upper_bound:
+                break
 
-            elif return_value == "range":
-                new_value = (lower_bound, upper_bound)  # type: ignore
+        if return_value == "index":
+            new_value = i
 
-            else:
-                msg = "You have entered a non-existing option for `return_value`."
-                raise Exception(msg)
+        elif return_value == "lower_bound":
+            new_value = lower_bound
 
-        if not summarize_highest:
-            if i == n_steps + 1:
-                if value > upper_bound:
-                    new_value = np.nan
-    # BUG: new_value possibly unbound
+        elif return_value == "range":
+            new_value = (lower_bound, upper_bound)
+
+        if value >= upper_bound:
+            if not summarize_highest:
+                new_value = np.nan
+
     return new_value
 
 
@@ -75,11 +74,8 @@ def print_header(text: object):
     print("")
 
 
-def make_it_a_list_if_it_is_no_list(x: object) -> list:
-    if isinstance(x, list):
-        return x
-    else:
-        return [x]
+def _to_list(x: object) -> list:
+    return x if isinstance(x, list) else [x]
 
 
 def _get_cls_as_str(cls_):

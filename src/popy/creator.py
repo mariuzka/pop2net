@@ -203,7 +203,7 @@ class Creator:
     ) -> list[int | str]:
         all_values = []
         for agent in agents:
-            agent_values = utils.make_it_a_list_if_it_is_no_list(dummy_location.split(agent))
+            agent_values = utils._to_list(dummy_location.split(agent))
 
             if allow_nesting:
                 # Add mother location's value to the value of the lower level location
@@ -608,7 +608,7 @@ class Creator:
                     subsplit_values = {
                         agent_subsplit_value
                         for agent in group_list
-                        for agent_subsplit_value in utils.make_it_a_list_if_it_is_no_list(
+                        for agent_subsplit_value in utils._to_list(
                             dummy_location._subsplit(agent),
                         )
                     }
@@ -620,7 +620,7 @@ class Creator:
 
                         # for agent in group_affiliated_agents:
                         for agent in group_list:
-                            agent_subsplit_value = utils.make_it_a_list_if_it_is_no_list(
+                            agent_subsplit_value = utils._to_list(
                                 dummy_location._subsplit(agent),
                             )
                             if subsplit_value in agent_subsplit_value:
