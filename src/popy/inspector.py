@@ -7,6 +7,7 @@ import typing
 from bokehgraph import BokehGraph
 import networkx as nx
 import pandas as pd
+import seaborn as sns
 from tabulate import tabulate
 
 import popy.utils as utils
@@ -119,13 +120,6 @@ class NetworkInspector:
             PopyException: _description_
             PopyException: _description_
         """
-        # if self.agents is None:
-        #    msg = "You have to create agents first!"
-        #    raise PopyException(msg)
-
-        # if self.locations is None:
-        #    msg = "You have to create locations first!"
-        #    raise PopyException(msg)
 
         df1 = pd.DataFrame(
             [
@@ -162,8 +156,89 @@ class NetworkInspector:
         if return_data:
             return df1, df2
         return None
+    
+    # TODO: calculate relative freqs
+    def create_contact_matrix(
+        self,
+        agents: list | None = None,
+        attr: str = "id",
+        weighted: bool = False,
+        plot: bool = True,
+        annot: bool = False,
+        return_df: bool = False,
+    ) -> pd.DataFrame:
+        """Create a contact matrix as a DataFrame from a given model's agent list.
 
-    #### Ported from utils #####
+        Args:
+            agents: A list of agents.
+            attr: The agent attribute which is shown in the matrix.
+            weighted: Should the contacts be weighted? Defaults to False.
+            plot: Should the matrix be plotted? Defaults to False.
+            annot: Should the plottet matrix be annotated? Defaults to False.
+            return_df: Should the data be returned as pandas.DataFrame?
+
+        Returns:
+            A DataFrame containing a contact matrix based on `attr`.
+        """
+        if agents is None:
+            agents = self.model.agents
+
+        contact_data = []
+        attr_values = []
+        pairs = []
+
+        attr_u_name = f"{attr}_u"
+        attr_v_name = f"{attr}_v"
+
+        for agent_u in agents:
+            attr_u = getattr(agent_u, attr)
+            if attr_u is not None:
+                attr_values.append(attr_u)
+
+                for agent_v in agent_u.neighbors():
+                    attr_v = getattr(agent_v, attr)
+                    if attr_v is not None:
+                        attr_values.append(attr_v)
+
+                        pair = {agent_u.id, agent_v.id}
+
+                        if pair not in pairs:
+                            contact_data.append(
+                                {
+                                    "id_u": agent_u.id,
+                                    attr_u_name: attr_u,
+                                    "id_v": agent_v.id,
+                                    attr_v_name: attr_v,
+                                    "weight": agent_u.get_agent_weight(agent_v),
+                                },
+                            )
+                            pairs.append(pair)
+
+        attr_values = list(set(attr_values))
+
+        df = pd.DataFrame(index=sorted(attr_values, reverse=True), columns=sorted(attr_values))
+        df = df.fillna(0)
+
+        weight_total = 0
+        for contact in contact_data:
+            weight = contact["weight"] if weighted else 1
+            weight_total += weight
+
+            df.loc[contact[attr_u_name], contact[attr_v_name]] = (
+                df.loc[contact[attr_u_name], contact[attr_v_name]] + weight
+            )
+            df.loc[contact[attr_v_name], contact[attr_u_name]] = (
+                df.loc[contact[attr_v_name], contact[attr_u_name]] + weight
+            )
+
+        if plot:
+            g = sns.heatmap(df, annot=annot, vmin=0, fmt="g")
+            g.set(xlabel=attr, ylabel=attr)
+
+        if return_df:
+            return df
+
+    
     def network_measures(self, node_attrs=None) -> dict | list[dict]:
         """Creates nx networkgraph and calculates common network measures.
 
@@ -178,7 +253,7 @@ class NetworkInspector:
             measure results
         """
         result_dict = {}
-        nx_graph = utils.create_agent_graph(self.model.agents, node_attrs)
+        nx_graph = self.model.export_agent_network(node_attrs=node_attrs)
 
         # make distinction between multiple independent networks and one network
         if nx.is_connected(nx_graph):
