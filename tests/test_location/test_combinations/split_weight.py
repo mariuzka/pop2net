@@ -109,7 +109,6 @@ def test_3():
 
     model = popy.Model()
     creator = popy.Creator(model=model)
-    inspector = popy.NetworkInspector(model=model)
     df = pd.DataFrame(
         {"status": ["A", "B", "A", "B"],
          "attention_span": [1, 3, 2.5, 4]
@@ -125,9 +124,7 @@ def test_3():
         
     creator.create_agents(df=df)
     creator.create_locations(location_classes=[ClassRoom])
-    inspector.plot_bipartite_network()
-    inspector.plot_agent_network(node_attrs=["status"])
-
+    
     assert len(model.locations) == 2
     assert len(model.agents) == 4
     assert len(model.locations[0].agents) == 2

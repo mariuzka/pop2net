@@ -45,10 +45,6 @@ def test_1():
         if location.type == "Classroom"
     )
 
-    inspector = popy.NetworkInspector(model)
-    inspector.plot_bipartite_network()
-    inspector.plot_agent_network(node_attrs=df.columns, node_color="id")
-
     class School(popy.MagicLocation):
         n_agents = 4
 
@@ -72,10 +68,6 @@ def test_1():
         for location in model.locations
         if location.type == "Classroom"
     )
-
-    inspector = popy.NetworkInspector(model)
-    inspector.plot_bipartite_network()
-    inspector.plot_agent_network(node_attrs=df.columns, node_color="group")
 
     for location in model.locations:
         if location.type == "School":

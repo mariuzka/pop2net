@@ -9,7 +9,6 @@ def test_1():
 
     model = popy.Model()
     creator = popy.Creator(model=model)
-    inspector = popy.NetworkInspector(model=model)
     df = pd.DataFrame(
         {"status": ["pupil", "pupil","pupil","pupil","pupil","pupil", "teacher", "teacher", "teacher"],
          "class_id": [1,1,2,2,3,3,1,2,3]
@@ -37,9 +36,7 @@ def test_1():
         
     creator.create_agents(df=df)
     creator.create_locations(location_classes=[ClassRoom])
-    inspector.plot_bipartite_network()
-    inspector.plot_agent_network(node_attrs=["class_id", "status"])
-
+    
     assert len(model.agents) == 9
     assert len(model.locations) == 3
 
@@ -61,7 +58,6 @@ def test_2():
 
     model = popy.Model()
     creator = popy.Creator(model=model)
-    inspector = popy.NetworkInspector(model=model)
     df = pd.DataFrame(
         {"status": ["pupil", "pupil","pupil","pupil","pupil","pupil", "teacher", "teacher", "teacher", "principal"],
          "class_id": [1,1,2,2,3,3,1,2,3, 0]
@@ -99,8 +95,6 @@ def test_2():
         
     creator.create_agents(df=df)
     creator.create_locations(location_classes=[ClassRoom, School])
-    inspector.plot_bipartite_network()
-    inspector.plot_agent_network(node_attrs=["class_id", "status"])
 
     assert len(model.agents) == 10
     assert len(model.locations) == 4

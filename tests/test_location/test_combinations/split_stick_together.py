@@ -12,7 +12,6 @@ def test_1():
 
     model = popy.Model()
     creator = popy.Creator(model=model)
-    inspector = popy.NetworkInspector(model=model)
     df = pd.DataFrame(
         {"friend_group": [1, 1, 1, 1, 2,2,2, 2, 3, 3, 3,3,4,4],
          "split_group": [1,2,1,2,1,2,1,2,1,2,1,2,1,2]
@@ -28,8 +27,6 @@ def test_1():
         
     creator.create_agents(df=df)
     creator.create_locations(location_classes=[TestLocation])
-
-    inspector.plot_agent_network(node_attrs=["friend_group"])
 
     for i, location in enumerate(model.locations):
         print(f"Location;{i}")
