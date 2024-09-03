@@ -6,7 +6,7 @@ X ('n_agents', 'filter'),
 0 ('n_agents', 'split'),
  ('n_agents', 'bridge'),
 X ('n_agents', 'nest'),
-0 ('n_agents', 'stick_together'),
+0 ('n_agents', 'stick_together'), -> Erwartetes Verhalten
 X ('n_agents', 'melt'),
 0 ('n_agents', 'refine'),
 X ('n_agents', 'weight'),
