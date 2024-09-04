@@ -21,13 +21,23 @@ jobs:
       # Pull to refresh and build
       - name: Build Project
         run: poetry build
+      # check version for tag
+      - name: Check Version
+        id: check-version
+        run: |
+          echo version=$(poetry version --short) >> $GITHUB_OUTPUT
+      - name: Check Prerelease
+        id: check-prerelease
+        run: |
+          if [[ ${{ steps.check-version.outputs.version }} =~ [a-zA-Z] ]]; then echo "prerelease=true" >> "$GITHUB_OUTPUT"; else echo "prerelease=false" >> "$GITHUB_OUTPUT"; fi
+          echo "IS PRERELEASE $GITHUB_OUTPUT"
       # Actually release
       - name: Create Release
         uses: ncipollo/release-action@v1
         with:
           artifacts: "dist/*"
           token: ${{ secrets.GITHUB_TOKEN }}
-          tag: ${{ steps.increase-version.outputs.version }}
+          tag: ${{ steps.check-version.outputs.version }}
           draft: false
           generateReleaseNotes: true
           prerelease: ${{ steps.check-version.outputs.prerelease }}
@@ -38,7 +48,7 @@ jobs:
         # poetry publish -r test-pypi
         # -------------------------------------------------------------
       - name: Publish to PyPI
-        if: steps.check-version.outputs.prerelease == 'false'
+        if: steps.check-prerelease.outputs.prerelease == 'false'
         env:
           POETRY_PYPI_TOKEN_PYPI: ${{ secrets.PYPI_TOKEN }}
         run: poetry publish

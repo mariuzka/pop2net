@@ -30,11 +30,6 @@ jobs:
         run: |
           poetry version ${{ inputs.version_increase }}
           echo version=$(poetry version --short) >> $GITHUB_OUTPUT
-      - name: Check Version
-        id: check-version
-        run: |
-          if [[ ${{ steps.increase-version.outputs.version }} =~ [a-zA-Z] ]]; then echo "prerelease=true" >> "$GITHUB_OUTPUT"; else echo "prerelease=false" >> "$GITHUB_OUTPUT"; fi
-          echo "IS PRERELEASE $GITHUB_OUTPUT"
       # Create and merge PR to increase version in main
       - name: Create Pull Request
         id: create-pr
