@@ -4,7 +4,8 @@ from __future__ import annotations
 
 import typing
 
-from bokehgraph import BokehGraph, BokehBipartiteGraph
+from bokehgraph import BokehBipartiteGraph
+from bokehgraph import BokehGraph
 import networkx as nx
 import pandas as pd
 import seaborn as sns
