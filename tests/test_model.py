@@ -1,8 +1,9 @@
 import random
 
+import pytest
+
 import popy
 from popy import utils
-import pytest
 
 
 def test_model():
