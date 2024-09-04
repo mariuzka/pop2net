@@ -2,7 +2,9 @@
 
 from __future__ import annotations
 
+import itertools
 import typing
+import warnings
 
 import agentpy as ap
 from agentpy import AgentList
@@ -63,6 +65,24 @@ class Model(ap.Model):
             model=self.model,
             objs=[data["_obj"] for _, data in self.g.nodes(data=True) if data["bipartite"] == 0],
         )
+
+    @property
+    def agents_by_id(self) -> dict:
+        """Returns a dictionary which stores the model's agents by their id.
+
+        Returns:
+            dict: A dictionary which stores the model's agents by their id.
+        """
+        return {agent.id: agent for agent in self.agents}
+
+    @property
+    def locations_by_id(self) -> dict:
+        """Returns a dictionary which stores the model's locations by their id.
+
+        Returns:
+            dict: A dictionary which stores the model's locations by their id.
+        """
+        return {location.id: location for location in self.locations}
 
     @property
     def locations(self):
@@ -377,3 +397,71 @@ class Model(ap.Model):
             int: The weight.
         """
         return self.g[agent.id][location.id]["weight"]
+
+    def connect_agents(self, agents: list, location_cls: type):
+        """Connects multiple agents via an instance of a given location class.
+
+        Args:
+            agents (list): A list of agents.
+            location_cls (type): The location class that is used to create a location instance.
+        """
+        location = location_cls(model=self)
+        location.add_agents(agents)
+
+    def disconnect_agents(
+        self,
+        agents: list,
+        location_classes: list | None = None,
+        remove_locations: bool = False,
+    ):
+        """Disconnects agents by removing them from shared locations.
+
+        If a list of location types is given, only shared locations of the given types are
+        considered. Turn on `remove_locations` in order to not only remove the given agents from the
+        given location instance but also to remove the location instance from the model.
+        Use this method with care because removing agents from locations also disconnects those
+        agents from all other agents connected to the location. Removing the location instance from
+        the model could have even more sideeffects to those agents still connected with this
+        location!
+
+        Args:
+            agents (list): A list of agents.
+            location_classes (list | None, optional): A list of location types to specify which
+            shared locations are considered. Defaults to None.
+            remove_locations (bool, optional): A bool that determines whether the shared locations
+                shall be removed from the model. Defaults to False.
+        """
+        pairs = list(itertools.combinations(agents, 2))
+
+        shared_locations = []
+
+        for agent1, agent2 in pairs:
+            shared_locations.extend(
+                self.locations_between_agents(
+                    agent1=agent1,
+                    agent2=agent2,
+                    location_classes=location_classes,
+                )
+            )
+
+        shared_locations = set(shared_locations)
+
+        for location in shared_locations:
+            warn = False
+            for agent in location.agents:
+                if agent not in agents:
+                    warn = True
+                    break
+
+            if warn:
+                msg = "There are other agents at the location from which you have removed agents."
+                warnings.warn(msg)
+
+            location.remove_agents(agents)
+
+            if remove_locations:
+                self.remove_location(location=location)
+
+                if warn:
+                    msg = "You have removed a location to which other agents were still connected."
+                    warnings.warn(msg)
