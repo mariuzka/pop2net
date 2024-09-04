@@ -3,6 +3,7 @@ import random
 import pytest
 
 import popy
+from popy import utils
 
 
 def test_model():
