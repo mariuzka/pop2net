@@ -466,12 +466,26 @@ class Model(ap.Model):
                     msg = "You have removed a location to which other agents were still connected."
                     warnings.warn(msg)
 
-    def export_bipartite_network(self, node_attrs: list | None = None):
+    def export_bipartite_network(
+        self,
+        agent_attrs: list | None = None,
+        location_attrs: list | None = None,
+    ):
         graph = self.g.copy()
+
         for i in graph:
-            if node_attrs is not None:
-                for node_attr in node_attrs:
-                    graph.nodes[i][node_attr] = getattr(graph.nodes[i]["_obj"], node_attr)
+            if graph.nodes[i]["bipartite"] == 0:
+                if agent_attrs is not None:
+                    for agent_attr in agent_attrs:
+                        graph.nodes[i][agent_attr] = getattr(graph.nodes[i]["_obj"], agent_attr)
+
+            elif graph.nodes[i]["bipartite"] == 1:
+                if location_attrs is not None:
+                    for location_attr in location_attrs:
+                        graph.nodes[i][location_attr] = getattr(
+                            graph.nodes[i]["_obj"], location_attr
+                        )
+
             del graph.nodes[i]["_obj"]
         return graph
 

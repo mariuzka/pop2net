@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import typing
 
-from bokehgraph import BokehGraph
+from bokehgraph import BokehGraph, BokehBipartiteGraph
 import networkx as nx
 import pandas as pd
 import seaborn as sns
@@ -29,8 +29,10 @@ class NetworkInspector:
 
     def plot_bipartite_network(
         self,
-        node_color: str | None = None,
-        node_attrs: list | None = None,
+        agent_attrs: list | None = None,
+        location_attrs: list | None = None,
+        agent_color: str | None = None,
+        location_color: str | None = None,
         edge_alpha: str = "weight",
         edge_color: str = "black",
     ) -> None:
@@ -49,23 +51,34 @@ class NetworkInspector:
             include_0_weights (bool, optional): Should edges with a weight of zero be included in
                 the plot? Defaults to True.
         """
-        if node_attrs is None:
-            node_attrs = ["type"]
+        if agent_attrs is None:
+            agent_attrs = ["type"]
         else:
-            node_attrs = list(node_attrs)
-            if "type" not in node_attrs:
-                node_attrs.append("type")
+            agent_attrs = list(agent_attrs)
+            if "type" not in agent_attrs:
+                agent_attrs.append("type")
 
-        graph = self.model.export_bipartite_network(node_attrs=node_attrs)
+        if location_attrs is None:
+            location_attrs = ["type"]
+        else:
+            location_attrs = list(location_attrs)
+            if "type" not in location_attrs:
+                location_attrs.append("type")
+
+        graph = self.model.export_bipartite_network(
+            agent_attrs=agent_attrs,
+            location_attrs=location_attrs,
+        )
 
         graph_layout = nx.drawing.spring_layout(graph)
-        plot = BokehGraph(graph, width=400, height=400, hover_edges=True)
+        plot = BokehBipartiteGraph(graph, width=400, height=400, hover_edges=True)
         plot.layout(layout=graph_layout)
         plot.draw(
-            node_color="type" if node_color is None else node_color,
-            edge_alpha="weight",
-            edge_color="black",
-            node_palette="random",
+            node_color_lv0="firebrick" if agent_color is None else agent_color,
+            node_color_lv1="black" if location_color is None else location_color,
+            edge_alpha=edge_alpha,
+            edge_color=edge_color,
+            # node_palette="random",
         )
 
     def plot_agent_network(
