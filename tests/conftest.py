@@ -1,5 +1,6 @@
-from popy.data_fakers import soep
 import pytest
+
+from popy.data_fakers import soep
 
 
 @pytest.fixture(scope="session")
