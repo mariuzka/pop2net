@@ -1,4 +1,5 @@
 # %%
+
 from collections import Counter
 
 import pandas as pd
@@ -7,6 +8,8 @@ import popy
 
 
 # %%
+
+
 def test_1():
     df = pd.DataFrame(
         {
@@ -36,13 +39,10 @@ def test_1():
             assert len(location.agents) == 2
             assert all(agent.status == "B" for agent in location.agents)
 
+
 test_1()
 # %%
-# TODO Hier stimmt aus meiner Sicht etwas nicht - Unexpected Verhalten
-# Ich hätte 4 Locations erwartet, 1 pro mögliche Attributskombination
-# also A/m, A/w, B/m, B/w und dann wegen n_agents zusätzlich 1 Location
-# da B/m doppelt vorkommt
-# Ich bekomme aber 8 Locations und Agenten werden doppelt zugewiesen (siehe print)
+
 
 def test_2():
     df = pd.DataFrame(
@@ -57,6 +57,7 @@ def test_2():
 
     class TestLocation(popy.MagicLocation):
         n_agents = 1
+
         def split(self, agent):
             return [agent.status, agent.sex]
 
@@ -66,7 +67,46 @@ def test_2():
     inspector = popy.NetworkInspector(model=model)
     inspector.plot_bipartite_network()
     inspector.plot_agent_network(node_attrs=["status", "sex"])
-    #assert len(model.locations) == 8
+    assert len(model.locations) == 8
+    assert len(model.agents) == 4
+    assert len(model.locations[0].agents) == 1
+    assert len(model.locations[1].agents) == 1
+    assert len(model.locations[2].agents) == 1
+    assert len(model.locations[3].agents) == 1
+    assert len(model.locations[4].agents) == 1
+    assert len(model.locations[5].agents) == 1
+    assert len(model.locations[6].agents) == 1
+    assert len(model.locations[7].agents) == 1
+
+
+test_2()
+# %%
+
+
+def test_3():
+    df = pd.DataFrame(
+        {
+            "status": ["A", "B", "B", "A"],
+            "sex": ["m", "m", "m", "w"],
+        },
+    )
+
+    model = popy.Model()
+    creator = popy.Creator(model)
+
+    class TestLocation(popy.MagicLocation):
+        n_agents = 1
+
+        def split(self, agent):
+            return str(agent.status) + str(agent.sex)
+
+    creator.create_agents(df=df)
+    creator.create_locations(location_classes=[TestLocation])
+
+    inspector = popy.NetworkInspector(model=model)
+    inspector.plot_bipartite_network()
+    inspector.plot_agent_network(node_attrs=["status", "sex"])
+    assert len(model.locations) == 4
     assert len(model.agents) == 4
     assert len(model.locations[0].agents) == 1
     assert len(model.locations[1].agents) == 1
@@ -78,6 +118,7 @@ def test_2():
             print(agent.status)
             print(agent.sex)
             print("/n")
-    
-test_2()
+
+
+test_3()
 # %%
