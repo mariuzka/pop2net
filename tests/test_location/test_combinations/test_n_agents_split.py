@@ -112,12 +112,6 @@ def test_3():
     assert len(model.locations[1].agents) == 1
     assert len(model.locations[2].agents) == 1
     assert len(model.locations[3].agents) == 1
-    print(model.locations[4:9])
-    for location in model.locations:
-        for agent in location.agents:
-            print(agent.status)
-            print(agent.sex)
-            print("/n")
 
 
 test_3()
