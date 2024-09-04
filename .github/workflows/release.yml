@@ -2,18 +2,6 @@ name: Release New Version
 
 on:
   workflow_dispatch:
-    inputs:
-      version_increase:
-        description: "Increase Version Number By"
-        required: true
-        default: "prerelease"
-        type: choice
-        options:
-        - "prerelease"
-        - "patch"
-        - "minor"
-        - "major"
-
 
 jobs:
   test:
@@ -30,36 +18,7 @@ jobs:
         uses: actions/checkout@v4
       - name: Enable Poetry
         uses: abatilo/actions-poetry@v2
-      # Increase Version
-      - name: Increase Version
-        id: increase-version
-        run: |
-          poetry version ${{ inputs.version_increase }}
-          echo version=$(poetry version --short) >> $GITHUB_OUTPUT
-      - name: Check Version
-        id: check-version
-        run: |
-          if [[ ${{ steps.increase-version.outputs.version }} =~ [a-zA-Z] ]]; then echo "prerelease=true" >> "$GITHUB_OUTPUT"; else echo "prerelease=false" >> "$GITHUB_OUTPUT"; fi
-          echo "IS PRERELEASE $GITHUB_OUTPUT"
-      # Create and merge PR to increase version in main
-      - name: Create Pull Request
-        id: create-pr
-        uses: peter-evans/create-pull-request@v6
-        with:
-          base: main
-          branch: gh-action/bump-version
-          title: bump version ${{ inputs.version_increase }} to ${{ steps.increase-version.outputs.version }}
-          delete-branch: true
-          commit-message: bump version to ${{ steps.increase-version.outputs.version }}
-      - name: Merge PR
-        uses: juliangruber/merge-pull-request-action@v1
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          number: ${{ steps.create-pr.outputs.pull-request-number }}
-          method: merge
-          repo: luerhard/bokehgraph
       # Pull to refresh and build
-      - run: git pull
       - name: Build Project
         run: poetry build
       # Actually release
