@@ -7,6 +7,7 @@ import typing
 from bokehgraph import BokehGraph
 import networkx as nx
 import pandas as pd
+import seaborn as sns
 from tabulate import tabulate
 
 import popy.utils as utils
@@ -26,49 +27,12 @@ class NetworkInspector:
         """
         self.model = model
 
-    def _plot_network(
-        self,
-        network_type,
-        node_color: str | None,
-        node_attrs: list | None,
-        edge_alpha: str,
-        edge_color: str,
-        include_0_weights: bool,
-    ):
-        if network_type == "bipartite":
-            graph = self.model.g.copy()
-            for i in graph:
-                if node_attrs is not None:
-                    for node_attr in node_attrs:
-                        graph.nodes[i][node_attr] = getattr(graph.nodes[i]["_obj"], node_attr)
-                del graph.nodes[i]["_obj"]
-            node_color = "type" if node_color is None else node_color
-
-        elif network_type == "agent":
-            graph = utils.create_agent_graph(
-                agents=self.model.agents,
-                node_attrs=node_attrs,
-                include_0_weights=include_0_weights,
-            )
-            node_color = "type" if node_color is None else node_color
-
-        graph_layout = nx.drawing.spring_layout(graph)
-        plot = BokehGraph(graph, width=400, height=400, hover_edges=True)
-        plot.layout(layout=graph_layout)
-        plot.draw(
-            node_color="firebrick",  # node_color if network_type == "agent" else "type",
-            edge_alpha="weight",
-            edge_color="black",
-            node_palette="random",
-        )
-
     def plot_bipartite_network(
         self,
         node_color: str | None = None,
         node_attrs: list | None = None,
         edge_alpha: str = "weight",
         edge_color: str = "black",
-        include_0_weights: bool = True,
     ) -> None:
         """Plots the two-mode network of agents and locations.
 
@@ -87,19 +51,21 @@ class NetworkInspector:
         """
         if node_attrs is None:
             node_attrs = ["type"]
-        elif isinstance(node_attrs, list):
+        else:
+            node_attrs = list(node_attrs)
             if "type" not in node_attrs:
                 node_attrs.append("type")
-        else:
-            raise Exception
 
-        self._plot_network(
-            network_type="bipartite",
-            node_color=node_color,
-            node_attrs=node_attrs,
-            edge_alpha=edge_alpha,
-            edge_color=edge_color,
-            include_0_weights=include_0_weights,
+        graph = self.model.export_bipartite_network(node_attrs=node_attrs)
+
+        graph_layout = nx.drawing.spring_layout(graph)
+        plot = BokehGraph(graph, width=400, height=400, hover_edges=True)
+        plot.layout(layout=graph_layout)
+        plot.draw(
+            node_color="type" if node_color is None else node_color,
+            edge_alpha="weight",
+            edge_color="black",
+            node_palette="random",
         )
 
     def plot_agent_network(
@@ -125,13 +91,26 @@ class NetworkInspector:
             include_0_weights (bool, optional): Should edges with a weight of zero be included in
                 the plot? Defaults to True.
         """
-        self._plot_network(
-            network_type="agent",
-            node_color=node_color,
+        if node_attrs is None:
+            node_attrs = ["type"]
+        else:
+            node_attrs = list(node_attrs)
+            if "type" not in node_attrs:
+                node_attrs.append("type")
+
+        graph = self.model.export_agent_network(
             node_attrs=node_attrs,
+            include_0_weights=include_0_weights,
+        )
+
+        graph_layout = nx.drawing.spring_layout(graph)
+        plot = BokehGraph(graph, width=400, height=400, hover_edges=True)
+        plot.layout(layout=graph_layout)
+        plot.draw(
+            node_color=node_color,
             edge_alpha=edge_alpha,
             edge_color=edge_color,
-            include_0_weights=include_0_weights,
+            node_palette="random",
         )
 
     def eval_affiliations(self, return_data=False) -> tuple[pd.DataFrame, pd.DataFrame] | None:
@@ -141,14 +120,6 @@ class NetworkInspector:
             PopyException: _description_
             PopyException: _description_
         """
-        # if self.agents is None:
-        #    msg = "You have to create agents first!"
-        #    raise PopyException(msg)
-
-        # if self.locations is None:
-        #    msg = "You have to create locations first!"
-        #    raise PopyException(msg)
-
         df1 = pd.DataFrame(
             [
                 {
@@ -185,7 +156,87 @@ class NetworkInspector:
             return df1, df2
         return None
 
-    #### Ported from utils #####
+    # TODO: calculate relative freqs
+    def create_contact_matrix(
+        self,
+        agents: list | None = None,
+        attr: str = "id",
+        weighted: bool = False,
+        plot: bool = True,
+        annot: bool = False,
+        return_df: bool = False,
+    ) -> pd.DataFrame:
+        """Create a contact matrix as a DataFrame from a given model's agent list.
+
+        Args:
+            agents: A list of agents.
+            attr: The agent attribute which is shown in the matrix.
+            weighted: Should the contacts be weighted? Defaults to False.
+            plot: Should the matrix be plotted? Defaults to False.
+            annot: Should the plottet matrix be annotated? Defaults to False.
+            return_df: Should the data be returned as pandas.DataFrame?
+
+        Returns:
+            A DataFrame containing a contact matrix based on `attr`.
+        """
+        if agents is None:
+            agents = self.model.agents
+
+        contact_data = []
+        attr_values = []
+        pairs = []
+
+        attr_u_name = f"{attr}_u"
+        attr_v_name = f"{attr}_v"
+
+        for agent_u in agents:
+            attr_u = getattr(agent_u, attr)
+            if attr_u is not None:
+                attr_values.append(attr_u)
+
+                for agent_v in agent_u.neighbors():
+                    attr_v = getattr(agent_v, attr)
+                    if attr_v is not None:
+                        attr_values.append(attr_v)
+
+                        pair = {agent_u.id, agent_v.id}
+
+                        if pair not in pairs:
+                            contact_data.append(
+                                {
+                                    "id_u": agent_u.id,
+                                    attr_u_name: attr_u,
+                                    "id_v": agent_v.id,
+                                    attr_v_name: attr_v,
+                                    "weight": agent_u.get_agent_weight(agent_v),
+                                },
+                            )
+                            pairs.append(pair)
+
+        attr_values = list(set(attr_values))
+
+        df = pd.DataFrame(index=sorted(attr_values, reverse=True), columns=sorted(attr_values))
+        df = df.fillna(0)
+
+        weight_total = 0
+        for contact in contact_data:
+            weight = contact["weight"] if weighted else 1
+            weight_total += weight
+
+            df.loc[contact[attr_u_name], contact[attr_v_name]] = (
+                df.loc[contact[attr_u_name], contact[attr_v_name]] + weight
+            )
+            df.loc[contact[attr_v_name], contact[attr_u_name]] = (
+                df.loc[contact[attr_v_name], contact[attr_u_name]] + weight
+            )
+
+        if plot:
+            g = sns.heatmap(df, annot=annot, vmin=0, fmt="g")
+            g.set(xlabel=attr, ylabel=attr)
+
+        if return_df:
+            return df
+
     def network_measures(self, node_attrs=None) -> dict | list[dict]:
         """Creates nx networkgraph and calculates common network measures.
 
@@ -200,7 +251,7 @@ class NetworkInspector:
             measure results
         """
         result_dict = {}
-        nx_graph = utils.create_agent_graph(self.model.agents, node_attrs)
+        nx_graph = self.model.export_agent_network(node_attrs=node_attrs)
 
         # make distinction between multiple independent networks and one network
         if nx.is_connected(nx_graph):

@@ -1,8 +1,8 @@
 import random
 
-import popy
-from popy import utils
 import pytest
+
+import popy
 
 
 def test_model():
@@ -91,7 +91,7 @@ def test_model_network_export_simple_n_agents(n_agents, exp_n_edges):
 
     model = MyModel(parameters={"steps": 2})
     model.run()
-    graph = utils.export_network(model)
+    graph = model.export_agent_network()
 
     assert graph.number_of_nodes() == n_agents
     assert graph.number_of_edges() == exp_n_edges

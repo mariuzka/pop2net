@@ -5,158 +5,7 @@ from __future__ import annotations
 import inspect
 import typing
 
-import networkx as nx
-from networkx import bipartite
 import numpy as np
-import pandas as pd
-import seaborn as sns
-
-if typing.TYPE_CHECKING:
-    from popy import AgentList
-
-
-##########################################################################
-# scientific stuff
-##########################################################################
-
-
-def create_agent_graph(
-    agents: AgentList,
-    node_attrs: list | None = None,
-    include_0_weights: bool = True,
-) -> nx.Graph:
-    """Create a Graph from a model's agent list.
-
-    Args:
-        agents: A model's agent list
-        node_attrs: A list of agent attributes
-        include_0_weights: Should edges with weight 0 be displayed?
-
-    Returns:
-        A weighted graph created from a model's agent list. Agents are connected if they are
-        neighbors in the model. Their connecting edge include the contact_weight as "weight"
-        attribute.
-    """
-    projection = nx.Graph()
-
-    # create nodes
-    for agent in agents:
-        if not projection.has_node(agent.id):
-            node_attr_dict = {}
-            if node_attrs is not None:
-                for node_attr in node_attrs:
-                    node_attr_dict.update({node_attr: vars(agent)[node_attr]})
-            projection.add_node(agent.id, **node_attr_dict)
-
-    # create edges
-    for agent in agents:
-        for agent_v in agent.neighbors():
-            if not projection.has_edge(agent.id, agent_v.id):
-                weight = agent.get_agent_weight(agent_v)
-                if include_0_weights or weight > 0:
-                    projection.add_edge(agent.id, agent_v.id, weight=weight)
-
-    return projection
-
-
-def export_network(env) -> nx.Graph:
-    """Export the current agent network (unweighted version).
-
-    This is a projection of the underlying bipartite network between agents and locations.
-
-    Returns:
-        The current agent network as unipartite, unweighted graph.
-    """
-    agent_nodes = {n for n, d in env.g.nodes(data=True) if d["bipartite"] == 0}
-
-    projection = bipartite.projection.projected_graph(env.g, agent_nodes)
-    for agent_id in projection:
-        del projection.nodes[agent_id]["_obj"]
-
-    return projection
-
-
-# TODO: calculate relative freqs
-def create_contact_matrix(
-    agents: list | AgentList,
-    attr: str = "id",
-    weighted: bool = False,
-    plot: bool = True,
-    annot: bool = False,
-    return_df: bool = False,
-) -> pd.DataFrame:
-    """Create a contact matrix as a DataFrame from a given model's agent list.
-
-    Args:
-        agents: A list of agents.
-        attr: The agent attribute which is shown in the matrix.
-        weighted: Should the contacts be weighted? Defaults to False.
-        plot: Should the matrix be plotted? Defaults to False.
-        annot: Should the plottet matrix be annotated? Defaults to False.
-        return_df: Should the data be returned as pandas.DataFrame?
-
-    Returns:
-        A DataFrame containing a contact matrix based on `attr`.
-    """
-    contact_data = []
-    attr_values = []
-    pairs = []
-
-    attr_u_name = f"{attr}_u"
-    attr_v_name = f"{attr}_v"
-
-    for agent_u in agents:
-        attr_u = getattr(agent_u, attr)
-        if attr_u is not None:
-            attr_values.append(attr_u)
-
-            for agent_v in agent_u.neighbors():
-                attr_v = getattr(agent_v, attr)
-                if attr_v is not None:
-                    attr_values.append(attr_v)
-
-                    pair = {agent_u.id, agent_v.id}
-
-                    if pair not in pairs:
-                        contact_data.append(
-                            {
-                                "id_u": agent_u.id,
-                                attr_u_name: attr_u,
-                                "id_v": agent_v.id,
-                                attr_v_name: attr_v,
-                                "weight": agent_u.get_agent_weight(agent_v),
-                            },
-                        )
-                        pairs.append(pair)
-
-    attr_values = list(set(attr_values))
-
-    df = pd.DataFrame(index=sorted(attr_values, reverse=True), columns=sorted(attr_values))
-    df = df.fillna(0)
-
-    weight_total = 0
-    for contact in contact_data:
-        weight = contact["weight"] if weighted else 1
-        weight_total += weight
-
-        df.loc[contact[attr_u_name], contact[attr_v_name]] = (
-            df.loc[contact[attr_u_name], contact[attr_v_name]] + weight
-        )
-        df.loc[contact[attr_v_name], contact[attr_u_name]] = (
-            df.loc[contact[attr_v_name], contact[attr_u_name]] + weight
-        )
-
-    if plot:
-        g = sns.heatmap(df, annot=annot, vmin=0, fmt="g")
-        g.set(xlabel=attr, ylabel=attr)
-
-    if return_df:
-        return df
-
-
-##########################################################################
-# technical helper functions
-##########################################################################
 
 
 def group_it(
@@ -180,33 +29,32 @@ def group_it(
     Returns:
         _type_: _description_
     """
-    # TODO: something is fishy in this function...
     assert type(value) in [int, float], f"{value} has to be a number!"
-    assert value >= start, f"The value {value} is smaller than the smallest lower bound {start}."
 
-    for i in range(n_steps):
-        lower_bound = start + step * i
-        upper_bound = lower_bound + step
+    if value < start:
+        new_value = np.nan
 
-        if lower_bound <= value:
-            if return_value == "index":
-                new_value = i
+    else:
+        for i in range(n_steps):
+            lower_bound = start + step * i
+            upper_bound = lower_bound + step
 
-            elif return_value == "lower_bound":
-                new_value = lower_bound  # type: ignore
+            if lower_bound <= value < upper_bound:
+                break
 
-            elif return_value == "range":
-                new_value = (lower_bound, upper_bound)  # type: ignore
+        if return_value == "index":
+            new_value = i
 
-            else:
-                msg = "You have entered a non-existing option for `return_value`."
-                raise Exception(msg)
+        elif return_value == "lower_bound":
+            new_value = lower_bound
 
-        if not summarize_highest:
-            if i == n_steps + 1:
-                if value > upper_bound:
-                    new_value = np.nan
-    # BUG: new_value possibly unbound
+        elif return_value == "range":
+            new_value = (lower_bound, upper_bound)
+
+        if value >= upper_bound:
+            if not summarize_highest:
+                new_value = np.nan
+
     return new_value
 
 
@@ -226,11 +74,8 @@ def print_header(text: object):
     print("")
 
 
-def make_it_a_list_if_it_is_no_list(x: object) -> list:
-    if isinstance(x, list):
-        return x
-    else:
-        return [x]
+def _to_list(x: object) -> list:
+    return x if isinstance(x, list) else [x]
 
 
 def _get_cls_as_str(cls_):

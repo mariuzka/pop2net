@@ -66,7 +66,6 @@ class Creator:
             A pandas DataFrame.
         """
         df = df.copy()
-        df = df.sample(frac=1)
 
         if n is None:
             return df
@@ -204,7 +203,7 @@ class Creator:
     ) -> list[int | str]:
         all_values = []
         for agent in agents:
-            agent_values = utils.make_it_a_list_if_it_is_no_list(dummy_location.split(agent))
+            agent_values = utils._to_list(dummy_location.split(agent))
 
             if allow_nesting:
                 # Add mother location's value to the value of the lower level location
@@ -278,7 +277,7 @@ class Creator:
 
         stick_values = {self._get_stick_value(agent, dummy_location) for agent in agents}
 
-        dummy_location = self._create_dummy_location(location_cls)
+        # dummy_location = self._create_dummy_location(location_cls)
 
         # for each group of sticky agents
         for stick_value in stick_values:
@@ -292,19 +291,19 @@ class Creator:
 
             for _, group in enumerate(groups):
                 # if there are still enough free places available
-                if dummy_location.n_agents is None or (dummy_location.n_agents - len(group)) >= len(
-                    sticky_agents,
+                if (dummy_location.n_agents is None) or dummy_location.n_agents - len(group) >= len(
+                    sticky_agents
                 ):
-                    if sum(
-                        [dummy_location.find(agent) for agent in sticky_agents],
-                    ) == len(sticky_agents):
-                        # assign agents
-                        for agent in sticky_agents:
-                            group.append(agent)
-                            dummy_location.add_agent(agent)
+                    # if sum(
+                    #    [dummy_location.find(agent) for agent in sticky_agents],
+                    # ) == len(sticky_agents):
+                    #    # assign agents
+                    for agent in sticky_agents:
+                        group.append(agent)
+                        dummy_location.add_agent(agent)
 
-                        assigned = True
-                        break
+                    assigned = True
+                    break
 
             if not assigned:
                 if len(groups) < n_location_groups:
@@ -568,10 +567,15 @@ class Creator:
                 allow_nesting=True,
             )
 
+            if len(split_values) == 0:
+                split_values.append("dummy_split_value")
+
             group_count = 0
 
             # for each group split value
             for split_value in split_values:
+                split_value_locations = []
+
                 # get all agents with that value
                 split_value_affiliated_agents = self._get_split_value_affiliated_agents(
                     agents=affiliated_agents,
@@ -604,7 +608,7 @@ class Creator:
                     subsplit_values = {
                         agent_subsplit_value
                         for agent in group_list
-                        for agent_subsplit_value in utils.make_it_a_list_if_it_is_no_list(
+                        for agent_subsplit_value in utils._to_list(
                             dummy_location._subsplit(agent),
                         )
                     }
@@ -616,7 +620,7 @@ class Creator:
 
                         # for agent in group_affiliated_agents:
                         for agent in group_list:
-                            agent_subsplit_value = utils.make_it_a_list_if_it_is_no_list(
+                            agent_subsplit_value = utils._to_list(
                                 dummy_location._subsplit(agent),
                             )
                             if subsplit_value in agent_subsplit_value:
@@ -629,7 +633,8 @@ class Creator:
                         location.subsplit_value = subsplit_value
                         location.group_id = i
                         location.subgroup_id = j
-                        # location.group_agents = group_list  # maybe delete later
+
+                        split_value_locations.append(location)
 
                         # Assigning process:
                         for agent in subsplit_affiliated_agents:
@@ -664,10 +669,24 @@ class Creator:
 
                         locations.append(location)
 
-        locations = popy.LocationList(
-            model=self.model,
-            objs=locations,
-        )
+                if (
+                    dummy_location.n_locations is not None
+                    and not dummy_location.only_exact_n_agents
+                ):
+                    if len(split_value_locations) < dummy_location.n_locations:
+                        for _ in range(
+                            int(dummy_location.n_locations - len(split_value_locations))
+                        ):
+                            location = location_cls(model=self.model)
+                            location.setup()
+                            location.split_value = split_value
+                            location.subsplit_value = None
+                            location.group_id = None
+                            location.subgroup_id = None
+
+                            locations.append(location)
+
+        locations = popy.LocationList(model=self.model, objs=locations)
 
         # execute an action after all locations have been created
         for location in locations:
