@@ -59,12 +59,18 @@ class NetworkInspector:
             if "type" not in agent_attrs:
                 agent_attrs.append("type")
 
+        if agent_color is not None and agent_color not in agent_attrs:
+            agent_attrs.append(agent_color)
+
         if location_attrs is None:
             location_attrs = ["type"]
         else:
             location_attrs = list(location_attrs)
             if "type" not in location_attrs:
                 location_attrs.append("type")
+
+        if location_color is not None and location_color not in location_attrs:
+            location_attrs.append(location_color)
 
         graph = self.model.export_bipartite_network(
             agent_attrs=agent_attrs,
