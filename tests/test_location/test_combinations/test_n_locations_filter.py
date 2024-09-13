@@ -1,8 +1,7 @@
 # %%
 import pandas as pd
 
-import popy
-from popy.creator import Creator
+import pop2net as p2n
 
 
 # %%
@@ -13,16 +12,16 @@ def test_1():
         },
     )
 
-    model = popy.Model()
-    creator = Creator(model)
+    model = p2n.Model()
+    creator = p2n.Creator(model)
 
-    class TestLocationA(popy.MagicLocation):
+    class TestLocationA(p2n.MagicLocation):
         n_locations = 2
 
         def filter(self, agent):
             return agent.status == "A"
 
-    class TestLocationB(popy.MagicLocation):
+    class TestLocationB(p2n.MagicLocation):
         n_locations = 1
 
         def filter(self, agent):
@@ -30,7 +29,7 @@ def test_1():
 
     creator.create_agents(df=df)
     creator.create_locations(location_classes=[TestLocationA, TestLocationB])
-    inspector = popy.NetworkInspector(model=model)
+    inspector = p2n.NetworkInspector(model=model)
     inspector.plot_bipartite_network()
     inspector.plot_agent_network(node_attrs=["status"])
 

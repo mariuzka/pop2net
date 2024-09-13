@@ -1,28 +1,28 @@
-import popy
+import pop2net as p2n
 
 # Laufzeit mit ca. 4.3 GHz: ca. 29-30s
 
 
 def test_affiliation_tracking():
-    class Agent(popy.Agent):
+    class Agent(p2n.Agent):
         def setup(self):
             self.n_locations = 0
 
         def count_locations(self):
             self.n_locations = len(self.locations)
 
-    class Location(popy.Location):
+    class Location(p2n.Location):
         def setup(self):
             self.n_agents = 0
 
         def count_agents(self):
             self.n_agents = len(self.agents)
 
-    class Model(popy.Model):
+    class Model(p2n.Model):
         def setup(self):
             n_agents = 1000
-            self.add_agents(popy.AgentList(self, n_agents, Agent))
-            self.add_locations(popy.LocationList(self, n_agents, Location))
+            self.add_agents(p2n.AgentList(self, n_agents, Agent))
+            self.add_locations(p2n.LocationList(self, n_agents, Location))
 
             for i, location in enumerate(self.locations):
                 location.add_agent(self.agents[i])

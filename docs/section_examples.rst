@@ -1,7 +1,7 @@
 Example Gallery
 ===============
 
-This is a example gallery that is supposed to show different implementations of Popy.
+This is a example gallery that is supposed to show different implementations of Pop2net.
 
 .. toctree::
    :maxdepth: 1

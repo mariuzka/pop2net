@@ -1,19 +1,19 @@
-import popy
+import pop2net as p2n
 
 
 def test_model_connect_agents_and_disconnect_agents_1():
     """A test without specifing locationt types and without removing locations from model."""
 
-    model = popy.Model()
-    agent1 = popy.Agent(model)
-    agent2 = popy.Agent(model)
-    agent3 = popy.Agent(model)
+    model = p2n.Model()
+    agent1 = p2n.Agent(model)
+    agent2 = p2n.Agent(model)
+    agent3 = p2n.Agent(model)
     agents = [agent1, agent2, agent3]
 
-    class Home(popy.Location):
+    class Home(p2n.Location):
         pass
 
-    class School(popy.Location):
+    class School(p2n.Location):
         pass
 
     model.connect_agents(
@@ -57,16 +57,16 @@ def test_model_connect_agents_and_disconnect_agents_1():
 def test_model_connect_agents_and_disconnect_agents_2():
     """A test without removing locations from model."""
 
-    model = popy.Model()
-    agent1 = popy.Agent(model)
-    agent2 = popy.Agent(model)
-    agent3 = popy.Agent(model)
+    model = p2n.Model()
+    agent1 = p2n.Agent(model)
+    agent2 = p2n.Agent(model)
+    agent3 = p2n.Agent(model)
     agents = [agent1, agent2, agent3]
 
-    class Home(popy.Location):
+    class Home(p2n.Location):
         pass
 
-    class School(popy.Location):
+    class School(p2n.Location):
         pass
 
     model.connect_agents(
@@ -129,16 +129,16 @@ def test_model_connect_agents_and_disconnect_agents_2():
 
 
 def test_model_connect_agents_and_disconnect_agents_3():
-    model = popy.Model()
-    agent1 = popy.Agent(model)
-    agent2 = popy.Agent(model)
-    agent3 = popy.Agent(model)
+    model = p2n.Model()
+    agent1 = p2n.Agent(model)
+    agent2 = p2n.Agent(model)
+    agent3 = p2n.Agent(model)
     agents = [agent1, agent2, agent3]
 
-    class Home(popy.Location):
+    class Home(p2n.Location):
         pass
 
-    class School(popy.Location):
+    class School(p2n.Location):
         pass
 
     model.connect_agents(
@@ -176,16 +176,16 @@ def test_model_connect_agents_and_disconnect_agents_3():
 
 
 def test_model_connect_agents_and_disconnect_agents_4():
-    model = popy.Model()
-    agent1 = popy.Agent(model)
-    agent2 = popy.Agent(model)
-    agent3 = popy.Agent(model)
+    model = p2n.Model()
+    agent1 = p2n.Agent(model)
+    agent2 = p2n.Agent(model)
+    agent3 = p2n.Agent(model)
     agents = [agent1, agent2, agent3]
 
-    class Home(popy.Location):
+    class Home(p2n.Location):
         pass
 
-    class School(popy.Location):
+    class School(p2n.Location):
         pass
 
     model.connect_agents(
@@ -211,14 +211,14 @@ def test_model_connect_agents_and_disconnect_agents_4():
 
 def test_model_connect_agents_and_disconnect_agents_5():
     """Test agent.shared_locations()"""
-    model = popy.Model()
-    agent1 = popy.Agent(model)
-    agent2 = popy.Agent(model)
+    model = p2n.Model()
+    agent1 = p2n.Agent(model)
+    agent2 = p2n.Agent(model)
 
-    class Home(popy.Location):
+    class Home(p2n.Location):
         pass
 
-    class School(popy.Location):
+    class School(p2n.Location):
         pass
 
     assert len(agent1.shared_locations(agent2)) == 0

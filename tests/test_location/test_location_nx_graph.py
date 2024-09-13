@@ -1,13 +1,13 @@
 import networkx as nx
 
-import popy
+import pop2net as p2n
 
 
 def test_line_1():
-    model = popy.Model()
-    creator = popy.Creator(model)
+    model = p2n.Model()
+    creator = p2n.Creator(model)
 
-    class LineLocation(popy.MagicLocation):
+    class LineLocation(p2n.MagicLocation):
         nxgraph = nx.path_graph(10)
         n_agents = None
         n_locations = None
@@ -32,10 +32,10 @@ def test_line_1():
 
 
 def test_line_2():
-    model = popy.Model()
-    creator = popy.Creator(model)
+    model = p2n.Model()
+    creator = p2n.Creator(model)
 
-    class LineLocation(popy.MagicLocation):
+    class LineLocation(p2n.MagicLocation):
         nxgraph = nx.path_graph(10)
         n_agents = None
         n_locations = None
@@ -71,10 +71,10 @@ def test_line_2():
 
 
 def test_line_3():
-    model = popy.Model()
-    creator = popy.Creator(model)
+    model = p2n.Model()
+    creator = p2n.Creator(model)
 
-    class LineLocation(popy.MagicLocation):
+    class LineLocation(p2n.MagicLocation):
         nxgraph = nx.path_graph(10)
         n_agents = 15
         n_locations = None
@@ -111,10 +111,10 @@ def test_line_3():
 
 
 def test_line_4():
-    model = popy.Model()
-    creator = popy.Creator(model)
+    model = p2n.Model()
+    creator = p2n.Creator(model)
 
-    class LineLocation(popy.MagicLocation):
+    class LineLocation(p2n.MagicLocation):
         nxgraph = nx.path_graph(10)
         n_agents = 15
         n_locations = None
@@ -151,10 +151,10 @@ def test_line_4():
 
 
 def test_line_5():
-    model = popy.Model()
-    creator = popy.Creator(model)
+    model = p2n.Model()
+    creator = p2n.Creator(model)
 
-    class LineLocation(popy.MagicLocation):
+    class LineLocation(p2n.MagicLocation):
         nxgraph = nx.path_graph(10)
         n_agents = 15
         n_locations = None
@@ -180,10 +180,10 @@ def test_line_5():
 
 
 def test_line_6():
-    model = popy.Model()
-    creator = popy.Creator(model)
+    model = p2n.Model()
+    creator = p2n.Creator(model)
 
-    class LineLocation(popy.MagicLocation):
+    class LineLocation(p2n.MagicLocation):
         nxgraph = nx.path_graph(10)
         only_exact_n_agents = True
 

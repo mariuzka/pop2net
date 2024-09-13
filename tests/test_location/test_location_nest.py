@@ -3,7 +3,7 @@ from collections import Counter
 
 import pandas as pd
 
-import popy
+import pop2net as p2n
 
 
 # %%
@@ -14,17 +14,17 @@ def test_1():
         }
     )
 
-    class School(popy.MagicLocation):
+    class School(p2n.MagicLocation):
         n_agents = 2
 
-    class Classroom(popy.MagicLocation):
+    class Classroom(p2n.MagicLocation):
         n_agents = 2
 
         def nest(self):
             return School
 
-    model = popy.Model()
-    creator = popy.Creator(model=model)
+    model = p2n.Model()
+    creator = p2n.Creator(model=model)
     creator.create(df=df, location_classes=[School, Classroom])
 
     assert len(model.agents) == 4
@@ -42,7 +42,7 @@ def test_1():
             is agent.neighbors(location_classes=[School])[0]
         )
 
-    inspector = popy.NetworkInspector(model)
+    inspector = p2n.NetworkInspector(model)
     inspector.plot_bipartite_network()
 
 
@@ -60,17 +60,17 @@ def test_2():
         }
     )
 
-    class School(popy.MagicLocation):
+    class School(p2n.MagicLocation):
         n_agents = 4
 
-    class Classroom(popy.MagicLocation):
+    class Classroom(p2n.MagicLocation):
         n_agents = 2
 
         def split(self, agent):
             return agent.group
 
-    model = popy.Model()
-    creator = popy.Creator(model=model)
+    model = p2n.Model()
+    creator = p2n.Creator(model=model)
     creator.create(df=df, location_classes=[School, Classroom])
 
     assert len(model.agents) == 8
@@ -89,14 +89,14 @@ def test_2():
         if location.type == "Classroom"
     )
 
-    inspector = popy.NetworkInspector(model)
+    inspector = p2n.NetworkInspector(model)
     inspector.plot_bipartite_network()
     inspector.plot_agent_network(node_attrs=df.columns, node_color="id")
 
-    class School(popy.MagicLocation):
+    class School(p2n.MagicLocation):
         n_agents = 4
 
-    class Classroom(popy.MagicLocation):
+    class Classroom(p2n.MagicLocation):
         n_agents = 2
 
         def split(self, agent):
@@ -105,8 +105,8 @@ def test_2():
         def nest(self):
             return School
 
-    model = popy.Model()
-    creator = popy.Creator(model=model)
+    model = p2n.Model()
+    creator = p2n.Creator(model=model)
     creator.create(df=df, location_classes=[School, Classroom])
 
     assert len(model.agents) == 8
@@ -117,7 +117,7 @@ def test_2():
         if location.type == "Classroom"
     )
 
-    inspector = popy.NetworkInspector(model)
+    inspector = p2n.NetworkInspector(model)
     inspector.plot_bipartite_network()
     inspector.plot_agent_network(node_attrs=df.columns, node_color="group")
 

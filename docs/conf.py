@@ -7,7 +7,7 @@
 from pathlib import Path
 import sys
 
-project = "popy"
+project = "pop2net"
 copyright = "2022, Marius Kaffai, Lukas Erhard"
 author = "Marius Kaffai, Lukas Erhard"
 release = "0.1.0"

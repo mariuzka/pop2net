@@ -1,7 +1,7 @@
 # %%
 import pandas as pd
 
-import popy
+import pop2net as p2n
 
 # %%
 
@@ -13,27 +13,27 @@ def test_1():
         },
     )
 
-    class Teacher(popy.MeltLocation):
+    class Teacher(p2n.MeltLocation):
         n_agents = 1
 
         def filter(self, agent):
             return agent.status == "teacher"
 
-    class Pupils(popy.MeltLocation):
+    class Pupils(p2n.MeltLocation):
         n_agents = 1
 
         def filter(self, agent):
             return agent.status == "pupil"
 
-    class Classroom(popy.MagicLocation):
+    class Classroom(p2n.MagicLocation):
         def melt(self):
             return Teacher, Pupils
 
-    model = popy.Model()
-    creator = popy.Creator(model)
+    model = p2n.Model()
+    creator = p2n.Creator(model)
     creator.create_agents(df=df)
     creator.create_locations(location_classes=[Classroom])
-    inspector = popy.NetworkInspector(model)
+    inspector = p2n.NetworkInspector(model)
     inspector.plot_bipartite_network()
 
     assert len(model.agents) == 5
@@ -55,29 +55,29 @@ def test_2():
         },
     )
 
-    class Teacher(popy.MeltLocation):
+    class Teacher(p2n.MeltLocation):
         n_agents = 1
 
         def filter(self, agent):
             return agent.status == "teacher"
 
-    class Pupils(popy.MeltLocation):
+    class Pupils(p2n.MeltLocation):
         n_agents = 2
 
         def filter(self, agent):
             return agent.status == "pupil"
 
-    class Classroom(popy.MagicLocation):
+    class Classroom(p2n.MagicLocation):
         n_agents = 2
 
         def melt(self):
             return Teacher, Pupils
 
-    model = popy.Model()
-    creator = popy.Creator(model)
+    model = p2n.Model()
+    creator = p2n.Creator(model)
     creator.create_agents(df=df)
     creator.create_locations(location_classes=[Classroom])
-    inspector = popy.NetworkInspector(model)
+    inspector = p2n.NetworkInspector(model)
     inspector.plot_bipartite_network()
     assert len(model.agents) == 5
     assert len(model.locations) == 2

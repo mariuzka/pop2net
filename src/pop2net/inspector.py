@@ -11,14 +11,14 @@ import pandas as pd
 import seaborn as sns
 from tabulate import tabulate
 
-import popy.utils as utils
+import pop2net.utils as utils
 
 if typing.TYPE_CHECKING:
     from . import location as _location
 
 
 class NetworkInspector:
-    """Helper class that contains functions to inspect the network of a popy model."""
+    """Helper class that contains functions to inspect the network of a pop2net model."""
 
     def __init__(self, model) -> None:
         """Initiate a NetworkInspector.
@@ -137,8 +137,8 @@ class NetworkInspector:
         """Prints information on the distribution of agents per location and locations per agent.
 
         Raises:
-            PopyException: _description_
-            PopyException: _description_
+            Pop2netException: _description_
+            Pop2netException: _description_
         """
         df1 = pd.DataFrame(
             [
@@ -441,7 +441,7 @@ class NetworkInspector:
            classes and agent_attributes
 
         Args:
-            select_locations (popy.Location | list[popy.Location] | None, optional): A list of
+            select_locations (p2n.Location | list[p2n.Location] | None, optional): A list of
                 location classes. Defaults to None.
             agent_attributes (str | None | list[str] | None, optional): A list of agent attributes.
                 Defaults to None.

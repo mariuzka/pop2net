@@ -2,11 +2,11 @@ import random
 
 import pytest
 
-import popy
+import pop2net as p2n
 
 
 def test_model():
-    class HealthyAgent(popy.Agent):
+    class HealthyAgent(p2n.Agent):
         def setup(self):
             self.is_infected = False
 
@@ -20,13 +20,13 @@ def test_model():
         def setup(self):
             self.is_infected = True
 
-    class MyModel(popy.Model):
+    class MyModel(p2n.Model):
         def setup(self):
-            popy.AgentList(self, 5, HealthyAgent)
-            self.agents.extend(popy.AgentList(self, 1, InfectedAgent))
+            p2n.AgentList(self, 5, HealthyAgent)
+            self.agents.extend(p2n.AgentList(self, 1, InfectedAgent))
             self.agents.shuffle()
 
-            popy.LocationList(self, 3, popy.Location)
+            p2n.LocationList(self, 3, p2n.Location)
 
             # home 1
             self.locations[0].add_agent(self.agents[0])
@@ -64,7 +64,7 @@ def test_model():
 def test_model_network_export_simple_n_agents(n_agents, exp_n_edges):
     random.seed(42)
 
-    class MovingAgent(popy.Agent):
+    class MovingAgent(p2n.Agent):
         def move(self):
             old_location = self.locations[0]
             old_location.remove_agent(self)
@@ -75,10 +75,10 @@ def test_model_network_export_simple_n_agents(n_agents, exp_n_edges):
                     break
             new_location.add_agent(self)
 
-    class MyModel(popy.Model):
+    class MyModel(p2n.Model):
         def setup(self):
-            popy.AgentList(self, n_agents, MovingAgent)
-            popy.LocationList(self, 10, popy.Location)
+            p2n.AgentList(self, n_agents, MovingAgent)
+            p2n.LocationList(self, 10, p2n.Location)
 
             # assign agents to locations
             for agent in self.agents:

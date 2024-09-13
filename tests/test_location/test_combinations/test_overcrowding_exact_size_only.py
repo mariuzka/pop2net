@@ -2,7 +2,7 @@
 # %%
 import pandas as pd
 
-import popy
+import pop2net as p2n
 
 
 # %%
@@ -13,43 +13,43 @@ def test_1():
         },
     )
 
-    class TestLocation(popy.MagicLocation):
+    class TestLocation(p2n.MagicLocation):
         overcrowding = None
         n_agents = 5
         only_exact_n_agents = False
 
-    class TestLocation2(popy.MagicLocation):
+    class TestLocation2(p2n.MagicLocation):
         overcrowding = True
         n_agents = 5
         only_exact_n_agents = False
 
-    class TestLocation3(popy.MagicLocation):
+    class TestLocation3(p2n.MagicLocation):
         overcrowding = False
         n_agents = 5
         only_exact_n_agents = False
 
-    model = popy.Model()
-    creator = popy.Creator(model)
+    model = p2n.Model()
+    creator = p2n.Creator(model)
     creator.create(df=df, location_classes=[TestLocation])
-    inspector = popy.NetworkInspector(model)
+    inspector = p2n.NetworkInspector(model)
     inspector.plot_agent_network(node_attrs=df.columns, node_color="status")
     assert len(model.agents) == 7
     assert len(model.locations) == 1
     assert len(model.locations[0].agents) == 7
 
-    model = popy.Model()
-    creator = popy.Creator(model)
+    model = p2n.Model()
+    creator = p2n.Creator(model)
     creator.create(df=df, location_classes=[TestLocation2])
-    inspector = popy.NetworkInspector(model)
+    inspector = p2n.NetworkInspector(model)
     inspector.plot_agent_network(node_attrs=df.columns, node_color="status")
     assert len(model.agents) == 7
     assert len(model.locations) == 1
     assert len(model.locations[0].agents) == 7
 
-    model = popy.Model()
-    creator = popy.Creator(model)
+    model = p2n.Model()
+    creator = p2n.Creator(model)
     creator.create(df=df, location_classes=[TestLocation3])
-    inspector = popy.NetworkInspector(model)
+    inspector = p2n.NetworkInspector(model)
     inspector.plot_agent_network(node_attrs=df.columns, node_color="status")
     assert len(model.agents) == 7
     assert len(model.locations) == 2
@@ -69,45 +69,45 @@ def test_1():
         },
     )
 
-    class TestLocation(popy.MagicLocation):
+    class TestLocation(p2n.MagicLocation):
         overcrowding = None
         n_agents = 5
         only_exact_n_agents = True
 
-    class TestLocation2(popy.MagicLocation):
+    class TestLocation2(p2n.MagicLocation):
         overcrowding = True
         n_agents = 5
         only_exact_n_agents = True
 
-    class TestLocation3(popy.MagicLocation):
+    class TestLocation3(p2n.MagicLocation):
         overcrowding = False
         n_agents = 5
         only_exact_n_agents = True
 
-    model = popy.Model()
-    creator = popy.Creator(model)
+    model = p2n.Model()
+    creator = p2n.Creator(model)
     creator.create(df=df, location_classes=[TestLocation])
-    inspector = popy.NetworkInspector(model)
+    inspector = p2n.NetworkInspector(model)
     inspector.plot_agent_network(node_attrs=df.columns, node_color="status")
     assert len(model.agents) == 7
     assert len(model.locations) == 1
     assert len(model.locations[0].agents) == 5
     assert sum(not agent.locations for agent in model.agents) == 2
 
-    model = popy.Model()
-    creator = popy.Creator(model)
+    model = p2n.Model()
+    creator = p2n.Creator(model)
     creator.create(df=df, location_classes=[TestLocation2])
-    inspector = popy.NetworkInspector(model)
+    inspector = p2n.NetworkInspector(model)
     inspector.plot_agent_network(node_attrs=df.columns, node_color="status")
     assert len(model.agents) == 7
     assert len(model.locations) == 1
     assert len(model.locations[0].agents) == 5
     assert sum(not agent.locations for agent in model.agents) == 2
 
-    model = popy.Model()
-    creator = popy.Creator(model)
+    model = p2n.Model()
+    creator = p2n.Creator(model)
     creator.create(df=df, location_classes=[TestLocation3])
-    inspector = popy.NetworkInspector(model)
+    inspector = p2n.NetworkInspector(model)
     inspector.plot_agent_network(node_attrs=df.columns, node_color="status")
     assert len(model.agents) == 7
     assert len(model.locations) == 1

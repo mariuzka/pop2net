@@ -2,7 +2,7 @@
 
 import pandas as pd
 
-import popy
+import pop2net as p2n
 
 
 # %%
@@ -11,15 +11,15 @@ def test_1():
         {"status": ["pupil", "pupil", "pupil", "pupil", "pupil"], "class_id": [1, 2, 1, 2, 1]}
     )
 
-    class Classroom(popy.MagicLocation):
+    class Classroom(p2n.MagicLocation):
         n_agents = 2
         only_exact_n_agents = False
 
         def stick_together(self, agent):
             return agent.class_id
 
-    model = popy.Model()
-    creator = popy.Creator(model=model)
+    model = p2n.Model()
+    creator = p2n.Creator(model=model)
     creator.create(df=df, location_classes=[Classroom])
 
     assert len(model.agents) == 5
@@ -31,18 +31,18 @@ def test_1():
         assert agent.neighbors(location_classes=[Classroom])[0].class_id == agent.class_id
 
     # with exact agent set to True
-    class Classroom(popy.MagicLocation):
+    class Classroom(p2n.MagicLocation):
         n_agents = 2
         only_exact_n_agents = True
 
         def stick_together(self, agent):
             return agent.class_id
 
-    model = popy.Model()
-    creator = popy.Creator(model=model)
+    model = p2n.Model()
+    creator = p2n.Creator(model=model)
     creator.create(df=df, location_classes=[Classroom])
 
-    inspector = popy.NetworkInspector(model)
+    inspector = p2n.NetworkInspector(model)
     inspector.plot_bipartite_network()
     inspector.plot_agent_network(node_attrs=df.columns, node_color="class_id")
 

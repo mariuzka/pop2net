@@ -1,7 +1,7 @@
 import numpy as np
 
-import popy
-import popy.utils as utils
+import pop2net as p2n
+import pop2net.utils as utils
 
 
 def test_group_it_1():
@@ -126,11 +126,11 @@ def test_to_list():
 
 
 def test_get_cls_as_str():
-    class MyLocation(popy.MagicLocation):
+    class MyLocation(p2n.MagicLocation):
         pass
 
     assert utils._get_cls_as_str(MyLocation) == "MyLocation"
-    assert utils._get_cls_as_str(popy.Agent) == "Agent"
+    assert utils._get_cls_as_str(p2n.Agent) == "Agent"
 
 
 def test_join_positions():

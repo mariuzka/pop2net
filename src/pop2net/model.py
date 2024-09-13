@@ -14,8 +14,8 @@ if typing.TYPE_CHECKING:
     from . import agent as _agent
     from . import location as _location
 
-from popy.sequences import LocationList
-import popy.utils as utils
+from pop2net.sequences import LocationList
+import pop2net.utils as utils
 
 
 class Model(ap.Model):

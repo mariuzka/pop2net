@@ -1,24 +1,24 @@
 # %%
 import pandas as pd
 
-import popy
+import pop2net as p2n
 
 # %%
 
 
 def test_1():
     df = pd.DataFrame({"status": ["pupil", "pupil", "pupil", "pupil", "pupil"]})
-    model = popy.Model()
-    creator = popy.Creator(model=model)
+    model = p2n.Model()
+    creator = p2n.Creator(model=model)
 
-    class Classroom(popy.MagicLocation):
+    class Classroom(p2n.MagicLocation):
         n_agents = 3
         only_exact_n_agents = False
 
         def nest(self):
             return School
 
-    class School(popy.MagicLocation):
+    class School(p2n.MagicLocation):
         pass
 
     creator.create(df=df, location_classes=[Classroom, School])
@@ -30,21 +30,21 @@ def test_1():
     assert len(model.locations[2].agents) == 5
 
     # Version with set to true
-    model = popy.Model()
-    creator = popy.Creator(model=model)
+    model = p2n.Model()
+    creator = p2n.Creator(model=model)
 
-    class Classroom(popy.MagicLocation):
+    class Classroom(p2n.MagicLocation):
         n_agents = 3
         only_exact_n_agents = True
 
         def nest(self):
             return School
 
-    class School(popy.MagicLocation):
+    class School(p2n.MagicLocation):
         pass
 
     creator.create(df=df, location_classes=[Classroom, School])
-    inspector = popy.NetworkInspector(model=model)
+    inspector = p2n.NetworkInspector(model=model)
     inspector.plot_bipartite_network()
     inspector.plot_agent_network(node_attrs=["status"])
 
@@ -60,22 +60,22 @@ test_1()
 # %%
 def test_2():
     df = pd.DataFrame({"status": ["pupil", "pupil", "pupil", "pupil", "pupil", "pupil"]})
-    model = popy.Model()
-    creator = popy.Creator(model=model)
+    model = p2n.Model()
+    creator = p2n.Creator(model=model)
 
-    class Classroom(popy.MagicLocation):
+    class Classroom(p2n.MagicLocation):
         n_agents = 2
         only_exact_n_agents = True
 
         def nest(self):
             return School
 
-    class School(popy.MagicLocation):
+    class School(p2n.MagicLocation):
         n_agents = 4
         only_exact_n_agents = True
 
     creator.create(df=df, location_classes=[Classroom, School])
-    inspector = popy.NetworkInspector(model=model)
+    inspector = p2n.NetworkInspector(model=model)
     inspector.plot_bipartite_network()
     inspector.plot_agent_network(node_attrs=["status", "id"])
 

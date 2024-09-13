@@ -1,7 +1,7 @@
 # %%
 import pandas as pd
 
-import popy
+import pop2net as p2n
 
 
 # %%
@@ -22,29 +22,29 @@ def test_1():
             "class_id": [1, 2, 1, 2, 1, 2, 1, 2, 3],
         }
     )
-    model = popy.Model()
-    creator = popy.Creator(model=model)
+    model = p2n.Model()
+    creator = p2n.Creator(model=model)
 
-    class Classroom1(popy.MagicLocation):
+    class Classroom1(p2n.MagicLocation):
         def filter(self, agent):
             return agent.class_id == 1
 
         def nest(self):
             return School
 
-    class Classroom2(popy.MagicLocation):
+    class Classroom2(p2n.MagicLocation):
         def filter(self, agent):
             return agent.class_id == 2
 
         def nest(self):
             return School
 
-    class School(popy.MagicLocation):
+    class School(p2n.MagicLocation):
         def filter(self, agent):
             return agent.class_id == 1 or agent.class_id == 2
 
     creator.create(df=df, location_classes=[Classroom1, Classroom2, School])
-    inspector = popy.NetworkInspector(model=model)
+    inspector = p2n.NetworkInspector(model=model)
     inspector.plot_bipartite_network()
     inspector.plot_agent_network(node_attrs=["status", "class_id"])
 
@@ -77,33 +77,33 @@ def test_2():
             "school_id": [1, 2, 1, 2, 1, 2, 1, 2, 3],
         }
     )
-    model = popy.Model()
-    creator = popy.Creator(model=model)
+    model = p2n.Model()
+    creator = p2n.Creator(model=model)
 
-    class Classroom1(popy.MagicLocation):
+    class Classroom1(p2n.MagicLocation):
         def filter(self, agent):
             return agent.school_id == 1
 
         def nest(self):
             return School1
 
-    class Classroom2(popy.MagicLocation):
+    class Classroom2(p2n.MagicLocation):
         def filter(self, agent):
             return agent.school_id == 2
 
         def nest(self):
             return School2
 
-    class School1(popy.MagicLocation):
+    class School1(p2n.MagicLocation):
         def filter(self, agent):
             return agent.school_id == 1
 
-    class School2(popy.MagicLocation):
+    class School2(p2n.MagicLocation):
         def filter(self, agent):
             return agent.school_id == 2
 
     creator.create(df=df, location_classes=[Classroom1, Classroom2, School1, School2])
-    inspector = popy.NetworkInspector(model=model)
+    inspector = p2n.NetworkInspector(model=model)
     inspector.plot_bipartite_network()
     inspector.plot_agent_network(node_attrs=["status", "school_id"])
     print(model.locations[3])

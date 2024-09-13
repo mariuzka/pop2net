@@ -1,7 +1,7 @@
 # %%
 import pandas as pd
 
-import popy
+import pop2net as p2n
 
 
 # %%
@@ -12,50 +12,50 @@ def test_1():
         },
     )
 
-    class TestLocationA1(popy.MagicLocation):
+    class TestLocationA1(p2n.MagicLocation):
         overcrowding = None
         n_agents = 5
 
         def filter(self, agent):
             return agent.status == "A"
 
-    class TestLocationA2(popy.MagicLocation):
+    class TestLocationA2(p2n.MagicLocation):
         overcrowding = True
         n_agents = 5
 
         def filter(self, agent):
             return agent.status == "A"
 
-    class TestLocationA3(popy.MagicLocation):
+    class TestLocationA3(p2n.MagicLocation):
         overcrowding = False
         n_agents = 5
 
         def filter(self, agent):
             return agent.status == "A"
 
-    class TestLocationB1(popy.MagicLocation):
+    class TestLocationB1(p2n.MagicLocation):
         overcrowding = None
         n_agents = 5
 
         def filter(self, agent):
             return agent.status == "B"
 
-    class TestLocationB2(popy.MagicLocation):
+    class TestLocationB2(p2n.MagicLocation):
         overcrowding = True
         n_agents = 5
 
         def filter(self, agent):
             return agent.status == "B"
 
-    class TestLocationB3(popy.MagicLocation):
+    class TestLocationB3(p2n.MagicLocation):
         overcrowding = False
         n_agents = 5
 
         def filter(self, agent):
             return agent.status == "B"
 
-    model = popy.Model()
-    creator = popy.Creator(model)
+    model = p2n.Model()
+    creator = p2n.Creator(model)
     creator.create(df=df, location_classes=[TestLocationA1, TestLocationB1])
     assert len(model.agents) == 14
     assert len(model.locations) == 2
@@ -64,10 +64,10 @@ def test_1():
     assert all(agent.status == "A" for agent in model.locations[0].agents)
     assert all(agent.status == "B" for agent in model.locations[1].agents)
 
-    model = popy.Model()
-    creator = popy.Creator(model)
+    model = p2n.Model()
+    creator = p2n.Creator(model)
     creator.create(df=df, location_classes=[TestLocationA2, TestLocationB2])
-    inspector = popy.NetworkInspector(model)
+    inspector = p2n.NetworkInspector(model)
     inspector.plot_bipartite_network()
     inspector.plot_agent_network(node_attrs=df.columns, node_color="status")
     assert len(model.agents) == 14
@@ -77,10 +77,10 @@ def test_1():
     assert all(agent.status == "A" for agent in model.locations[0].agents)
     assert all(agent.status == "B" for agent in model.locations[1].agents)
 
-    model = popy.Model()
-    creator = popy.Creator(model)
+    model = p2n.Model()
+    creator = p2n.Creator(model)
     creator.create(df=df, location_classes=[TestLocationA3, TestLocationB3])
-    inspector = popy.NetworkInspector(model)
+    inspector = p2n.NetworkInspector(model)
     inspector.plot_agent_network(node_attrs=df.columns, node_color="status")
     assert len(model.agents) == 14
     assert len(model.locations) == 4

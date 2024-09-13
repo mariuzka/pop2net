@@ -1,60 +1,60 @@
 import pandas as pd
 import pytest
 
-import popy
+import pop2net as p2n
 
 
 @pytest.fixture
 def model():
-    return popy.Model()
+    return p2n.Model()
 
 
 @pytest.fixture
 def two_locations(model):
-    return popy.LocationList(
+    return p2n.LocationList(
         model,
         [
-            popy.Location(model),
-            popy.Location(model),
+            p2n.Location(model),
+            p2n.Location(model),
         ],
     )
 
 
 def test_agent_creation(model):
-    agent = popy.Agent(model)
+    agent = p2n.Agent(model)
     assert agent.model == model
     assert list(agent.locations) == []
 
 
 def test_agentlist_broadcasting(model):
-    agents = popy.AgentList(model, [popy.Agent(model), popy.Agent(model)])
+    agents = p2n.AgentList(model, [p2n.Agent(model), p2n.Agent(model)])
     agents.x = 1
     assert sum(agents.x) == 2  # type: ignore
 
 
 def test_agent_locations(model):
-    agent = popy.Agent(model)
+    agent = p2n.Agent(model)
 
-    location1 = popy.Location(model)
-    location2 = popy.Location(model)
+    location1 = p2n.Location(model)
+    location2 = p2n.Location(model)
 
     agent.add_location(location1)
 
-    exp = popy.LocationList(model, [location1])
+    exp = p2n.LocationList(model, [location1])
     assert agent.locations == exp
 
     agent.add_location(location2)
-    exp = popy.LocationList(model, [location1, location2])
+    exp = p2n.LocationList(model, [location1, location2])
     assert agent.locations == exp
 
     assert len(agent.locations) == 2
 
 
 def test_agent_located_at_single_location(model):
-    class Model(popy.Model):
+    class Model(p2n.Model):
         def setup(self):
-            popy.AgentList(self, 1, popy.Agent)
-            popy.LocationList(self, 2, popy.Location)
+            p2n.AgentList(self, 1, p2n.Agent)
+            p2n.LocationList(self, 2, p2n.Location)
             self.agents[0].add_location(self.locations[0])
 
     model = Model(parameters={"steps": 1})
@@ -64,10 +64,10 @@ def test_agent_located_at_single_location(model):
 
 
 def test_agent_visits_two_locations(model):
-    class Model(popy.Model):
+    class Model(p2n.Model):
         def setup(self):
-            popy.AgentList(self, 1, popy.Agent)
-            popy.LocationList(self, 2, popy.Location)
+            p2n.AgentList(self, 1, p2n.Agent)
+            p2n.LocationList(self, 2, p2n.Location)
             self.agents[0].add_location(self.locations[0])
             self.agents[0].add_location(self.locations[1])
 
@@ -78,13 +78,13 @@ def test_agent_visits_two_locations(model):
 
 
 def test_adding_and_removing_agents():
-    model = popy.Model()
+    model = p2n.Model()
 
     for _ in range(5):
-        popy.Agent(model)
+        p2n.Agent(model)
 
     for _ in range(2):
-        popy.Location(model)
+        p2n.Location(model)
 
     model.locations[0].add_agents(model.agents[0:3])
     model.locations[1].add_agents(model.agents[3:5])
@@ -96,17 +96,17 @@ def test_adding_and_removing_agents():
     assert len(model.agents[0].neighbors()) == 2
     assert len(model.agents[-1].neighbors()) == 1
 
-    # inspector = popy.inspector.NetworkInspector(model)
+    # inspector = p2n.inspector.NetworkInspector(model)
     # inspector.plot_bipartite_network()
 
 
 def test_color_agents():
-    class ColorLocation(popy.Location):
+    class ColorLocation(p2n.Location):
         def __init__(self, model, color) -> None:
             super().__init__(model)
             self.color = color
 
-    class ColorAgent(popy.Agent):
+    class ColorAgent(p2n.Agent):
         def __init__(self, model, color) -> None:
             super().__init__(model)
             self.color = color
@@ -125,7 +125,7 @@ def test_color_agents():
                 location = ColorLocation(model=self.model, color=self.color)
                 location.add_agent(self)
 
-    class ColorModel(popy.Model):
+    class ColorModel(p2n.Model):
         def setup(self):
             for color in ["red", "green", "red", "blue", "blue", "red"]:
                 ColorAgent(
@@ -156,7 +156,7 @@ def test_color_agents():
 
 
 def test_chef_agents():
-    class Town(popy.MagicLocation):
+    class Town(p2n.MagicLocation):
         n_agents = 4
 
         def stick_together(self, agent):
@@ -165,7 +165,7 @@ def test_chef_agents():
         def assert_(self):
             assert len(self.agents) == 4
 
-    class Home(popy.MagicLocation):
+    class Home(p2n.MagicLocation):
         def split(self, agent):
             return agent.couple
 
@@ -175,7 +175,7 @@ def test_chef_agents():
         def assert_(self):
             assert len({a.couple for a in self.agents}) == 1
 
-    class Restaurant(popy.MagicLocation):
+    class Restaurant(p2n.MagicLocation):
         def setup(self):
             chef = Chef(self.model)
             self.add_agent(chef)
@@ -203,7 +203,7 @@ def test_chef_agents():
                 == 1
             )
 
-    class Chef(popy.Agent):
+    class Chef(p2n.Agent):
         def assert_(self):
             assert len(self.locations) == 1
             assert self.locations[0].type == "Restaurant"
@@ -213,7 +213,7 @@ def test_chef_agents():
                 == 0
             )
 
-    class MyAgent(popy.Agent):
+    class MyAgent(p2n.Agent):
         def assert_(self):
             couple_agent = [
                 agent
@@ -238,8 +238,8 @@ def test_chef_agents():
         },
     )
 
-    model = popy.Model()
-    creator = popy.Creator(model)
+    model = p2n.Model()
+    creator = p2n.Creator(model)
     # inspector = NetworkInspector(model)
 
     creator.create_agents(df=df, agent_class=MyAgent)
@@ -264,8 +264,8 @@ def test_table_agents():
     # TODO: copied from new_structure.ipynb but has no assert statements.
     # not sure what is being checked here.
 
-    model = popy.Model()
-    creator = popy.Creator(model)
+    model = p2n.Model()
+    creator = p2n.Creator(model)
 
     df = pd.DataFrame(
         {
@@ -279,11 +279,11 @@ def test_table_agents():
 
     creator.create_agents(df=df)
 
-    class Table(popy.MagicLocation):
+    class Table(p2n.MagicLocation):
         recycle = True
 
         def melt(self):
-            class PizzaGroup(popy.MagicLocation):
+            class PizzaGroup(p2n.MagicLocation):
                 n_agents = 3
                 only_exact_n_agents = False
 
@@ -296,7 +296,7 @@ def test_table_agents():
                 def weight(self, agent):
                     return 10
 
-            class PastaGroup(popy.MagicLocation):
+            class PastaGroup(p2n.MagicLocation):
                 n_agents = 2
                 only_exact_n_agents = False
 
@@ -311,7 +311,7 @@ def test_table_agents():
         def weight(self, agent):
             return 5
 
-    class Restaurant(popy.MagicLocation):
+    class Restaurant(p2n.MagicLocation):
         n_agents = 10
 
         # def stick_together(self, agent):
@@ -329,6 +329,6 @@ def test_table_agents():
 
     raise AssertionError()
 
-    # inspector = popy.inspector.NetworkInspector(model)
+    # inspector = p2n.inspector.NetworkInspector(model)
     # inspector.plot_agent_network(node_attrs=["food", "age", "couple"], node_color="food")
     # inspector.plot_bipartite_network()

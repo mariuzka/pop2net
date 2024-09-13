@@ -1,4 +1,4 @@
-.. currentmodule:: popy
+.. currentmodule:: pop2net
 .. highlight:: shell
 
 ===================
@@ -10,7 +10,7 @@ These are notes to developers.
 Installation
 ============
 
-To install popy for development, it is strongly advised to use `poetry <https://python-poetry.org/>`_.
+To install pop2net for development, it is strongly advised to use `poetry <https://python-poetry.org/>`_.
 This has to be installed outside the virtual environment.
 The recommended way to have poetry installed, generally is via `pipx <https://pipx.pypa.io/stable/installation/>`_.
 Once poetry is installed, just run ``poetry install`` from within the repository to install the package, all dependencies as well as all test and development dependencies.
@@ -42,7 +42,7 @@ The general idea for a development workflow is:
 2. Create a PR from your feature branch to ``dev``.
 3. Once we release a new version, we set it up in ``dev`` and create a relase PR from ``dev`` to ``main``.
 
-If your are not a member of the core development team, PRs are generally always welcome. Please fork the repository, create a new branch and create your PRs from there to ``popy/dev``.
+If your are not a member of the core development team, PRs are generally always welcome. Please fork the repository, create a new branch and create your PRs from there to ``pop2net/dev``.
 
 
 How to Release

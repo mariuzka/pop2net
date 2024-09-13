@@ -1,4 +1,4 @@
-"""Various utility functions for popy."""
+"""Various utility functions for pop2net."""
 
 from __future__ import annotations
 

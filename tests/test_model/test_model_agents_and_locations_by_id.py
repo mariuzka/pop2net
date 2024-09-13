@@ -1,20 +1,20 @@
-import popy
+import pop2net as p2n
 
 
 def test_1():
-    model = popy.Model()
+    model = p2n.Model()
 
     for _ in range(10):
-        popy.Agent(model=model)
+        p2n.Agent(model=model)
 
     for _ in range(10):
-        popy.Location(model=model)
+        p2n.Location(model=model)
 
     for _ in range(10):
-        popy.Agent(model=model)
+        p2n.Agent(model=model)
 
     for _ in range(10):
-        popy.Location(model=model)
+        p2n.Location(model=model)
 
     # check if the agents can be found by id agents_dict
     for agent in model.agents:

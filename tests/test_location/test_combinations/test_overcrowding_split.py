@@ -1,7 +1,7 @@
 # %%
 import pandas as pd
 
-import popy
+import pop2net as p2n
 
 
 # %%
@@ -12,29 +12,29 @@ def test_1():
         },
     )
 
-    class TestLocation1(popy.MagicLocation):
+    class TestLocation1(p2n.MagicLocation):
         overcrowding = None
         n_agents = 5
 
         def split(self, agent):
             return agent.status
 
-    class TestLocation2(popy.MagicLocation):
+    class TestLocation2(p2n.MagicLocation):
         overcrowding = True
         n_agents = 5
 
         def split(self, agent):
             return agent.status
 
-    class TestLocation3(popy.MagicLocation):
+    class TestLocation3(p2n.MagicLocation):
         overcrowding = False
         n_agents = 5
 
         def split(self, agent):
             return agent.status
 
-    model = popy.Model()
-    creator = popy.Creator(model)
+    model = p2n.Model()
+    creator = p2n.Creator(model)
     creator.create(df=df, location_classes=[TestLocation1])
     assert len(model.agents) == 14
     assert len(model.locations) == 2
@@ -43,8 +43,8 @@ def test_1():
     assert all(agent.status == "A" for agent in model.locations[0].agents)
     assert all(agent.status == "B" for agent in model.locations[1].agents)
 
-    model = popy.Model()
-    creator = popy.Creator(model)
+    model = p2n.Model()
+    creator = p2n.Creator(model)
     creator.create(df=df, location_classes=[TestLocation2])
     assert len(model.agents) == 14
     assert len(model.locations) == 2
@@ -53,8 +53,8 @@ def test_1():
     assert all(agent.status == "A" for agent in model.locations[0].agents)
     assert all(agent.status == "B" for agent in model.locations[1].agents)
 
-    model = popy.Model()
-    creator = popy.Creator(model)
+    model = p2n.Model()
+    creator = p2n.Creator(model)
     creator.create(df=df, location_classes=[TestLocation3])
     assert len(model.agents) == 14
     assert len(model.locations) == 4
