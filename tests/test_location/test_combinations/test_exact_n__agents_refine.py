@@ -8,7 +8,7 @@ import popy
 def test_1():
     df = pd.DataFrame(
         {
-            "status": ["A","A","A", "B","B"],
+            "status": ["A", "A", "A", "B", "B"],
         },
     )
 
@@ -21,7 +21,7 @@ def test_1():
                 new_agent = popy.Agent(model)
                 new_agent.status = "C"
                 self.add_agent(new_agent)
-            
+
     model = popy.Model()
     creator = popy.Creator(model)
     creator.create(df=df, location_classes=[TestLocation])
@@ -40,6 +40,7 @@ def test_1():
     assert sum(agent.status == "A" for agent in model.locations[1].agents) == 1
     assert sum(agent.status == "B" for agent in model.locations[1].agents) == 1
     assert sum(agent.status == "C" for agent in model.locations[1].agents) == 1
+
 
 test_1()
 # %%

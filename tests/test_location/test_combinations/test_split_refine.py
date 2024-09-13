@@ -3,8 +3,8 @@ import pandas as pd
 
 import popy
 
+# %%
 
-#%%
 
 def test_1():
     model = popy.Model()
@@ -17,7 +17,6 @@ def test_1():
     )
 
     class ClassRoom(popy.MagicLocation):
-        
         def split(self, agent):
             return agent.status
 
@@ -25,7 +24,6 @@ def test_1():
             for agent in self.agents:
                 if agent.status == "C":
                     self.remove_agent(agent)
-            
 
     creator.create_agents(df=df)
     creator.create_locations(location_classes=[ClassRoom])
@@ -35,5 +33,6 @@ def test_1():
     assert not model.locations[2].agents
     assert len(model.locations[1].agents) == 3
     assert len(model.locations[0].agents) == 2
+
 
 test_1()

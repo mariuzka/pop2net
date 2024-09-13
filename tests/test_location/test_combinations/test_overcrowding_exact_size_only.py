@@ -1,4 +1,3 @@
-
 # Hier muss man die Hierarchie berücksichtgigen und testen exact size only überschreibt das Verhalten von overcrrowd
 # %%
 import pandas as pd
@@ -10,16 +9,15 @@ import popy
 def test_1():
     df = pd.DataFrame(
         {
-            "status": ["A","A","A","A","A","A","A"],
+            "status": ["A", "A", "A", "A", "A", "A", "A"],
         },
     )
-
 
     class TestLocation(popy.MagicLocation):
         overcrowding = None
         n_agents = 5
         only_exact_n_agents = False
-    
+
     class TestLocation2(popy.MagicLocation):
         overcrowding = True
         n_agents = 5
@@ -30,7 +28,6 @@ def test_1():
         n_agents = 5
         only_exact_n_agents = False
 
-            
     model = popy.Model()
     creator = popy.Creator(model)
     creator.create(df=df, location_classes=[TestLocation])
@@ -48,7 +45,6 @@ def test_1():
     assert len(model.agents) == 7
     assert len(model.locations) == 1
     assert len(model.locations[0].agents) == 7
-
 
     model = popy.Model()
     creator = popy.Creator(model)
@@ -60,22 +56,24 @@ def test_1():
     assert len(model.locations[0].agents) == 5
     assert len(model.locations[1].agents) == 2
 
+
 test_1()
+
+
 # %%
 # %%
 def test_1():
     df = pd.DataFrame(
         {
-            "status": ["A","A","A","A","A","A","A"],
+            "status": ["A", "A", "A", "A", "A", "A", "A"],
         },
     )
-
 
     class TestLocation(popy.MagicLocation):
         overcrowding = None
         n_agents = 5
         only_exact_n_agents = True
-    
+
     class TestLocation2(popy.MagicLocation):
         overcrowding = True
         n_agents = 5
@@ -86,7 +84,6 @@ def test_1():
         n_agents = 5
         only_exact_n_agents = True
 
-            
     model = popy.Model()
     creator = popy.Creator(model)
     creator.create(df=df, location_classes=[TestLocation])
@@ -116,6 +113,7 @@ def test_1():
     assert len(model.locations) == 1
     assert len(model.locations[0].agents) == 5
     assert sum(not agent.locations for agent in model.agents) == 2
+
 
 test_1()
 # %%

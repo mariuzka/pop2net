@@ -1,12 +1,11 @@
-#%%
-from collections import Counter
+# %%
 
 import pandas as pd
 
 import popy
 
 
-#%%
+# %%
 def test_1():
     df = pd.DataFrame(
         {
@@ -39,17 +38,16 @@ def test_1():
             assert len(location.agents) == 2
 
     for agent in model.agents:
-        assert (
-            agent.neighbors(location_classes=[Classroom])[0]
-            in agent.neighbors(location_classes=[School])
+        assert agent.neighbors(location_classes=[Classroom])[0] in agent.neighbors(
+            location_classes=[School]
         )
-
-   
 
 
 test_1()
+
+
 # %%
-# TODO 
+# TODO
 # n_locations wird ignoriert, wenn das obere Level von nest 2 instanzen hat
 # und das untere nur 1, es werden trotzdem 2 Classrooms erstellt
 def test_2():
@@ -83,6 +81,7 @@ def test_2():
             assert len(location.agents) == 2
         if location.type == "Classroom":
             assert len(location.agents) == 4
-        
+
+
 test_2()
 # %%

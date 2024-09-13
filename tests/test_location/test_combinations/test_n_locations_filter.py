@@ -24,6 +24,7 @@ def test_1():
 
     class TestLocationB(popy.MagicLocation):
         n_locations = 1
+
         def filter(self, agent):
             return agent.status == "B"
 
@@ -39,6 +40,7 @@ def test_1():
     assert all(agent.status == "A" for agent in model.locations[0].agents)
     assert all(agent.status == "A" for agent in model.locations[1].agents)
     assert all(agent.status == "B" for agent in model.locations[2].agents)
+
 
 test_1()
 # %%

@@ -5,6 +5,7 @@ import popy
 
 # %%
 
+
 def test_1():
     df = pd.DataFrame(
         {
@@ -18,6 +19,7 @@ def test_1():
     class TestLocation(popy.MagicLocation):
         n_agents = 2
         only_exact_n_agents = True
+
         def weight(self, agent):
             return 1
 
@@ -30,5 +32,5 @@ def test_1():
     assert all(agent.status == "A" for agent in model.locations[0].agents)
     assert all(model.locations[0].get_weight(agent) == 1 for agent in model.locations[0].agents)
 
-  
+
 test_1()

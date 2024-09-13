@@ -3,8 +3,8 @@ import pandas as pd
 
 import popy
 
-
 # %%
+
 
 def test_1():
     df = pd.DataFrame({"status": ["pupil", "pupil", "pupil", "pupil"], "class_id": [1, 2, 1, 2]})
@@ -36,8 +36,6 @@ def test_1():
     for agent in model.agents:
         assert agent.neighbors(location_classes=[Classroom])[0].class_id == agent.class_id
     assert all(not location.agents for location in model.locations[2:])
-    
-
 
 
 test_1()

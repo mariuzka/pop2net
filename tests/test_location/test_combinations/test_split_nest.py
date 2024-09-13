@@ -1,4 +1,4 @@
-#%%
+# %%
 from collections import Counter
 
 import pandas as pd
@@ -6,7 +6,7 @@ import pandas as pd
 import popy
 
 
-#%%
+# %%
 def test_1():
     df = pd.DataFrame(
         {
@@ -92,5 +92,6 @@ def test_1():
         if location.type == "School":
             for agent in location.agents:
                 assert all(agent.School == nghbr.School for nghbr in agent.neighbors())
-test_1()
 
+
+test_1()

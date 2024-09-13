@@ -49,8 +49,8 @@ def test_1():
 test_1()
 
 
-
 # %%
+
 
 def test_2():
     df = pd.DataFrame(
@@ -151,6 +151,7 @@ test_2()
 
 # %%
 
+
 def test_3():
     class City(popy.MagicLocation):
         n_agents = 4
@@ -203,5 +204,6 @@ def test_3():
 
     # all members of a group are in the same city
     assert all(location.agents[0].City == location.agents[1].City for location in model.locations)
+
 
 test_3()

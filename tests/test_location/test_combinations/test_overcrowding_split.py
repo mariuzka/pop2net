@@ -8,8 +8,7 @@ import popy
 def test_1():
     df = pd.DataFrame(
         {
-            "status": ["A","A","B","B","A","A","A","B","B","B","A","B","A","B"],
-
+            "status": ["A", "A", "B", "B", "A", "A", "A", "B", "B", "B", "A", "B", "A", "B"],
         },
     )
 
@@ -17,23 +16,23 @@ def test_1():
         overcrowding = None
         n_agents = 5
 
-        def split(self,agent):
+        def split(self, agent):
             return agent.status
-    
+
     class TestLocation2(popy.MagicLocation):
         overcrowding = True
         n_agents = 5
 
-        def split(self,agent):
+        def split(self, agent):
             return agent.status
-        
+
     class TestLocation3(popy.MagicLocation):
         overcrowding = False
         n_agents = 5
 
-        def split(self,agent):
+        def split(self, agent):
             return agent.status
-                   
+
     model = popy.Model()
     creator = popy.Creator(model)
     creator.create(df=df, location_classes=[TestLocation1])
@@ -67,7 +66,6 @@ def test_1():
     assert all(agent.status == "A" for agent in model.locations[1].agents)
     assert all(agent.status == "B" for agent in model.locations[2].agents)
     assert all(agent.status == "B" for agent in model.locations[3].agents)
-
 
 
 test_1()

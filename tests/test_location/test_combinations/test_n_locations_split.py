@@ -1,5 +1,4 @@
 # %%
-from collections import Counter
 
 import pandas as pd
 
@@ -22,12 +21,13 @@ def test_1():
 
     class TestLocation(popy.MagicLocation):
         n_locations = 3
+
         def split(self, agent):
             return agent.status
 
     creator.create_agents(df=df)
     creator.create_locations(location_classes=[TestLocation])
-    
+
     inspector = popy.NetworkInspector(model=model)
     inspector.plot_bipartite_network()
     inspector.plot_agent_network(node_attrs=["status"])
@@ -44,5 +44,7 @@ def test_1():
     #     if location.agents[0].status == "C":
     #         assert len(location.agents) == 1
     #         assert all(agent.status == "C" for agent in location.agents)
+
+
 test_1()
 # %%

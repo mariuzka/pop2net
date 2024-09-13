@@ -6,13 +6,13 @@ import popy
 # %%
 
 
-
 def test_1():
     df = pd.DataFrame(
-    {
-        "status": ["teacher", "teacher", "pupil", "pupil", "pupil"],
-    },
+        {
+            "status": ["teacher", "teacher", "pupil", "pupil", "pupil"],
+        },
     )
+
     class Teacher(popy.MeltLocation):
         n_agents = 1
 
@@ -26,7 +26,6 @@ def test_1():
             return agent.status == "pupil"
 
     class Classroom(popy.MagicLocation):
-
         def melt(self):
             return Teacher, Pupils
 
@@ -46,14 +45,16 @@ def test_1():
 
 
 test_1()
+
+
 # %%
 def test_2():
-
     df = pd.DataFrame(
-    {
-        "status": ["teacher", "teacher", "pupil", "pupil", "pupil"],
-    },
+        {
+            "status": ["teacher", "teacher", "pupil", "pupil", "pupil"],
+        },
     )
+
     class Teacher(popy.MeltLocation):
         n_agents = 1
 
@@ -68,6 +69,7 @@ def test_2():
 
     class Classroom(popy.MagicLocation):
         n_agents = 2
+
         def melt(self):
             return Teacher, Pupils
 
@@ -79,10 +81,11 @@ def test_2():
     inspector.plot_bipartite_network()
     assert len(model.agents) == 5
     assert len(model.locations) == 2
-    
+
     for location in model.locations:
         assert location.agents[0].status == "teacher"
         assert location.agents[1].status == "pupil"
+
 
 test_2()
 # %%

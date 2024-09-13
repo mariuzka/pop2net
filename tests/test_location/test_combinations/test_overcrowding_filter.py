@@ -8,7 +8,7 @@ import popy
 def test_1():
     df = pd.DataFrame(
         {
-            "status": ["A","A","B","B","A","A","A","B","B","B","A","B","A","B"],
+            "status": ["A", "A", "B", "B", "A", "A", "A", "B", "B", "B", "A", "B", "A", "B"],
         },
     )
 
@@ -16,47 +16,44 @@ def test_1():
         overcrowding = None
         n_agents = 5
 
-        def filter(self,agent):
+        def filter(self, agent):
             return agent.status == "A"
-    
+
     class TestLocationA2(popy.MagicLocation):
         overcrowding = True
         n_agents = 5
 
-        def filter(self,agent):
+        def filter(self, agent):
             return agent.status == "A"
-        
+
     class TestLocationA3(popy.MagicLocation):
         overcrowding = False
         n_agents = 5
 
-        def filter(self,agent):
+        def filter(self, agent):
             return agent.status == "A"
 
     class TestLocationB1(popy.MagicLocation):
         overcrowding = None
         n_agents = 5
 
-        def filter(self,agent):
+        def filter(self, agent):
             return agent.status == "B"
-    
+
     class TestLocationB2(popy.MagicLocation):
         overcrowding = True
         n_agents = 5
 
-        def filter(self,agent):
+        def filter(self, agent):
             return agent.status == "B"
-        
+
     class TestLocationB3(popy.MagicLocation):
         overcrowding = False
         n_agents = 5
 
-        def filter(self,agent):
+        def filter(self, agent):
             return agent.status == "B"
-        
 
-
-            
     model = popy.Model()
     creator = popy.Creator(model)
     creator.create(df=df, location_classes=[TestLocationA1, TestLocationB1])
@@ -95,7 +92,6 @@ def test_1():
     assert all(agent.status == "A" for agent in model.locations[1].agents)
     assert all(agent.status == "B" for agent in model.locations[2].agents)
     assert all(agent.status == "B" for agent in model.locations[3].agents)
-
 
 
 test_1()

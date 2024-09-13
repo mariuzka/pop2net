@@ -5,14 +5,15 @@ import popy
 
 # %%
 
+
 # Testen: Wie verhält es sich wenn n_agents vorgegeben ist aber noch lehrer übrig sind
 # wie verhält es sich, wenn in der Ziel location n_agent und exact true ist, aber in den unteren nichts gesetz ist
 # was passiert wenn ich false und true in den Meltlocation mixe?
 def test_1():
     df = pd.DataFrame(
-    {
-        "status": ["A", "A", "A", "B", "B", "B"],
-    },
+        {
+            "status": ["A", "A", "A", "B", "B", "B"],
+        },
     )
 
     model = popy.Model()
@@ -33,11 +34,9 @@ def test_1():
             return agent.status == "B"
 
     class LocAB(popy.MagicLocation):
-
         def melt(self):
             return LocA, LocB
 
-    
     creator.create_agents(df=df)
     creator.create_locations(location_classes=[LocAB])
     inspector = popy.NetworkInspector(model)
@@ -46,11 +45,10 @@ def test_1():
 
     assert len(model.agents) == 6
     assert len(model.locations) == 2
-    assert sum(True for agent in  model.locations[0].agents if agent.status == "A") == 2
-    assert sum(True for agent in  model.locations[0].agents if agent.status == "B") == 2
-    assert sum(True for agent in  model.locations[1].agents if agent.status == "A") == 1
-    assert sum(True for agent in  model.locations[1].agents if agent.status == "B") == 1
-
+    assert sum(True for agent in model.locations[0].agents if agent.status == "A") == 2
+    assert sum(True for agent in model.locations[0].agents if agent.status == "B") == 2
+    assert sum(True for agent in model.locations[1].agents if agent.status == "A") == 1
+    assert sum(True for agent in model.locations[1].agents if agent.status == "B") == 1
 
     # Ver. with exact_n set to true
     model = popy.Model()
@@ -73,10 +71,10 @@ def test_1():
     class LocAB(popy.MagicLocation):
         n_agents = 4
         only_exact_n_agents = True
+
         def melt(self):
             return LocA, LocB
 
-    
     creator.create_agents(df=df)
     creator.create_locations(location_classes=[LocAB])
     inspector = popy.NetworkInspector(model)
@@ -85,8 +83,8 @@ def test_1():
 
     assert len(model.agents) == 6
     assert len(model.locations) == 1
-    assert sum(True for agent in  model.locations[0].agents if agent.status == "A") == 2
-    assert sum(True for agent in  model.locations[0].agents if agent.status == "B") == 2
+    assert sum(True for agent in model.locations[0].agents if agent.status == "A") == 2
+    assert sum(True for agent in model.locations[0].agents if agent.status == "B") == 2
     assert sum(True for agent in model.agents if not agent.locations) == 2
 
 

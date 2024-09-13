@@ -7,7 +7,9 @@ import popy
 
 # %%
 def test_1():
-    df = pd.DataFrame({"status": ["pupil", "pupil","pupil", "pupil", "pupil"], "class_id": [1, 2, 1, 2, 1]})
+    df = pd.DataFrame(
+        {"status": ["pupil", "pupil", "pupil", "pupil", "pupil"], "class_id": [1, 2, 1, 2, 1]}
+    )
 
     class Classroom(popy.MagicLocation):
         n_agents = 2
@@ -28,7 +30,6 @@ def test_1():
     for agent in model.agents:
         assert agent.neighbors(location_classes=[Classroom])[0].class_id == agent.class_id
 
-
     # with exact agent set to True
     class Classroom(popy.MagicLocation):
         n_agents = 2
@@ -48,7 +49,7 @@ def test_1():
     assert len(model.agents) == 5
     assert len(model.locations) == 1
     assert len(model.locations[0].agents) == 2
-    
+
     for agent in model.agents:
         if agent.locations:
             assert agent.neighbors(location_classes=[Classroom])[0].class_id == agent.class_id
