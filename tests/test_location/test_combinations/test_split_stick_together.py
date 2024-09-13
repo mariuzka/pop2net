@@ -3,14 +3,14 @@ from collections import Counter
 
 import pandas as pd
 
-import popy
+import pop2net as p2n
 
 # %%
 
 
 def test_1():
-    model = popy.Model()
-    creator = popy.Creator(model=model)
+    model = p2n.Model()
+    creator = p2n.Creator(model=model)
     df = pd.DataFrame(
         {
             "friend_group": [1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4],
@@ -18,7 +18,7 @@ def test_1():
         }
     )
 
-    class TestLocation(popy.MagicLocation):
+    class TestLocation(p2n.MagicLocation):
         n_agents = 4
 
         def split(self, agent):

@@ -1,21 +1,21 @@
-.. currentmodule:: popy
+.. currentmodule:: pop2net
 .. highlight:: shell
 
 ============
 Installation
 ============
 
-To install the latest release of popy,
+To install the latest release of pop2net,
 run the following command on your console:
 
 .. code-block:: console
 
-	$ pip install popy
+	$ pip install pop2net
 
 Dependencies
 ------------
 
-Popy supports Python 3.8 and higher.
+Pop2net supports Python 3.8 and higher.
 The installation includes the following packages:
 
 - `agentpy <https://agentpy.readthedocs.io/en/latest/>`_ as a modeling framework
@@ -26,7 +26,7 @@ The installation includes the following packages:
 - `SALib <https://salib.readthedocs.io/>`_, for sensitivity analysis
 - `joblib <https://joblib.readthedocs.io/>`_, for parallel processing
 
-These optional packages can further be useful in combination with popy:
+These optional packages can further be useful in combination with pop2net:
 
 - `jupyter <https://jupyter.org/>`_, for interactive computing
 - `ipysimulate <https://ipysimulate.readthedocs.io/>`_ >= 0.2.0, for interactive simulations
@@ -40,7 +40,7 @@ The most recent version of agentpy can be cloned from Github:
 
 .. code-block:: console
 
-	$ git clone https://github.com/mariuzka/popy.git
+	$ git clone https://github.com/mariuzka/pop2net.git
 
 Once you have a copy of the source, you can install it with:
 
@@ -49,4 +49,4 @@ Once you have a copy of the source, you can install it with:
     $ pip install -e
 
 
-.. _Github repository: https://github.com/mariuzka/popy
+.. _Github repository: https://github.com/mariuzka/pop2net

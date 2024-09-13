@@ -1,17 +1,17 @@
 # %%
 import pandas as pd
 
-import popy
+import pop2net as p2n
 
 
 # %%
 def test_1():
-    model = popy.Model()
-    creator = popy.Creator(model=model)
-    inspector = popy.NetworkInspector(model=model)
+    model = p2n.Model()
+    creator = p2n.Creator(model=model)
+    inspector = p2n.NetworkInspector(model=model)
     df = pd.DataFrame({"status": ["A", "B", "B", "A", "A"]})
 
-    class ClassRoom(popy.MagicLocation):
+    class ClassRoom(p2n.MagicLocation):
         def split(self, agent):
             return agent.status
 
@@ -52,16 +52,16 @@ test_1()
 
 # %%
 def test_2():
-    model = popy.Model()
-    creator = popy.Creator(model=model)
-    inspector = popy.NetworkInspector(model=model)
+    model = p2n.Model()
+    creator = p2n.Creator(model=model)
+    inspector = p2n.NetworkInspector(model=model)
     df = pd.DataFrame(
         {
             "status": ["A", "B", "A", "B", "A"],
         }
     )
 
-    class ClassRoom(popy.MagicLocation):
+    class ClassRoom(p2n.MagicLocation):
         def split(self, agent):
             return agent.status
 
@@ -100,11 +100,11 @@ test_2()
 
 # %%
 def test_3():
-    model = popy.Model()
-    creator = popy.Creator(model=model)
+    model = p2n.Model()
+    creator = p2n.Creator(model=model)
     df = pd.DataFrame({"status": ["A", "B", "A", "B"], "attention_span": [1, 3, 2.5, 4]})
 
-    class ClassRoom(popy.MagicLocation):
+    class ClassRoom(p2n.MagicLocation):
         def split(self, agent):
             return agent.status
 

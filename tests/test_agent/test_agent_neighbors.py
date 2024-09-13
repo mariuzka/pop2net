@@ -1,11 +1,11 @@
-import popy
+import pop2net as p2n
 
 
 def test_1():
-    model = popy.Model()
-    agent1 = popy.Agent(model)
-    agent2 = popy.Agent(model)
-    location1 = popy.Location(model)
+    model = p2n.Model()
+    agent1 = p2n.Agent(model)
+    agent2 = p2n.Agent(model)
+    location1 = p2n.Location(model)
 
     location1.add_agents([agent1, agent2])
 
@@ -20,19 +20,19 @@ def test_1():
 
 
 def test_2a():
-    class Max(popy.Agent):
+    class Max(p2n.Agent):
         pass
 
-    class Marius(popy.Agent):
+    class Marius(p2n.Agent):
         pass
 
-    class Lukas(popy.Agent):
+    class Lukas(p2n.Agent):
         pass
 
-    class WebexMeeting(popy.MagicLocation):
+    class WebexMeeting(p2n.MagicLocation):
         pass
 
-    model = popy.Model()
+    model = p2n.Model()
     agent_max = Max(model=model)
     agent_marius = Marius(model=model)
     agent_lukas = Lukas(model=model)
@@ -54,19 +54,19 @@ def test_2a():
 
 # all in one location
 def test_2b():
-    model = popy.Model()
-    creator = popy.Creator(model)
+    model = p2n.Model()
+    creator = p2n.Creator(model)
 
-    class Max(popy.Agent):
+    class Max(p2n.Agent):
         pass
 
-    class Marius(popy.Agent):
+    class Marius(p2n.Agent):
         pass
 
-    class Lukas(popy.Agent):
+    class Lukas(p2n.Agent):
         pass
 
-    class WebexMeeting(popy.MagicLocation):
+    class WebexMeeting(p2n.MagicLocation):
         pass
 
     _max = creator.create_agents(agent_class=Max, n=1)[0]
@@ -88,22 +88,22 @@ def test_2b():
 
 
 def test_3a():
-    class Max(popy.Agent):
+    class Max(p2n.Agent):
         pass
 
-    class Marius(popy.Agent):
+    class Marius(p2n.Agent):
         pass
 
-    class Lukas(popy.Agent):
+    class Lukas(p2n.Agent):
         pass
 
-    class Meeting1(popy.MagicLocation):
+    class Meeting1(p2n.MagicLocation):
         pass
 
-    class Meeting2(popy.MagicLocation):
+    class Meeting2(p2n.MagicLocation):
         pass
 
-    model = popy.Model()
+    model = p2n.Model()
     agent_max = Max(model=model)
     agent_marius = Marius(model=model)
     agent_lukas = Lukas(model=model)
@@ -125,23 +125,23 @@ def test_3a():
 
 # two Locations
 def test_3b():
-    model = popy.Model()
-    creator = popy.Creator(model)
+    model = p2n.Model()
+    creator = p2n.Creator(model)
 
-    class Max(popy.Agent):
+    class Max(p2n.Agent):
         pass
 
-    class Marius(popy.Agent):
+    class Marius(p2n.Agent):
         pass
 
-    class Lukas(popy.Agent):
+    class Lukas(p2n.Agent):
         pass
 
-    class Meeting1(popy.MagicLocation):
+    class Meeting1(p2n.MagicLocation):
         def filter(self, agent):
             return agent.type in ["Max", "Marius"]
 
-    class Meeting2(popy.MagicLocation):
+    class Meeting2(p2n.MagicLocation):
         def filter(self, agent):
             return agent.type in ["Marius", "Lukas"]
 

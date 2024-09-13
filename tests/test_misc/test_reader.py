@@ -1,6 +1,6 @@
 import pytest
 
-from popy.reader import DataReader
+from pop2net.reader import DataReader
 
 
 def test_reader_small(soep100):

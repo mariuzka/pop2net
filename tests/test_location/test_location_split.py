@@ -2,7 +2,7 @@ from collections import Counter
 
 import pandas as pd
 
-import popy
+import pop2net as p2n
 
 
 def test_1():
@@ -12,10 +12,10 @@ def test_1():
         },
     )
 
-    model = popy.Model()
-    creator = popy.Creator(model)
+    model = p2n.Model()
+    creator = p2n.Creator(model)
 
-    class TestLocation(popy.MagicLocation):
+    class TestLocation(p2n.MagicLocation):
         def split(self, agent):
             return agent.status
 
@@ -44,10 +44,10 @@ def test_2():
         },
     )
 
-    model = popy.Model()
-    creator = popy.Creator(model)
+    model = p2n.Model()
+    creator = p2n.Creator(model)
 
-    class TestLocation(popy.MagicLocation):
+    class TestLocation(p2n.MagicLocation):
         def split(self, agent):
             return [agent.status, agent.sex]
 
@@ -162,10 +162,10 @@ def test_3():
         },
     )
 
-    model = popy.Model()
-    creator = popy.Creator(model)
+    model = p2n.Model()
+    creator = p2n.Creator(model)
 
-    class TestLocation(popy.MagicLocation):
+    class TestLocation(p2n.MagicLocation):
         def split(self, agent):
             if agent.relevance == 1:
                 return agent.status

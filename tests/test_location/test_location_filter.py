@@ -1,7 +1,7 @@
 import pandas as pd
 
-import popy
-from popy.creator import Creator
+import pop2net as p2n
+from pop2net.creator import Creator
 
 
 def test_1():
@@ -11,14 +11,14 @@ def test_1():
         },
     )
 
-    model = popy.Model()
+    model = p2n.Model()
     creator = Creator(model)
 
-    class TestLocationA(popy.MagicLocation):
+    class TestLocationA(p2n.MagicLocation):
         def filter(self, agent):
             return agent.status == "A"
 
-    class TestLocationB(popy.MagicLocation):
+    class TestLocationB(p2n.MagicLocation):
         def filter(self, agent):
             return agent.status == "B"
 
@@ -41,14 +41,14 @@ def test_2():
         },
     )
 
-    model = popy.Model()
+    model = p2n.Model()
     creator = Creator(model)
 
-    class TestLocationA(popy.MagicLocation):
+    class TestLocationA(p2n.MagicLocation):
         def filter(self, agent):
             return agent.status == "A" and agent.sex == "w"
 
-    class TestLocationB(popy.MagicLocation):
+    class TestLocationB(p2n.MagicLocation):
         def filter(self, agent):
             return agent.status == "B" and agent.sex == "w"
 

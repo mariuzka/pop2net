@@ -1,7 +1,7 @@
 # %%
 import pandas as pd
 
-import popy
+import pop2net as p2n
 
 
 # %%
@@ -12,21 +12,21 @@ def test_1():
         },
     )
 
-    class TestLocation(popy.MagicLocation):
+    class TestLocation(p2n.MagicLocation):
         n_agents = 2
         only_exact_n_agents = True
 
         def refine(self):
             if len(self.agents) % 3 != 0:
-                new_agent = popy.Agent(model)
+                new_agent = p2n.Agent(model)
                 new_agent.status = "C"
                 self.add_agent(new_agent)
 
-    model = popy.Model()
-    creator = popy.Creator(model)
+    model = p2n.Model()
+    creator = p2n.Creator(model)
     creator.create(df=df, location_classes=[TestLocation])
 
-    inspector = popy.NetworkInspector(model)
+    inspector = p2n.NetworkInspector(model)
     inspector.plot_bipartite_network()
     inspector.plot_agent_network(node_attrs=df.columns, node_color="status")
 

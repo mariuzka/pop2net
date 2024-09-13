@@ -1,14 +1,14 @@
 # %%
 import pandas as pd
 
-import popy
+import pop2net as p2n
 
 # %%
 
 
 def test_1():
-    model = popy.Model()
-    creator = popy.Creator(model=model)
+    model = p2n.Model()
+    creator = p2n.Creator(model=model)
 
     df = pd.DataFrame(
         {
@@ -16,7 +16,7 @@ def test_1():
         },
     )
 
-    class ClassRoom(popy.MagicLocation):
+    class ClassRoom(p2n.MagicLocation):
         def split(self, agent):
             return agent.status
 

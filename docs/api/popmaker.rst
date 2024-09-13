@@ -1,4 +1,4 @@
-.. currentmodule:: popy.pop_maker
+.. currentmodule:: pop2net.pop_maker
 
 Population Maker
 ================

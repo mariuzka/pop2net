@@ -1,7 +1,7 @@
 # %%
 import pandas as pd
 
-import popy
+import pop2net as p2n
 
 
 # %%
@@ -11,10 +11,10 @@ def test_1():
             "status": ["A", "A", "A", "B"],
         }
     )
-    model = popy.Model()
-    creator = popy.Creator(model=model)
+    model = p2n.Model()
+    creator = p2n.Creator(model=model)
 
-    class TestLocation(popy.MagicLocation):
+    class TestLocation(p2n.MagicLocation):
         only_exact_n_agents = False
         n_agents = 2
 
@@ -22,7 +22,7 @@ def test_1():
             return agent.status == "A"
 
     creator.create(df=df, location_classes=[TestLocation])
-    inspector = popy.NetworkInspector(model=model)
+    inspector = p2n.NetworkInspector(model=model)
     inspector.plot_bipartite_network()
     inspector.plot_agent_network(node_attrs=["status"])
 
@@ -34,10 +34,10 @@ def test_1():
     assert all(agent.status == "A" for agent in model.locations[1].agents)
     assert all(not agent.locations for agent in model.agents if agent.status == "B")
 
-    model = popy.Model()
-    creator = popy.Creator(model=model)
+    model = p2n.Model()
+    creator = p2n.Creator(model=model)
 
-    class TestLocation(popy.MagicLocation):
+    class TestLocation(p2n.MagicLocation):
         only_exact_n_agents = True
         n_agents = 2
 
@@ -45,7 +45,7 @@ def test_1():
             return agent.status == "A"
 
     creator.create(df=df, location_classes=[TestLocation])
-    inspector = popy.NetworkInspector(model=model)
+    inspector = p2n.NetworkInspector(model=model)
     inspector.plot_bipartite_network()
     inspector.plot_agent_network(node_attrs=["status"])
 

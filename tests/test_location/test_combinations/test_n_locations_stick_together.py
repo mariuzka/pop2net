@@ -1,7 +1,7 @@
 # %%
 import pandas as pd
 
-import popy
+import pop2net as p2n
 
 # %%
 
@@ -9,17 +9,17 @@ import popy
 def test_1():
     df = pd.DataFrame({"status": ["pupil", "pupil", "pupil", "pupil"], "class_id": [1, 2, 1, 2]})
 
-    class Classroom(popy.MagicLocation):
+    class Classroom(p2n.MagicLocation):
         n_locations = 4
 
         def stick_together(self, agent):
             return agent.class_id
 
-    model = popy.Model()
-    creator = popy.Creator(model=model)
+    model = p2n.Model()
+    creator = p2n.Creator(model=model)
     creator.create(df=df, location_classes=[Classroom])
 
-    inspector = popy.NetworkInspector(model)
+    inspector = p2n.NetworkInspector(model)
     inspector.plot_bipartite_network()
     inspector.plot_agent_network(node_attrs=df.columns, node_color="class_id")
 

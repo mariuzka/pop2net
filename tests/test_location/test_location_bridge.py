@@ -1,21 +1,21 @@
-import popy
+import pop2net as p2n
 
 
 def test_1():
     # basic test
 
-    model = popy.Model()
-    creator = popy.Creator(model)
+    model = p2n.Model()
+    creator = p2n.Creator(model)
 
     for _ in range(3):
-        agent = popy.Agent(model)
+        agent = p2n.Agent(model)
         agent.gender = "w"
 
     for _ in range(2):
-        agent = popy.Agent(model)
+        agent = p2n.Agent(model)
         agent.gender = "m"
 
-    class HeteroRelationship(popy.MagicLocation):
+    class HeteroRelationship(p2n.MagicLocation):
         recycle = False
 
         def bridge(self, agent):
@@ -41,18 +41,18 @@ def test_1():
 def test_2():
     # test n_locations
 
-    model = popy.Model()
-    creator = popy.Creator(model)
+    model = p2n.Model()
+    creator = p2n.Creator(model)
 
     for _ in range(3):
-        agent = popy.Agent(model)
+        agent = p2n.Agent(model)
         agent.gender = "w"
 
     for _ in range(2):
-        agent = popy.Agent(model)
+        agent = p2n.Agent(model)
         agent.gender = "m"
 
-    class HeteroRelationship(popy.MagicLocation):
+    class HeteroRelationship(p2n.MagicLocation):
         recycle = False
         n_locations = 1
 
@@ -79,18 +79,18 @@ def test_2():
 def test_3():
     # test recycle
 
-    model = popy.Model()
-    creator = popy.Creator(model)
+    model = p2n.Model()
+    creator = p2n.Creator(model)
 
     for _ in range(3):
-        agent = popy.Agent(model)
+        agent = p2n.Agent(model)
         agent.gender = "w"
 
     for _ in range(2):
-        agent = popy.Agent(model)
+        agent = p2n.Agent(model)
         agent.gender = "m"
 
-    class HeteroRelationship(popy.MagicLocation):
+    class HeteroRelationship(p2n.MagicLocation):
         recycle = True
 
         def bridge(self, agent):
@@ -116,18 +116,18 @@ def test_3():
 def test_4():
     # test n_locations and recycle
 
-    model = popy.Model()
-    creator = popy.Creator(model)
+    model = p2n.Model()
+    creator = p2n.Creator(model)
 
     for _ in range(3):
-        agent = popy.Agent(model)
+        agent = p2n.Agent(model)
         agent.gender = "w"
 
     for _ in range(2):
-        agent = popy.Agent(model)
+        agent = p2n.Agent(model)
         agent.gender = "m"
 
-    class HeteroRelationship(popy.MagicLocation):
+    class HeteroRelationship(p2n.MagicLocation):
         recycle = True
         n_locations = 1
 

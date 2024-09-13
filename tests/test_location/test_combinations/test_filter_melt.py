@@ -1,28 +1,28 @@
 # %%
 import pandas as pd
 
-import popy
+import pop2net as p2n
 
 
 # %%
 def test_1():
-    model = popy.Model()
-    creator = popy.Creator(model=model)
+    model = p2n.Model()
+    creator = p2n.Creator(model=model)
     df = pd.DataFrame(
         {
             "status": ["pupil", "pupil", "pupil", "pupil", "teacher"],
         }
     )
 
-    class PupilHelper(popy.MagicLocation):
+    class PupilHelper(p2n.MagicLocation):
         def filter(self, agent):
             return agent.status == "pupil"
 
-    class TeacherHelper(popy.MagicLocation):
+    class TeacherHelper(p2n.MagicLocation):
         def filter(self, agent):
             return agent.status == "teacher"
 
-    class ClassRoom(popy.MagicLocation):
+    class ClassRoom(p2n.MagicLocation):
         def melt(self):
             return PupilHelper, TeacherHelper
 
@@ -40,8 +40,8 @@ test_1()
 
 # %%
 def test_2():
-    model = popy.Model()
-    creator = popy.Creator(model=model)
+    model = p2n.Model()
+    creator = p2n.Creator(model=model)
     df = pd.DataFrame(
         {
             "status": ["pupil", "pupil", "pupil", "pupil", "teacher", "teacher"],
@@ -49,15 +49,15 @@ def test_2():
         }
     )
 
-    class PupilHelper(popy.MagicLocation):
+    class PupilHelper(p2n.MagicLocation):
         def filter(self, agent):
             return agent.status == "pupil"
 
-    class TeacherHelper(popy.MagicLocation):
+    class TeacherHelper(p2n.MagicLocation):
         def filter(self, agent):
             return agent.status == "teacher"
 
-    class ClassRoom(popy.MagicLocation):
+    class ClassRoom(p2n.MagicLocation):
         def filter(self, agent):
             return agent.classroom_id == 1
 

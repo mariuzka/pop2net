@@ -1,19 +1,19 @@
-import popy
+import pop2net as p2n
 
 
 def test_0():
-    model = popy.Model()
-    creator = popy.Creator(model=model)
+    model = p2n.Model()
+    creator = p2n.Creator(model=model)
 
     for _ in range(5):
-        agent = popy.Agent(model=model)
+        agent = p2n.Agent(model=model)
         agent.gender = "w"
 
     for _ in range(5):
-        agent = popy.Agent(model=model)
+        agent = p2n.Agent(model=model)
         agent.gender = "m"
 
-    class School(popy.MagicLocation):
+    class School(p2n.MagicLocation):
         pass
 
     school = School(model=model)
@@ -23,7 +23,7 @@ def test_0():
         for agent in creator._get_affiliated_agents(agents=model.agents, dummy_location=school)
     )
 
-    class School(popy.MagicLocation):
+    class School(p2n.MagicLocation):
         def filter(self, agent):
             return agent.gender == "w"
 

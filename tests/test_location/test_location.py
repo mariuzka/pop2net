@@ -1,9 +1,9 @@
 import pytest
 
-from popy import AgentList
-from popy.agent import Agent
-from popy.location import Location
-from popy.model import Model
+from pop2net import AgentList
+from pop2net.agent import Agent
+from pop2net.location import Location
+from pop2net.model import Model
 
 
 @pytest.fixture(scope="module")
@@ -65,11 +65,11 @@ def test_location_size():
 #     only_exact_n_agents_pizza_group,
 #     only_exact_n_agents_pasta_group,
 # ):
-#     class Table(popy.MagicLocation):
+#     class Table(p2n.MagicLocation):
 #         recycle = recycle_
 
 #         def melt(self):
-#             class PizzaGroup(popy.MagicLocation):
+#             class PizzaGroup(p2n.MagicLocation):
 #                 n_agents = size_pizza_group
 #                 only_exact_n_agents = only_exact_n_agents_pizza_group
 
@@ -82,7 +82,7 @@ def test_location_size():
 #                 def weight(self, agent):
 #                     return 10
 
-#             class PastaGroup(popy.MagicLocation):
+#             class PastaGroup(p2n.MagicLocation):
 #                 n_agents = size_pasta_group
 #                 only_exact_n_agents = only_exact_n_agents_pasta_group
 
@@ -92,7 +92,7 @@ def test_location_size():
 #             return PizzaGroup, PastaGroup
 
 #     df = pd.DataFrame({"food": ["pizza", "pasta"] * 10})
-#     model = popy.Model()
+#     model = p2n.Model()
 
 #     creator = Creator(model)
 #     creator.create_agents(df=df)

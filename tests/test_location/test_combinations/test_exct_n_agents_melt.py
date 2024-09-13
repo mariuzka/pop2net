@@ -1,7 +1,7 @@
 # %%
 import pandas as pd
 
-import popy
+import pop2net as p2n
 
 # %%
 
@@ -16,30 +16,30 @@ def test_1():
         },
     )
 
-    model = popy.Model()
-    creator = popy.Creator(model)
+    model = p2n.Model()
+    creator = p2n.Creator(model)
 
-    class LocA(popy.MeltLocation):
+    class LocA(p2n.MeltLocation):
         n_agents = 2
         only_exact_n_agents = False
 
         def filter(self, agent):
             return agent.status == "A"
 
-    class LocB(popy.MeltLocation):
+    class LocB(p2n.MeltLocation):
         n_agents = 2
         only_exact_n_agents = False
 
         def filter(self, agent):
             return agent.status == "B"
 
-    class LocAB(popy.MagicLocation):
+    class LocAB(p2n.MagicLocation):
         def melt(self):
             return LocA, LocB
 
     creator.create_agents(df=df)
     creator.create_locations(location_classes=[LocAB])
-    inspector = popy.NetworkInspector(model)
+    inspector = p2n.NetworkInspector(model)
     inspector.plot_bipartite_network()
     inspector.plot_agent_network(node_attrs=["status"])
 
@@ -51,24 +51,24 @@ def test_1():
     assert sum(True for agent in model.locations[1].agents if agent.status == "B") == 1
 
     # Ver. with exact_n set to true
-    model = popy.Model()
-    creator = popy.Creator(model)
+    model = p2n.Model()
+    creator = p2n.Creator(model)
 
-    class LocA(popy.MeltLocation):
+    class LocA(p2n.MeltLocation):
         n_agents = 2
         only_exact_n_agents = True
 
         def filter(self, agent):
             return agent.status == "A"
 
-    class LocB(popy.MeltLocation):
+    class LocB(p2n.MeltLocation):
         n_agents = 2
         only_exact_n_agents = True
 
         def filter(self, agent):
             return agent.status == "B"
 
-    class LocAB(popy.MagicLocation):
+    class LocAB(p2n.MagicLocation):
         n_agents = 4
         only_exact_n_agents = True
 
@@ -77,7 +77,7 @@ def test_1():
 
     creator.create_agents(df=df)
     creator.create_locations(location_classes=[LocAB])
-    inspector = popy.NetworkInspector(model)
+    inspector = p2n.NetworkInspector(model)
     inspector.plot_bipartite_network()
     inspector.plot_agent_network(node_attrs=["status"])
 

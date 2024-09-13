@@ -1,23 +1,23 @@
-import popy
+import pop2net as p2n
 
 
 def test_1a():
-    class Max(popy.Agent):
+    class Max(p2n.Agent):
         pass
 
-    class Marius(popy.Agent):
+    class Marius(p2n.Agent):
         pass
 
-    class Lukas(popy.Agent):
+    class Lukas(p2n.Agent):
         pass
 
-    class Meeting1(popy.MagicLocation):
+    class Meeting1(p2n.MagicLocation):
         pass
 
-    class Meeting2(popy.MagicLocation):
+    class Meeting2(p2n.MagicLocation):
         pass
 
-    model = popy.Model()
+    model = p2n.Model()
     agent_max = Max(model=model)
     agent_marius = Marius(model=model)
     agent_lukas = Lukas(model=model)
@@ -40,23 +40,23 @@ def test_1a():
 
 
 def test_1b():
-    model = popy.Model()
-    creator = popy.Creator(model=model)
+    model = p2n.Model()
+    creator = p2n.Creator(model=model)
 
-    class Max(popy.Agent):
+    class Max(p2n.Agent):
         pass
 
-    class Marius(popy.Agent):
+    class Marius(p2n.Agent):
         pass
 
-    class Lukas(popy.Agent):
+    class Lukas(p2n.Agent):
         pass
 
-    class Meeting1(popy.MagicLocation):
+    class Meeting1(p2n.MagicLocation):
         def filter(self, agent):
             return agent.type in ["Max", "Marius"]
 
-    class Meeting2(popy.MagicLocation):
+    class Meeting2(p2n.MagicLocation):
         def filter(self, agent):
             return agent.type in ["Marius", "Lukas"]
 

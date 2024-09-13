@@ -1,4 +1,4 @@
-.. currentmodule:: popy
+.. currentmodule:: pop2net
 
 API Reference
 =============

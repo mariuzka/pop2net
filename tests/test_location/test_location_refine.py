@@ -1,15 +1,15 @@
-import popy
+import pop2net as p2n
 
 
 def test_1():
-    model = popy.Model()
-    creator = popy.Creator(model=model)
+    model = p2n.Model()
+    creator = p2n.Creator(model=model)
 
-    class ClassRoom(popy.MagicLocation):
+    class ClassRoom(p2n.MagicLocation):
         n_locations = 3
 
         def refine(self):
-            agent = popy.Agent(model=self.model)
+            agent = p2n.Agent(model=self.model)
             self.add_agent(agent)
 
     creator.create_locations(location_classes=[ClassRoom])
@@ -22,13 +22,13 @@ def test_1():
 
 
 def test_2():
-    model = popy.Model()
-    creator = popy.Creator(model=model)
+    model = p2n.Model()
+    creator = p2n.Creator(model=model)
 
     for _ in range(10):
-        popy.Agent(model=model)
+        p2n.Agent(model=model)
 
-    class ClassRoom(popy.MagicLocation):
+    class ClassRoom(p2n.MagicLocation):
         n_locations = 2
 
         def refine(self):

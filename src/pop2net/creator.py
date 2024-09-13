@@ -8,10 +8,10 @@ import warnings
 
 import pandas as pd
 
-import popy
-import popy.utils as utils
+import pop2net as p2n
+import pop2net.utils as utils
 
-from .exceptions import PopyException
+from .exceptions import Pop2netException
 
 
 class Creator:
@@ -19,21 +19,21 @@ class Creator:
 
     def __init__(
         self,
-        model: popy.Model,
+        model: p2n.Model,
         seed: int = None,
     ) -> None:
         """Instantiate a creator for a specific model.
 
         Args:
-            model (popy.Model): Model, for which a population should be created
+            model (p2n.Model): Model, for which a population should be created
             seed (int, optional): A seed for reproducibility. Defaults to 999.
         """
         self.model = model
         self.seed = seed
         self.rng = random.Random(seed)
-        self._dummy_model = popy.Model()
+        self._dummy_model = p2n.Model()
 
-    def _create_dummy_location(self, location_cls) -> popy.Location:
+    def _create_dummy_location(self, location_cls) -> p2n.Location:
         location = location_cls(model=self._dummy_model)
         location.setup()
         return location
@@ -111,12 +111,12 @@ class Creator:
 
     def create_agents(
         self,
-        agent_class=popy.Agent,
+        agent_class=p2n.Agent,
         agent_class_attr: None | str = None,
         agent_class_dict: None | dict = None,
         df: pd.DataFrame | None = None,
         n: int | None = None,
-    ) -> popy.AgentList:
+    ) -> p2n.AgentList:
         """Creates agents from a pandas DataFrame.
 
         Creates one agent-instance of the given agent-class for each row of the given df,
@@ -162,7 +162,7 @@ class Creator:
                 msg = "Either `df` or `n` must be not None."
                 raise Exception(msg)
 
-        agents = popy.AgentList(model=self.model, objs=agents)
+        agents = p2n.AgentList(model=self.model, objs=agents)
 
         return agents
 
@@ -432,21 +432,21 @@ class Creator:
     def create_locations(
         self,
         location_classes: list,
-        agents: list | popy.AgentList | None = None,
-    ) -> popy.LocationList:
+        agents: list | p2n.AgentList | None = None,
+    ) -> p2n.LocationList:
         """Creates location instances and connects them with the given agent population.
 
         Args:
             location_classes (list): A list of location classes.
-            agents (list | popy.AgentList): A list of agents.
+            agents (list | p2n.AgentList): A list of agents.
 
         Returns:
-            popy.LocationList: A list of locations.
+            p2n.LocationList: A list of locations.
         """
         if agents is None:
             agents = self.model.agents
 
-        # self._dummy_model = popy.Model()
+        # self._dummy_model = p2n.Model()
         self._dummy_model.add_agents(agents)
 
         for location_cls in location_classes:
@@ -530,7 +530,7 @@ class Creator:
 
                         dummy_melt_class = type(
                             f"dummy_meltlocation{str(bridge_value)}",
-                            (popy.MeltLocation,),
+                            (p2n.MeltLocation,),
                             {
                                 "filter": filter,
                                 "n_agents": 1,
@@ -692,7 +692,7 @@ class Creator:
 
                             locations.append(location)
 
-        locations = popy.LocationList(model=self.model, objs=locations)
+        locations = p2n.LocationList(model=self.model, objs=locations)
 
         # execute an action after all locations have been created
         for location in locations:
@@ -720,7 +720,7 @@ class Creator:
         self,
         df: pd.DataFrame,
         location_classes: list,
-        agent_class: type[popy.Agent] = popy.Agent,
+        agent_class: type[p2n.Agent] = p2n.Agent,
         agent_class_attr: None | str = None,
         agent_class_dict: None | dict = None,
         n_agents: int | None = None,
@@ -736,7 +736,7 @@ class Creator:
             df (pd.DataFrame): A data set with individual data that forms the basis for
                 the creation of agents. Each row is (potentially) translated into one agent.
                 Each column is translated into one agent attribute.
-            agent_class (type[popy.Agent]): The class from which the agent instances are created.
+            agent_class (type[p2n.Agent]): The class from which the agent instances are created.
             location_classes (list): A list of classes from which the location instances are
                 created.
             n_agents (Optional[int], optional): The number of agents that will be created.
@@ -791,7 +791,7 @@ class Creator:
             drop_agentpy_columns (bool): Deletes some columns created by AgentPy.
 
         Raises:
-            PopyException: _description_
+            Pop2netException: _description_
 
         Returns:
             pd.DataFrame: A dataframe which contains one row for each
@@ -799,7 +799,7 @@ class Creator:
         """
         if self.agents is None:
             msg = "There are no agents."
-            raise PopyException(msg)
+            raise Pop2netException(msg)
 
         df = pd.DataFrame([vars(agent) for agent in self.agents])
 

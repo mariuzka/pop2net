@@ -1,16 +1,16 @@
-import popy
+import pop2net as p2n
 
 
 def test_agent_connect_1():
-    model = popy.Model()
-    agent1 = popy.Agent(model)
-    agent2 = popy.Agent(model)
-    agent3 = popy.Agent(model)
+    model = p2n.Model()
+    agent1 = p2n.Agent(model)
+    agent2 = p2n.Agent(model)
+    agent3 = p2n.Agent(model)
 
-    class Home(popy.Location):
+    class Home(p2n.Location):
         pass
 
-    class School(popy.Location):
+    class School(p2n.Location):
         pass
 
     agent1.connect(
@@ -47,15 +47,15 @@ def test_agent_connect_1():
 
 
 def test_agent_disconnect_1():
-    model = popy.Model()
-    agent1 = popy.Agent(model)
-    agent2 = popy.Agent(model)
-    agent3 = popy.Agent(model)
+    model = p2n.Model()
+    agent1 = p2n.Agent(model)
+    agent2 = p2n.Agent(model)
+    agent3 = p2n.Agent(model)
 
-    class Home(popy.Location):
+    class Home(p2n.Location):
         pass
 
-    class School(popy.Location):
+    class School(p2n.Location):
         pass
 
     agent1.connect(
@@ -114,15 +114,15 @@ def test_agent_disconnect_1():
 
 
 def test_agent_disconnect_2():
-    model = popy.Model()
-    agent1 = popy.Agent(model)
-    agent2 = popy.Agent(model)
-    agent3 = popy.Agent(model)
+    model = p2n.Model()
+    agent1 = p2n.Agent(model)
+    agent2 = p2n.Agent(model)
+    agent3 = p2n.Agent(model)
 
-    class Home(popy.Location):
+    class Home(p2n.Location):
         pass
 
-    class School(popy.Location):
+    class School(p2n.Location):
         pass
 
     agent1.connect(

@@ -1,7 +1,7 @@
-.. currentmodule:: popy
+.. currentmodule:: pop2net
 
 Model
 =====
 
-.. autoclass:: popy.Model
+.. autoclass:: pop2net.Model
     :members:

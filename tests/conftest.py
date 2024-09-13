@@ -1,6 +1,6 @@
 import pytest
 
-from popy.data_fakers import soep
+from pop2net.data_fakers import soep
 
 
 @pytest.fixture(scope="session")

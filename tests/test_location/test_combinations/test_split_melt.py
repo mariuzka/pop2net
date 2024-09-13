@@ -1,13 +1,13 @@
 # %%
 import pandas as pd
 
-import popy
+import pop2net as p2n
 
 
 # %%
 def test_1():
-    model = popy.Model()
-    creator = popy.Creator(model=model)
+    model = p2n.Model()
+    creator = p2n.Creator(model=model)
     df = pd.DataFrame(
         {
             "status": [
@@ -25,21 +25,21 @@ def test_1():
         }
     )
 
-    class PupilHelper(popy.MagicLocation):
+    class PupilHelper(p2n.MagicLocation):
         def filter(self, agent):
             return agent.status == "pupil"
 
         def split(self, agent):
             return agent.class_id
 
-    class TeacherHelper(popy.MagicLocation):
+    class TeacherHelper(p2n.MagicLocation):
         def filter(self, agent):
             return agent.status == "teacher"
 
         def split(self, agent):
             return agent.class_id
 
-    class ClassRoom(popy.MagicLocation):
+    class ClassRoom(p2n.MagicLocation):
         def melt(self):
             return PupilHelper, TeacherHelper
 
@@ -62,8 +62,8 @@ test_1()
 # ...nicht schlecht?
 # 2-layer melts
 def test_2():
-    model = popy.Model()
-    creator = popy.Creator(model=model)
+    model = p2n.Model()
+    creator = p2n.Creator(model=model)
     df = pd.DataFrame(
         {
             "status": [
@@ -82,29 +82,29 @@ def test_2():
         }
     )
 
-    class PupilHelper(popy.MeltLocation):
+    class PupilHelper(p2n.MeltLocation):
         def filter(self, agent):
             return agent.status == "pupil"
 
         def split(self, agent):
             return agent.class_id
 
-    class TeacherHelper(popy.MeltLocation):
+    class TeacherHelper(p2n.MeltLocation):
         def filter(self, agent):
             return agent.status == "teacher"
 
         def split(self, agent):
             return agent.class_id
 
-    class ClassRoom(popy.MagicLocation):
+    class ClassRoom(p2n.MagicLocation):
         def melt(self):
             return PupilHelper, TeacherHelper
 
-    class SchoolHelper(popy.MeltLocation):
+    class SchoolHelper(p2n.MeltLocation):
         def filter(self, agent):
             return agent.status == "principal"
 
-    class School(popy.MagicLocation):
+    class School(p2n.MagicLocation):
         def melt(self):
             return ClassRoom, SchoolHelper
 

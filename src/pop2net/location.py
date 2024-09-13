@@ -6,7 +6,7 @@ from agentpy.objects import Object
 from agentpy.sequences import AgentList
 import networkx as nx
 
-import popy.utils as utils
+import pop2net.utils as utils
 
 from . import agent as _agent
 from . import model as _model

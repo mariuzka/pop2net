@@ -20,9 +20,9 @@ show_error_codes = true
 exclude = ["docs"]
 
 [tool.poetry]
-name = "popy"
+name = "pop2net"
 version = "0.1.1a2"
-packages = [{include = "popy", from="src/"}]
+packages = [{include = "pop2net", from="src/"}]
 description = "Creates representative random populations for simulation studies"
 authors = [
   "Marius Kaffai <marius.kaffai@sowi.uni-stuttgart.de>",
