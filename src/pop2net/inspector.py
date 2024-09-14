@@ -166,7 +166,6 @@ class NetworkInspector:
             include_0_weights (bool): Should edges with a weight of zero be included in
                 the plot? Defaults to True.
         """
-
         self.plot_bipartite_network(
             agent_color=agent_color,
             agent_attrs=agent_attrs,
