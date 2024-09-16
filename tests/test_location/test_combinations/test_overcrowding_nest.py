@@ -1,4 +1,3 @@
-# %%
 from collections import Counter
 
 import pandas as pd
@@ -31,7 +30,7 @@ def test_1():
     creator.create(df=df, location_classes=[School, Classroom])
     inspector = p2n.NetworkInspector(model)
     inspector.plot_bipartite_network()
-    inspector.plot_agent_network(node_attrs=df)
+    inspector.plot_agent_network(agent_attrs=df)
 
     assert len(model.agents) == 7
     assert len(model.locations) == 4
@@ -40,8 +39,6 @@ def test_1():
     assert len(model.locations[2].agents) == 5
     assert len(model.locations[3].agents) == 2
 
-
-test_1()
 
 # %%
 # TODO das von oben nur mit True True und eine Variante wo True False jeweils gemischt ist
@@ -87,7 +84,7 @@ def test_2():
 
     inspector = p2n.NetworkInspector(model)
     inspector.plot_bipartite_network()
-    inspector.plot_agent_network(node_attrs=df.columns, node_color="id")
+    inspector.plot_agent_network(agent_attrs=df.columns, agent_color="id")
 
     class School(p2n.MagicLocation):
         n_agents = 4
@@ -115,7 +112,7 @@ def test_2():
 
     inspector = p2n.NetworkInspector(model)
     inspector.plot_bipartite_network()
-    inspector.plot_agent_network(node_attrs=df.columns, node_color="group")
+    inspector.plot_agent_network(agent_attrs=df.columns, agent_color="group")
 
     for location in model.locations:
         if location.type == "School":
@@ -140,11 +137,6 @@ def test_2():
         if location.type == "School":
             for agent in location.agents:
                 assert all(agent.School == nghbr.School for nghbr in agent.neighbors())
-
-
-test_2()
-
-# %%
 
 
 def test_3():
@@ -199,7 +191,3 @@ def test_3():
 
     # all members of a group are in the same city
     assert all(location.agents[0].City == location.agents[1].City for location in model.locations)
-
-
-test_3()
-# %%

@@ -1,11 +1,8 @@
-# %%
 from collections import Counter
 
 import pandas as pd
 
 import pop2net as p2n
-
-# %%
 
 
 def test_1():
@@ -38,27 +35,23 @@ def test_1():
     assert len(model.agents) == 14
     # assert expecetd locations split and agent distribution
     for i, location in enumerate(model.locations):
-        match i:
-            case 0:
-                assert len(location.agents) == 4
-                counter = Counter([agent.friend_group for agent in location.agents])
-                assert list(counter.keys()) == [1, 2]
-                assert list(counter.values()) == [2, 2]
-            case 1:
-                assert len(location.agents) == 3
-                counter = Counter([agent.friend_group for agent in location.agents])
-                assert list(counter.keys()) == [3, 4]
-                assert list(counter.values()) == [2, 1]
-            case 2:
-                assert len(location.agents) == 4
-                counter = Counter([agent.friend_group for agent in location.agents])
-                assert list(counter.keys()) == [1, 2]
-                assert list(counter.values()) == [2, 2]
-            case 3:
-                assert len(location.agents) == 3
-                counter = Counter([agent.friend_group for agent in location.agents])
-                assert list(counter.keys()) == [3, 4]
-                assert list(counter.values()) == [2, 1]
-
-
-test_1()
+        if i == 0:
+            assert len(location.agents) == 4
+            counter = Counter([agent.friend_group for agent in location.agents])
+            assert list(counter.keys()) == [1, 2]
+            assert list(counter.values()) == [2, 2]
+        elif i == 1:
+            assert len(location.agents) == 3
+            counter = Counter([agent.friend_group for agent in location.agents])
+            assert list(counter.keys()) == [3, 4]
+            assert list(counter.values()) == [2, 1]
+        elif i == 2:
+            assert len(location.agents) == 4
+            counter = Counter([agent.friend_group for agent in location.agents])
+            assert list(counter.keys()) == [1, 2]
+            assert list(counter.values()) == [2, 2]
+        elif i == 3:
+            assert len(location.agents) == 3
+            counter = Counter([agent.friend_group for agent in location.agents])
+            assert list(counter.keys()) == [3, 4]
+            assert list(counter.values()) == [2, 1]

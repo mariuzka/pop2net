@@ -1,10 +1,8 @@
-# %%
 import pandas as pd
 
 import pop2net as p2n
 
 
-# %%
 def test_1():
     model = p2n.Model()
     creator = p2n.Creator(model=model)
@@ -28,7 +26,7 @@ def test_1():
     creator.create_agents(df=df)
     creator.create_locations(location_classes=[ClassRoom])
     inspector.plot_bipartite_network()
-    inspector.plot_agent_network(node_attrs=["status"])
+    inspector.plot_agent_network(agent_attrs=["status"])
 
     assert len(model.locations) == 1
     assert len(model.agents) == 5
@@ -39,7 +37,3 @@ def test_1():
 
     assert len(model.locations[0].agents) == 3
     assert sum(not agent.locations for agent in model.agents) == 2
-
-
-test_1()
-# %%

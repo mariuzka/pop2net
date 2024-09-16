@@ -21,7 +21,7 @@ def test_1():
 
     inspector = p2n.NetworkInspector(model)
     inspector.plot_bipartite_network()
-    inspector.plot_agent_network(node_attrs=df.columns, node_color="class_id")
+    inspector.plot_agent_network(agent_attrs=df.columns, agent_color="class_id")
 
     for location in model.locations[0:3]:
         print(location)
@@ -36,9 +36,3 @@ def test_1():
     for agent in model.agents:
         assert agent.neighbors(location_classes=[Classroom])[0].class_id == agent.class_id
     assert all(not location.agents for location in model.locations[2:])
-
-
-test_1()
-
-# %%
-# TODO was macht hier noch Sinn zu testen

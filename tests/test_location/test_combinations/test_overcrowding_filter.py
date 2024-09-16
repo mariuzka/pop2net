@@ -1,10 +1,8 @@
-# %%
 import pandas as pd
 
 import pop2net as p2n
 
 
-# %%
 def test_1():
     df = pd.DataFrame(
         {
@@ -69,7 +67,7 @@ def test_1():
     creator.create(df=df, location_classes=[TestLocationA2, TestLocationB2])
     inspector = p2n.NetworkInspector(model)
     inspector.plot_bipartite_network()
-    inspector.plot_agent_network(node_attrs=df.columns, node_color="status")
+    inspector.plot_agent_network(agent_attrs=df.columns, agent_color="status")
     assert len(model.agents) == 14
     assert len(model.locations) == 2
     assert len(model.locations[0].agents) == 7
@@ -81,7 +79,7 @@ def test_1():
     creator = p2n.Creator(model)
     creator.create(df=df, location_classes=[TestLocationA3, TestLocationB3])
     inspector = p2n.NetworkInspector(model)
-    inspector.plot_agent_network(node_attrs=df.columns, node_color="status")
+    inspector.plot_agent_network(agent_attrs=df.columns, agent_color="status")
     assert len(model.agents) == 14
     assert len(model.locations) == 4
     assert len(model.locations[0].agents) == 5
@@ -92,7 +90,3 @@ def test_1():
     assert all(agent.status == "A" for agent in model.locations[1].agents)
     assert all(agent.status == "B" for agent in model.locations[2].agents)
     assert all(agent.status == "B" for agent in model.locations[3].agents)
-
-
-test_1()
-# %%
