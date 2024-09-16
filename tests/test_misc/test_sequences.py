@@ -3,7 +3,7 @@ import pytest
 import pop2net as p2n
 
 
-@pytest.fixture()
+@pytest.fixture
 def simple_location_list():
     model = p2n.Model()
     return p2n.LocationList(

@@ -4,12 +4,12 @@ import pytest
 import pop2net as p2n
 
 
-@pytest.fixture()
+@pytest.fixture
 def model():
     return p2n.Model()
 
 
-@pytest.fixture()
+@pytest.fixture
 def two_locations(model):
     return p2n.LocationList(
         model,
@@ -259,7 +259,7 @@ def test_chef_agents():
     model.locations.assert_()
 
 
-@pytest.mark.skip()
+@pytest.mark.skip
 def test_table_agents():
     # TODO: copied from new_structure.ipynb but has no assert statements.
     # not sure what is being checked here.
