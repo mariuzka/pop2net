@@ -1,4 +1,5 @@
 import pandas as pd
+
 import pop2net as p2n
 
 # Testen: Wie verhält es sich wenn n_agents vorgegeben ist aber noch lehrer übrig sind

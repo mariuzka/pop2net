@@ -108,7 +108,7 @@ convention = "google"
 [tool.ruff.lint.isort]
 force-single-line = true
 force-sort-within-sections = true
-lines-after-imports = -1
+known-first-party = ["src", "pop2net"]
 
 [build-system]
 requires = ["poetry-core"]

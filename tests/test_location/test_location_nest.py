@@ -1,6 +1,7 @@
 from collections import Counter
 
 import pandas as pd
+
 import pop2net as p2n
 
 
