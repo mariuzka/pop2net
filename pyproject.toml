@@ -21,7 +21,7 @@ exclude = ["docs"]
 
 [tool.poetry]
 name = "pop2net"
-version = "0.1.1a2"
+version = "0.1.1a3"
 packages = [{include = "pop2net", from="src/"}]
 description = "Creates representative random populations for simulation studies"
 authors = [
