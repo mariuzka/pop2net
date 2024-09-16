@@ -10,6 +10,6 @@ API Reference
 
    agent
    location
-   popmaker
+   creator
    model
    utils
