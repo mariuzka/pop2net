@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Model &mdash; pop2net 0.1.0 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=01f34227"></script>
+        <script src="../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Utils" href="utils.html" />
+    <link rel="prev" title="Population Maker" href="popmaker.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            pop2net
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../about.html">About Popy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../section_introduction.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">API Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="agent.html">Agent</a></li>
+<li class="toctree-l2"><a class="reference internal" href="location.html">Location</a></li>
+<li class="toctree-l2"><a class="reference internal" href="popmaker.html">Population Maker</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Model</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#pop2net.Model"><code class="docutils literal notranslate"><span class="pre">Model</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pop2net.Model.add_agent"><code class="docutils literal notranslate"><span class="pre">Model.add_agent()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pop2net.Model.add_agent_to_location"><code class="docutils literal notranslate"><span class="pre">Model.add_agent_to_location()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pop2net.Model.add_agents"><code class="docutils literal notranslate"><span class="pre">Model.add_agents()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pop2net.Model.add_location"><code class="docutils literal notranslate"><span class="pre">Model.add_location()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pop2net.Model.add_locations"><code class="docutils literal notranslate"><span class="pre">Model.add_locations()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pop2net.Model.agents"><code class="docutils literal notranslate"><span class="pre">Model.agents</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pop2net.Model.agents_between_locations"><code class="docutils literal notranslate"><span class="pre">Model.agents_between_locations()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pop2net.Model.agents_by_id"><code class="docutils literal notranslate"><span class="pre">Model.agents_by_id</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pop2net.Model.agents_of_location"><code class="docutils literal notranslate"><span class="pre">Model.agents_of_location()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pop2net.Model.connect_agents"><code class="docutils literal notranslate"><span class="pre">Model.connect_agents()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pop2net.Model.disconnect_agents"><code class="docutils literal notranslate"><span class="pre">Model.disconnect_agents()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pop2net.Model.export_agent_network"><code class="docutils literal notranslate"><span class="pre">Model.export_agent_network()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pop2net.Model.get_weight"><code class="docutils literal notranslate"><span class="pre">Model.get_weight()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pop2net.Model.locations"><code class="docutils literal notranslate"><span class="pre">Model.locations</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pop2net.Model.locations_between_agents"><code class="docutils literal notranslate"><span class="pre">Model.locations_between_agents()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pop2net.Model.locations_by_id"><code class="docutils literal notranslate"><span class="pre">Model.locations_by_id</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pop2net.Model.locations_of_agent"><code class="docutils literal notranslate"><span class="pre">Model.locations_of_agent()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pop2net.Model.neighbors_of_agent"><code class="docutils literal notranslate"><span class="pre">Model.neighbors_of_agent()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pop2net.Model.remove_agent"><code class="docutils literal notranslate"><span class="pre">Model.remove_agent()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pop2net.Model.remove_agent_from_location"><code class="docutils literal notranslate"><span class="pre">Model.remove_agent_from_location()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pop2net.Model.remove_agents"><code class="docutils literal notranslate"><span class="pre">Model.remove_agents()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pop2net.Model.remove_location"><code class="docutils literal notranslate"><span class="pre">Model.remove_location()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pop2net.Model.remove_locations"><code class="docutils literal notranslate"><span class="pre">Model.remove_locations()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pop2net.Model.set_weight"><code class="docutils literal notranslate"><span class="pre">Model.set_weight()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pop2net.Model.sim_step"><code class="docutils literal notranslate"><span class="pre">Model.sim_step()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="utils.html">Utils</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../section_examples.html">Example Gallery</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers.html">Notes to Developers</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">pop2net</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">API Reference</a></li>
+      <li class="breadcrumb-item active">Model</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/model.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="model">
+<h1>Model<a class="headerlink" href="#model" title="Link to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="pop2net.Model">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pop2net.</span></span><span class="sig-name descname"><span class="pre">Model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parameters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_run_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pop2net/model.html#Model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pop2net.Model" title="Link to this definition"></a></dt>
+<dd><p>Class the encapsulates a full simluation.</p>
+<p>This very closely follows the logic of the <a class="reference external" href="https://agentpy.readthedocs.io/en/latest/reference_model.html#agentpy.Model" title="(in agentpy)"><code class="xref py py-class docutils literal notranslate"><span class="pre">agentpy.Model</span></code></a> package. See
+<a class="reference external" href="https://agentpy.readthedocs.io/en/latest/reference_model.html#agentpy.Model" title="(in agentpy)"><code class="xref py py-class docutils literal notranslate"><span class="pre">agentpy.Model</span></code></a> for more information.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pop2net.Model.add_agent">
+<span class="sig-name descname"><span class="pre">add_agent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pop2net/model.html#Model.add_agent"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pop2net.Model.add_agent" title="Link to this definition"></a></dt>
+<dd><p>Add an agent to the environment.</p>
+<p>The added agent will have no connections to other agents or locatons by default.
+If the agent is already in the current environment, this methods does nothing.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>agent</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="agent.html#pop2net.Agent" title="pop2net.agent.Agent"><code class="xref py py-class docutils literal notranslate"><span class="pre">Agent</span></code></a></span>) – Agent to be added to the environment.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pop2net.Model.add_agent_to_location">
+<span class="sig-name descname"><span class="pre">add_agent_to_location</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">location</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pop2net/model.html#Model.add_agent_to_location"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pop2net.Model.add_agent_to_location" title="Link to this definition"></a></dt>
+<dd><p>Add an agent to a specific location.</p>
+<p>Both the agent and the location have to be defined beforehand. All additional keyword
+arguments will be edge attributes for this connection.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>location</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="location.html#pop2net.Location" title="pop2net.location.Location"><code class="xref py py-class docutils literal notranslate"><span class="pre">Location</span></code></a></span>) – Location the agent is to be added to.</p></li>
+<li><p><strong>agent</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="agent.html#pop2net.Agent" title="pop2net.agent.Agent"><code class="xref py py-class docutils literal notranslate"><span class="pre">Agent</span></code></a></span>) – Agent to be added to the location.</p></li>
+<li><p><strong>weight</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a></span>) – An optional weight for the connection.</p></li>
+<li><p><strong>**kwargs</strong> – Additional edge attributes.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.12)"><strong>Exception</strong></a> – Raised if the location does not exist in the environment.</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.12)"><strong>Exception</strong></a> – Raised if the agent does not exist in the environment.</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pop2net.Model.add_agents">
+<span class="sig-name descname"><span class="pre">add_agents</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agents</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pop2net/model.html#Model.add_agents"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pop2net.Model.add_agents" title="Link to this definition"></a></dt>
+<dd><p>Add agents to the environment.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>agents</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><em>list</em></a>) – A list of the agents to be added.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pop2net.Model.add_location">
+<span class="sig-name descname"><span class="pre">add_location</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">location</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pop2net/model.html#Model.add_location"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pop2net.Model.add_location" title="Link to this definition"></a></dt>
+<dd><p>Add a location to the environment.</p>
+<p>The added location will have no connections to other agents or locatons by default.
+If the location is already in the current environment, this methods does nothing.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>location</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="location.html#pop2net.Location" title="pop2net.location.Location"><code class="xref py py-class docutils literal notranslate"><span class="pre">Location</span></code></a></span>) – Location to be added to the environment.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pop2net.Model.add_locations">
+<span class="sig-name descname"><span class="pre">add_locations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">locations</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pop2net/model.html#Model.add_locations"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pop2net.Model.add_locations" title="Link to this definition"></a></dt>
+<dd><p>Add multiple locations to the environment at once.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>locations</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><em>list</em></a>) – An iterable over multiple locations.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pop2net.Model.agents">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">agents</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://agentpy.readthedocs.io/en/latest/reference_sequences.html#agentpy.AgentList" title="(in agentpy)"><span class="pre">AgentList</span></a></em><a class="headerlink" href="#pop2net.Model.agents" title="Link to this definition"></a></dt>
+<dd><p>Show a iterable view of all agents in the environment.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A non-mutable AgentList of all agents in the environment.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>AgentList</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pop2net.Model.agents_between_locations">
+<span class="sig-name descname"><span class="pre">agents_between_locations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">location1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">location2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agent_classes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pop2net/model.html#Model.agents_between_locations"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pop2net.Model.agents_between_locations" title="Link to this definition"></a></dt>
+<dd><p>Return all agents between two locations.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>location1</strong> (<a class="reference internal" href="location.html#pop2net.Location" title="pop2net.Location"><em>Location</em></a>) – Location 1.</p></li>
+<li><p><strong>location2</strong> (<a class="reference internal" href="location.html#pop2net.Location" title="pop2net.Location"><em>Location</em></a>) – Location 2.</p></li>
+<li><p><strong>agent_classes</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.12)"><em>tuple</em></a><em>, </em><em>optional</em>) – Constrain the agents to the following types.
+Defaults to ().</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of agents.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>AgentList</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pop2net.Model.agents_by_id">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">agents_by_id</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><span class="pre">dict</span></a></em><a class="headerlink" href="#pop2net.Model.agents_by_id" title="Link to this definition"></a></dt>
+<dd><p>Returns a dictionary which stores the model’s agents by their id.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A dictionary which stores the model’s agents by their id.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)">dict</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pop2net.Model.agents_of_location">
+<span class="sig-name descname"><span class="pre">agents_of_location</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">location</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pop2net/model.html#Model.agents_of_location"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pop2net.Model.agents_of_location" title="Link to this definition"></a></dt>
+<dd><p>Return the list of agents associated with a specific location.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>location</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="location.html#pop2net.Location" title="pop2net.location.Location"><code class="xref py py-class docutils literal notranslate"><span class="pre">Location</span></code></a></span>) – The desired location.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://agentpy.readthedocs.io/en/latest/reference_sequences.html#agentpy.AgentList" title="(in agentpy)"><code class="xref py py-class docutils literal notranslate"><span class="pre">AgentList</span></code></a></span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A list of agents.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pop2net.Model.connect_agents">
+<span class="sig-name descname"><span class="pre">connect_agents</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agents</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">location_cls</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pop2net/model.html#Model.connect_agents"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pop2net.Model.connect_agents" title="Link to this definition"></a></dt>
+<dd><p>Connects multiple agents via an instance of a given location class.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>agents</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><em>list</em></a>) – A list of agents.</p></li>
+<li><p><strong>location_cls</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#type" title="(in Python v3.12)"><em>type</em></a>) – The location class that is used to create a location instance.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pop2net.Model.disconnect_agents">
+<span class="sig-name descname"><span class="pre">disconnect_agents</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agents</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">location_classes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">remove_locations</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pop2net/model.html#Model.disconnect_agents"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pop2net.Model.disconnect_agents" title="Link to this definition"></a></dt>
+<dd><p>Disconnects agents by removing them from shared locations.</p>
+<p>If a list of location types is given, only shared locations of the given types are
+considered. Turn on <cite>remove_locations</cite> in order to not only remove the given agents from the
+given location instance but also to remove the location instance from the model.
+Use this method with care because removing agents from locations also disconnects those
+agents from all other agents connected to the location. Removing the location instance from
+the model could have even more sideeffects to those agents still connected with this
+location!</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>agents</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><em>list</em></a>) – A list of agents.</p></li>
+<li><p><strong>location_classes</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><em>list</em></a><em> | </em><em>None</em><em>, </em><em>optional</em>) – A list of location types to specify which</p></li>
+<li><p><strong>None.</strong> (<em>shared locations are considered. Defaults to</em>)</p></li>
+<li><p><strong>remove_locations</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>, </em><em>optional</em>) – A bool that determines whether the shared locations
+shall be removed from the model. Defaults to False.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pop2net.Model.export_agent_network">
+<span class="sig-name descname"><span class="pre">export_agent_network</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node_attrs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_0_weights</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pop2net/model.html#Model.export_agent_network"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pop2net.Model.export_agent_network" title="Link to this definition"></a></dt>
+<dd><p>Creates a projection of the model’s bipartite network.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>node_attrs</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.12)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></a>]</span>) – A list of agent attributes</p></li>
+<li><p><strong>include_0_weights</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a></span>) – Should edges with weight 0 be displayed?</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://networkx.org/documentation/stable/reference/classes/graph.html#networkx.Graph" title="(in NetworkX v3.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Graph</span></code></a></span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A weighted graph created from a model’s agent list. Agents are connected if they are
+neighbors in the model. Their connecting edge include the contact_weight as “weight”
+attribute.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pop2net.Model.get_weight">
+<span class="sig-name descname"><span class="pre">get_weight</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">location</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pop2net/model.html#Model.get_weight"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pop2net.Model.get_weight" title="Link to this definition"></a></dt>
+<dd><p>Get the weight of an agent at a location.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>agent</strong> (<a class="reference internal" href="agent.html#pop2net.Agent" title="pop2net.Agent"><em>Agent</em></a>) – The agent.</p></li>
+<li><p><strong>location</strong> (<a class="reference internal" href="location.html#pop2net.Location" title="pop2net.Location"><em>Location</em></a>) – The location.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The weight.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pop2net.Model.locations">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">locations</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">LocationList</span></em><a class="headerlink" href="#pop2net.Model.locations" title="Link to this definition"></a></dt>
+<dd><p>Show a iterable view of all locations in the environment.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>a non-mutable LocationList of all locations in the environment.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>LocationList</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pop2net.Model.locations_between_agents">
+<span class="sig-name descname"><span class="pre">locations_between_agents</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agent2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">location_classes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pop2net/model.html#Model.locations_between_agents"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pop2net.Model.locations_between_agents" title="Link to this definition"></a></dt>
+<dd><p>Return all locations the connect two agents.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>agent1</strong> (<a class="reference internal" href="agent.html#pop2net.Agent" title="pop2net.Agent"><em>Agent</em></a>) – Agent 1.</p></li>
+<li><p><strong>agent2</strong> (<a class="reference internal" href="agent.html#pop2net.Agent" title="pop2net.Agent"><em>Agent</em></a>) – Agent 2.</p></li>
+<li><p><strong>location_classes</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.12)"><em>tuple</em></a><em>, </em><em>optional</em>) – Constrain the locations to the following types.
+Defaults to ().</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of locations.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>LocationList</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pop2net.Model.locations_by_id">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">locations_by_id</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><span class="pre">dict</span></a></em><a class="headerlink" href="#pop2net.Model.locations_by_id" title="Link to this definition"></a></dt>
+<dd><p>Returns a dictionary which stores the model’s locations by their id.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A dictionary which stores the model’s locations by their id.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)">dict</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pop2net.Model.locations_of_agent">
+<span class="sig-name descname"><span class="pre">locations_of_agent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pop2net/model.html#Model.locations_of_agent"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pop2net.Model.locations_of_agent" title="Link to this definition"></a></dt>
+<dd><p>Return the list of locations associated with a specific agent.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>agent</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="agent.html#pop2net.Agent" title="pop2net.agent.Agent"><code class="xref py py-class docutils literal notranslate"><span class="pre">Agent</span></code></a></span>) – The desired agent.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">LocationList</span></code></span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A list of locations.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pop2net.Model.neighbors_of_agent">
+<span class="sig-name descname"><span class="pre">neighbors_of_agent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">location_classes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pop2net/model.html#Model.neighbors_of_agent"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pop2net.Model.neighbors_of_agent" title="Link to this definition"></a></dt>
+<dd><p>Return a list of neighboring agents for a specific agent.</p>
+<p>The locations to be considered can be defined with location_classes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>agent</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="agent.html#pop2net.Agent" title="pop2net.agent.Agent"><code class="xref py py-class docutils literal notranslate"><span class="pre">Agent</span></code></a></span>) – Agent of whom the neighbors are to be returned.</p></li>
+<li><p><strong>location_classes</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.12)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></a>]</span>) – A list of location_classes.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://agentpy.readthedocs.io/en/latest/reference_sequences.html#agentpy.AgentList" title="(in agentpy)"><code class="xref py py-class docutils literal notranslate"><span class="pre">AgentList</span></code></a></span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The list of neighbors for the specified agent.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pop2net.Model.remove_agent">
+<span class="sig-name descname"><span class="pre">remove_agent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pop2net/model.html#Model.remove_agent"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pop2net.Model.remove_agent" title="Link to this definition"></a></dt>
+<dd><p>Remove an agent from the environment.</p>
+<p>If the agent does not exist in the environment, this method does nothing.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>agent</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="agent.html#pop2net.Agent" title="pop2net.agent.Agent"><code class="xref py py-class docutils literal notranslate"><span class="pre">Agent</span></code></a></span>) – Agent to be removed.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pop2net.Model.remove_agent_from_location">
+<span class="sig-name descname"><span class="pre">remove_agent_from_location</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">location</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agent</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pop2net/model.html#Model.remove_agent_from_location"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pop2net.Model.remove_agent_from_location" title="Link to this definition"></a></dt>
+<dd><p>Remove an agent from a location.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>location</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="location.html#pop2net.Location" title="pop2net.location.Location"><code class="xref py py-class docutils literal notranslate"><span class="pre">Location</span></code></a></span>) – Location, the agent is to be removed from.</p></li>
+<li><p><strong>agent</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="agent.html#pop2net.Agent" title="pop2net.agent.Agent"><code class="xref py py-class docutils literal notranslate"><span class="pre">Agent</span></code></a></span>) – Agent to be disassociated with the location.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.12)"><strong>Exception</strong></a> – Raised if the location does not exist in the environment.</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.12)"><strong>Exception</strong></a> – Raised if the agent does not exist in the environment.</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pop2net.Model.remove_agents">
+<span class="sig-name descname"><span class="pre">remove_agents</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agents</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pop2net/model.html#Model.remove_agents"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pop2net.Model.remove_agents" title="Link to this definition"></a></dt>
+<dd><p>Remove multiple agents from the environment at once.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>agents</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><em>list</em></a>) – An iterable over multiple agents.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pop2net.Model.remove_location">
+<span class="sig-name descname"><span class="pre">remove_location</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">location</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pop2net/model.html#Model.remove_location"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pop2net.Model.remove_location" title="Link to this definition"></a></dt>
+<dd><p>Remove a location from the environment.</p>
+<p>If the location does not exist in the environment, this method does nothing.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>location</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="location.html#pop2net.Location" title="pop2net.location.Location"><code class="xref py py-class docutils literal notranslate"><span class="pre">Location</span></code></a></span>) – Location to be removed.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pop2net.Model.remove_locations">
+<span class="sig-name descname"><span class="pre">remove_locations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">locations</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pop2net/model.html#Model.remove_locations"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pop2net.Model.remove_locations" title="Link to this definition"></a></dt>
+<dd><p>Remove multiple locations at once.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>locations</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><em>list</em></a>) – An iterable over locations.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pop2net.Model.set_weight">
+<span class="sig-name descname"><span class="pre">set_weight</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">location</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weight</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pop2net/model.html#Model.set_weight"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pop2net.Model.set_weight" title="Link to this definition"></a></dt>
+<dd><p>Set the weight of an agent at a location.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>agent</strong> (<a class="reference internal" href="agent.html#pop2net.Agent" title="pop2net.Agent"><em>Agent</em></a>) – The agent.</p></li>
+<li><p><strong>location</strong> (<a class="reference internal" href="location.html#pop2net.Location" title="pop2net.Location"><em>Location</em></a>) – The location.</p></li>
+<li><p><strong>weight</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a>) – The weight</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pop2net.Model.sim_step">
+<span class="sig-name descname"><span class="pre">sim_step</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pop2net/model.html#Model.sim_step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pop2net.Model.sim_step" title="Link to this definition"></a></dt>
+<dd><p>Do 1 step in the simulation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="popmaker.html" class="btn btn-neutral float-left" title="Population Maker" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="utils.html" class="btn btn-neutral float-right" title="Utils" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Marius Kaffai, Lukas Erhard.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
