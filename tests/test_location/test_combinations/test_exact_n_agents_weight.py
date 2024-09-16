@@ -1,9 +1,5 @@
-# %%
 import pandas as pd
-
 import pop2net as p2n
-
-# %%
 
 
 def test_1():
@@ -31,6 +27,3 @@ def test_1():
     assert len(model.locations[0].agents) == 2
     assert all(agent.status == "A" for agent in model.locations[0].agents)
     assert all(model.locations[0].get_weight(agent) == 1 for agent in model.locations[0].agents)
-
-
-test_1()

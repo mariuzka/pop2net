@@ -1,11 +1,7 @@
-# %%
-
 import pandas as pd
-
 import pop2net as p2n
 
 
-# %%
 # TODO ist das so gewollt? n_locations macht drei leere Location-Objecte und dann
 # generiert split die Locations mit den Agenten, aber auch nicht richtig:
 # !Komisch ist, dass jeder Agent eine eigene Location zugewiesen bekommt!
@@ -30,7 +26,7 @@ def test_1():
 
     inspector = p2n.NetworkInspector(model=model)
     inspector.plot_bipartite_network()
-    inspector.plot_agent_network(node_attrs=["status"])
+    inspector.plot_agent_network(agent_attrs=["status"])
 
     # assert len(model.locations) == 3
     # assert len(model.agents) == 6
@@ -44,7 +40,3 @@ def test_1():
     #     if location.agents[0].status == "C":
     #         assert len(location.agents) == 1
     #         assert all(agent.status == "C" for agent in location.agents)
-
-
-test_1()
-# %%

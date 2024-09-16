@@ -1,14 +1,11 @@
-# %%
 import pandas as pd
-
 import pop2net as p2n
-
-# %%
-
 
 # Testen: Wie verhält es sich wenn n_agents vorgegeben ist aber noch lehrer übrig sind
 # wie verhält es sich, wenn in der Ziel location n_agent und exact true ist, aber in den unteren nichts gesetz ist
 # was passiert wenn ich false und true in den Meltlocation mixe?
+
+
 def test_1():
     df = pd.DataFrame(
         {
@@ -41,7 +38,7 @@ def test_1():
     creator.create_locations(location_classes=[LocAB])
     inspector = p2n.NetworkInspector(model)
     inspector.plot_bipartite_network()
-    inspector.plot_agent_network(node_attrs=["status"])
+    inspector.plot_agent_network(agent_attrs=["status"])
 
     assert len(model.agents) == 6
     assert len(model.locations) == 2
@@ -79,14 +76,10 @@ def test_1():
     creator.create_locations(location_classes=[LocAB])
     inspector = p2n.NetworkInspector(model)
     inspector.plot_bipartite_network()
-    inspector.plot_agent_network(node_attrs=["status"])
+    inspector.plot_agent_network(agent_attrs=["status"])
 
     assert len(model.agents) == 6
     assert len(model.locations) == 1
     assert sum(True for agent in model.locations[0].agents if agent.status == "A") == 2
     assert sum(True for agent in model.locations[0].agents if agent.status == "B") == 2
     assert sum(True for agent in model.agents if not agent.locations) == 2
-
-
-test_1()
-# %%

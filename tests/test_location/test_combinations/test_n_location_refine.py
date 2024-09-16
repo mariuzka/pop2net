@@ -1,9 +1,5 @@
-# %%
 import pandas as pd
-
 import pop2net as p2n
-
-# %%
 
 
 # TODO Gefundener Nebeneffekt:
@@ -29,7 +25,7 @@ def test_1():
 
     inspector = p2n.NetworkInspector(model)
     inspector.plot_bipartite_network()
-    inspector.plot_agent_network(node_attrs=df.columns, node_color="status")
+    inspector.plot_agent_network(agent_attrs=df.columns, agent_color="status")
 
     assert len(model.locations) == 2
     assert len(model.agents) == 6
@@ -39,7 +35,3 @@ def test_1():
     assert sum(agent.status == "teacher" for agent in model.locations[0].agents) == 1
     assert sum(agent.status == "pupil" for agent in model.locations[1].agents) == 2
     assert sum(agent.status == "teacher" for agent in model.locations[1].agents) == 1
-
-
-test_1()
-# %%

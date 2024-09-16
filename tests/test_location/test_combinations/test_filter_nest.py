@@ -1,10 +1,7 @@
-# %%
 import pandas as pd
-
 import pop2net as p2n
 
 
-# %%
 def test_1():
     df = pd.DataFrame(
         {
@@ -46,7 +43,7 @@ def test_1():
     creator.create(df=df, location_classes=[Classroom1, Classroom2, School])
     inspector = p2n.NetworkInspector(model=model)
     inspector.plot_bipartite_network()
-    inspector.plot_agent_network(node_attrs=["status", "class_id"])
+    inspector.plot_agent_network(agent_attrs=["status", "class_id"])
 
     assert len(model.agents) == 9
     assert len(model.locations) == 3
@@ -54,9 +51,6 @@ def test_1():
     assert all(agent.class_id == 2 for agent in model.locations[1].agents)
     assert all(agent.class_id in [1, 2] for agent in model.locations[2].agents)
     assert all(not agent.locations for agent in model.agents if agent.class_id == 3)
-
-
-test_1()
 
 
 # %%
@@ -105,7 +99,7 @@ def test_2():
     creator.create(df=df, location_classes=[Classroom1, Classroom2, School1, School2])
     inspector = p2n.NetworkInspector(model=model)
     inspector.plot_bipartite_network()
-    inspector.plot_agent_network(node_attrs=["status", "school_id"])
+    inspector.plot_agent_network(agent_attrs=["status", "school_id"])
     print(model.locations[3])
 
     assert len(model.agents) == 9
@@ -115,7 +109,3 @@ def test_2():
     assert all(agent.school_id == 1 for agent in model.locations[2].agents)
     assert all(agent.school_id == 2 for agent in model.locations[3].agents)
     assert all(not agent.locations for agent in model.agents if agent.school_id == 3)
-
-
-test_2()
-# %%

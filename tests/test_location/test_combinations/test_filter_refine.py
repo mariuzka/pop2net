@@ -1,10 +1,7 @@
-# %%
 import pandas as pd
-
 import pop2net as p2n
 
 
-# %%
 def test_1():
     df = pd.DataFrame(
         {
@@ -33,7 +30,3 @@ def test_1():
     assert len(model.locations[0].agents) == 1
     assert all(agent.status == "A" and agent.sex == "w" for agent in model.locations[0].agents)
     assert sum(not agent.locations for agent in model.agents) == 2
-
-
-test_1()
-# %%
