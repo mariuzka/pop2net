@@ -1,4 +1,3 @@
-# %%
 import pandas as pd
 
 import pop2net as p2n
@@ -28,7 +27,7 @@ def test_1():
 
     inspector = p2n.NetworkInspector(model)
     inspector.plot_bipartite_network()
-    inspector.plot_agent_network(node_attrs=df.columns, node_color="class_id")
+    inspector.plot_agent_network(agent_attrs=df.columns, agent_color="class_id")
 
 
 # stick together with uneven agent-location "seats"
@@ -48,7 +47,7 @@ def test_2():
     creator.create(df=df, location_classes=[Classroom])
     inspector = p2n.NetworkInspector(model)
     inspector.plot_bipartite_network()
-    inspector.plot_agent_network(node_attrs=df.columns, node_color="class_id")
+    inspector.plot_agent_network(agent_attrs=df.columns, agent_color="class_id")
 
     assert len(model.agents) == 5
     assert len(model.locations) == 2
@@ -86,7 +85,7 @@ def test_3():
     creator.create(df=df, location_classes=[Classroom])
     inspector = p2n.NetworkInspector(model)
     inspector.plot_bipartite_network()
-    inspector.plot_agent_network(node_attrs=df.columns, node_color="class_id")
+    inspector.plot_agent_network(agent_attrs=df.columns, agent_color="class_id")
 
     assert len(model.agents) == 6
     assert len(model.locations) == 4
@@ -98,11 +97,6 @@ def test_3():
 
     for agent in model.agents:
         assert all(nghbr.class_id == agent.class_id for nghbr in agent.neighbors())
-
-
-test_3()
-
-# %%
 
 
 def test_4():
@@ -158,7 +152,4 @@ def test_4():
         if agent_i.group == agent_j.group
     )
 
-    inspector.plot_agent_network(node_attrs=["group"])
-
-
-test_4()
+    inspector.plot_agent_network(agent_attrs=["group"])

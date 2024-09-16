@@ -1,11 +1,8 @@
-# %%
-
 import pandas as pd
 
 import pop2net as p2n
 
 
-# %%
 # TODO ohne n_agents oder n_locations seh ich keine Möglichkeit stick_together mitr filter sinnvoll zu testen
 def test_1():
     model = p2n.Model()
@@ -36,7 +33,7 @@ def test_1():
     creator.create_locations(location_classes=[TestLocationA, TestLocationB])
     inspector = p2n.NetworkInspector(model=model)
     inspector.plot_bipartite_network()
-    inspector.plot_agent_network(node_attrs=["friend_group", "filter_group"])
+    inspector.plot_agent_network(agent_attrs=["friend_group", "filter_group"])
 
     assert len(model.locations) == 4
     assert len(model.agents) == 7
@@ -51,7 +48,3 @@ def test_1():
     assert all(agent.friend_group == 2 for agent in model.locations[2].agents)
     assert len(model.locations[3].agents) == 1
     assert all(agent.friend_group == 3 for agent in model.locations[3].agents)
-
-
-test_1()
-# %%

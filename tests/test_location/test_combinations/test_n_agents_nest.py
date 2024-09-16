@@ -1,4 +1,3 @@
-# %%
 from collections import Counter
 
 import pandas as pd
@@ -6,7 +5,6 @@ import pandas as pd
 import pop2net as p2n
 
 
-# %%
 def test_1():
     df = pd.DataFrame(
         {
@@ -44,12 +42,6 @@ def test_1():
 
     inspector = p2n.NetworkInspector(model)
     inspector.plot_bipartite_network()
-
-
-test_1()
-
-
-# %%
 
 
 def test_2():
@@ -92,7 +84,7 @@ def test_2():
 
     inspector = p2n.NetworkInspector(model)
     inspector.plot_bipartite_network()
-    inspector.plot_agent_network(node_attrs=df.columns, node_color="id")
+    inspector.plot_agent_network(agent_attrs=df.columns, agent_color="id")
 
     class School(p2n.MagicLocation):
         n_agents = 4
@@ -120,7 +112,7 @@ def test_2():
 
     inspector = p2n.NetworkInspector(model)
     inspector.plot_bipartite_network()
-    inspector.plot_agent_network(node_attrs=df.columns, node_color="group")
+    inspector.plot_agent_network(agent_attrs=df.columns, agent_color="group")
 
     for location in model.locations:
         if location.type == "School":
@@ -145,11 +137,6 @@ def test_2():
         if location.type == "School":
             for agent in location.agents:
                 assert all(agent.School == nghbr.School for nghbr in agent.neighbors())
-
-
-test_2()
-
-# %%
 
 
 def test_3():
@@ -204,6 +191,3 @@ def test_3():
 
     # all members of a group are in the same city
     assert all(location.agents[0].City == location.agents[1].City for location in model.locations)
-
-
-test_3()

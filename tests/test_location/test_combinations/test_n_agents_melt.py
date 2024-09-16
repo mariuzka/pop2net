@@ -1,9 +1,6 @@
-# %%
 import pandas as pd
 
 import pop2net as p2n
-
-# %%
 
 
 def test_1():
@@ -44,10 +41,6 @@ def test_1():
         assert location.agents[1].status == "pupil"
 
 
-test_1()
-
-
-# %%
 def test_2():
     df = pd.DataFrame(
         {
@@ -85,7 +78,3 @@ def test_2():
     for location in model.locations:
         assert location.agents[0].status == "teacher"
         assert location.agents[1].status == "pupil"
-
-
-test_2()
-# %%

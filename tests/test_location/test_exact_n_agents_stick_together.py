@@ -1,11 +1,8 @@
-# %%
-
 import pandas as pd
 
 import pop2net as p2n
 
 
-# %%
 def test_1():
     df = pd.DataFrame(
         {"status": ["pupil", "pupil", "pupil", "pupil", "pupil"], "class_id": [1, 2, 1, 2, 1]}
@@ -44,7 +41,7 @@ def test_1():
 
     inspector = p2n.NetworkInspector(model)
     inspector.plot_bipartite_network()
-    inspector.plot_agent_network(node_attrs=df.columns, node_color="class_id")
+    inspector.plot_agent_network(agent_attrs=df.columns, agent_color="class_id")
 
     assert len(model.agents) == 5
     assert len(model.locations) == 1
@@ -54,7 +51,3 @@ def test_1():
         if agent.locations:
             assert agent.neighbors(location_classes=[Classroom])[0].class_id == agent.class_id
     assert all(not agent.locations for agent in model.agents if agent.class_id == 1)
-
-
-test_1()
-# %%

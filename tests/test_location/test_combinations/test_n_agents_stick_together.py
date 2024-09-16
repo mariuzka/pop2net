@@ -1,5 +1,3 @@
-# %%
-
 import pandas as pd
 
 import pop2net as p2n
@@ -29,12 +27,7 @@ def test_1():
 
     inspector = p2n.NetworkInspector(model)
     inspector.plot_bipartite_network()
-    inspector.plot_agent_network(node_attrs=df.columns, node_color="class_id")
-
-
-test_1()
-
-# %%
+    inspector.plot_agent_network(agent_attrs=df.columns, agent_color="class_id")
 
 
 def test_2():
@@ -53,16 +46,10 @@ def test_2():
 
     inspector = p2n.NetworkInspector(model)
     inspector.plot_bipartite_network()
-    inspector.plot_agent_network(node_attrs=df.columns, node_color="status")
+    inspector.plot_agent_network(agent_attrs=df.columns, agent_color="status")
 
     assert len(model.agents) == 4
     assert len(model.locations) == 1
-
-
-test_2()
-
-
-# %%
 
 
 def test_3():
@@ -86,7 +73,7 @@ def test_3():
 
     inspector = p2n.NetworkInspector(model)
     inspector.plot_bipartite_network()
-    inspector.plot_agent_network(node_attrs=df.columns, node_color="status")
+    inspector.plot_agent_network(agent_attrs=df.columns, agent_color="status")
 
     assert len(model.agents) == 7
     assert len(model.locations) == 3
@@ -106,8 +93,3 @@ def test_3():
             counter += 1
 
     assert counter == 3
-
-
-test_3()
-
-# %%

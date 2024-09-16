@@ -1,10 +1,8 @@
-# %%
 import pandas as pd
 
 import pop2net as p2n
 
 
-# %%
 def test_1():
     model = p2n.Model()
     creator = p2n.Creator(model=model)
@@ -27,8 +25,8 @@ def test_1():
     assert len(model.agents) == 5
     assert len(model.locations[0].agents) == 3
     assert len(model.locations[1].agents) == 2
-    assert all(agent.status == "A" for agent in model.locations[0])
-    assert all(agent.status == "B" for agent in model.locations[1])
+    assert all(agent.status == "A" for agent in model.locations[0].agents)
+    assert all(agent.status == "B" for agent in model.locations[1].agents)
 
     # TODO Warum triggered das nicht assert?
     # assert all([[location.get_weight(agent) == 4 for agent in location.agents] for location in model.locations])
@@ -47,10 +45,6 @@ def test_1():
     assert all(location.get_weight(agent) == 5 for agent in location.agents)
 
 
-test_1()
-
-
-# %%
 def test_2():
     model = p2n.Model()
     creator = p2n.Creator(model=model)
@@ -74,14 +68,14 @@ def test_2():
     creator.create_agents(df=df)
     creator.create_locations(location_classes=[ClassRoom])
     inspector.plot_bipartite_network()
-    inspector.plot_agent_network(node_attrs=["status"])
+    inspector.plot_agent_network(agent_attrs=["status"])
 
     assert len(model.locations) == 2
     assert len(model.agents) == 5
     assert len(model.locations[0].agents) == 3
     assert len(model.locations[1].agents) == 2
-    assert all(agent.status == "A" for agent in model.locations[0])
-    assert all(agent.status == "B" for agent in model.locations[1])
+    assert all(agent.status == "A" for agent in model.locations[0].agents)
+    assert all(agent.status == "B" for agent in model.locations[1].agents)
 
     assert (
         sum([model.get_weight(agent, model.locations[0]) for agent in model.locations[0].agents])
@@ -95,10 +89,6 @@ def test_2():
     assert all(model.locations[1].get_weight(agent) == 4 for agent in model.locations[1].agents)
 
 
-test_2()
-
-
-# %%
 def test_3():
     model = p2n.Model()
     creator = p2n.Creator(model=model)
@@ -130,6 +120,3 @@ def test_3():
         sum([model.get_weight(agent, model.locations[1]) for agent in model.locations[1].agents])
         == 7
     )
-
-
-test_3()

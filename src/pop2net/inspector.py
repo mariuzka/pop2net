@@ -40,10 +40,13 @@ class NetworkInspector:
         """Plots the two-mode network of agents and locations.
 
         Args:
-            node_color (str, optional): The node attribute that determines the
-                color of the nodes. If None, the node color represents whether
-                it is a location or an agent instance.
-            node_attrs (list | None, optional): A list of agent and location attributes that
+            agent_color (str, optional): The agent attribute that determines the
+                color of the agent nodes.
+            agent_attrs (list | None, optional): A list of agent attributes that
+                should be shown as node attributes in the network graph. Defaults to None.
+            location_color (str, optional): The location attribute that determines the
+                color of the location nodes.
+            location_attrs (list | None, optional): A list of location attributes that
                 should be shown as node attributes in the network graph. Defaults to None.
             edge_alpha (str, optional): The node attribute that determines the edges' transparency.
                 Defaults to "weight".
@@ -90,8 +93,8 @@ class NetworkInspector:
 
     def plot_agent_network(
         self,
-        node_color: str | None = "firebrick",
-        node_attrs: list | None = None,
+        agent_color: str | None = None,
+        agent_attrs: list | None = None,
         edge_alpha: str = "weight",
         edge_color: str = "black",
         include_0_weights: bool = True,
@@ -99,10 +102,10 @@ class NetworkInspector:
         """Plots the agent network.
 
         Args:
-            node_color (str, optional): The node attribute that determines the
+            agent_color (str, optional): The node attribute that determines the
                 color of the nodes. If None, the node color represents whether
                 it is a location or an agent instance.
-            node_attrs (list | None, optional): A list of agent and location attributes that
+            agent_attrs (list | None, optional): A list of agent attributes that
                 should be shown as node attributes in the network graph. Defaults to None.
             edge_alpha (str, optional): The node attribute that determines the edges' transparency.
                 Defaults to "weight".
@@ -111,15 +114,18 @@ class NetworkInspector:
             include_0_weights (bool, optional): Should edges with a weight of zero be included in
                 the plot? Defaults to True.
         """
-        if node_attrs is None:
-            node_attrs = ["type"]
+        if agent_attrs is None:
+            agent_attrs = ["type"]
         else:
-            node_attrs = list(node_attrs)
-            if "type" not in node_attrs:
-                node_attrs.append("type")
+            agent_attrs = list(agent_attrs)
+            if "type" not in agent_attrs:
+                agent_attrs.append("type")
+
+        if agent_color is not None and agent_color not in agent_attrs:
+            agent_attrs.append(agent_color)
 
         graph = self.model.export_agent_network(
-            node_attrs=node_attrs,
+            node_attrs=agent_attrs,
             include_0_weights=include_0_weights,
         )
 
@@ -127,10 +133,55 @@ class NetworkInspector:
         plot = BokehGraph(graph, width=400, height=400, hover_edges=True)
         plot.layout(layout=graph_layout)
         plot.draw(
-            node_color=node_color,
+            node_color="firebrick" if agent_color is None else agent_color,
             edge_alpha=edge_alpha,
             edge_color=edge_color,
-            node_palette="random",
+        )
+
+    def plot_networks(
+        self,
+        agent_attrs: list | None = None,
+        location_attrs: list | None = None,
+        agent_color: str | None = None,
+        location_color: str | None = None,
+        edge_alpha: str = "weight",
+        edge_color: str = "black",
+        include_0_weights: bool = True,
+    ) -> None:
+        """Plots the two-mode network and the agent network.
+
+        Args:
+            agent_color (str, optional): The agent attribute that determines the
+                color of the agent nodes.
+            agent_attrs (list | None, optional): A list of agent attributes that
+                should be shown as node attributes in the network graph. Defaults to None.
+            location_color (str, optional): The location attribute that determines the
+                color of the location nodes.
+            location_attrs (list | None, optional): A list of location attributes that
+                should be shown as node attributes in the network graph. Defaults to None.
+            edge_alpha (str, optional): The node attribute that determines the edges' transparency.
+                Defaults to "weight".
+            edge_color (str, optional): The node attribute that determines the edges' color.
+                Defaults to "black".
+            include_0_weights (bool): Should edges with a weight of zero be included in
+                the plot? Defaults to True.
+        """
+        self.plot_bipartite_network(
+            agent_color=agent_color,
+            agent_attrs=agent_attrs,
+            location_color=location_color,
+            location_attrs=location_attrs,
+            edge_color=edge_color,
+            edge_alpha=edge_alpha,
+            # include_0_weights=include_0_weights,
+        )
+
+        self.plot_agent_network(
+            agent_color=agent_color,
+            agent_attrs=agent_attrs,
+            edge_color=edge_color,
+            edge_alpha=edge_alpha,
+            include_0_weights=include_0_weights,
         )
 
     def eval_affiliations(self, return_data=False) -> tuple[pd.DataFrame, pd.DataFrame] | None:

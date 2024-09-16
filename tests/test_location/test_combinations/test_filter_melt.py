@@ -1,10 +1,8 @@
-# %%
 import pandas as pd
 
 import pop2net as p2n
 
 
-# %%
 def test_1():
     model = p2n.Model()
     creator = p2n.Creator(model=model)
@@ -35,10 +33,6 @@ def test_1():
     assert sum(agent.status == "pupil" for agent in model.locations[0].agents) == 4
 
 
-test_1()
-
-
-# %%
 def test_2():
     model = p2n.Model()
     creator = p2n.Creator(model=model)
@@ -73,7 +67,3 @@ def test_2():
     assert sum(agent.status == "pupil" for agent in model.locations[0].agents) == 2
     assert sum(agent.status == "teacher" for agent in model.locations[0].agents) == 1
     assert sum(not agent.locations for agent in model.agents) == 3
-
-
-test_2()
-# %%

@@ -4,7 +4,6 @@ import pandas as pd
 import pop2net as p2n
 
 
-# %%
 def test_1():
     df = pd.DataFrame(
         {
@@ -24,7 +23,7 @@ def test_1():
     creator.create(df=df, location_classes=[TestLocation])
     inspector = p2n.NetworkInspector(model=model)
     inspector.plot_bipartite_network()
-    inspector.plot_agent_network(node_attrs=["status"])
+    inspector.plot_agent_network(agent_attrs=["status"])
 
     assert len(model.agents) == 4
     assert len(model.locations) == 2
@@ -47,14 +46,10 @@ def test_1():
     creator.create(df=df, location_classes=[TestLocation])
     inspector = p2n.NetworkInspector(model=model)
     inspector.plot_bipartite_network()
-    inspector.plot_agent_network(node_attrs=["status"])
+    inspector.plot_agent_network(agent_attrs=["status"])
 
     assert len(model.agents) == 4
     assert len(model.locations) == 1
     assert len(model.locations[0].agents) == 2
     assert all(agent.status == "A" for agent in model.locations[0].agents)
     assert all(not agent.locations for agent in model.agents if agent.status == "B")
-
-
-test_1()
-# %%

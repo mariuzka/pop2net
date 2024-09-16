@@ -1,10 +1,8 @@
-# %%
 import pandas as pd
 
 import pop2net as p2n
 
 
-# %%
 def test_1():
     df = pd.DataFrame(
         {
@@ -49,9 +47,3 @@ def test_1():
     assert model.locations[1].agents[0].sex == "m"
     assert all(agent.sex == "m" for agent in model.locations[2].agents)
     assert all(agent.sex == "w" for agent in model.locations[3].agents)
-
-
-test_1()
-
-
-# %%
