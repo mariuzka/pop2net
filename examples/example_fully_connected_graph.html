@@ -50,7 +50,7 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="../about.html">About Popy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../about.html">About Pop2net</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../section_introduction.html">Tutorial</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/index.html">API Reference</a></li>
@@ -60,13 +60,14 @@
 <li class="toctree-l2"><a class="reference internal" href="example_caveman_graph.html">Caveman graph</a></li>
 <li class="toctree-l2"><a class="reference internal" href="example_cycle.html">Cycle using networkx</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Complete graph</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#Example-I:-Simple-complete-graph-using-popy-only">Example I: Simple complete graph using popy only</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Example-I:-Simple-complete-graph-using-p2n-only">Example I: Simple complete graph using p2n only</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#Example-II:-Complete-graph-with-one-location-for-each-bilateral-relation-using-networkx">Example II: Complete graph with one location for each bilateral relation using networkx</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="example_grid.html">Grid graph using networkx</a></li>
 <li class="toctree-l2"><a class="reference internal" href="example_line.html">Line graph using networkx</a></li>
 <li class="toctree-l2"><a class="reference internal" href="example_lollipop.html">Lollipop graph</a></li>
+<li class="toctree-l2"><a class="reference internal" href="example_opinion_cluster.html">Connected opinion clusters</a></li>
 <li class="toctree-l2"><a class="reference internal" href="example_smallworld.html">Small world using networkx</a></li>
 </ul>
 </li>
@@ -100,25 +101,25 @@
              
   <section id="Complete-graph">
 <h1>Complete graph<a class="headerlink" href="#Complete-graph" title="Link to this heading"></a></h1>
-<section id="Example-I:-Simple-complete-graph-using-popy-only">
-<h2>Example I: Simple complete graph using popy only<a class="headerlink" href="#Example-I:-Simple-complete-graph-using-popy-only" title="Link to this heading"></a></h2>
+<section id="Example-I:-Simple-complete-graph-using-p2n-only">
+<h2>Example I: Simple complete graph using p2n only<a class="headerlink" href="#Example-I:-Simple-complete-graph-using-p2n-only" title="Link to this heading"></a></h2>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">popy</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pop2net</span> <span class="k">as</span> <span class="nn">p2n</span>
 
 
-<span class="k">class</span> <span class="nc">FullyConnected</span><span class="p">(</span><span class="n">popy</span><span class="o">.</span><span class="n">MagicLocation</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">FullyConnected</span><span class="p">(</span><span class="n">p2n</span><span class="o">.</span><span class="n">MagicLocation</span><span class="p">):</span>
     <span class="k">pass</span>
 
 
-<span class="n">model</span> <span class="o">=</span> <span class="n">popy</span><span class="o">.</span><span class="n">Model</span><span class="p">()</span>
-<span class="n">creator</span> <span class="o">=</span> <span class="n">popy</span><span class="o">.</span><span class="n">Creator</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
-<span class="n">inspector</span> <span class="o">=</span> <span class="n">popy</span><span class="o">.</span><span class="n">NetworkInspector</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">p2n</span><span class="o">.</span><span class="n">Model</span><span class="p">()</span>
+<span class="n">creator</span> <span class="o">=</span> <span class="n">p2n</span><span class="o">.</span><span class="n">Creator</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+<span class="n">inspector</span> <span class="o">=</span> <span class="n">p2n</span><span class="o">.</span><span class="n">NetworkInspector</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
 
 <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">):</span>
-    <span class="n">popy</span><span class="o">.</span><span class="n">Agent</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+    <span class="n">p2n</span><span class="o">.</span><span class="n">Agent</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
 
 <span class="n">creator</span><span class="o">.</span><span class="n">create_locations</span><span class="p">(</span><span class="n">location_classes</span><span class="o">=</span><span class="p">[</span><span class="n">FullyConnected</span><span class="p">])</span>
 </pre></div>
@@ -807,16 +808,16 @@ var element = document.currentScript.previousSibling.previousSibling;
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">networkx</span> <span class="k">as</span> <span class="nn">nx</span>
 
 
-<span class="k">class</span> <span class="nc">FullyConnected</span><span class="p">(</span><span class="n">popy</span><span class="o">.</span><span class="n">MagicLocation</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">FullyConnected</span><span class="p">(</span><span class="n">p2n</span><span class="o">.</span><span class="n">MagicLocation</span><span class="p">):</span>
     <span class="n">nxgraph</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">complete_graph</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
 
 
-<span class="n">model</span> <span class="o">=</span> <span class="n">popy</span><span class="o">.</span><span class="n">Model</span><span class="p">()</span>
-<span class="n">creator</span> <span class="o">=</span> <span class="n">popy</span><span class="o">.</span><span class="n">Creator</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
-<span class="n">inspector</span> <span class="o">=</span> <span class="n">popy</span><span class="o">.</span><span class="n">NetworkInspector</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">p2n</span><span class="o">.</span><span class="n">Model</span><span class="p">()</span>
+<span class="n">creator</span> <span class="o">=</span> <span class="n">p2n</span><span class="o">.</span><span class="n">Creator</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+<span class="n">inspector</span> <span class="o">=</span> <span class="n">p2n</span><span class="o">.</span><span class="n">NetworkInspector</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
 
 <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">):</span>
-    <span class="n">popy</span><span class="o">.</span><span class="n">Agent</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+    <span class="n">p2n</span><span class="o">.</span><span class="n">Agent</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
 
 <span class="n">creator</span><span class="o">.</span><span class="n">create_locations</span><span class="p">(</span><span class="n">location_classes</span><span class="o">=</span><span class="p">[</span><span class="n">FullyConnected</span><span class="p">])</span>
 </pre></div>

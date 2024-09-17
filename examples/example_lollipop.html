@@ -25,7 +25,7 @@
     <link rel="author" title="About these documents" href="../about.html" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Small world using networkx" href="example_smallworld.html" />
+    <link rel="next" title="Connected opinion clusters" href="example_opinion_cluster.html" />
     <link rel="prev" title="Line graph using networkx" href="example_line.html" /> 
 </head>
 
@@ -50,7 +50,7 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="../about.html">About Popy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../about.html">About Pop2net</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../section_introduction.html">Tutorial</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/index.html">API Reference</a></li>
@@ -67,6 +67,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#Example-II---A-Lollipop-flower">Example II - A Lollipop flower</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="example_opinion_cluster.html">Connected opinion clusters</a></li>
 <li class="toctree-l2"><a class="reference internal" href="example_smallworld.html">Small world using networkx</a></li>
 </ul>
 </li>
@@ -107,20 +108,21 @@
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">networkx</span> <span class="k">as</span> <span class="nn">nx</span>
-<span class="kn">import</span> <span class="nn">popy</span>
 
-<span class="n">model</span> <span class="o">=</span> <span class="n">popy</span><span class="o">.</span><span class="n">Model</span><span class="p">()</span>
-<span class="n">creator</span> <span class="o">=</span> <span class="n">popy</span><span class="o">.</span><span class="n">Creator</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
-<span class="n">inspector</span> <span class="o">=</span> <span class="n">popy</span><span class="o">.</span><span class="n">NetworkInspector</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+<span class="kn">import</span> <span class="nn">pop2net</span> <span class="k">as</span> <span class="nn">p2n</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">p2n</span><span class="o">.</span><span class="n">Model</span><span class="p">()</span>
+<span class="n">creator</span> <span class="o">=</span> <span class="n">p2n</span><span class="o">.</span><span class="n">Creator</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+<span class="n">inspector</span> <span class="o">=</span> <span class="n">p2n</span><span class="o">.</span><span class="n">NetworkInspector</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
 
 
-<span class="k">class</span> <span class="nc">Lollipop</span><span class="p">(</span><span class="n">popy</span><span class="o">.</span><span class="n">MagicLocation</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">Lollipop</span><span class="p">(</span><span class="n">p2n</span><span class="o">.</span><span class="n">MagicLocation</span><span class="p">):</span>
     <span class="n">n_agents</span> <span class="o">=</span> <span class="mi">7</span>
     <span class="n">nxgraph</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">lollipop_graph</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
 
 
 <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">20</span><span class="p">):</span>
-    <span class="n">popy</span><span class="o">.</span><span class="n">Agent</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+    <span class="n">p2n</span><span class="o">.</span><span class="n">Agent</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
 
 <span class="n">creator</span><span class="o">.</span><span class="n">create_locations</span><span class="p">(</span>
     <span class="n">location_classes</span><span class="o">=</span><span class="p">[</span>
@@ -810,18 +812,18 @@ var element = document.currentScript.previousSibling.previousSibling;
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">popy</span><span class="o">.</span><span class="n">Model</span><span class="p">()</span>
-<span class="n">creator</span> <span class="o">=</span> <span class="n">popy</span><span class="o">.</span><span class="n">Creator</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
-<span class="n">inspector</span> <span class="o">=</span> <span class="n">popy</span><span class="o">.</span><span class="n">NetworkInspector</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">p2n</span><span class="o">.</span><span class="n">Model</span><span class="p">()</span>
+<span class="n">creator</span> <span class="o">=</span> <span class="n">p2n</span><span class="o">.</span><span class="n">Creator</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+<span class="n">inspector</span> <span class="o">=</span> <span class="n">p2n</span><span class="o">.</span><span class="n">NetworkInspector</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
 
 
-<span class="k">class</span> <span class="nc">Lollipop</span><span class="p">(</span><span class="n">popy</span><span class="o">.</span><span class="n">MagicLocation</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">Lollipop</span><span class="p">(</span><span class="n">p2n</span><span class="o">.</span><span class="n">MagicLocation</span><span class="p">):</span>
     <span class="n">n_locations</span> <span class="o">=</span> <span class="mi">5</span>
     <span class="n">nxgraph</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">lollipop_graph</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
     <span class="n">only_exact_n_agents</span> <span class="o">=</span> <span class="kc">True</span>
 
 
-<span class="k">class</span> <span class="nc">Center</span><span class="p">(</span><span class="n">popy</span><span class="o">.</span><span class="n">MagicLocation</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">Center</span><span class="p">(</span><span class="n">p2n</span><span class="o">.</span><span class="n">MagicLocation</span><span class="p">):</span>
     <span class="k">def</span> <span class="nf">filter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">agent</span><span class="o">.</span><span class="n">Lollipop_tail</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">agent</span><span class="o">.</span><span class="n">Lollipop</span>
 
@@ -830,7 +832,7 @@ var element = document.currentScript.previousSibling.previousSibling;
 
 
 <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">41</span><span class="p">):</span>
-    <span class="n">popy</span><span class="o">.</span><span class="n">Agent</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+    <span class="n">p2n</span><span class="o">.</span><span class="n">Agent</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
 
 <span class="n">creator</span><span class="o">.</span><span class="n">create_locations</span><span class="p">(</span>
     <span class="n">location_classes</span><span class="o">=</span><span class="p">[</span>
@@ -1522,7 +1524,7 @@ var element = document.currentScript.previousSibling.previousSibling;
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="example_line.html" class="btn btn-neutral float-left" title="Line graph using networkx" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="example_smallworld.html" class="btn btn-neutral float-right" title="Small world using networkx" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="example_opinion_cluster.html" class="btn btn-neutral float-right" title="Connected opinion clusters" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

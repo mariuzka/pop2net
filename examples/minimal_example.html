@@ -48,7 +48,7 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../about.html">About Popy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../about.html">About Pop2net</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../section_introduction.html">Tutorial</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/index.html">API Reference</a></li>
@@ -89,8 +89,9 @@
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">random</span>
 
-<span class="kn">import</span> <span class="nn">popy</span>
 <span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
+
+<span class="kn">import</span> <span class="nn">pop2net</span> <span class="k">as</span> <span class="nn">p2n</span>
 
 <span class="c1"># for reproducibilty</span>
 <span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">1337</span><span class="p">)</span>
@@ -102,7 +103,7 @@
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">InfectionAgent</span><span class="p">(</span><span class="n">popy</span><span class="o">.</span><span class="n">Agent</span><span class="p">):</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">InfectionAgent</span><span class="p">(</span><span class="n">p2n</span><span class="o">.</span><span class="n">Agent</span><span class="p">):</span>
     <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">is_infected</span> <span class="o">=</span> <span class="kc">False</span>
 
@@ -129,13 +130,13 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">model</span>
 
         <span class="c1"># create 5 agents - none of them are infected right now</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">agents</span> <span class="o">=</span> <span class="n">popy</span><span class="o">.</span><span class="n">AgentList</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="n">InfectionAgent</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">agents</span> <span class="o">=</span> <span class="n">p2n</span><span class="o">.</span><span class="n">AgentList</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="n">InfectionAgent</span><span class="p">)</span>
 
         <span class="c1"># set one random agent to be infected</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">agents</span><span class="o">.</span><span class="n">random</span><span class="p">()</span><span class="o">.</span><span class="n">is_infected</span> <span class="o">=</span> <span class="mi">1</span>
 
         <span class="c1"># create 3 different locations</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">locations</span> <span class="o">=</span> <span class="n">popy</span><span class="o">.</span><span class="n">LocationList</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">popy</span><span class="o">.</span><span class="n">Location</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">locations</span> <span class="o">=</span> <span class="n">p2n</span><span class="o">.</span><span class="n">LocationList</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">p2n</span><span class="o">.</span><span class="n">Location</span><span class="p">)</span>
 
         <span class="c1"># home 1</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">agents</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">add_location</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">locations</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
@@ -163,7 +164,7 @@
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">MyModel</span><span class="p">(</span><span class="n">popy</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">MyModel</span><span class="p">(</span><span class="n">p2n</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
     <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">population</span> <span class="o">=</span> <span class="n">Population</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 

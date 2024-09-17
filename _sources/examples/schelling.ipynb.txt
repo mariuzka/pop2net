@@ -7,7 +7,7 @@
    "source": [
     "# Schelling model on a network\n",
     "\n",
-    "Todo: Build a version using this code but use popy for network generation: https://agentpy.readthedocs.io/en/latest/agentpy_segregation.html\n"
+    "Todo: Build a version using this code but use p2n for network generation: https://agentpy.readthedocs.io/en/latest/agentpy_segregation.html\n"
    ]
   },
   {
@@ -20,10 +20,11 @@
     "\n",
     "import agentpy as ap\n",
     "import matplotlib.pyplot as plt\n",
-    "import popy\n",
-    "from popy.data_fakers.soep import soep_faker\n",
-    "from popy.pop_maker import PopMaker\n",
-    "import seaborn as sns"
+    "import seaborn as sns\n",
+    "\n",
+    "import pop2net as p2n\n",
+    "from pop2net.data_fakers.soep import soep_faker\n",
+    "from pop2net.pop_maker import PopMaker"
    ]
   },
   {
@@ -32,7 +33,7 @@
    "metadata": {},
    "outputs": [],
    "source": [
-    "class Agent(popy.Agent):\n",
+    "class Agent(p2n.Agent):\n",
     "    def __init__(self, model, *args, **kwargs):\n",
     "        super().__init__(model, *args, **kwargs)\n",
     "\n",
@@ -83,7 +84,7 @@
    "metadata": {},
    "outputs": [],
    "source": [
-    "class Work(popy.Location):\n",
+    "class Work(p2n.Location):\n",
     "    def setup(self):\n",
     "        self.size = self.model.p.location_size"
    ]
@@ -94,7 +95,7 @@
    "metadata": {},
    "outputs": [],
    "source": [
-    "class Model(popy.Model):\n",
+    "class Model(p2n.Model):\n",
     "    def setup(self):\n",
     "        df_soep = soep_faker.soep(size=self.p.n_agents)\n",
     "        self.pop_maker = PopMaker(model=self)\n",

@@ -48,7 +48,7 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../about.html">About Popy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../about.html">About Pop2net</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../section_introduction.html">Tutorial</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/index.html">API Reference</a></li>
@@ -87,9 +87,10 @@
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="kn">import</span> <span class="nn">popy</span>
-<span class="kn">from</span> <span class="nn">popy.pop_maker</span> <span class="kn">import</span> <span class="n">PopMaker</span>
-<span class="kn">import</span> <span class="nn">popy.utils</span> <span class="k">as</span> <span class="nn">utils</span>
+
+<span class="kn">import</span> <span class="nn">pop2net</span> <span class="k">as</span> <span class="nn">p2n</span>
+<span class="kn">from</span> <span class="nn">pop2net.pop_maker</span> <span class="kn">import</span> <span class="n">PopMaker</span>
+<span class="kn">import</span> <span class="nn">pop2net.utils</span> <span class="k">as</span> <span class="nn">utils</span>
 </pre></div>
 </div>
 </div>
@@ -97,7 +98,7 @@
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df_pequiv</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_stata</span><span class="p">(</span><span class="s2">&quot;C:/01-main/03-ac135963/Projekte/popy/examples/data/pequiv.dta&quot;</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df_pequiv</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_stata</span><span class="p">(</span><span class="s2">&quot;C:/01-main/03-ac135963/Projekte/p2n/examples/data/pequiv.dta&quot;</span><span class="p">)</span>
 <span class="n">df_pequiv</span> <span class="o">=</span> <span class="n">df_pequiv</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;d11101&quot;</span><span class="p">:</span> <span class="s2">&quot;age&quot;</span><span class="p">})</span>
 </pre></div>
 </div>
@@ -144,11 +145,11 @@ See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stab
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Agent</span><span class="p">(</span><span class="n">popy</span><span class="o">.</span><span class="n">Agent</span><span class="p">):</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Agent</span><span class="p">(</span><span class="n">p2n</span><span class="o">.</span><span class="n">Agent</span><span class="p">):</span>
     <span class="k">pass</span>
 
 
-<span class="k">class</span> <span class="nc">Home</span><span class="p">(</span><span class="n">popy</span><span class="o">.</span><span class="n">Location</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">Home</span><span class="p">(</span><span class="n">p2n</span><span class="o">.</span><span class="n">Location</span><span class="p">):</span>
     <span class="k">def</span> <span class="nf">group</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">agent</span><span class="o">.</span><span class="n">hid</span>
 </pre></div>
@@ -158,7 +159,7 @@ See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stab
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Model</span><span class="p">(</span><span class="n">popy</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Model</span><span class="p">(</span><span class="n">p2n</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
     <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">pop_maker</span> <span class="o">=</span> <span class="n">PopMaker</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">agents</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">locations</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pop_maker</span><span class="o">.</span><span class="n">make</span><span class="p">(</span>
