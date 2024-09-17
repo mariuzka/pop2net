@@ -41,17 +41,9 @@ jobs:
           draft: false
           generateReleaseNotes: true
           prerelease: ${{ steps.check-version.outputs.prerelease }}
-        # -------------------------------------------------------------
-        # if you want to test on test-pipy use these commands instead
-        # poetry config repositories.test-pypi https://test.pypi.org/legacy/
-        # poetry config pypi-token.test-pypi ${{ secrets.TESTPYPI_TOKEN }}
-        # poetry publish -r test-pypi
-        # -------------------------------------------------------------
       - name: Publish to PyPI
         if: steps.check-prerelease.outputs.prerelease == 'false'
-        env:
-          POETRY_PYPI_TOKEN_PYPI: ${{ secrets.PYPI_TOKEN }}
-        run: poetry publish
+        uses: pypa/gh-action-pypi-publish@release/v1
       # merge main to dev to have up-to-date version number there
       - name: Merge main to dev
         uses: devmasx/merge-branch@master
@@ -60,4 +52,3 @@ jobs:
           from_branch: main
           target_branch: dev
           message: merge main to dev
-          github_token: ${{ secrets.GITHUB_TOKEN }}
