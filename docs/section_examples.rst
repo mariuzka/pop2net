@@ -14,4 +14,5 @@ This is a example gallery that is supposed to show different implementations of 
    examples/example_grid
    examples/example_line
    examples/example_lollipop
+   examples/example_opinion_cluster
    examples/example_smallworld
