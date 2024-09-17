@@ -14,6 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       id-token: write
+      contents: write
     steps:
       # Set up environment
       - name: Checkout code
@@ -54,3 +55,4 @@ jobs:
           from_branch: main
           target_branch: dev
           message: merge main to dev
+          github_token: ${{ secrets.GITHUB_TOKEN }}
