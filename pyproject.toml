@@ -23,7 +23,7 @@ exclude = ["docs"]
 name = "pop2net"
 version = "0.1.1"
 packages = [{include = "pop2net", from="src/"}]
-description = "Creates representative random populations for simulation studies"
+description = "Pop2net is a Python package designed to generate and manage relations between agents in agent-based models in a simple and flexible way."
 authors = [
   "Marius Kaffai <marius.kaffai@sowi.uni-stuttgart.de>",
   "Lukas Erhard <lukas.erhard@sowi.uni-stuttgart.de>",
