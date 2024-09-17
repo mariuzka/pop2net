@@ -12,6 +12,8 @@ jobs:
     name: Release
     needs: [test, build_docs]
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
     steps:
       # Set up environment
       - name: Checkout code
