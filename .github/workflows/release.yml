@@ -55,3 +55,4 @@ jobs:
           from_branch: main
           target_branch: dev
           message: merge main to dev
+          github_token: ${{ secrets.GITHUB_TOKEN }}
