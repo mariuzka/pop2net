@@ -1,6 +1,6 @@
 .. currentmodule:: pop2net.creator
 
-Population Maker
+Creator
 ================
 
 .. autoclass:: Creator
