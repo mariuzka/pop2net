@@ -32,6 +32,7 @@ class Creator:
         self.seed = seed
         self.rng = random.Random(seed)
         self._dummy_model = p2n.Model()
+        self._temp_agent_attrs = ["_P2NTEMP_split_values", "_P2NTEMP_melt_location_weight"]
 
     def _create_dummy_location(self, location_cls) -> p2n.Location:
         location = location_cls(model=self._dummy_model)
@@ -167,7 +168,18 @@ class Creator:
         return agents
 
     def _get_affiliated_agents(self, agents, dummy_location) -> list:
-        return [agent for agent in agents if dummy_location.filter(agent)]
+        temp_filter_attr = "_P2NTEMP_filter_" + dummy_location.type
+
+        affiliated_agents = []
+        for agent in agents:
+            if not hasattr(agent, temp_filter_attr):
+                setattr(agent, temp_filter_attr, dummy_location.filter(agent))
+                self._temp_agent_attrs.append(temp_filter_attr)
+
+            if getattr(agent, temp_filter_attr):
+                affiliated_agents.append(agent)
+
+        return affiliated_agents
 
     def _get_mother_group_id(self, agent, dummy_location) -> str:
         if dummy_location.nest() is None:
@@ -210,11 +222,13 @@ class Creator:
                 for i, value in enumerate(agent_values):
                     mother_group_id = self._get_mother_group_id(agent, dummy_location)
                     agent_values[i] = "-".join([mother_group_id, str(value)])
-                    setattr(agent, f"_TEMP_{dummy_location.type}_mother_group_id", mother_group_id)
+                    temp_attr = f"_P2NTEMP_{dummy_location.type}_mother_group_id"
+                    setattr(agent, temp_attr, mother_group_id)
+                    self._temp_agent_attrs.append(temp_attr)
 
             # Temporarely store group values as agent attribute
             # to assign them to the corresponding location group later
-            agent._TEMP_split_values = agent_values
+            agent._P2NTEMP_split_values = agent_values
 
             for value in agent_values:
                 if value not in all_values:
@@ -333,7 +347,7 @@ class Creator:
         split_value: int | str,
     ) -> list:
         group_affiliated_agents = [
-            agent for agent in agents if split_value in agent._TEMP_split_values
+            agent for agent in agents if split_value in agent._P2NTEMP_split_values
         ]
 
         return group_affiliated_agents
@@ -389,7 +403,7 @@ class Creator:
                 )
 
                 for agent in melt_location_affiliated_agents:
-                    agent._TEMP_melt_location_weight = melt_dummy_location.weight(agent)
+                    agent._P2NTEMP_melt_location_weight = melt_dummy_location.weight(agent)
 
                 # for each split value: get groups and collect them in one list for all values
                 location_groups_to_melt: list[list] = []
@@ -465,7 +479,7 @@ class Creator:
         # for each location class
         for location_cls in location_classes:
             for agent in agents:
-                agent._TEMP_melt_location_weight = None
+                agent._P2NTEMP_melt_location_weight = None
 
             # create location dummy in order to use the location's methods
             dummy_location = self._create_dummy_location(location_cls)
@@ -647,8 +661,8 @@ class Creator:
                             location.add_agent(agent)
 
                             weight = (
-                                agent._TEMP_melt_location_weight
-                                if agent._TEMP_melt_location_weight is not None
+                                agent._P2NTEMP_melt_location_weight
+                                if agent._P2NTEMP_melt_location_weight is not None
                                 else location.weight(agent)
                             )
 
@@ -700,19 +714,9 @@ class Creator:
 
         # delete temporary agent attributes
         for agent in self._dummy_model.agents:
-            if hasattr(agent, "_TEMP_split_values"):
-                del agent._TEMP_split_values
-
-            if hasattr(agent, "_TEMP_melt_location_weight"):
-                del agent._TEMP_melt_location_weight
-
-            # for location_class in location_classes:
-            #    if hasattr(agent, utils._get_cls_as_str(location_class)):
-            #        delattr(agent, utils._get_cls_as_str(location_class))
-
-        # delete temporary location attributes
-        # for location in locations:
-        #    del location.group_agents
+            for attr in self._temp_agent_attrs:
+                if hasattr(agent, attr):
+                    delattr(agent, attr)
 
         return locations
 
