@@ -1,6 +1,6 @@
-============
+=============
 About Pop2net
-============
+=============
 
 Interactions between agents are the key elements of agent-based models.
 Thus, the interaction structure in such models must be implemented with care.
