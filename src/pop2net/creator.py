@@ -427,6 +427,7 @@ class Creator:
                 [len(groups_to_melt) for groups_to_melt in groups_to_melt_by_location],
                 reverse=True if dummy_location.recycle else False,
             )[0]
+
             for i in range(z):
                 melted_group = []
                 for groups_to_melt in groups_to_melt_by_location:
@@ -512,7 +513,9 @@ class Creator:
             if not dummy_location.melt():
                 bridge_values = {
                     dummy_location.bridge(agent)
-                    for agent in agents
+                    for agent in self._get_affiliated_agents(
+                        agents=agents, dummy_location=dummy_location
+                    )
                     if dummy_location.bridge(agent) is not None
                 }
 
