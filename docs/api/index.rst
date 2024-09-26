@@ -13,4 +13,4 @@ API Reference
    magiclocation
    creator
    model
-   utils
+   inspector
