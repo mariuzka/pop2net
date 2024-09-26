@@ -113,6 +113,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">seed</span> <span class="o">=</span> <span class="n">seed</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">rng</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">Random</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_dummy_model</span> <span class="o">=</span> <span class="n">p2n</span><span class="o">.</span><span class="n">Model</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_temp_agent_attrs</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;_P2NTEMP_split_values&quot;</span><span class="p">,</span> <span class="s2">&quot;_P2NTEMP_melt_location_weight&quot;</span><span class="p">]</span>
 
     <span class="k">def</span> <span class="nf">_create_dummy_location</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">location_cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">p2n</span><span class="o">.</span><span class="n">Location</span><span class="p">:</span>
         <span class="n">location</span> <span class="o">=</span> <span class="n">location_cls</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_dummy_model</span><span class="p">)</span>
@@ -254,7 +255,18 @@
 
 
     <span class="k">def</span> <span class="nf">_get_affiliated_agents</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agents</span><span class="p">,</span> <span class="n">dummy_location</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
-        <span class="k">return</span> <span class="p">[</span><span class="n">agent</span> <span class="k">for</span> <span class="n">agent</span> <span class="ow">in</span> <span class="n">agents</span> <span class="k">if</span> <span class="n">dummy_location</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">agent</span><span class="p">)]</span>
+        <span class="n">temp_filter_attr</span> <span class="o">=</span> <span class="s2">&quot;_P2NTEMP_filter_&quot;</span> <span class="o">+</span> <span class="n">dummy_location</span><span class="o">.</span><span class="n">type</span>
+
+        <span class="n">affiliated_agents</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">agent</span> <span class="ow">in</span> <span class="n">agents</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">agent</span><span class="p">,</span> <span class="n">temp_filter_attr</span><span class="p">):</span>
+                <span class="nb">setattr</span><span class="p">(</span><span class="n">agent</span><span class="p">,</span> <span class="n">temp_filter_attr</span><span class="p">,</span> <span class="n">dummy_location</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">agent</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_temp_agent_attrs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">temp_filter_attr</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">agent</span><span class="p">,</span> <span class="n">temp_filter_attr</span><span class="p">):</span>
+                <span class="n">affiliated_agents</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">agent</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">affiliated_agents</span>
 
     <span class="k">def</span> <span class="nf">_get_mother_group_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent</span><span class="p">,</span> <span class="n">dummy_location</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">dummy_location</span><span class="o">.</span><span class="n">nest</span><span class="p">()</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -297,11 +309,13 @@
                 <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">agent_values</span><span class="p">):</span>
                     <span class="n">mother_group_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_mother_group_id</span><span class="p">(</span><span class="n">agent</span><span class="p">,</span> <span class="n">dummy_location</span><span class="p">)</span>
                     <span class="n">agent_values</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;-&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">mother_group_id</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">value</span><span class="p">)])</span>
-                    <span class="nb">setattr</span><span class="p">(</span><span class="n">agent</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;_TEMP_</span><span class="si">{</span><span class="n">dummy_location</span><span class="o">.</span><span class="n">type</span><span class="si">}</span><span class="s2">_mother_group_id&quot;</span><span class="p">,</span> <span class="n">mother_group_id</span><span class="p">)</span>
+                    <span class="n">temp_attr</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;_P2NTEMP_</span><span class="si">{</span><span class="n">dummy_location</span><span class="o">.</span><span class="n">type</span><span class="si">}</span><span class="s2">_mother_group_id&quot;</span>
+                    <span class="nb">setattr</span><span class="p">(</span><span class="n">agent</span><span class="p">,</span> <span class="n">temp_attr</span><span class="p">,</span> <span class="n">mother_group_id</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_temp_agent_attrs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">temp_attr</span><span class="p">)</span>
 
             <span class="c1"># Temporarely store group values as agent attribute</span>
             <span class="c1"># to assign them to the corresponding location group later</span>
-            <span class="n">agent</span><span class="o">.</span><span class="n">_TEMP_split_values</span> <span class="o">=</span> <span class="n">agent_values</span>
+            <span class="n">agent</span><span class="o">.</span><span class="n">_P2NTEMP_split_values</span> <span class="o">=</span> <span class="n">agent_values</span>
 
             <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">agent_values</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">value</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">all_values</span><span class="p">:</span>
@@ -420,7 +434,7 @@
         <span class="n">split_value</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">str</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
         <span class="n">group_affiliated_agents</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="n">agent</span> <span class="k">for</span> <span class="n">agent</span> <span class="ow">in</span> <span class="n">agents</span> <span class="k">if</span> <span class="n">split_value</span> <span class="ow">in</span> <span class="n">agent</span><span class="o">.</span><span class="n">_TEMP_split_values</span>
+            <span class="n">agent</span> <span class="k">for</span> <span class="n">agent</span> <span class="ow">in</span> <span class="n">agents</span> <span class="k">if</span> <span class="n">split_value</span> <span class="ow">in</span> <span class="n">agent</span><span class="o">.</span><span class="n">_P2NTEMP_split_values</span>
         <span class="p">]</span>
 
         <span class="k">return</span> <span class="n">group_affiliated_agents</span>
@@ -476,7 +490,7 @@
                 <span class="p">)</span>
 
                 <span class="k">for</span> <span class="n">agent</span> <span class="ow">in</span> <span class="n">melt_location_affiliated_agents</span><span class="p">:</span>
-                    <span class="n">agent</span><span class="o">.</span><span class="n">_TEMP_melt_location_weight</span> <span class="o">=</span> <span class="n">melt_dummy_location</span><span class="o">.</span><span class="n">weight</span><span class="p">(</span><span class="n">agent</span><span class="p">)</span>
+                    <span class="n">agent</span><span class="o">.</span><span class="n">_P2NTEMP_melt_location_weight</span> <span class="o">=</span> <span class="n">melt_dummy_location</span><span class="o">.</span><span class="n">weight</span><span class="p">(</span><span class="n">agent</span><span class="p">)</span>
 
                 <span class="c1"># for each split value: get groups and collect them in one list for all values</span>
                 <span class="n">location_groups_to_melt</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
@@ -554,7 +568,7 @@
         <span class="c1"># for each location class</span>
         <span class="k">for</span> <span class="n">location_cls</span> <span class="ow">in</span> <span class="n">location_classes</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">agent</span> <span class="ow">in</span> <span class="n">agents</span><span class="p">:</span>
-                <span class="n">agent</span><span class="o">.</span><span class="n">_TEMP_melt_location_weight</span> <span class="o">=</span> <span class="kc">None</span>
+                <span class="n">agent</span><span class="o">.</span><span class="n">_P2NTEMP_melt_location_weight</span> <span class="o">=</span> <span class="kc">None</span>
 
             <span class="c1"># create location dummy in order to use the location&#39;s methods</span>
             <span class="n">dummy_location</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_dummy_location</span><span class="p">(</span><span class="n">location_cls</span><span class="p">)</span>
@@ -736,8 +750,8 @@
                             <span class="n">location</span><span class="o">.</span><span class="n">add_agent</span><span class="p">(</span><span class="n">agent</span><span class="p">)</span>
 
                             <span class="n">weight</span> <span class="o">=</span> <span class="p">(</span>
-                                <span class="n">agent</span><span class="o">.</span><span class="n">_TEMP_melt_location_weight</span>
-                                <span class="k">if</span> <span class="n">agent</span><span class="o">.</span><span class="n">_TEMP_melt_location_weight</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+                                <span class="n">agent</span><span class="o">.</span><span class="n">_P2NTEMP_melt_location_weight</span>
+                                <span class="k">if</span> <span class="n">agent</span><span class="o">.</span><span class="n">_P2NTEMP_melt_location_weight</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
                                 <span class="k">else</span> <span class="n">location</span><span class="o">.</span><span class="n">weight</span><span class="p">(</span><span class="n">agent</span><span class="p">)</span>
                             <span class="p">)</span>
 
@@ -789,19 +803,9 @@
 
         <span class="c1"># delete temporary agent attributes</span>
         <span class="k">for</span> <span class="n">agent</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dummy_model</span><span class="o">.</span><span class="n">agents</span><span class="p">:</span>
-            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">agent</span><span class="p">,</span> <span class="s2">&quot;_TEMP_split_values&quot;</span><span class="p">):</span>
-                <span class="k">del</span> <span class="n">agent</span><span class="o">.</span><span class="n">_TEMP_split_values</span>
-
-            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">agent</span><span class="p">,</span> <span class="s2">&quot;_TEMP_melt_location_weight&quot;</span><span class="p">):</span>
-                <span class="k">del</span> <span class="n">agent</span><span class="o">.</span><span class="n">_TEMP_melt_location_weight</span>
-
-            <span class="c1"># for location_class in location_classes:</span>
-            <span class="c1">#    if hasattr(agent, utils._get_cls_as_str(location_class)):</span>
-            <span class="c1">#        delattr(agent, utils._get_cls_as_str(location_class))</span>
-
-        <span class="c1"># delete temporary location attributes</span>
-        <span class="c1"># for location in locations:</span>
-        <span class="c1">#    del location.group_agents</span>
+            <span class="k">for</span> <span class="n">attr</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_temp_agent_attrs</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">agent</span><span class="p">,</span> <span class="n">attr</span><span class="p">):</span>
+                    <span class="nb">delattr</span><span class="p">(</span><span class="n">agent</span><span class="p">,</span> <span class="n">attr</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">locations</span></div>
 

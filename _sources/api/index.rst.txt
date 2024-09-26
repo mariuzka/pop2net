@@ -10,6 +10,7 @@ API Reference
 
    agent
    location
+   magiclocation
    creator
    model
-   utils
+   inspector

@@ -230,6 +230,8 @@
 
 
 
+<div class="viewcode-block" id="MagicLocation">
+<a class="viewcode-back" href="../../api/magiclocation.html#pop2net.MagicLocation">[docs]</a>
 <span class="k">class</span> <span class="nc">MagicLocation</span><span class="p">(</span><span class="n">Location</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Helper class to create locations from inside the Creator.&quot;&quot;&quot;</span>
 
@@ -253,12 +255,17 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">group_value</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">subgroup_value</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
 
+<div class="viewcode-block" id="MagicLocation.setup">
+<a class="viewcode-back" href="../../api/magiclocation.html#pop2net.MagicLocation.setup">[docs]</a>
     <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Use this method to set instance attributes, for instance.</span>
 
-<span class="sd">        This method is called automatically by the population maker after creating an instance.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        This method is called automatically by the creator after creating an instance.</span>
+<span class="sd">        &quot;&quot;&quot;</span></div>
 
+
+<div class="viewcode-block" id="MagicLocation.filter">
+<a class="viewcode-back" href="../../api/magiclocation.html#pop2net.MagicLocation.filter">[docs]</a>
     <span class="k">def</span> <span class="nf">filter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent</span><span class="p">:</span> <span class="n">_agent</span><span class="o">.</span><span class="n">Agent</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>  <span class="c1"># noqa: ARG002</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Check whether the agent is meant to join this type of location.</span>
 
@@ -272,8 +279,11 @@
 <span class="sd">        Returns:</span>
 <span class="sd">            True if the agent is allowed to join the location, False otherwise.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="kc">True</span></div>
 
+
+<div class="viewcode-block" id="MagicLocation.bridge">
+<a class="viewcode-back" href="../../api/magiclocation.html#pop2net.MagicLocation.bridge">[docs]</a>
     <span class="k">def</span> <span class="nf">bridge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent</span><span class="p">:</span> <span class="n">_agent</span><span class="o">.</span><span class="n">Agent</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">list</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># noqa: ARG002</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Create locations with one agent for each unique value returned.</span>
 
@@ -283,11 +293,14 @@
 <span class="sd">            agent (_agent.Agent): The agent that is currently processed by the Creator.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            float | str | list | None: The value which is used to assign agents</span>
-<span class="sd">                to location instances.</span>
+<span class="sd">            float | str | list | None:</span>
+<span class="sd">                The value which is used to assign agents to location instances.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="kc">None</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
 
+
+<div class="viewcode-block" id="MagicLocation.split">
+<a class="viewcode-back" href="../../api/magiclocation.html#pop2net.MagicLocation.split">[docs]</a>
     <span class="k">def</span> <span class="nf">split</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent</span><span class="p">:</span> <span class="n">_agent</span><span class="o">.</span><span class="n">Agent</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">list</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># noqa: ARG002</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Creates seperate location instances for each unique returned value.</span>
 
@@ -295,11 +308,14 @@
 <span class="sd">            agent: The agent that is currently processed by the Creator.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            float | str | list | None: The value(s) that determine(s) to which location instance</span>
-<span class="sd">                the agent is assigned.</span>
+<span class="sd">            float | str | list | None:</span>
+<span class="sd">                The value(s) that determine(s) to which location instance the agent is assigned.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="kc">None</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
 
+
+<div class="viewcode-block" id="MagicLocation.weight">
+<a class="viewcode-back" href="../../api/magiclocation.html#pop2net.MagicLocation.weight">[docs]</a>
     <span class="k">def</span> <span class="nf">weight</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent</span><span class="p">:</span> <span class="n">_agent</span><span class="o">.</span><span class="n">Agent</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># noqa: ARG002</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Defines the edge weight between the agent and the location instance.</span>
 
@@ -313,8 +329,11 @@
 <span class="sd">        Returns:</span>
 <span class="sd">            The edge weight.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="kc">None</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
 
+
+<div class="viewcode-block" id="MagicLocation.stick_together">
+<a class="viewcode-back" href="../../api/magiclocation.html#pop2net.MagicLocation.stick_together">[docs]</a>
     <span class="k">def</span> <span class="nf">stick_together</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent</span><span class="p">:</span> <span class="n">_agent</span><span class="o">.</span><span class="n">Agent</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span> <span class="o">|</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Assigns agents with a shared value on an attribute to the same location instance.</span>
 
@@ -324,8 +343,11 @@
 <span class="sd">        Returns:</span>
 <span class="sd">            float | str: A value that defines the groups of agents.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">agent</span><span class="o">.</span><span class="n">id</span>
+        <span class="k">return</span> <span class="n">agent</span><span class="o">.</span><span class="n">id</span></div>
 
+
+<div class="viewcode-block" id="MagicLocation.nest">
+<a class="viewcode-back" href="../../api/magiclocation.html#pop2net.MagicLocation.nest">[docs]</a>
     <span class="k">def</span> <span class="nf">nest</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">type</span><span class="p">[</span><span class="n">Location</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Nests this location class into another location class.</span>
 
@@ -335,8 +357,11 @@
 <span class="sd">        Returns:</span>
 <span class="sd">           type[Location] | None: The location class in which this location class should be nested.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="kc">None</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
 
+
+<div class="viewcode-block" id="MagicLocation.melt">
+<a class="viewcode-back" href="../../api/magiclocation.html#pop2net.MagicLocation.melt">[docs]</a>
     <span class="k">def</span> <span class="nf">melt</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Location</span><span class="p">]</span> <span class="o">|</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Location</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Allows to assign agents with different attribute values to the same location.</span>
 
@@ -346,11 +371,15 @@
 <span class="sd">        Returns:</span>
 <span class="sd">            None | list | tuple: A list or tuple of location classes.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="p">[]</span>
+        <span class="k">return</span> <span class="p">[]</span></div>
 
+
+<div class="viewcode-block" id="MagicLocation.refine">
+<a class="viewcode-back" href="../../api/magiclocation.html#pop2net.MagicLocation.refine">[docs]</a>
     <span class="k">def</span> <span class="nf">refine</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;An action that is performed after all location instances have been created.&quot;&quot;&quot;</span>
-        <span class="k">pass</span>
+        <span class="k">pass</span></div>
+
 
     <span class="k">def</span> <span class="nf">_update_weight</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent</span><span class="p">:</span> <span class="n">_agent</span><span class="o">.</span><span class="n">Agent</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Create or update the agent-speific weight.</span>
@@ -389,7 +418,8 @@
                 <span class="p">]</span>
 
             <span class="k">else</span><span class="p">:</span>
-                <span class="k">return</span> <span class="kc">None</span>
+                <span class="k">return</span> <span class="kc">None</span></div>
+
 
 
 <span class="k">class</span> <span class="nc">MeltLocation</span><span class="p">(</span><span class="n">Location</span><span class="p">):</span>

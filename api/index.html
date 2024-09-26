@@ -53,9 +53,10 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">API Reference</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="agent.html">Agent</a></li>
 <li class="toctree-l2"><a class="reference internal" href="location.html">Location</a></li>
-<li class="toctree-l2"><a class="reference internal" href="creator.html">Population Maker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="magiclocation.html">MagicLocation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="creator.html">Creator</a></li>
 <li class="toctree-l2"><a class="reference internal" href="model.html">Model</a></li>
-<li class="toctree-l2"><a class="reference internal" href="utils.html">Utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="inspector.html">Network Inspector</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../section_examples.html">Example Gallery</a></li>
@@ -119,7 +120,22 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="creator.html">Population Maker</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="magiclocation.html">MagicLocation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="magiclocation.html#pop2net.MagicLocation"><code class="docutils literal notranslate"><span class="pre">MagicLocation</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="magiclocation.html#pop2net.MagicLocation.bridge"><code class="docutils literal notranslate"><span class="pre">MagicLocation.bridge()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="magiclocation.html#pop2net.MagicLocation.filter"><code class="docutils literal notranslate"><span class="pre">MagicLocation.filter()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="magiclocation.html#pop2net.MagicLocation.melt"><code class="docutils literal notranslate"><span class="pre">MagicLocation.melt()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="magiclocation.html#pop2net.MagicLocation.nest"><code class="docutils literal notranslate"><span class="pre">MagicLocation.nest()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="magiclocation.html#pop2net.MagicLocation.refine"><code class="docutils literal notranslate"><span class="pre">MagicLocation.refine()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="magiclocation.html#pop2net.MagicLocation.setup"><code class="docutils literal notranslate"><span class="pre">MagicLocation.setup()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="magiclocation.html#pop2net.MagicLocation.split"><code class="docutils literal notranslate"><span class="pre">MagicLocation.split()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="magiclocation.html#pop2net.MagicLocation.stick_together"><code class="docutils literal notranslate"><span class="pre">MagicLocation.stick_together()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="magiclocation.html#pop2net.MagicLocation.weight"><code class="docutils literal notranslate"><span class="pre">MagicLocation.weight()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="creator.html">Creator</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="creator.html#pop2net.creator.Creator"><code class="docutils literal notranslate"><span class="pre">Creator</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="creator.html#pop2net.creator.Creator.create"><code class="docutils literal notranslate"><span class="pre">Creator.create()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="creator.html#pop2net.creator.Creator.create_agents"><code class="docutils literal notranslate"><span class="pre">Creator.create_agents()</span></code></a></li>
@@ -161,9 +177,18 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="utils.html">Utils</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="utils.html#pop2net.utils.group_it"><code class="docutils literal notranslate"><span class="pre">group_it()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="utils.html#pop2net.utils.print_header"><code class="docutils literal notranslate"><span class="pre">print_header()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="inspector.html">Network Inspector</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="inspector.html#pop2net.inspector.NetworkInspector"><code class="docutils literal notranslate"><span class="pre">NetworkInspector</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="inspector.html#pop2net.inspector.NetworkInspector.create_contact_matrix"><code class="docutils literal notranslate"><span class="pre">NetworkInspector.create_contact_matrix()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="inspector.html#pop2net.inspector.NetworkInspector.eval_affiliations"><code class="docutils literal notranslate"><span class="pre">NetworkInspector.eval_affiliations()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="inspector.html#pop2net.inspector.NetworkInspector.location_crosstab"><code class="docutils literal notranslate"><span class="pre">NetworkInspector.location_crosstab()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="inspector.html#pop2net.inspector.NetworkInspector.location_information"><code class="docutils literal notranslate"><span class="pre">NetworkInspector.location_information()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="inspector.html#pop2net.inspector.NetworkInspector.network_measures"><code class="docutils literal notranslate"><span class="pre">NetworkInspector.network_measures()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="inspector.html#pop2net.inspector.NetworkInspector.plot_agent_network"><code class="docutils literal notranslate"><span class="pre">NetworkInspector.plot_agent_network()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="inspector.html#pop2net.inspector.NetworkInspector.plot_bipartite_network"><code class="docutils literal notranslate"><span class="pre">NetworkInspector.plot_bipartite_network()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="inspector.html#pop2net.inspector.NetworkInspector.plot_networks"><code class="docutils literal notranslate"><span class="pre">NetworkInspector.plot_networks()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>

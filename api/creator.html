@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Population Maker &mdash; pop2net 0.1.0 documentation</title>
+  <title>Creator &mdash; pop2net 0.1.0 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
@@ -23,7 +23,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Model" href="model.html" />
-    <link rel="prev" title="Location" href="location.html" /> 
+    <link rel="prev" title="MagicLocation" href="magiclocation.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -53,7 +53,8 @@
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">API Reference</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="agent.html">Agent</a></li>
 <li class="toctree-l2"><a class="reference internal" href="location.html">Location</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Population Maker</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="magiclocation.html">MagicLocation</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Creator</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#pop2net.creator.Creator"><code class="docutils literal notranslate"><span class="pre">Creator</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#pop2net.creator.Creator.create"><code class="docutils literal notranslate"><span class="pre">Creator.create()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#pop2net.creator.Creator.create_agents"><code class="docutils literal notranslate"><span class="pre">Creator.create_agents()</span></code></a></li>
@@ -65,7 +66,7 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="model.html">Model</a></li>
-<li class="toctree-l2"><a class="reference internal" href="utils.html">Utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="inspector.html">Network Inspector</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../section_examples.html">Example Gallery</a></li>
@@ -87,7 +88,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="index.html">API Reference</a></li>
-      <li class="breadcrumb-item active">Population Maker</li>
+      <li class="breadcrumb-item active">Creator</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/api/creator.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -97,8 +98,8 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="population-maker">
-<h1>Population Maker<a class="headerlink" href="#population-maker" title="Link to this heading"></a></h1>
+  <section id="creator">
+<h1>Creator<a class="headerlink" href="#creator" title="Link to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="pop2net.creator.Creator">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pop2net.creator.</span></span><span class="sig-name descname"><span class="pre">Creator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pop2net/creator.html#Creator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pop2net.creator.Creator" title="Link to this definition"></a></dt>
@@ -156,7 +157,7 @@ created.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>agent_class</strong> – A class to instantiate all agents with. Every column in the DataFrame will
 result in an attribute of the agents.</p></li>
-<li><p><strong>df</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.12)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code></a>[<a class="reference external" href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v2.2.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></a>]</span>) – The DataFrame from which the agents should be created from.</p></li>
+<li><p><strong>df</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.12)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code></a>[<a class="reference external" href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v2.2.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></a>]</span>) – The DataFrame from which the agents should be created from.</p></li>
 <li><p><strong>n</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.12)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>]</span>) – The number of agents that should be created. Defaults to None.</p></li>
 <li><p><strong>clear_agents</strong> – Should existing agents be removed before creating new ones?</p></li>
 </ul>
@@ -197,7 +198,7 @@ result in an attribute of the agents.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>df</strong> (<a class="reference external" href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v2.2.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a>) – a pandas DataFrame</p></li>
+<li><p><strong>df</strong> (<a class="reference external" href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v2.2.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a>) – a pandas DataFrame</p></li>
 <li><p><strong>n</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a>) – Target size of the final sample. If this is higher the size of the input
 DataFrame, the sampling will occure with replacement. Without otherwise. If <cite>n</cite> is
 set to <cite>None</cite>, df is returned as it is.</p></li>
@@ -212,7 +213,7 @@ overwritten by unique values after sampling to avoid duplicates?</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v2.2.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></a></span></p>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v2.2.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></a></span></p>
 </dd>
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>A pandas DataFrame.</p>
@@ -253,7 +254,7 @@ agent and one column for each agent attribute.</p>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="location.html" class="btn btn-neutral float-left" title="Location" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="magiclocation.html" class="btn btn-neutral float-left" title="MagicLocation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="model.html" class="btn btn-neutral float-right" title="Model" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
