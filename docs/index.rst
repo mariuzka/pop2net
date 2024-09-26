@@ -4,7 +4,7 @@
    contain the root `toctree` directive.
 
 Welcome to Pop2net's documentation!
-================================
+===================================
 
 **Pop2net** is a new software package for Python that simplifies the creation of network structures for agent-based models.
 Using a simple syntax, Pop2net makes it easy to determine how links between certain (groups of) agents are formed by defining contact layers.

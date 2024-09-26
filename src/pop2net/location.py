@@ -150,7 +150,7 @@ class MagicLocation(Location):
     def setup(self) -> None:
         """Use this method to set instance attributes, for instance.
 
-        This method is called automatically by the population maker after creating an instance.
+        This method is called automatically by the creator after creating an instance.
         """
 
     def filter(self, agent: _agent.Agent) -> bool:  # noqa: ARG002
@@ -177,8 +177,8 @@ class MagicLocation(Location):
             agent (_agent.Agent): The agent that is currently processed by the Creator.
 
         Returns:
-            float | str | list | None: The value which is used to assign agents
-                to location instances.
+            float | str | list | None:
+                The value which is used to assign agents to location instances.
         """
         return None
 
@@ -189,8 +189,8 @@ class MagicLocation(Location):
             agent: The agent that is currently processed by the Creator.
 
         Returns:
-            float | str | list | None: The value(s) that determine(s) to which location instance
-                the agent is assigned.
+            float | str | list | None:
+                The value(s) that determine(s) to which location instance the agent is assigned.
         """
         return None
 
