@@ -514,6 +514,7 @@
                 <span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">groups_to_melt</span><span class="p">)</span> <span class="k">for</span> <span class="n">groups_to_melt</span> <span class="ow">in</span> <span class="n">groups_to_melt_by_location</span><span class="p">],</span>
                 <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span> <span class="k">if</span> <span class="n">dummy_location</span><span class="o">.</span><span class="n">recycle</span> <span class="k">else</span> <span class="kc">False</span><span class="p">,</span>
             <span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
             <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">z</span><span class="p">):</span>
                 <span class="n">melted_group</span> <span class="o">=</span> <span class="p">[]</span>
                 <span class="k">for</span> <span class="n">groups_to_melt</span> <span class="ow">in</span> <span class="n">groups_to_melt_by_location</span><span class="p">:</span>
@@ -601,7 +602,9 @@
             <span class="k">if</span> <span class="ow">not</span> <span class="n">dummy_location</span><span class="o">.</span><span class="n">melt</span><span class="p">():</span>
                 <span class="n">bridge_values</span> <span class="o">=</span> <span class="p">{</span>
                     <span class="n">dummy_location</span><span class="o">.</span><span class="n">bridge</span><span class="p">(</span><span class="n">agent</span><span class="p">)</span>
-                    <span class="k">for</span> <span class="n">agent</span> <span class="ow">in</span> <span class="n">agents</span>
+                    <span class="k">for</span> <span class="n">agent</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_affiliated_agents</span><span class="p">(</span>
+                        <span class="n">agents</span><span class="o">=</span><span class="n">agents</span><span class="p">,</span> <span class="n">dummy_location</span><span class="o">=</span><span class="n">dummy_location</span>
+                    <span class="p">)</span>
                     <span class="k">if</span> <span class="n">dummy_location</span><span class="o">.</span><span class="n">bridge</span><span class="p">(</span><span class="n">agent</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
                 <span class="p">}</span>
 
