@@ -57,8 +57,7 @@ def test_create():
         n_agents=10,
         df=df,
         location_classes=[MyLocation],
-        clear_agents=False,
-        clear_locations=False,
+        clear=False,
     )
 
     assert len(model.agents) == 10
@@ -68,8 +67,7 @@ def test_create():
         n_agents=10,
         df=df,
         location_classes=[MyLocation],
-        clear_agents=False,
-        clear_locations=False,
+        clear=False,
     )
 
     assert len(model.agents) == 20
@@ -79,30 +77,7 @@ def test_create():
         n_agents=10,
         df=df,
         location_classes=[MyLocation],
-        clear_agents=True,
-        clear_locations=False,
-    )
-
-    assert len(model.agents) == 10
-    assert len(model.locations) == 15
-
-    creator.create(
-        n_agents=10,
-        df=df,
-        location_classes=[MyLocation],
-        clear_agents=False,
-        clear_locations=True,
-    )
-
-    assert len(model.agents) == 20
-    assert len(model.locations) == 5
-
-    creator.create(
-        n_agents=10,
-        df=df,
-        location_classes=[MyLocation],
-        clear_agents=True,
-        clear_locations=True,
+        clear=True,
     )
 
     assert len(model.agents) == 10

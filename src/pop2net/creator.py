@@ -743,8 +743,7 @@ class Creator:
         sample_level: str | None = None,
         sample_weight: str | None = None,
         replace_sample_level_column: bool = True,
-        clear_agents: bool = False,
-        clear_locations: bool = False,
+        clear: bool = False,
     ) -> tuple:
         """Creates agents and locations based on a given dataset.
 
@@ -770,8 +769,7 @@ class Creator:
                 weight during sampling.
             replace_sample_level_column (bool): Should the original values of the sample level be
                 overwritten by unique values after sampling to avoid duplicates?
-            clear_agents (bool): Should the agents already included in the model be removed?
-            clear_locations (bool): Should the locations already included in the model be removed?
+            clear (bool): Should the agents and locations already included in the model be removed?
 
         Returns:
             tuple: A list of agents and a list of locations.
@@ -791,14 +789,14 @@ class Creator:
             agent_class=agent_class,
             agent_class_attr=agent_class_attr,
             agent_class_dict=agent_class_dict,
-            clear=clear_agents,
+            clear=clear,
         )
 
         # create locations
         locations = self.create_locations(
             agents=agents,
             location_classes=location_classes,
-            clear=clear_locations,
+            clear=clear,
         )
 
         return agents, locations
