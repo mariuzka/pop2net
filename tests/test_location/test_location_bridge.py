@@ -149,3 +149,52 @@ def test_4():
     assert len(model.agents[2].locations) == 0
     assert len(model.agents[3].locations) == 1
     assert len(model.agents[4].locations) == 0
+
+def test_5():
+    # Version with 3 unique Values on one attribute
+
+    model = p2n.Model()
+    creator = p2n.Creator(model)
+
+    for _ in range(2):
+        agent = p2n.Agent(model)
+        agent.status = 1
+
+    for _ in range(2):
+        agent = p2n.Agent(model)
+        agent.status = 2
+    
+    for _ in range(2):
+        agent = p2n.Agent(model)
+        agent.status = 3
+
+    class ThreeBodyProblem(p2n.MagicLocation):
+        recycle = True
+
+        def bridge(self, agent):
+            return agent.status
+
+    creator.create_locations(location_classes=[ThreeBodyProblem])
+
+    assert len(model.locations) == 2
+    assert len(model.agents) == 6
+
+    
+    assert len(model.locations[0].agents) == 3
+    assert [agent.status for agent in model.locations[0].agents].count(1) == 1
+    assert [agent.status for agent in model.locations[0].agents].count(2) == 1
+    assert [agent.status for agent in model.locations[0].agents].count(3) == 1
+
+    assert len(model.locations[1].agents) == 3
+    assert [agent.status for agent in model.locations[1].agents].count(1) == 1
+    assert [agent.status for agent in model.locations[1].agents].count(2) == 1
+    assert [agent.status for agent in model.locations[1].agents].count(3) == 1
+
+    assert len(model.agents[0].locations) == 1
+    assert len(model.agents[1].locations) == 1
+    assert len(model.agents[2].locations) == 1
+    assert len(model.agents[3].locations) == 1
+    assert len(model.agents[4].locations) == 1
+    assert len(model.agents[5].locations) == 1
+
+test_5()
