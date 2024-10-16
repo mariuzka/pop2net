@@ -20,7 +20,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
       - name: Enable Poetry
-        uses: abatilo/actions-poetry@v2
+        run: pipx install poetry
       # Pull to refresh and build
       - name: Build Project
         run: poetry build
