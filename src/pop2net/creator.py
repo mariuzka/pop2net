@@ -117,6 +117,7 @@ class Creator:
         agent_class_dict: None | dict = None,
         df: pd.DataFrame | None = None,
         n: int | None = None,
+        clear: bool = False,
     ) -> p2n.AgentList:
         """Creates agents from a pandas DataFrame.
 
@@ -132,11 +133,14 @@ class Creator:
                 result in an attribute of the agents.
             df: The DataFrame from which the agents should be created from.
             n: The number of agents that should be created. Defaults to None.
-            clear_agents: Should existing agents be removed before creating new ones?
+            clear (bool): Should the agents already included in the model be removed?
 
         Returns:
             A list of agents.
         """
+        if clear:
+            self.model.remove_agents(self.model.agents)
+
         if df is not None:
             df = df.copy()
 
@@ -448,16 +452,21 @@ class Creator:
         self,
         location_classes: list,
         agents: list | p2n.AgentList | None = None,
+        clear: bool = False,
     ) -> p2n.LocationList:
         """Creates location instances and connects them with the given agent population.
 
         Args:
             location_classes (list): A list of location classes.
             agents (list | p2n.AgentList): A list of agents.
+            clear (bool): Should the locations already included in the model be removed?
 
         Returns:
             p2n.LocationList: A list of locations.
         """
+        if clear:
+            self.model.remove_locations(self.model.locations)
+
         if agents is None:
             agents = self.model.agents
 
@@ -734,6 +743,7 @@ class Creator:
         sample_level: str | None = None,
         sample_weight: str | None = None,
         replace_sample_level_column: bool = True,
+        clear: bool = False,
     ) -> tuple:
         """Creates agents and locations based on a given dataset.
 
@@ -759,6 +769,7 @@ class Creator:
                 weight during sampling.
             replace_sample_level_column (bool): Should the original values of the sample level be
                 overwritten by unique values after sampling to avoid duplicates?
+            clear (bool): Should the agents and locations already included in the model be removed?
 
         Returns:
             tuple: A list of agents and a list of locations.
@@ -778,10 +789,15 @@ class Creator:
             agent_class=agent_class,
             agent_class_attr=agent_class_attr,
             agent_class_dict=agent_class_dict,
+            clear=clear,
         )
 
         # create locations
-        locations = self.create_locations(agents=agents, location_classes=location_classes)
+        locations = self.create_locations(
+            agents=agents,
+            location_classes=location_classes,
+            clear=clear,
+        )
 
         return agents, locations
 
