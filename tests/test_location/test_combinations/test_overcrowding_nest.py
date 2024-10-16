@@ -41,8 +41,6 @@ def test_1():
 
 
 # %%
-# TODO das von oben nur mit True True und eine Variante wo True False jeweils gemischt ist
-
 
 def test_2():
     df = pd.DataFrame(

@@ -55,7 +55,7 @@ def test_1():
     assert len(model.locations[1].agents) == 2
 
 
-def test_1():
+def test_2():
     df = pd.DataFrame(
         {
             "status": ["A", "A", "A", "A", "A", "A", "A"],
