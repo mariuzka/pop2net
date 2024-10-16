@@ -28,7 +28,7 @@ jobs:
       #  -----  install & configure poetry  -----
       #----------------------------------------------
       - name: Install Poetry
-        uses: |
+        run: |
           pipx install poetry
           poetry config virtualenvs.create true --local
           poetry config virtualenvs.in-project true --local
