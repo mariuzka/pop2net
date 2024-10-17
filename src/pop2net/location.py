@@ -34,22 +34,25 @@ class Location(Object):
         """
         return self.model.agents_of_location(self)
 
-    def add_agent(self, agent: _agent.Agent) -> None:
+    def add_agent(self, agent: _agent.Agent, weight: float | None = None) -> None:
         """Assigns the given agent to this location.
 
         Args:
             agent: The agent that should be added to the location.
+            weight: The edge weight between the agent and the location. Defaults to 1.
         """
-        self.model.add_agent_to_location(self, agent)
+        self.model.add_agent_to_location(self, agent=agent, weight=weight)
 
-    def add_agents(self, agents: list) -> None:
+    def add_agents(self, agents: list, weight: float | None = None) -> None:
         """Add multiple agents at once.
 
         Args:
             agents (list): An iterable over agents.
+            weight(float | None): The edge weight between the agents and the location.
+                Defaults to None.
         """
         for agent in agents:
-            self.add_agent(agent)
+            self.add_agent(agent=agent, weight=weight)
 
     def remove_agent(self, agent: _agent.Agent) -> None:
         """Removes the given agent from this location.
@@ -87,14 +90,17 @@ class Location(Object):
     def set_weight(self, agent, weight: float | None = None) -> None:
         """Set the weight of an agent at the current location.
 
+        If weight is None the method location.weight() will be used to generate a weight.
+
         Args:
             agent (Agent): The agent.
             weight (float): The weight.
         """
-        if weight is None:
-            self.model.set_weight(agent=agent, location=self, weight=self.weight(agent))
-        else:
-            self.model.set_weight(agent=agent, location=self, weight=weight)
+        self.model.set_weight(
+            agent=agent,
+            location=self,
+            weight=weight,
+        )
 
     def get_weight(self, agent: _agent.Agent) -> float:
         """Return the edge weight between an agent and the location.
@@ -244,19 +250,6 @@ class MagicLocation(Location):
     def refine(self):
         """An action that is performed after all location instances have been created."""
         pass
-
-    def _update_weight(self, agent: _agent.Agent) -> None:
-        """Create or update the agent-speific weight.
-
-        Args:
-            agent: The agent to be updated.
-        """
-        self.set_weight(agent, self.weight(agent))
-
-    def _update_weights(self) -> None:
-        """Update the weight of every agent on this location."""
-        for agent_ in self.agents:
-            self._update_weight(agent_)
 
     def _subsplit(self, agent: _agent.Agent) -> str | float | list | None:  # noqa: ARG002
         """Splits a location instance into sub-instances to create a certain network structure.
