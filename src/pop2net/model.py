@@ -38,22 +38,6 @@ class Model(ap.Model):
         super().__init__(parameters, _run_id, **kwargs)
         self.g = nx.Graph()
 
-    def sim_step(self) -> None:
-        """Do 1 step in the simulation."""
-        self.t += 1
-
-        # TODO: Rethink the following:
-        for location in self.locations:
-            if hasattr(location, "static_weight") and hasattr(location, "_update_weights"):
-                if not location.static_weight:
-                    location._update_weights()
-
-        self.step()
-        self.update()
-
-        if self.t >= self._steps:  # type: ignore
-            self.running = False
-
     @property
     def agents(self) -> AgentList:
         """Show a iterable view of all agents in the environment.
