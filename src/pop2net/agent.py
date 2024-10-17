@@ -124,7 +124,7 @@ class Agent(ap.Agent):
             agents (list): An agent to connect with.
             location_cls (type): The location class that is used to create a location instance.
         """
-        self.model.connect_agents(agents=[self, agent], location_cls=location_cls)
+        self.model.connect_agents(agents=[self, agent], location_cls=location_cls, weight=weight)
 
     def disconnect(
         self,
