@@ -126,7 +126,7 @@ class Model(ap.Model):
         self,
         location: _location.Location,
         agent: _agent.Agent,
-        weight: float = 1,
+        weight: float | None = None,
         **kwargs,
     ) -> None:
         """Add an agent to a specific location.
@@ -360,7 +360,7 @@ class Model(ap.Model):
             objs=self._objects_between_objects(location1, location2, agent_classes),
         )
 
-    def set_weight(self, agent, location, weight) -> None:
+    def set_weight(self, agent, location, weight: float | None = None) -> None:
         """Set the weight of an agent at a location.
 
         Args:
@@ -368,7 +368,9 @@ class Model(ap.Model):
             location (Location): The location.
             weight (int): The weight
         """
-        self.g[agent.id][location.id]["weight"] = 1 if weight is None else weight
+        self.g[agent.id][location.id]["weight"] = (
+            location.weight(agent) if weight is None else weight
+        )
 
     def get_weight(self, agent, location) -> int:
         """Get the weight of an agent at a location.
@@ -382,15 +384,17 @@ class Model(ap.Model):
         """
         return self.g[agent.id][location.id]["weight"]
 
-    def connect_agents(self, agents: list, location_cls: type):
+    def connect_agents(self, agents: list, location_cls: type, weight: float | None = None):
         """Connects multiple agents via an instance of a given location class.
 
         Args:
             agents (list): A list of agents.
             location_cls (type): The location class that is used to create a location instance.
+            weight (float | None): The edge weight between the agents and the location.
+                Defaults to None.
         """
         location = location_cls(model=self)
-        location.add_agents(agents)
+        location.add_agents(agents=agents, weight=weight)
 
     def disconnect_agents(
         self,
@@ -510,3 +514,22 @@ class Model(ap.Model):
                         graph.add_edge(agent.id, agent_v.id, weight=weight)
 
         return graph
+
+    def update_weights(self, location_classes: list | None = None) -> None:
+        """Updates the edge weights between agents and locations.
+
+        If you only want to update the weights of specific types of locations
+        specify those types in location_classes.
+
+        Args:
+            location_classes (list | None, optional): A list of location classes that specifiy for
+                which location types the weights should be updated.
+                If location_classes is None all locations are considered. Defaults to None.
+        """
+        for location in (
+            self.locations
+            if location_classes is None
+            else [location for location in self.locations if type(location) in location_classes]
+        ):
+            for agent in location.agents:
+                location.set_weight(agent=agent, weight=location.weight(agent=agent))
