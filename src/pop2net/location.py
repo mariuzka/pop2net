@@ -84,14 +84,17 @@ class Location(Object):
         agents.remove(agent)
         return agents
 
-    def set_weight(self, agent, weight) -> None:
+    def set_weight(self, agent, weight: float | None = None) -> None:
         """Set the weight of an agent at the current location.
 
         Args:
             agent (Agent): The agent.
             weight (float): The weight.
         """
-        self.model.set_weight(agent=agent, location=self, weight=weight)
+        if weight is None:
+            self.model.set_weight(agent=agent, location=self, weight=self.weight(agent))
+        else:
+            self.model.set_weight(agent=agent, location=self, weight=weight)
 
     def get_weight(self, agent: _agent.Agent) -> float:
         """Return the edge weight between an agent and the location.
@@ -103,6 +106,17 @@ class Location(Object):
             Edge weight.
         """
         return self.model.get_weight(agent=agent, location=self)
+
+    def weight(self, agent) -> float:  # noqa: ARG002
+        """Generates the edge weight between a given agent and the location instance.
+
+        Args:
+            agent (_type_): An agent.
+
+        Returns:
+            float: The weight between the given agent and the location.
+        """
+        return 1
 
     def project_weights(self, agent1: _agent.Agent, agent2: _agent.Agent) -> float:
         """Calculates the edge weight between two agents assigned to the same location instance.
@@ -191,21 +205,6 @@ class MagicLocation(Location):
         Returns:
             float | str | list | None:
                 The value(s) that determine(s) to which location instance the agent is assigned.
-        """
-        return None
-
-    def weight(self, agent: _agent.Agent) -> float | None:  # noqa: ARG002
-        """Defines the edge weight between the agent and the location instance.
-
-        Defines how the edge weight between an agent and the location is determined.
-        This is a boilerplate implementation of this method which always returns 1; i.e. all
-        edge weights will be 1. Override this method in your own implementations as you seem fit.
-
-        Args:
-            agent: The agent that is currently processed by the Creator.
-
-        Returns:
-            The edge weight.
         """
         return None
 
