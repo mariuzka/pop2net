@@ -99,12 +99,14 @@ class Agent(ap.Agent):
         return self.model.locations_of_agent(self)
 
     def get_agent_weight(self, agent: Agent, location_classes: list | None = None) -> float:
-        """Return the contact weight between this agent and a given other agent.
+        """Return the edge weight between this agent and a given other agent.
 
         This is summed over all shared locations.
 
         Args:
-            agent_v: The other agent.
+            agent: The other agent.
+            location_classes (list): A list of location classes to specify the type of locations
+                which are considered.
 
         Returns:
             A weight of the contact between the two agents.
@@ -115,14 +117,24 @@ class Agent(ap.Agent):
         return weight
 
     def get_location_weight(self, location) -> float:
+        """Return the edge weight between this agent and a given location.
+
+        Args:
+            location (_type_): A location.
+
+        Returns:
+            float: The edge weight.
+        """
         return self.model.get_weight(agent=self, location=location)
 
-    def connect(self, agent: Agent, location_cls: type):
+    def connect(self, agent: Agent, location_cls: type, weight: float | None = None):
         """Connects this agent with a given other agent via an instance of a given location class.
 
         Args:
-            agents (list): An agent to connect with.
+            agent (list): An agent to connect with.
             location_cls (type): The location class that is used to create a location instance.
+            weight(float | None): The edge weight between the agents and the location.
+                Defaults to None.
         """
         self.model.connect_agents(agents=[self, agent], location_cls=location_cls, weight=weight)
 

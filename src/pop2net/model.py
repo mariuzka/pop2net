@@ -363,6 +363,8 @@ class Model(ap.Model):
     def set_weight(self, agent, location, weight: float | None = None) -> None:
         """Set the weight of an agent at a location.
 
+        If weight is None the method location.weight() will be used to generate a weight.
+
         Args:
             agent (Agent): The agent.
             location (Location): The location.
