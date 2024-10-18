@@ -65,17 +65,26 @@ class Agent(ap.Agent):
             location_classes=location_classes,
         )
 
-    def add_location(self, location: _location.Location) -> None:
+    def add_location(self, location: _location.Location, weight: float | None = None) -> None:
         """Add this Agent to a given location.
 
         Args:
             location: Add agent to this location.
+            weight (float | None): The edge weight between the agent and the location.
+                Defaults to None.
         """
-        self.model.add_agent_to_location(self, location)
+        self.model.add_agent_to_location(agent=self, location=location, weight=weight)
 
-    def add_locations(self, locations: list) -> None:
+    def add_locations(self, locations: list, weight: float | None = None) -> None:
+        """Add this agent to multiple locations.
+
+        Args:
+            locations (list): Add the agent to these locations.
+            weight (float | None): The edge weight between the agent and the location.
+                Defaults to None.
+        """
         for location in locations:
-            self.add_location(location)
+            self.add_location(location=location, weight=weight)
 
     def remove_location(self, location: _location.Location) -> None:
         """Remove this Agent from a given location.
@@ -86,6 +95,11 @@ class Agent(ap.Agent):
         self.model.remove_agent_from_location(self, location)
 
     def remove_locations(self, locations: list) -> None:
+        """Remove this Agent from the given locations.
+
+        Args:
+            locations (list): A list of location instances.
+        """
         for location in locations:
             self.remove_location(location)
 
