@@ -181,6 +181,38 @@ def test_individually_generated_weights():
         def weight(self, agent):
             return agent.w
 
+    # test model.set_weight()
+    model = p2n.Model()
+    location = WeightedLocation(model=model)
+    agent1 = p2n.Agent(model=model)
+    agent1.w = 100
+    agent2 = p2n.Agent(model=model)
+    agent2.w = 200
+    model.add_agent_to_location(location=location, agent=agent1, weight=1)
+    model.add_agent_to_location(location=location, agent=agent2, weight=1)
+    model.set_weight(agent=agent1, location=location)
+    model.set_weight(agent=agent2, location=location)
+    assert location.get_weight(agent=agent1) == 100
+    assert agent1.get_location_weight(location=location) == 100
+    assert location.get_weight(agent=agent2) == 200
+    assert agent2.get_location_weight(location=location) == 200
+
+    # test location.set_weight()
+    model = p2n.Model()
+    location = WeightedLocation(model=model)
+    agent1 = p2n.Agent(model=model)
+    agent1.w = 100
+    agent2 = p2n.Agent(model=model)
+    agent2.w = 200
+    model.add_agent_to_location(location=location, agent=agent1, weight=1)
+    model.add_agent_to_location(location=location, agent=agent2, weight=1)
+    location.set_weight(agent=agent1)
+    location.set_weight(agent=agent2)
+    assert location.get_weight(agent=agent1) == 100
+    assert agent1.get_location_weight(location=location) == 100
+    assert location.get_weight(agent=agent2) == 200
+    assert agent2.get_location_weight(location=location) == 200
+
     # test model.add_agent_to_location()
     model = p2n.Model()
     location = WeightedLocation(model=model)
