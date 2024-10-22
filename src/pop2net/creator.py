@@ -453,7 +453,7 @@ class Creator:
         location_classes: list,
         agents: list | p2n.AgentList | None = None,
         clear: bool = False,
-        delete_magic_location_attributes: bool = True,
+        # TODO: delete_magic_location_attributes: bool = True,
         delete_magic_agent_attributes: bool = True,
     ) -> p2n.LocationList:
         """Creates location instances and connects them with the given agent population.
@@ -765,8 +765,8 @@ class Creator:
             "melt",
             "refine",
         ]
-        # delete magic location attributes
-        if delete_magic_location_attributes:
+        # TODO: delete magic location attributes
+        if False:  # delete_magic_location_attributes:
             for cls in location_classes:
                 del cls.stick_together
                 del cls.setup
@@ -774,7 +774,8 @@ class Creator:
         magic_agent_attributes = set(magic_agent_attributes)
         if delete_magic_agent_attributes:
             for attr in magic_agent_attributes:
-                for agent in self._dummy_model.agents:
+                for agent in agents:
+                    # if hasattr(agent, attr):
                     delattr(agent, attr)
 
         return locations
@@ -791,6 +792,7 @@ class Creator:
         sample_weight: str | None = None,
         replace_sample_level_column: bool = True,
         clear: bool = False,
+        delete_magic_agent_attributes: bool = True,
     ) -> tuple:
         """Creates agents and locations based on a given dataset.
 
@@ -817,6 +819,10 @@ class Creator:
             replace_sample_level_column (bool): Should the original values of the sample level be
                 overwritten by unique values after sampling to avoid duplicates?
             clear (bool): Should the agents and locations already included in the model be removed?
+            delete_magic_location_attributes (bool): If True, all magic location attributes will be
+                removed after the creation of the location instances.
+            delete_magic_agent_attributes (bool): If True, all magic agent attributes will be
+                removed after the creation of the location instances.
 
         Returns:
             tuple: A list of agents and a list of locations.
@@ -844,6 +850,7 @@ class Creator:
             agents=agents,
             location_classes=location_classes,
             clear=clear,
+            delete_magic_agent_attributes=delete_magic_agent_attributes,
         )
 
         return agents, locations
