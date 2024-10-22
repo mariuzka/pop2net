@@ -114,7 +114,10 @@ def test_4():
         n_locations = 5
 
     creator.create_agents(df=df)
-    creator.create_locations(location_classes=[TestLocation])
+    creator.create_locations(
+        location_classes=[TestLocation],
+        delete_magic_agent_attributes=False,
+    )
 
     assert len(model.locations) == 5
     assert len(model.agents) == 26
@@ -139,7 +142,10 @@ def test_4():
             return agent.group
 
     creator.create_agents(df=df)
-    creator.create_locations(location_classes=[TestLocation])
+    creator.create_locations(
+        location_classes=[TestLocation],
+        delete_magic_agent_attributes=False,
+    )
 
     assert len(model.locations) == 5
     assert len(model.agents) == 26

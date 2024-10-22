@@ -15,7 +15,10 @@ def test_line_1():
         overcrowding = False
 
     creator.create_agents(n=10)
-    creator.create_locations(location_classes=[LineLocation])
+    creator.create_locations(
+        location_classes=[LineLocation],
+        delete_magic_agent_attributes=False,
+    )
 
     assert len(model.agents) == 10
     assert len(model.locations) == 9
@@ -42,7 +45,10 @@ def test_line_2():
         only_exact_n_agents = False
 
     creator.create_agents(n=20)
-    creator.create_locations(location_classes=[LineLocation])
+    creator.create_locations(
+        location_classes=[LineLocation],
+        delete_magic_agent_attributes=False,
+    )
 
     assert len(model.agents) == 20
     assert len(model.locations) == 18
@@ -82,7 +88,10 @@ def test_line_3():
         overcrowding = None
 
     creator.create_agents(n=20)
-    creator.create_locations(location_classes=[LineLocation])
+    creator.create_locations(
+        location_classes=[LineLocation],
+        delete_magic_agent_attributes=False,
+    )
 
     assert len(model.agents) == 20
     assert len(model.locations) == 18
@@ -122,7 +131,10 @@ def test_line_4():
         overcrowding = True
 
     creator.create_agents(n=20)
-    creator.create_locations(location_classes=[LineLocation])
+    creator.create_locations(
+        location_classes=[LineLocation],
+        delete_magic_agent_attributes=False,
+    )
 
     assert len(model.agents) == 20
     assert len(model.locations) == 18
@@ -162,7 +174,10 @@ def test_line_5():
         overcrowding = True
 
     creator.create_agents(n=5)
-    creator.create_locations(location_classes=[LineLocation])
+    creator.create_locations(
+        location_classes=[LineLocation],
+        delete_magic_agent_attributes=False,
+    )
 
     assert len(model.agents) == 5
     assert len(model.locations) == 5  # one location instance is useless
