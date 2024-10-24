@@ -33,7 +33,6 @@ def test_1():
             assert all(agent.status == "B" for agent in location.agents)
 
 
-test_1()
 # %%
 
 
@@ -72,7 +71,6 @@ def test_2():
     assert len(model.locations[7].agents) == 1
 
 
-test_2()
 # %%
 
 
@@ -107,5 +105,4 @@ def test_3():
     assert len(model.locations[3].agents) == 1
 
 
-test_3()
 # %%

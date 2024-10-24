@@ -43,9 +43,6 @@ def test_1():
         )
 
 
-test_1()
-
-
 # %%
 # TODO
 # n_locations wird ignoriert, wenn das obere Level von nest 2 instanzen hat
@@ -87,5 +84,4 @@ def test_2():
             # assert len(location.agents) == 4
 
 
-test_2()
 # %%

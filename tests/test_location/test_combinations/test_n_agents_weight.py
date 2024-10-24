@@ -32,9 +32,6 @@ def test_1():
         assert all(location.get_weight(agent) == 1 for agent in location.agents)
 
 
-test_1()
-
-
 # %%
 def test_2():
     df = pd.DataFrame(
@@ -74,9 +71,6 @@ def test_2():
             assert agent.get_location_weight(agent.locations[0]) == 2
         if agent.status == "C":
             assert agent.get_location_weight(agent.locations[0]) == 3
-
-
-test_2()
 
 
 # %%

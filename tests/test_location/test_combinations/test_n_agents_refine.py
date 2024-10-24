@@ -85,5 +85,4 @@ def test_1():
     # assert len(model.locations) == 6
 
 
-test_1()
 # %%

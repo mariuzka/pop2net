@@ -68,5 +68,4 @@ def test_1():
     assert all(agent.status == "B" for agent in model.locations[3].agents)
 
 
-test_1()
 # %%

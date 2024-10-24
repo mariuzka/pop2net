@@ -64,7 +64,11 @@ def test_2():
 
     model = p2n.Model()
     creator = p2n.Creator(model=model)
-    creator.create(df=df, location_classes=[School, Classroom])
+    creator.create(
+        df=df,
+        location_classes=[School, Classroom],
+        delete_magic_agent_attributes=False,
+    )
 
     assert len(model.agents) == 8
     assert len(model.locations) == 6
@@ -100,7 +104,11 @@ def test_2():
 
     model = p2n.Model()
     creator = p2n.Creator(model=model)
-    creator.create(df=df, location_classes=[School, Classroom])
+    creator.create(
+        df=df,
+        location_classes=[School, Classroom],
+        delete_magic_agent_attributes=False,
+    )
 
     assert len(model.agents) == 8
     assert len(model.locations) == 6
@@ -156,7 +164,10 @@ def test_3():
         agent = p2n.Agent(model=model)
         agent.group = i % 2
 
-    creator.create_locations(location_classes=[City, Group])
+    creator.create_locations(
+        location_classes=[City, Group],
+        delete_magic_agent_attributes=False,
+    )
 
     for location in model.locations.select(model.locations.type == "City"):
         assert int(location.agents[0].group) == 0
@@ -178,7 +189,10 @@ def test_3():
 
     model = p2n.Model()
     creator = p2n.Creator(model=model)
-    creator.create_locations(location_classes=[City, GroupNestedInCity])
+    creator.create_locations(
+        location_classes=[City, GroupNestedInCity],
+        delete_magic_agent_attributes=False,
+    )
 
     for location in model.locations.select(model.locations.type == "City"):
         assert int(location.agents[0].group) == 0

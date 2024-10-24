@@ -18,7 +18,10 @@ def test_1():
         agent = p2n.Agent(model=model)
         agent.group = i % 2
 
-    creator.create_locations(location_classes=[City, Group])
+    creator.create_locations(
+        location_classes=[City, Group],
+        delete_magic_agent_attributes=False,
+    )
 
     for location in model.locations.select(model.locations.type == "City"):
         assert int(location.agents[0].group) == 0
@@ -40,7 +43,10 @@ def test_1():
 
     model = p2n.Model()
     creator = p2n.Creator(model=model)
-    creator.create_locations(location_classes=[City, GroupNestedInCity])
+    creator.create_locations(
+        location_classes=[City, GroupNestedInCity],
+        delete_magic_agent_attributes=False,
+    )
 
     for location in model.locations.select(model.locations.type == "City"):
         assert int(location.agents[0].group) == 0
