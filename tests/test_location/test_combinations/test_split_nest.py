@@ -27,7 +27,11 @@ def test_1():
 
     model = p2n.Model()
     creator = p2n.Creator(model=model)
-    creator.create(df=df, location_classes=[School, Classroom])
+    creator.create(
+        df=df,
+        location_classes=[School, Classroom],
+        delete_magic_agent_attributes=False,
+    )
 
     assert len(model.agents) == 8
     assert len(model.locations) == 6
@@ -59,7 +63,11 @@ def test_1():
 
     model = p2n.Model()
     creator = p2n.Creator(model=model)
-    creator.create(df=df, location_classes=[School, Classroom])
+    creator.create(
+        df=df,
+        location_classes=[School, Classroom],
+        delete_magic_agent_attributes=False,
+    )
 
     assert len(model.agents) == 8
     assert len(model.locations) == 6
