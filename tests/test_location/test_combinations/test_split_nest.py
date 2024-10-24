@@ -92,6 +92,3 @@ def test_1():
         if location.type == "School":
             for agent in location.agents:
                 assert all(agent.School == nghbr.School for nghbr in agent.neighbors())
-
-
-test_1()
