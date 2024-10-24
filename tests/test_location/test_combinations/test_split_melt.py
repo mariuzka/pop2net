@@ -54,9 +54,6 @@ def test_1():
         assert all(location.agents[0].class_id == agent.class_id for agent in location.agents)
 
 
-test_1()
-
-
 # %%
 # TODO Anwendungsbeispiel passt eher zu nest? aber zum testen von multi melt...
 # ...nicht schlecht?
@@ -120,6 +117,3 @@ def test_2():
             assert all(location.agents[0].class_id == agent.class_id for agent in location.agents)
         else:
             assert len(location.agents) == 10
-
-
-test_2()
