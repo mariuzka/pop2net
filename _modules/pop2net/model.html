@@ -119,25 +119,6 @@
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">parameters</span><span class="p">,</span> <span class="n">_run_id</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">g</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">()</span>
 
-<div class="viewcode-block" id="Model.sim_step">
-<a class="viewcode-back" href="../../api/model.html#pop2net.Model.sim_step">[docs]</a>
-    <span class="k">def</span> <span class="nf">sim_step</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Do 1 step in the simulation.&quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">t</span> <span class="o">+=</span> <span class="mi">1</span>
-
-        <span class="c1"># TODO: Rethink the following:</span>
-        <span class="k">for</span> <span class="n">location</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">locations</span><span class="p">:</span>
-            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">location</span><span class="p">,</span> <span class="s2">&quot;static_weight&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">location</span><span class="p">,</span> <span class="s2">&quot;_update_weights&quot;</span><span class="p">):</span>
-                <span class="k">if</span> <span class="ow">not</span> <span class="n">location</span><span class="o">.</span><span class="n">static_weight</span><span class="p">:</span>
-                    <span class="n">location</span><span class="o">.</span><span class="n">_update_weights</span><span class="p">()</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
-
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">t</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_steps</span><span class="p">:</span>  <span class="c1"># type: ignore</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">running</span> <span class="o">=</span> <span class="kc">False</span></div>
-
-
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">agents</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AgentList</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Show a iterable view of all agents in the environment.</span>
@@ -240,7 +221,7 @@
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">location</span><span class="p">:</span> <span class="n">_location</span><span class="o">.</span><span class="n">Location</span><span class="p">,</span>
         <span class="n">agent</span><span class="p">:</span> <span class="n">_agent</span><span class="o">.</span><span class="n">Agent</span><span class="p">,</span>
-        <span class="n">weight</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="n">weight</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Add an agent to a specific location.</span>
@@ -507,15 +488,19 @@
 
 <div class="viewcode-block" id="Model.set_weight">
 <a class="viewcode-back" href="../../api/model.html#pop2net.Model.set_weight">[docs]</a>
-    <span class="k">def</span> <span class="nf">set_weight</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent</span><span class="p">,</span> <span class="n">location</span><span class="p">,</span> <span class="n">weight</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">set_weight</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent</span><span class="p">,</span> <span class="n">location</span><span class="p">,</span> <span class="n">weight</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the weight of an agent at a location.</span>
+
+<span class="sd">        If weight is None the method location.weight() will be used to generate a weight.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            agent (Agent): The agent.</span>
 <span class="sd">            location (Location): The location.</span>
 <span class="sd">            weight (int): The weight</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">g</span><span class="p">[</span><span class="n">agent</span><span class="o">.</span><span class="n">id</span><span class="p">][</span><span class="n">location</span><span class="o">.</span><span class="n">id</span><span class="p">][</span><span class="s2">&quot;weight&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">weight</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">weight</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">g</span><span class="p">[</span><span class="n">agent</span><span class="o">.</span><span class="n">id</span><span class="p">][</span><span class="n">location</span><span class="o">.</span><span class="n">id</span><span class="p">][</span><span class="s2">&quot;weight&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">location</span><span class="o">.</span><span class="n">weight</span><span class="p">(</span><span class="n">agent</span><span class="p">)</span> <span class="k">if</span> <span class="n">weight</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">weight</span>
+        <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Model.get_weight">
@@ -535,15 +520,17 @@
 
 <div class="viewcode-block" id="Model.connect_agents">
 <a class="viewcode-back" href="../../api/model.html#pop2net.Model.connect_agents">[docs]</a>
-    <span class="k">def</span> <span class="nf">connect_agents</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agents</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">location_cls</span><span class="p">:</span> <span class="nb">type</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">connect_agents</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agents</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">location_cls</span><span class="p">:</span> <span class="nb">type</span><span class="p">,</span> <span class="n">weight</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Connects multiple agents via an instance of a given location class.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            agents (list): A list of agents.</span>
 <span class="sd">            location_cls (type): The location class that is used to create a location instance.</span>
+<span class="sd">            weight (float | None): The edge weight between the agents and the location.</span>
+<span class="sd">                Defaults to None.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">location</span> <span class="o">=</span> <span class="n">location_cls</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span>
-        <span class="n">location</span><span class="o">.</span><span class="n">add_agents</span><span class="p">(</span><span class="n">agents</span><span class="p">)</span></div>
+        <span class="n">location</span><span class="o">.</span><span class="n">add_agents</span><span class="p">(</span><span class="n">agents</span><span class="o">=</span><span class="n">agents</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="n">weight</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Model.disconnect_agents">
@@ -669,6 +656,28 @@
                         <span class="n">graph</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">agent</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">agent_v</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="n">weight</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">graph</span></div>
+
+
+<div class="viewcode-block" id="Model.update_weights">
+<a class="viewcode-back" href="../../api/model.html#pop2net.Model.update_weights">[docs]</a>
+    <span class="k">def</span> <span class="nf">update_weights</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">location_classes</span><span class="p">:</span> <span class="nb">list</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Updates the edge weights between agents and locations.</span>
+
+<span class="sd">        If you only want to update the weights of specific types of locations</span>
+<span class="sd">        specify those types in location_classes.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            location_classes (list | None, optional): A list of location classes that specifiy for</span>
+<span class="sd">                which location types the weights should be updated.</span>
+<span class="sd">                If location_classes is None all locations are considered. Defaults to None.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">location</span> <span class="ow">in</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">locations</span>
+            <span class="k">if</span> <span class="n">location_classes</span> <span class="ow">is</span> <span class="kc">None</span>
+            <span class="k">else</span> <span class="p">[</span><span class="n">location</span> <span class="k">for</span> <span class="n">location</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">locations</span> <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">location</span><span class="p">)</span> <span class="ow">in</span> <span class="n">location_classes</span><span class="p">]</span>
+        <span class="p">):</span>
+            <span class="k">for</span> <span class="n">agent</span> <span class="ow">in</span> <span class="n">location</span><span class="o">.</span><span class="n">agents</span><span class="p">:</span>
+                <span class="n">location</span><span class="o">.</span><span class="n">set_weight</span><span class="p">(</span><span class="n">agent</span><span class="o">=</span><span class="n">agent</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="n">location</span><span class="o">.</span><span class="n">weight</span><span class="p">(</span><span class="n">agent</span><span class="o">=</span><span class="n">agent</span><span class="p">))</span></div>
 </div>
 
 </pre></div>

@@ -63,7 +63,6 @@
 <li class="toctree-l4"><a class="reference internal" href="#pop2net.MagicLocation.setup"><code class="docutils literal notranslate"><span class="pre">MagicLocation.setup()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#pop2net.MagicLocation.split"><code class="docutils literal notranslate"><span class="pre">MagicLocation.split()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#pop2net.MagicLocation.stick_together"><code class="docutils literal notranslate"><span class="pre">MagicLocation.stick_together()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#pop2net.MagicLocation.weight"><code class="docutils literal notranslate"><span class="pre">MagicLocation.weight()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -227,26 +226,6 @@ are also assigned to the same instance of the returned location class.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)">float</a> | <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pop2net.MagicLocation.weight">
-<span class="sig-name descname"><span class="pre">weight</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pop2net/location.html#MagicLocation.weight"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pop2net.MagicLocation.weight" title="Link to this definition"></a></dt>
-<dd><p>Defines the edge weight between the agent and the location instance.</p>
-<p>Defines how the edge weight between an agent and the location is determined.
-This is a boilerplate implementation of this method which always returns 1; i.e. all
-edge weights will be 1. Override this method in your own implementations as you seem fit.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>agent</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="agent.html#pop2net.Agent" title="pop2net.agent.Agent"><code class="xref py py-class docutils literal notranslate"><span class="pre">Agent</span></code></a></span>) – The agent that is currently processed by the Creator.</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.13)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a>]</span></p>
-</dd>
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>The edge weight.</p>
 </dd>
 </dl>
 </dd></dl>

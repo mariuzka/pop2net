@@ -154,18 +154,30 @@
 
 <div class="viewcode-block" id="Agent.add_location">
 <a class="viewcode-back" href="../../api/agent.html#pop2net.Agent.add_location">[docs]</a>
-    <span class="k">def</span> <span class="nf">add_location</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">location</span><span class="p">:</span> <span class="n">_location</span><span class="o">.</span><span class="n">Location</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">add_location</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">location</span><span class="p">:</span> <span class="n">_location</span><span class="o">.</span><span class="n">Location</span><span class="p">,</span> <span class="n">weight</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Add this Agent to a given location.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            location: Add agent to this location.</span>
+<span class="sd">            weight (float | None): The edge weight between the agent and the location.</span>
+<span class="sd">                Defaults to None.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">add_agent_to_location</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">location</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">add_agent_to_location</span><span class="p">(</span><span class="n">agent</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">location</span><span class="o">=</span><span class="n">location</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="n">weight</span><span class="p">)</span></div>
 
 
-    <span class="k">def</span> <span class="nf">add_locations</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">locations</span><span class="p">:</span> <span class="nb">list</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="Agent.add_locations">
+<a class="viewcode-back" href="../../api/agent.html#pop2net.Agent.add_locations">[docs]</a>
+    <span class="k">def</span> <span class="nf">add_locations</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">locations</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">weight</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add this agent to multiple locations.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            locations (list): Add the agent to these locations.</span>
+<span class="sd">            weight (float | None): The edge weight between the agent and the location.</span>
+<span class="sd">                Defaults to None.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">location</span> <span class="ow">in</span> <span class="n">locations</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_location</span><span class="p">(</span><span class="n">location</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_location</span><span class="p">(</span><span class="n">location</span><span class="o">=</span><span class="n">location</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="n">weight</span><span class="p">)</span></div>
+
 
 <div class="viewcode-block" id="Agent.remove_location">
 <a class="viewcode-back" href="../../api/agent.html#pop2net.Agent.remove_location">[docs]</a>
@@ -178,9 +190,17 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">remove_agent_from_location</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">location</span><span class="p">)</span></div>
 
 
+<div class="viewcode-block" id="Agent.remove_locations">
+<a class="viewcode-back" href="../../api/agent.html#pop2net.Agent.remove_locations">[docs]</a>
     <span class="k">def</span> <span class="nf">remove_locations</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">locations</span><span class="p">:</span> <span class="nb">list</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Remove this Agent from the given locations.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            locations (list): A list of location instances.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">location</span> <span class="ow">in</span> <span class="n">locations</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">remove_location</span><span class="p">(</span><span class="n">location</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">remove_location</span><span class="p">(</span><span class="n">location</span><span class="p">)</span></div>
+
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">locations</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_sequences</span><span class="o">.</span><span class="n">LocationList</span><span class="p">:</span>
@@ -194,12 +214,14 @@
 <div class="viewcode-block" id="Agent.get_agent_weight">
 <a class="viewcode-back" href="../../api/agent.html#pop2net.Agent.get_agent_weight">[docs]</a>
     <span class="k">def</span> <span class="nf">get_agent_weight</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent</span><span class="p">:</span> <span class="n">Agent</span><span class="p">,</span> <span class="n">location_classes</span><span class="p">:</span> <span class="nb">list</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the contact weight between this agent and a given other agent.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the edge weight between this agent and a given other agent.</span>
 
 <span class="sd">        This is summed over all shared locations.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            agent_v: The other agent.</span>
+<span class="sd">            agent: The other agent.</span>
+<span class="sd">            location_classes (list): A list of location classes to specify the type of locations</span>
+<span class="sd">                which are considered.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            A weight of the contact between the two agents.</span>
@@ -210,19 +232,32 @@
         <span class="k">return</span> <span class="n">weight</span></div>
 
 
+<div class="viewcode-block" id="Agent.get_location_weight">
+<a class="viewcode-back" href="../../api/agent.html#pop2net.Agent.get_location_weight">[docs]</a>
     <span class="k">def</span> <span class="nf">get_location_weight</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">location</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">get_weight</span><span class="p">(</span><span class="n">agent</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">location</span><span class="o">=</span><span class="n">location</span><span class="p">)</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the edge weight between this agent and a given location.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            location (_type_): A location.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            float: The edge weight.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">get_weight</span><span class="p">(</span><span class="n">agent</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">location</span><span class="o">=</span><span class="n">location</span><span class="p">)</span></div>
+
 
 <div class="viewcode-block" id="Agent.connect">
 <a class="viewcode-back" href="../../api/agent.html#pop2net.Agent.connect">[docs]</a>
-    <span class="k">def</span> <span class="nf">connect</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent</span><span class="p">:</span> <span class="n">Agent</span><span class="p">,</span> <span class="n">location_cls</span><span class="p">:</span> <span class="nb">type</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">connect</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent</span><span class="p">:</span> <span class="n">Agent</span><span class="p">,</span> <span class="n">location_cls</span><span class="p">:</span> <span class="nb">type</span><span class="p">,</span> <span class="n">weight</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Connects this agent with a given other agent via an instance of a given location class.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            agents (list): An agent to connect with.</span>
+<span class="sd">            agent (list): An agent to connect with.</span>
 <span class="sd">            location_cls (type): The location class that is used to create a location instance.</span>
+<span class="sd">            weight(float | None): The edge weight between the agents and the location.</span>
+<span class="sd">                Defaults to None.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">connect_agents</span><span class="p">(</span><span class="n">agents</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent</span><span class="p">],</span> <span class="n">location_cls</span><span class="o">=</span><span class="n">location_cls</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">connect_agents</span><span class="p">(</span><span class="n">agents</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent</span><span class="p">],</span> <span class="n">location_cls</span><span class="o">=</span><span class="n">location_cls</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="n">weight</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Agent.disconnect">
