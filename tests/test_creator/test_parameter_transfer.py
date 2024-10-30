@@ -1,4 +1,3 @@
-import agentpy as ap
 import networkx as nx
 
 import pop2net as p2n
