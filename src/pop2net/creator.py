@@ -31,7 +31,7 @@ class Creator:
         self.model = model
         self.seed = seed
         self.rng = random.Random(seed)
-        self._dummy_model = p2n.Model()
+        self._dummy_model = p2n.Model(parameters=self.model.p)
         self._temp_agent_attrs = ["_P2NTEMP_split_values", "_P2NTEMP_melt_location_weight"]
 
     def _create_dummy_location(self, location_cls) -> p2n.Location:
