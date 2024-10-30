@@ -33,6 +33,3 @@ def test_1():
     assert not model.locations[2].agents
     assert len(model.locations[1].agents) == 3
     assert len(model.locations[0].agents) == 2
-
-
-test_1()
