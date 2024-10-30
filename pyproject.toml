@@ -21,7 +21,7 @@ exclude = ["docs"]
 
 [tool.poetry]
 name = "pop2net"
-version = "0.2.0"
+version = "0.2.1"
 packages = [{include = "pop2net", from="src/"}]
 description = "Pop2net is a Python package designed to generate and manage relations between agents in agent-based models in a simple and flexible way."
 authors = [
