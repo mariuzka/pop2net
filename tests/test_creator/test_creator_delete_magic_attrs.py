@@ -1,14 +1,19 @@
 import pandas as pd
+import pytest
 
 import pop2net as p2n
 
-magic_agent_attributes = ["", "_assigned", "_id", "_position", "_head", "_tail"]
-magic_agent_attributes = ["Location1" + attr for attr in magic_agent_attributes] + [
-    "Location2" + attr for attr in magic_agent_attributes
-]
+
+@pytest.fixture(scope="session")
+def magic_agent_attributes():
+    magic_agent_attributes = ["", "_assigned", "_id", "_position", "_head", "_tail"]
+    magic_agent_attributes = ["Location1" + attr for attr in magic_agent_attributes] + [
+        "Location2" + attr for attr in magic_agent_attributes
+    ]
+    return magic_agent_attributes
 
 
-def test_del_magic_agent_attrs1():
+def test_del_magic_agent_attrs1(magic_agent_attributes):
     model = p2n.Model()
     creator = p2n.Creator(model=model)
 
@@ -42,7 +47,7 @@ def test_del_magic_agent_attrs1():
             assert not hasattr(agent, attr)
 
 
-def test_del_magic_agent_attrs2():
+def test_del_magic_agent_attrs2(magic_agent_attributes):
     df = pd.DataFrame({"testattr": [10, 11, 12, 13]})
 
     model = p2n.Model()
