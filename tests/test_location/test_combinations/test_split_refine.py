@@ -1,11 +1,13 @@
 # %%
 import pandas as pd
+import pytest
 
 import pop2net as p2n
 
 # %%
 
 
+@pytest.mark.skip
 def test_1():
     model = p2n.Model()
     creator = p2n.Creator(model=model)

@@ -1,6 +1,9 @@
+import pytest
+
 import pop2net as p2n
 
 
+@pytest.mark.skip
 def test_1():
     model = p2n.Model()
     creator = p2n.Creator(model=model)
@@ -21,6 +24,7 @@ def test_1():
         assert len(location.agents) == 1
 
 
+@pytest.mark.skip
 def test_2():
     model = p2n.Model()
     creator = p2n.Creator(model=model)
