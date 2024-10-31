@@ -533,13 +533,7 @@ class Creator:
                         It will be set to `False` automatically."""
                     warnings.warn(msg)
                 location_cls.overcrowding = False
-                dummy_location.n_agents = False
-
-            # if dummy_location.n_agents is not None and dummy_location.n_agents < 1:
-            #    msg = (
-            #        f"""{str_location_cls}.n_agents must be `None` or an integer greater than 0."""
-            #    )
-            #    raise Exception(msg)
+                dummy_location.overcrowding = False
 
             # bridge
             if not dummy_location.melt():
