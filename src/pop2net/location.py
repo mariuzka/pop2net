@@ -151,6 +151,9 @@ class Location(Object):
 class MagicLocation(Location):
     """Helper class to create locations from inside the Creator."""
 
+    location_class: type | None = None
+    # location_name: str | None = None
+
     n_agents: int | None = None
     overcrowding: bool = None
     only_exact_n_agents: bool = False
@@ -285,6 +288,8 @@ class MagicLocation(Location):
 class MeltLocation(Location):
     """Helper class to melt locations."""
 
+    location_class: type | None = None
+    # location_name: str | None = None
     n_agents: int | None = None
     overcrowding: bool | None = None
     only_exact_n_agents: bool = False

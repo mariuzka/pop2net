@@ -35,7 +35,18 @@ class Creator:
         self._temp_agent_attrs = ["_P2NTEMP_split_values", "_P2NTEMP_melt_location_weight"]
 
     def _create_dummy_location(self, location_cls) -> p2n.Location:
-        location = location_cls(model=self._dummy_model)
+        if location_cls.location_class is None:
+            location = location_cls(model=self._dummy_model)
+        else:
+            location = type(
+                utils._get_cls_as_str(location_cls.location_class),
+                (
+                    location_cls.location_class,
+                    location_cls,
+                ),
+                {},
+                # {"weight": location_cls.weight},
+            )(model=self._dummy_model)
         location.setup()
         return location
 
@@ -193,7 +204,7 @@ class Creator:
             # search for mother location assigned to this agent
             n_mother_locations_found = 0
             for location in agent.locations:
-                if isinstance(location, dummy_location.nest()):
+                if location.type == utils._get_cls_as_str(dummy_location.nest()):
                     mother_location = location
                     n_mother_locations_found += 1
 
@@ -675,8 +686,59 @@ class Creator:
                             if subsplit_value in agent_subsplit_value:
                                 subsplit_affiliated_agents.append(agent)
 
+                        magic_attrs = [
+                            "split",
+                            "nest",
+                            "bridge",
+                            "filter",
+                            "location_class",
+                            "melt",
+                            "n_agents",
+                            "n_locations",
+                            "nxgraph",
+                            "only_exact_n_agents",
+                            "overcrowding",
+                            "recycle",
+                            "refine",
+                            "static_weight",
+                            "stick_together",
+                            "_subsplit",
+                            "__annotations__",
+                        ]
+
                         # Build the final location
-                        location = location_cls(model=self.model)
+                        if location_cls.location_class is None:
+                            keep_attrs = {}
+                            for attr in dir(location_cls):
+                                if (
+                                    attr not in magic_attrs
+                                    and attr not in list(p2n.MagicLocation.__dict__.keys())
+                                    and attr not in dir(p2n.Location)
+                                    or attr == "weight"
+                                ):
+                                    keep_attrs[attr] = getattr(location_cls, attr)
+                            location = type(
+                                dummy_location.type,
+                                (p2n.Location,),
+                                keep_attrs,
+                            )(model=self.model)
+                        else:
+                            keep_attrs = {}
+                            for attr in dir(location_cls):
+                                if (
+                                    attr not in magic_attrs
+                                    and attr not in list(p2n.MagicLocation.__dict__.keys())
+                                    and attr not in dir(p2n.Location)
+                                    or attr == "weight"
+                                ):
+                                    keep_attrs[attr] = getattr(location_cls, attr)
+
+                            location = type(
+                                utils._get_cls_as_str(location_cls.location_class),
+                                (location_cls.location_class,),
+                                keep_attrs,
+                            )(model=self.model)
+
                         location.setup()
                         location.split_value = split_value
                         location.subsplit_value = subsplit_value
@@ -738,8 +800,8 @@ class Creator:
         locations = p2n.LocationList(model=self.model, objs=locations)
 
         # execute an action after all locations have been created
-        for location in locations:
-            location.refine()
+        # for location in locations:
+        #    location.refine()
 
         # delete temporary agent attributes
         for agent in self._dummy_model.agents:
