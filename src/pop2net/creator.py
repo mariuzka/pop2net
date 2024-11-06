@@ -198,7 +198,7 @@ class Creator:
                     n_mother_locations_found += 1
 
             # Check if the number of mother locations is not 1
-            if n_mother_locations_found > 1:
+            if n_mother_locations_found > 1 and self.model.enable_p2n_warnings:
                 warnings.warn(
                     f"""For agent {agent},
                     {n_mother_locations_found} locations of class
@@ -521,14 +521,14 @@ class Creator:
 
             # If nxgraph is used do some checks
             if dummy_location.nxgraph is not None:
-                if dummy_location.n_agents is not None:
+                if dummy_location.n_agents is not None and self.model.enable_p2n_warnings:
                     msg = """You cannot define location.n_agents if location.nxgraph is used. 
                         It will be set to the number of nodes in location.nxgraph automatically."""
                     warnings.warn(msg)
                 location_cls.n_agents = len(list(dummy_location.nxgraph.nodes))
                 dummy_location.n_agents = len(list(dummy_location.nxgraph.nodes))
 
-                if dummy_location.overcrowding is True:
+                if dummy_location.overcrowding is True and self.model.enable_p2n_warnings:
                     msg = """You cannot define location.overcrowding if location.nxgraph is used. 
                         It will be set to `False` automatically."""
                     warnings.warn(msg)
@@ -548,7 +548,7 @@ class Creator:
                 if len(bridge_values) == 0:
                     pass
 
-                elif len(bridge_values) == 1:
+                elif len(bridge_values) == 1 and self.model.enable_p2n_warnings:
                     msg = f"""{str_location_cls}.bridge() returned only one unique value.
                     {str_location_cls}.bridge() must return at least two unique values in order 
                     to create locations that bring together agents with different values on the 
@@ -556,7 +556,7 @@ class Creator:
                     """
                     warnings.warn(msg)
 
-                elif len(bridge_values) > 1:
+                elif len(bridge_values) > 1 and self.model.enable_p2n_warnings:
                     if dummy_location.n_agents is not None:
                         msg = f"""You cannot use {str_location_cls}.n_agents and 
                         {str_location_cls}.bridge() at the same time. {str_location_cls}.n_agents

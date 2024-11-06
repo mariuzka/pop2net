@@ -25,7 +25,13 @@ class Model(ap.Model):
     :class:`agentpy.Model` for more information.
     """
 
-    def __init__(self, parameters=None, _run_id=None, **kwargs):
+    def __init__(
+        self,
+        parameters=None,
+        _run_id=None,
+        enable_p2n_warnings=True,
+        **kwargs,
+    ):
         """Initiate a simulation.
 
         Args:
@@ -37,6 +43,7 @@ class Model(ap.Model):
         """
         super().__init__(parameters, _run_id, **kwargs)
         self.g = nx.Graph()
+        self.enable_p2n_warnings = enable_p2n_warnings
 
     @property
     def agents(self) -> AgentList:
@@ -443,7 +450,7 @@ class Model(ap.Model):
                     warn = True
                     break
 
-            if warn:
+            if warn and self.enable_p2n_warnings:
                 msg = "There are other agents at the location from which you have removed agents."
                 warnings.warn(msg)
 
@@ -452,7 +459,7 @@ class Model(ap.Model):
             if remove_locations:
                 self.remove_location(location=location)
 
-                if warn:
+                if warn and self.enable_p2n_warnings:
                     msg = "You have removed a location to which other agents were still connected."
                     warnings.warn(msg)
 
