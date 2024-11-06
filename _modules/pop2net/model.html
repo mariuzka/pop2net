@@ -106,7 +106,13 @@
 <span class="sd">    :class:`agentpy.Model` for more information.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parameters</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_run_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">parameters</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">_run_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">enable_p2n_warnings</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+    <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Initiate a simulation.</span>
 
 <span class="sd">        Args:</span>
@@ -118,6 +124,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">parameters</span><span class="p">,</span> <span class="n">_run_id</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">g</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">enable_p2n_warnings</span> <span class="o">=</span> <span class="n">enable_p2n_warnings</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">agents</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AgentList</span><span class="p">:</span>
@@ -580,7 +587,7 @@
                     <span class="n">warn</span> <span class="o">=</span> <span class="kc">True</span>
                     <span class="k">break</span>
 
-            <span class="k">if</span> <span class="n">warn</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">warn</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">enable_p2n_warnings</span><span class="p">:</span>
                 <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;There are other agents at the location from which you have removed agents.&quot;</span>
                 <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
 
@@ -589,7 +596,7 @@
             <span class="k">if</span> <span class="n">remove_locations</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">remove_location</span><span class="p">(</span><span class="n">location</span><span class="o">=</span><span class="n">location</span><span class="p">)</span>
 
-                <span class="k">if</span> <span class="n">warn</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">warn</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">enable_p2n_warnings</span><span class="p">:</span>
                     <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;You have removed a location to which other agents were still connected.&quot;</span>
                     <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span></div>
 
