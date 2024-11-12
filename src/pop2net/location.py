@@ -152,7 +152,7 @@ class MagicLocation(Location):
     """Helper class to create locations from inside the Creator."""
 
     location_class: type | None = None
-    # location_name: str | None = None
+    location_name: str | None = None
 
     n_agents: int | None = None
     overcrowding: bool = None

@@ -36,16 +36,24 @@ class Creator:
 
     def _create_dummy_location(self, location_cls) -> p2n.Location:
         if location_cls.location_class is None:
-            location = location_cls(model=self._dummy_model)
+            location_name = (
+                location_cls.location_name
+                if location_cls.location_name is not None
+                else utils._get_cls_as_str(location_cls)
+            )
+            new_location_class = type(location_name, (location_cls,), {})
+
         else:
-            location = type(
-                utils._get_cls_as_str(location_cls.location_class),
-                (
-                    location_cls,
-                    location_cls.location_class,
-                ),
-                {},
-            )(model=self._dummy_model)
+            location_name = (
+                location_cls.location_name
+                if location_cls.location_name is not None
+                else utils._get_cls_as_str(location_cls.location_class)
+            )
+            new_location_class = type(
+                location_name, (location_cls, location_cls.location_class), {}
+            )
+
+        location = new_location_class(model=self._dummy_model)
         location.setup()
         return location
 
@@ -697,8 +705,14 @@ class Creator:
                             # Build a new location class that has the name of the given magic
                             # location class and the attributes of the base location class
                             # + the attributes added by the user in the magic location class
+                            location_name = (
+                                location_cls.location_name
+                                if location_cls.location_name is not None
+                                else utils._get_cls_as_str(p2n.Location)
+                            )
+
                             location = type(
-                                dummy_location.type,
+                                location_name,
                                 (p2n.Location,),
                                 keep_attrs,
                             )(model=self.model)
@@ -708,8 +722,14 @@ class Creator:
                             # Build a location class that has the name and the attributes of the
                             # location class given in the magic location class + the attributes
                             # added by the user in the magic location class
+                            location_name = (
+                                location_cls.location_name
+                                if location_cls.location_name is not None
+                                else utils._get_cls_as_str(location_cls.location_class)
+                            )
+
                             location = type(
-                                utils._get_cls_as_str(location_cls.location_class),
+                                location_name,
                                 (location_cls.location_class,),
                                 keep_attrs,
                             )(model=self.model)
