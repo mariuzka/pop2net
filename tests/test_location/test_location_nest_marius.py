@@ -2,10 +2,12 @@ import pop2net as p2n
 
 
 def test_1():
-    class City(p2n.MagicLocation):
+    class CityDesigner(p2n.MagicLocation):
+        location_name = "City"
         n_agents = 4
 
-    class Group(p2n.MagicLocation):
+    class GroupDesigner(p2n.MagicLocation):
+        location_name = "Group"
         n_agents = 2
 
         def split(self, agent):
@@ -19,7 +21,7 @@ def test_1():
         agent.group = i % 2
 
     creator.create_locations(
-        location_classes=[City, Group],
+        location_classes=[CityDesigner, GroupDesigner],
         delete_magic_agent_attributes=False,
     )
 
@@ -37,14 +39,14 @@ def test_1():
         location.agents[0].City == location.agents[1].City for location in model.locations
     )
 
-    class GroupNestedInCity(Group):
+    class GroupNestedInCityDesigner(GroupDesigner):
         def nest(self):
-            return City
+            return "City"
 
     model = p2n.Model()
     creator = p2n.Creator(model=model)
     creator.create_locations(
-        location_classes=[City, GroupNestedInCity],
+        location_classes=[CityDesigner, GroupNestedInCityDesigner],
         delete_magic_agent_attributes=False,
     )
 

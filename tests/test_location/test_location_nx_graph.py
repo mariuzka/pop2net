@@ -7,7 +7,8 @@ def test_line_1():
     model = p2n.Model()
     creator = p2n.Creator(model)
 
-    class LineLocation(p2n.MagicLocation):
+    class LineLocationDesigner(p2n.MagicLocation):
+        location_name = "LineLocation"
         nxgraph = nx.path_graph(10)
         n_agents = None
         n_locations = None
@@ -16,7 +17,7 @@ def test_line_1():
 
     creator.create_agents(n=10)
     creator.create_locations(
-        location_classes=[LineLocation],
+        location_classes=[LineLocationDesigner],
         delete_magic_agent_attributes=False,
     )
 
@@ -38,7 +39,8 @@ def test_line_2():
     model = p2n.Model()
     creator = p2n.Creator(model)
 
-    class LineLocation(p2n.MagicLocation):
+    class LineLocationDesigner(p2n.MagicLocation):
+        location_name = "LineLocation"
         nxgraph = nx.path_graph(10)
         n_agents = None
         n_locations = None
@@ -46,7 +48,7 @@ def test_line_2():
 
     creator.create_agents(n=20)
     creator.create_locations(
-        location_classes=[LineLocation],
+        location_classes=[LineLocationDesigner],
         delete_magic_agent_attributes=False,
     )
 
@@ -80,7 +82,8 @@ def test_line_3():
     model = p2n.Model()
     creator = p2n.Creator(model)
 
-    class LineLocation(p2n.MagicLocation):
+    class LineLocationDesigner(p2n.MagicLocation):
+        location_name = "LineLocation"
         nxgraph = nx.path_graph(10)
         n_agents = 15
         n_locations = None
@@ -89,7 +92,7 @@ def test_line_3():
 
     creator.create_agents(n=20)
     creator.create_locations(
-        location_classes=[LineLocation],
+        location_classes=[LineLocationDesigner],
         delete_magic_agent_attributes=False,
     )
 
@@ -123,7 +126,8 @@ def test_line_4():
     model = p2n.Model()
     creator = p2n.Creator(model)
 
-    class LineLocation(p2n.MagicLocation):
+    class LineLocationDesigner(p2n.MagicLocation):
+        location_name = "LineLocation"
         nxgraph = nx.path_graph(10)
         n_agents = 15
         n_locations = None
@@ -132,7 +136,7 @@ def test_line_4():
 
     creator.create_agents(n=20)
     creator.create_locations(
-        location_classes=[LineLocation],
+        location_classes=[LineLocationDesigner],
         delete_magic_agent_attributes=False,
     )
 
@@ -166,7 +170,8 @@ def test_line_5():
     model = p2n.Model()
     creator = p2n.Creator(model)
 
-    class LineLocation(p2n.MagicLocation):
+    class LineLocationDesigner(p2n.MagicLocation):
+        location_name = "LineLocation"
         nxgraph = nx.path_graph(10)
         n_agents = 15
         n_locations = None
@@ -175,7 +180,7 @@ def test_line_5():
 
     creator.create_agents(n=5)
     creator.create_locations(
-        location_classes=[LineLocation],
+        location_classes=[LineLocationDesigner],
         delete_magic_agent_attributes=False,
     )
 
@@ -198,12 +203,13 @@ def test_line_6():
     model = p2n.Model()
     creator = p2n.Creator(model)
 
-    class LineLocation(p2n.MagicLocation):
+    class LineLocationDesigner(p2n.MagicLocation):
+        location_name = "LineLocation"
         nxgraph = nx.path_graph(10)
         only_exact_n_agents = True
 
     creator.create_agents(n=5)
-    creator.create_locations(location_classes=[LineLocation])
+    creator.create_locations(location_classes=[LineLocationDesigner])
 
     assert len(model.agents) == 5
     assert len(model.locations) == 0

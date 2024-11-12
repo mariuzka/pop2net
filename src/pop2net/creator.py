@@ -697,7 +697,7 @@ class Creator:
                         # that are not part of magic location class
                         keep_attrs = {}
                         for attr in dir(location_cls):
-                            if attr not in p2n.MagicLocation.__dict__:
+                            if attr not in p2n.LocationDesigner.__dict__:
                                 keep_attrs[attr] = getattr(location_cls, attr)
                         # Build the final location
                         if location_cls.location_class is None:

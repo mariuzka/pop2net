@@ -52,7 +52,7 @@ def magic_attrs():
 def test_1(base_attrs, magic_attrs):
     """Testcase: location_class == None & location_name == None."""
 
-    class MyLocationDesigner(p2n.MagicLocation):
+    class MyLocationDesigner(p2n.LocationDesigner):
         def custom_method1(self):
             pass
 
@@ -68,7 +68,7 @@ def test_1(base_attrs, magic_attrs):
     # test if the types are correct
     assert location.type == "Location"
     assert isinstance(location, p2n.Location)
-    assert not isinstance(location, p2n.MagicLocation)
+    assert not isinstance(location, p2n.LocationDesigner)
 
     # test if magic attributes are deleted
     for attr in magic_attrs:
@@ -85,7 +85,7 @@ def test_1(base_attrs, magic_attrs):
 def test_2(base_attrs, magic_attrs):
     """Testcase: location_class == None & location_name != None."""
 
-    class MyLocationDesigner(p2n.MagicLocation):
+    class MyLocationDesigner(p2n.LocationDesigner):
         location_name = "MyLocation"
 
         def custom_method1(self):
@@ -103,7 +103,7 @@ def test_2(base_attrs, magic_attrs):
     # test if the types are correct
     assert location.type == "MyLocation"
     assert isinstance(location, p2n.Location)
-    assert not isinstance(location, p2n.MagicLocation)
+    assert not isinstance(location, p2n.LocationDesigner)
     # assert isinstance(location, MyLocation)
 
     # test if magic attributes are deleted
@@ -128,14 +128,14 @@ def test_3(base_attrs, magic_attrs):
         def weight(self, agent):
             return "MyLocation"
 
-    class MyLocationDesigner(p2n.MagicLocation):
+    class MyLocationDesigner(p2n.LocationDesigner):
         location_class = MyLocation
 
         def custom_method1(self):
             pass
 
         def weight(self, agent):
-            return "MyMagicLocation"
+            return "MyLocationDesigner"
 
     model = p2n.Model()
     creator = p2n.Creator(model)
@@ -150,7 +150,7 @@ def test_3(base_attrs, magic_attrs):
     assert location.type == "MyLocation"
     assert isinstance(location, p2n.Location)
     assert isinstance(location, MyLocation)
-    assert not isinstance(location, p2n.MagicLocation)
+    assert not isinstance(location, p2n.LocationDesigner)
 
     # test if magic attributes are deleted
     for attr in magic_attrs:
@@ -160,14 +160,14 @@ def test_3(base_attrs, magic_attrs):
     for attr in base_attrs:
         assert hasattr(location, attr)
 
-    # test if custom methods defined in MyMagicLocation are still there
+    # test if custom methods defined in MyLocationDesigner are still there
     assert hasattr(location, "custom_method1")
 
     # test if custom methods defined in MyLocation are still there
     assert hasattr(location, "custom_method2")
 
     # test if the baselocation weight method is overwritten by the magiclocation weight method
-    assert location.weight(None) == "MyMagicLocation"
+    assert location.weight(None) == "MyLocationDesigner"
 
 
 def test_4(base_attrs, magic_attrs):
@@ -180,7 +180,7 @@ def test_4(base_attrs, magic_attrs):
         def weight(self, agent):
             return "MyLocation"
 
-    class MyLocationDesigner(p2n.MagicLocation):
+    class MyLocationDesigner(p2n.LocationDesigner):
         location_class = MyLocation
         location_name = "BlaBla"
 
@@ -188,7 +188,7 @@ def test_4(base_attrs, magic_attrs):
             pass
 
         def weight(self, agent):
-            return "MyMagicLocation"
+            return "MyLocationDesigner"
 
     model = p2n.Model()
     creator = p2n.Creator(model)
@@ -203,7 +203,7 @@ def test_4(base_attrs, magic_attrs):
     assert location.type == "BlaBla"
     assert isinstance(location, p2n.Location)
     assert isinstance(location, MyLocation)
-    assert not isinstance(location, p2n.MagicLocation)
+    assert not isinstance(location, p2n.LocationDesigner)
 
     # test if magic attributes are deleted
     for attr in magic_attrs:
@@ -213,11 +213,11 @@ def test_4(base_attrs, magic_attrs):
     for attr in base_attrs:
         assert hasattr(location, attr)
 
-    # test if custom methods defined in MyMagicLocation are still there
+    # test if custom methods defined in MyLocationDesigner are still there
     assert hasattr(location, "custom_method1")
 
     # test if custom methods defined in MyLocation are still there
     assert hasattr(location, "custom_method2")
 
     # test if the baselocation weight method is overwritten by the magiclocation weight method
-    assert location.weight(None) == "MyMagicLocation"
+    assert location.weight(None) == "MyLocationDesigner"
