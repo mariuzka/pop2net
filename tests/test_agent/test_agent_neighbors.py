@@ -29,7 +29,7 @@ def test_2a():
     class Lukas(p2n.Agent):
         pass
 
-    class WebexMeeting(p2n.MagicLocation):
+    class WebexMeeting(p2n.LocationDesigner):
         pass
 
     model = p2n.Model()
@@ -66,7 +66,7 @@ def test_2b():
     class Lukas(p2n.Agent):
         pass
 
-    class WebexMeeting(p2n.MagicLocation):
+    class WebexMeeting(p2n.LocationDesigner):
         pass
 
     _max = creator.create_agents(agent_class=Max, n=1)[0]
@@ -97,10 +97,10 @@ def test_3a():
     class Lukas(p2n.Agent):
         pass
 
-    class Meeting1(p2n.MagicLocation):
+    class Meeting1(p2n.Location):
         pass
 
-    class Meeting2(p2n.MagicLocation):
+    class Meeting2(p2n.Location):
         pass
 
     model = p2n.Model()
@@ -137,11 +137,15 @@ def test_3b():
     class Lukas(p2n.Agent):
         pass
 
-    class Meeting1(p2n.MagicLocation):
+    class Meeting1(p2n.LocationDesigner):
+        location_name = "Meeting1"
+
         def filter(self, agent):
             return agent.type in ["Max", "Marius"]
 
-    class Meeting2(p2n.MagicLocation):
+    class Meeting2(p2n.LocationDesigner):
+        location_name = "Meeting2"
+
         def filter(self, agent):
             return agent.type in ["Marius", "Lukas"]
 
