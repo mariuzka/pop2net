@@ -41,11 +41,10 @@ class Creator:
             location = type(
                 utils._get_cls_as_str(location_cls.location_class),
                 (
-                    location_cls.location_class,
                     location_cls,
+                    location_cls.location_class,
                 ),
                 {},
-                # {"weight": location_cls.weight},
             )(model=self._dummy_model)
         location.setup()
         return location
@@ -686,53 +685,29 @@ class Creator:
                             if subsplit_value in agent_subsplit_value:
                                 subsplit_affiliated_agents.append(agent)
 
-                        magic_attrs = [
-                            "split",
-                            "nest",
-                            "bridge",
-                            "filter",
-                            "location_class",
-                            "melt",
-                            "n_agents",
-                            "n_locations",
-                            "nxgraph",
-                            "only_exact_n_agents",
-                            "overcrowding",
-                            "recycle",
-                            "refine",
-                            "static_weight",
-                            "stick_together",
-                            "_subsplit",
-                            "__annotations__",
-                        ]
-
+                        # inspect the defined magic location class get all methods/attributes
+                        # that are not part of magic location class
+                        keep_attrs = {}
+                        for attr in dir(location_cls):
+                            if attr not in p2n.MagicLocation.__dict__:
+                                keep_attrs[attr] = getattr(location_cls, attr)
                         # Build the final location
                         if location_cls.location_class is None:
-                            keep_attrs = {}
-                            for attr in dir(location_cls):
-                                if (
-                                    attr not in magic_attrs
-                                    and attr not in list(p2n.MagicLocation.__dict__.keys())
-                                    and attr not in dir(p2n.Location)
-                                    or attr == "weight"
-                                ):
-                                    keep_attrs[attr] = getattr(location_cls, attr)
+                            # If no location class is defined in the given magic location class:
+                            # Build a new location class that has the name of the given magic
+                            # location class and the attributes of the base location class
+                            # + the attributes added by the user in the magic location class
                             location = type(
                                 dummy_location.type,
                                 (p2n.Location,),
                                 keep_attrs,
                             )(model=self.model)
-                        else:
-                            keep_attrs = {}
-                            for attr in dir(location_cls):
-                                if (
-                                    attr not in magic_attrs
-                                    and attr not in list(p2n.MagicLocation.__dict__.keys())
-                                    and attr not in dir(p2n.Location)
-                                    or attr == "weight"
-                                ):
-                                    keep_attrs[attr] = getattr(location_cls, attr)
 
+                        else:
+                            # If a base location class is defined in the given magic location class:
+                            # Build a location class that has the name and the attributes of the
+                            # location class given in the magic location class + the attributes
+                            # added by the user in the magic location class
                             location = type(
                                 utils._get_cls_as_str(location_cls.location_class),
                                 (location_cls.location_class,),
@@ -799,39 +774,16 @@ class Creator:
 
         locations = p2n.LocationList(model=self.model, objs=locations)
 
-        # execute an action after all locations have been created
-        # for location in locations:
-        #    location.refine()
-
         # delete temporary agent attributes
         for agent in self._dummy_model.agents:
             for attr in self._temp_agent_attrs:
                 if hasattr(agent, attr):
                     delattr(agent, attr)
 
-        # delete magic location attributes
-        magic_location_attributes = [
-            "filter",
-            "setup",
-            "bridge",
-            "split",
-            "weight",
-            "stick_together",
-            "nest",
-            "melt",
-            "refine",
-        ]
-        # TODO: delete magic location attributes
-        if False:  # delete_magic_location_attributes:
-            for cls in location_classes:
-                del cls.stick_together
-                del cls.setup
-
         magic_agent_attributes = set(magic_agent_attributes)
         if delete_magic_agent_attributes:
             for attr in magic_agent_attributes:
                 for agent in agents:
-                    # if hasattr(agent, attr):
                     delattr(agent, attr)
 
         return locations
