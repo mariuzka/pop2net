@@ -44,25 +44,25 @@ class Agent(ap.Agent):
         This is executed on the instantiation of each agent.
         """
 
-    def neighbors(self, location_classes: list | None = None) -> ap.AgentList:
+    def neighbors(self, location_labels: list[str] | None = None) -> ap.AgentList:
         """Return all neighbors of an agent.
 
         Convenience method that returns all neighbors over all locations this agent is currently
-        located in. The locations to be considered can be defined with location_classes.
+        located in. The locations to be considered can be defined with location_labels.
 
         Args:
-            location_classes: A list of location_classes.
+            location_labels: A list of location_labels.
 
         Returns:
             All agents co-located with this agent over all locations.
         """
-        return self.model.neighbors_of_agent(self, location_classes=location_classes)
+        return self.model.neighbors_of_agent(self, location_labels=location_labels)
 
-    def shared_locations(self, agent, location_classes: list | None = None):
+    def shared_locations(self, agent, location_labels: list[str] | None = None):
         return self.model.locations_between_agents(
             agent1=self,
             agent2=agent,
-            location_classes=location_classes,
+            location_labels=location_labels,
         )
 
     def add_location(self, location: _location.Location, weight: float | None = None) -> None:
@@ -112,21 +112,21 @@ class Agent(ap.Agent):
         """
         return self.model.locations_of_agent(self)
 
-    def get_agent_weight(self, agent: Agent, location_classes: list | None = None) -> float:
+    def get_agent_weight(self, agent: Agent, location_labels: list | None = None) -> float:
         """Return the edge weight between this agent and a given other agent.
 
         This is summed over all shared locations.
 
         Args:
             agent: The other agent.
-            location_classes (list): A list of location classes to specify the type of locations
+            location_labels (list): A list of location classes to specify the type of locations
                 which are considered.
 
         Returns:
             A weight of the contact between the two agents.
         """
         weight = 0
-        for location in self.shared_locations(agent=agent, location_classes=location_classes):
+        for location in self.shared_locations(agent=agent, location_labels=location_labels):
             weight += location.project_weights(agent1=self, agent2=agent)
         return weight
 
@@ -155,7 +155,7 @@ class Agent(ap.Agent):
     def disconnect(
         self,
         neighbor: Agent,
-        location_classes: list | None = None,
+        location_labels: list | None = None,
         remove_self=True,
         remove_neighbor=True,
         remove_locations: bool = False,
@@ -169,7 +169,7 @@ class Agent(ap.Agent):
 
         Args:
             neighbor (Agent): An agent to disconnect from.
-            location_classes (list | None, optional): A list of location types to specify which
+            location_labels (list | None, optional): A list of location types to specify which
             shared locations are considered. Defaults to None.
             remove_self (bool): Should the agent be removed from the shared locations?
                 Defaults to True.
@@ -180,7 +180,7 @@ class Agent(ap.Agent):
         """
         shared_locations = self.shared_locations(
             agent=neighbor,
-            location_classes=location_classes,
+            location_labels=location_labels,
         )
 
         for location in shared_locations:

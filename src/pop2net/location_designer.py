@@ -10,6 +10,7 @@ from . import model as _model
 class LocationDesigner(Location):
     """Helper class to create locations from inside the Creator."""
 
+    label: str | None = None
     location_class: type | None = None
     location_name: str | None = None
 
@@ -146,6 +147,8 @@ class LocationDesigner(Location):
 
 class MeltLocationDesigner(Location):
     """Helper class to melt locations."""
+
+    label: str | None = None
 
     location_class: type | None = None
     location_name: str | None = None

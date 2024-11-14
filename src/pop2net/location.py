@@ -12,6 +12,8 @@ from . import model as _model
 class Location(Object):
     """Base class for location objects."""
 
+    label: str | None = None
+
     def __init__(self, model: _model.Model) -> None:
         """Location constructor.
 
@@ -21,6 +23,7 @@ class Location(Object):
         super().__init__(model)
         self.model = model
         self.model.add_location(self)
+        self.label = self.__class__.__name__ if self.label is None else self.label
 
     @property
     def agents(self) -> AgentList:

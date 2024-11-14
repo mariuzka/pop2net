@@ -34,26 +34,17 @@ class Creator:
         self._dummy_model = p2n.Model(parameters=self.model.p)
         self._temp_agent_attrs = ["_P2NTEMP_split_values", "_P2NTEMP_melt_location_weight"]
 
-    def _create_dummy_location(self, location_cls) -> p2n.Location:
-        if location_cls.location_class is None:
-            location_name = (
-                location_cls.location_name
-                if location_cls.location_name is not None
-                else utils._get_cls_as_str(location_cls)
-            )
-            new_location_class = type(location_name, (location_cls,), {})
-
-        else:
-            location_name = (
-                location_cls.location_name
-                if location_cls.location_name is not None
-                else utils._get_cls_as_str(location_cls.location_class)
-            )
-            new_location_class = type(
-                location_name, (location_cls, location_cls.location_class), {}
-            )
-
-        location = new_location_class(model=self._dummy_model)
+    def _create_dummy_location(self, designer) -> p2n.Location:
+        lc = designer.location_class
+        cls = type(
+            "Location" if lc is None else utils._get_cls_as_str(designer.location_class),
+            (designer,) if lc is None else (designer, designer.location_class),
+            {},  # TODO: warum funktioniert das hier nicht?: {"label": designer.label},
+        )
+        location = cls(model=self._dummy_model)
+        location.label = (
+            designer.label if designer.label is not None else utils._get_cls_as_str(designer)
+        )
         location.setup()
         return location
 
@@ -190,7 +181,7 @@ class Creator:
         return agents
 
     def _get_affiliated_agents(self, agents, dummy_location) -> list:
-        temp_filter_attr = "_P2NTEMP_filter_" + dummy_location.type
+        temp_filter_attr = "_P2NTEMP_filter_" + dummy_location.label
 
         affiliated_agents = []
         for agent in agents:
@@ -211,7 +202,7 @@ class Creator:
             # search for mother location assigned to this agent
             n_mother_locations_found = 0
             for location in agent.locations:
-                if location.type == utils._get_cls_as_str(dummy_location.nest()):
+                if location.label == utils._get_cls_as_str(dummy_location.nest()):
                     mother_location = location
                     n_mother_locations_found += 1
 
@@ -244,7 +235,7 @@ class Creator:
                 for i, value in enumerate(agent_values):
                     mother_group_id = self._get_mother_group_id(agent, dummy_location)
                     agent_values[i] = "-".join([mother_group_id, str(value)])
-                    temp_attr = f"_P2NTEMP_{dummy_location.type}_mother_group_id"
+                    temp_attr = f"_P2NTEMP_{dummy_location.label}_mother_group_id"
                     setattr(agent, temp_attr, mother_group_id)
                     self._temp_agent_attrs.append(temp_attr)
 
@@ -265,10 +256,10 @@ class Creator:
         else:
             return stick_value
 
-    def _get_groups(self, agents, location_cls) -> list[list]:
+    def _get_groups(self, agents, designer) -> list[list]:
         overcrowding_i = 0
 
-        dummy_location = self._create_dummy_location(location_cls)
+        dummy_location = self._create_dummy_location(designer)
 
         n_location_groups_is_fixed = False
 
@@ -296,7 +287,7 @@ class Creator:
 
         elif dummy_location.n_locations is not None and dummy_location.n_agents is None:
             n_location_groups = dummy_location.n_locations
-            location_cls.n_agents = max(
+            designer.n_agents = max(
                 math.floor(len(agents) / n_location_groups),
                 1,
             )
@@ -313,7 +304,7 @@ class Creator:
 
         stick_values = {self._get_stick_value(agent, dummy_location) for agent in agents}
 
-        # dummy_location = self._create_dummy_location(location_cls)
+        # dummy_location = self._create_dummy_location(designer)
 
         # for each group of sticky agents
         for stick_value in stick_values:
@@ -344,7 +335,7 @@ class Creator:
             if not assigned:
                 if len(groups) < n_location_groups:
                     new_group = []
-                    dummy_location = self._create_dummy_location(location_cls)
+                    dummy_location = self._create_dummy_location(designer)
                     # assign agents
                     for agent in sticky_agents:
                         new_group.append(agent)
@@ -374,8 +365,8 @@ class Creator:
 
         return group_affiliated_agents
 
-    def _get_melted_groups(self, agents: list, location_cls) -> list[list]:
-        dummy_location = self._create_dummy_location(location_cls)
+    def _get_melted_groups(self, agents: list, designer) -> list[list]:
+        dummy_location = self._create_dummy_location(designer)
 
         # get all mother locations the agents are nested in
         all_mother_group_ids = {
@@ -399,11 +390,11 @@ class Creator:
             groups_to_melt_by_location: list[list[list]] = []
 
             # for each location that shall be melted
-            for melt_location_cls in dummy_location.melt():
+            for melt_designer in dummy_location.melt():
                 # create dummy location
-                melt_dummy_location = self._create_dummy_location(melt_location_cls)
-                if melt_location_cls.n_locations is None:
-                    melt_location_cls.n_locations = location_cls.n_locations
+                melt_dummy_location = self._create_dummy_location(melt_designer)
+                if melt_designer.n_locations is None:
+                    melt_designer.n_locations = designer.n_locations
 
                 # get all agents that should be assigned to this location
                 # filter by melt_location
@@ -437,7 +428,7 @@ class Creator:
                     location_groups_to_melt.extend(
                         self._get_groups(
                             agents=melt_split_value_affiliated_agents,
-                            location_cls=melt_location_cls,
+                            designer=melt_designer,
                         ),
                     )
 
@@ -468,16 +459,15 @@ class Creator:
 
     def create_locations(
         self,
-        location_classes: list,
+        location_designers: list,
         agents: list | p2n.AgentList | None = None,
         clear: bool = False,
-        # TODO: delete_magic_location_attributes: bool = True,
         delete_magic_agent_attributes: bool = True,
     ) -> p2n.LocationList:
         """Creates location instances and connects them with the given agent population.
 
         Args:
-            location_classes (list): A list of location classes.
+            location_designers (list): A list of LocationDesigner classes.
             agents (list | p2n.AgentList): A list of agents.
             clear (bool): Should the locations already included in the model be removed?
             delete_magic_location_attributes (bool): If True, all magic location attributes will be
@@ -488,12 +478,28 @@ class Creator:
         Returns:
             p2n.LocationList: A list of locations.
         """
+        # Check if all location classes have a unique label
+        labels = []
+        for designer in location_designers:
+            dummy_location = self._create_dummy_location(designer)
+            if dummy_location.label is None:
+                msg = (
+                    f"LocationDesigner class {designer} has no label. Please define a unique label."
+                )
+                raise Pop2netException(msg)
+            elif dummy_location.label in labels:
+                msg = f"""LocationDesigner class {designer} has a duplicate label. 
+                    Please define a unique label."""
+                raise Pop2netException(msg)
+            else:
+                labels.append(dummy_location.label)
+
+        # Remove all locations if clear is True
         if clear:
-            # Remove all locations
             self.model.remove_locations(self.model.locations)
 
+        # Use the existing agents in the model if no agents are given if agents is None:
         if agents is None:
-            # Use the existing agents in the model if no agents are given
             agents = self.model.agents
 
         # Create a list containing the names of all special location attributes
@@ -503,39 +509,41 @@ class Creator:
         # Add the agents to the dummy model
         self._dummy_model.add_agents(agents)
 
-        for location_cls in location_classes:
-            dummy_location = self._create_dummy_location(location_cls)
-            str_location_cls = dummy_location.type
+        # Create magic agent attributes for each location designer class
+        for designer in location_designers:
+            dummy_location = self._create_dummy_location(designer)
+            label = dummy_location.label
             for agent in agents:
-                setattr(agent, str_location_cls, None)
-                magic_agent_attributes.append(str_location_cls)
+                setattr(agent, label, None)
+                magic_agent_attributes.append(label)
 
-                setattr(agent, str_location_cls + "_assigned", False)
-                magic_agent_attributes.append(str_location_cls + "_assigned")
+                setattr(agent, label + "_assigned", False)
+                magic_agent_attributes.append(label + "_assigned")
 
-                setattr(agent, str_location_cls + "_id", None)
-                magic_agent_attributes.append(str_location_cls + "_id")
+                setattr(agent, label + "_id", None)
+                magic_agent_attributes.append(label + "_id")
 
-                setattr(agent, str_location_cls + "_position", None)
-                magic_agent_attributes.append(str_location_cls + "_position")
+                setattr(agent, label + "_position", None)
+                magic_agent_attributes.append(label + "_position")
 
-                setattr(agent, str_location_cls + "_head", None)
-                magic_agent_attributes.append(str_location_cls + "_head")
+                setattr(agent, label + "_head", None)
+                magic_agent_attributes.append(label + "_head")
 
-                setattr(agent, str_location_cls + "_tail", None)
-                magic_agent_attributes.append(str_location_cls + "_tail")
+                setattr(agent, label + "_tail", None)
+                magic_agent_attributes.append(label + "_tail")
 
+        # The list of all created location instances
         locations = []
 
-        # for each location class
-        for location_cls in location_classes:
+        # For each designer: start of creation procedure
+        for designer in location_designers:
+            # Set temporary location weight of MeltLocations to None
             for agent in agents:
                 agent._P2NTEMP_melt_location_weight = None
 
             # create location dummy in order to use the location's methods
-            dummy_location = self._create_dummy_location(location_cls)
-
-            str_location_cls = dummy_location.type
+            dummy_location = self._create_dummy_location(designer)
+            label = dummy_location.label
 
             # If nxgraph is used do some checks
             if dummy_location.nxgraph is not None:
@@ -543,14 +551,14 @@ class Creator:
                     msg = """You cannot define location.n_agents if location.nxgraph is used. 
                         It will be set to the number of nodes in location.nxgraph automatically."""
                     warnings.warn(msg)
-                location_cls.n_agents = len(list(dummy_location.nxgraph.nodes))
+                designer.n_agents = len(list(dummy_location.nxgraph.nodes))
                 dummy_location.n_agents = len(list(dummy_location.nxgraph.nodes))
 
                 if dummy_location.overcrowding is True:
                     msg = """You cannot define location.overcrowding if location.nxgraph is used. 
                         It will be set to `False` automatically."""
                     warnings.warn(msg)
-                location_cls.overcrowding = False
+                designer.overcrowding = False
                 dummy_location.overcrowding = False
 
             # bridge
@@ -567,8 +575,8 @@ class Creator:
                     pass
 
                 elif len(bridge_values) == 1:
-                    msg = f"""{str_location_cls}.bridge() returned only one unique value.
-                    {str_location_cls}.bridge() must return at least two unique values in order 
+                    msg = f"""{label}.bridge() returned only one unique value.
+                    {label}.bridge() must return at least two unique values in order 
                     to create locations that bring together agents with different values on the 
                     same attribute.
                     """
@@ -576,8 +584,8 @@ class Creator:
 
                 elif len(bridge_values) > 1:
                     if dummy_location.n_agents is not None:
-                        msg = f"""You cannot use {str_location_cls}.n_agents and 
-                        {str_location_cls}.bridge() at the same time. {str_location_cls}.n_agents
+                        msg = f"""You cannot use {label}.n_agents and 
+                        {label}.bridge() at the same time. {label}.n_agents
                         is ignored."""
                         warnings.warn(msg)
 
@@ -591,7 +599,7 @@ class Creator:
 
                         dummy_melt_class = type(
                             f"dummy_meltlocation{str(bridge_value)}",
-                            (p2n.MeltLocation,),
+                            (p2n.MeltLocationDesigner,),
                             {
                                 "filter": filter,
                                 "n_agents": 1,
@@ -605,8 +613,8 @@ class Creator:
                     def melt(self):
                         return melt_list
 
-                    location_cls.melt = melt
-                    dummy_location = self._create_dummy_location(location_cls)
+                    designer.melt = melt
+                    dummy_location = self._create_dummy_location(designer)
 
             if not dummy_location.melt():
                 # get all agents that could be assigned to locations of this class
@@ -618,8 +626,8 @@ class Creator:
             else:
                 affiliated_agents = []
 
-                for melt_location_cls in dummy_location.melt():
-                    melt_dummy_location = self._create_dummy_location(melt_location_cls)
+                for melt_designer in dummy_location.melt():
+                    melt_dummy_location = self._create_dummy_location(melt_designer)
                     affiliated_agents.extend(
                         self._get_affiliated_agents(
                             agents=agents,
@@ -653,23 +661,20 @@ class Creator:
                 if not dummy_location.melt():
                     group_lists: list[list] = self._get_groups(
                         agents=split_value_affiliated_agents,
-                        location_cls=location_cls,
+                        designer=designer,
                     )
                 else:
                     group_lists = self._get_melted_groups(
                         agents=split_value_affiliated_agents,
-                        location_cls=location_cls,
+                        designer=designer,
                     )
 
                 # for each group of agents
                 for i, group_list in enumerate(group_lists):
                     group_count += 1
 
-                    dummy_location = self._create_dummy_location(location_cls)
+                    dummy_location = self._create_dummy_location(designer)
                     dummy_location.agents_ = group_list
-                    # dummy_location.add_agents(agents)
-
-                    # dummy_location.group_agents = group_list
 
                     # get all subgroub values
                     subsplit_values = {
@@ -696,44 +701,30 @@ class Creator:
                         # inspect the defined magic location class get all methods/attributes
                         # that are not part of magic location class
                         keep_attrs = {}
-                        for attr in dir(location_cls):
+                        for attr in dir(designer):
                             if attr not in p2n.LocationDesigner.__dict__:
-                                keep_attrs[attr] = getattr(location_cls, attr)
-                        # Build the final location
-                        if location_cls.location_class is None:
-                            # If no location class is defined in the given magic location class:
-                            # Build a new location class that has the name of the given magic
-                            # location class and the attributes of the base location class
-                            # + the attributes added by the user in the magic location class
-                            location_name = (
-                                location_cls.location_name
-                                if location_cls.location_name is not None
-                                else utils._get_cls_as_str(p2n.Location)
-                            )
+                                keep_attrs[attr] = getattr(designer, attr)
 
+                        # Build the final location
+                        if designer.location_class is None:
                             location = type(
-                                location_name,
+                                "Location",
                                 (p2n.Location,),
                                 keep_attrs,
                             )(model=self.model)
 
                         else:
-                            # If a base location class is defined in the given magic location class:
-                            # Build a location class that has the name and the attributes of the
-                            # location class given in the magic location class + the attributes
-                            # added by the user in the magic location class
-                            location_name = (
-                                location_cls.location_name
-                                if location_cls.location_name is not None
-                                else utils._get_cls_as_str(location_cls.location_class)
-                            )
-
                             location = type(
-                                location_name,
-                                (location_cls.location_class,),
+                                utils._get_cls_as_str(designer.location_class),
+                                (designer.location_class,),
                                 keep_attrs,
                             )(model=self.model)
 
+                        location.label = (
+                            designer.label
+                            if designer.label is not None
+                            else utils._get_cls_as_str(designer)
+                        )
                         location.setup()
                         location.split_value = split_value
                         location.subsplit_value = subsplit_value
@@ -758,18 +749,18 @@ class Creator:
                             )
 
                             group_info_str = f"gv={location.split_value},gid={location.group_id}"
-                            setattr(agent, str_location_cls, group_info_str)
-                            setattr(agent, str_location_cls + "_assigned", True)
-                            setattr(agent, str_location_cls + "_id", group_count - 1)
-                            setattr(agent, str_location_cls + "_position", group_list.index(agent))
+                            setattr(agent, label, group_info_str)
+                            setattr(agent, label + "_assigned", True)
+                            setattr(agent, label + "_id", group_count - 1)
+                            setattr(agent, label + "_position", group_list.index(agent))
                             setattr(
                                 agent,
-                                str_location_cls + "_head",
+                                label + "_head",
                                 True if group_list.index(agent) == 0 else False,
                             )
                             setattr(
                                 agent,
-                                str_location_cls + "_tail",
+                                label + "_tail",
                                 True if group_list.index(agent) == (len(group_list) - 1) else False,
                             )
 
@@ -783,7 +774,7 @@ class Creator:
                         for _ in range(
                             int(dummy_location.n_locations - len(split_value_locations))
                         ):
-                            location = location_cls(model=self.model)
+                            location = designer(model=self.model)
                             location.setup()
                             location.split_value = split_value
                             location.subsplit_value = None
@@ -811,7 +802,7 @@ class Creator:
     def create(
         self,
         df: pd.DataFrame,
-        location_classes: list,
+        location_designers: list,
         agent_class: type[p2n.Agent] = p2n.Agent,
         agent_class_attr: None | str = None,
         agent_class_dict: None | dict = None,
@@ -831,7 +822,7 @@ class Creator:
                 the creation of agents. Each row is (potentially) translated into one agent.
                 Each column is translated into one agent attribute.
             agent_class (type[p2n.Agent]): The class from which the agent instances are created.
-            location_classes (list): A list of classes from which the location instances are
+            location_designers (list): A list of classes from which the location instances are
                 created.
             n_agents (Optional[int], optional): The number of agents that will be created.
                 If `n_agents` is set to None, each row of `df` is translated into exactly one agent.
@@ -876,7 +867,7 @@ class Creator:
         # create locations
         locations = self.create_locations(
             agents=agents,
-            location_classes=location_classes,
+            location_designers=location_designers,
             clear=clear,
             delete_magic_agent_attributes=delete_magic_agent_attributes,
         )
