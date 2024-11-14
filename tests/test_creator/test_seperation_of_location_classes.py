@@ -50,16 +50,16 @@ def magic_attrs():
 
 
 def test_1(base_attrs, magic_attrs):
-    """Testcase: location_class == None & location_name == None."""
+    """Testcase: location_class == None & label == None."""
 
-    class MyLocationDesigner(p2n.LocationDesigner):
+    class MyLocation(p2n.LocationDesigner):
         def custom_method1(self):
             pass
 
     model = p2n.Model()
     creator = p2n.Creator(model)
     creator.create_agents(n=10)
-    creator.create_locations(location_classes=[MyLocationDesigner])
+    creator.create_locations(location_designers=[MyLocation])
     location = model.locations[0]
 
     # check number of locations
@@ -67,8 +67,9 @@ def test_1(base_attrs, magic_attrs):
 
     # test if the types are correct
     assert location.type == "Location"
+    assert location.label == "MyLocation"
     assert isinstance(location, p2n.Location)
-    assert not isinstance(location, p2n.LocationDesigner)
+    assert not isinstance(location, MyLocation)
 
     # test if magic attributes are deleted
     for attr in magic_attrs:
@@ -83,10 +84,10 @@ def test_1(base_attrs, magic_attrs):
 
 
 def test_2(base_attrs, magic_attrs):
-    """Testcase: location_class == None & location_name != None."""
+    """Testcase: location_class == None & label != None."""
 
-    class MyLocationDesigner(p2n.LocationDesigner):
-        location_name = "MyLocation"
+    class MyLocation(p2n.LocationDesigner):
+        label = "MyLocationYo"
 
         def custom_method1(self):
             pass
@@ -94,17 +95,17 @@ def test_2(base_attrs, magic_attrs):
     model = p2n.Model()
     creator = p2n.Creator(model)
     creator.create_agents(n=10)
-    creator.create_locations(location_classes=[MyLocationDesigner])
+    creator.create_locations(location_designers=[MyLocation])
     location = model.locations[0]
 
     # check number of locations
     assert len(model.locations) == 1
 
     # test if the types are correct
-    assert location.type == "MyLocation"
+    assert location.type == "Location"
+    assert location.label == "MyLocationYo"
     assert isinstance(location, p2n.Location)
-    assert not isinstance(location, p2n.LocationDesigner)
-    # assert isinstance(location, MyLocation)
+    assert not isinstance(location, MyLocation)
 
     # test if magic attributes are deleted
     for attr in magic_attrs:
@@ -119,7 +120,7 @@ def test_2(base_attrs, magic_attrs):
 
 
 def test_3(base_attrs, magic_attrs):
-    """Testcase: location_class != None & location_name == None."""
+    """Testcase: location_class != None & label == None."""
 
     class MyLocation(p2n.Location):
         def custom_method2(self):
@@ -140,7 +141,7 @@ def test_3(base_attrs, magic_attrs):
     model = p2n.Model()
     creator = p2n.Creator(model)
     creator.create_agents(n=10)
-    creator.create_locations(location_classes=[MyLocationDesigner])
+    creator.create_locations(location_designers=[MyLocationDesigner])
     location = model.locations[0]
 
     # check number of locations
@@ -148,6 +149,7 @@ def test_3(base_attrs, magic_attrs):
 
     # test if the types are correct
     assert location.type == "MyLocation"
+    assert location.label == "MyLocationDesigner"
     assert isinstance(location, p2n.Location)
     assert isinstance(location, MyLocation)
     assert not isinstance(location, p2n.LocationDesigner)
@@ -171,7 +173,7 @@ def test_3(base_attrs, magic_attrs):
 
 
 def test_4(base_attrs, magic_attrs):
-    """Testcase: location_class != None & location_name != None."""
+    """Testcase: location_class != None & label != None."""
 
     class MyLocation(p2n.Location):
         def custom_method2(self):
@@ -182,7 +184,7 @@ def test_4(base_attrs, magic_attrs):
 
     class MyLocationDesigner(p2n.LocationDesigner):
         location_class = MyLocation
-        location_name = "BlaBla"
+        label = "BlaBla"
 
         def custom_method1(self):
             pass
@@ -193,14 +195,15 @@ def test_4(base_attrs, magic_attrs):
     model = p2n.Model()
     creator = p2n.Creator(model)
     creator.create_agents(n=10)
-    creator.create_locations(location_classes=[MyLocationDesigner])
+    creator.create_locations(location_designers=[MyLocationDesigner])
     location = model.locations[0]
 
     # check number of locations
     assert len(model.locations) == 1
 
     # test if the types are correct
-    assert location.type == "BlaBla"
+    assert location.type == "MyLocation"
+    assert location.label == "BlaBla"
     assert isinstance(location, p2n.Location)
     assert isinstance(location, MyLocation)
     assert not isinstance(location, p2n.LocationDesigner)

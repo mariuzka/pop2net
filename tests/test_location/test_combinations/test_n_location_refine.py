@@ -13,7 +13,7 @@ import pop2net as p2n
 def test_1():
     df = pd.DataFrame({"status": ["pupil", "pupil", "pupil", "teacher", "teacher"]})
 
-    class TestLocation(p2n.MagicLocation):
+    class TestLocation(p2n.LocationDesigner):
         n_locations = 2
 
         def refine(self):

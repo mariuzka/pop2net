@@ -9,7 +9,7 @@ import pop2net as p2n
 def test_1():
     df = pd.DataFrame({"status": ["pupil", "pupil", "pupil", "pupil"], "class_id": [1, 2, 1, 2]})
 
-    class Classroom(p2n.MagicLocation):
+    class Classroom(p2n.LocationDesigner):
         n_locations = 4
 
         def stick_together(self, agent):

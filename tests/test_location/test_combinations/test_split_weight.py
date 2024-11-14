@@ -9,7 +9,7 @@ def test_1():
     inspector = p2n.NetworkInspector(model=model)
     df = pd.DataFrame({"status": ["A", "B", "B", "A", "A"]})
 
-    class ClassRoom(p2n.MagicLocation):
+    class ClassRoom(p2n.LocationDesigner):
         def split(self, agent):
             return agent.status
 
@@ -55,7 +55,7 @@ def test_2():
         }
     )
 
-    class ClassRoom(p2n.MagicLocation):
+    class ClassRoom(p2n.LocationDesigner):
         def split(self, agent):
             return agent.status
 
@@ -94,7 +94,7 @@ def test_3():
     creator = p2n.Creator(model=model)
     df = pd.DataFrame({"status": ["A", "B", "A", "B"], "attention_span": [1, 3, 2.5, 4]})
 
-    class ClassRoom(p2n.MagicLocation):
+    class ClassRoom(p2n.LocationDesigner):
         def split(self, agent):
             return agent.status
 

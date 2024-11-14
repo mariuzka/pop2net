@@ -8,14 +8,14 @@ def test_1():
     model = p2n.Model()
     creator = p2n.Creator(model=model)
 
-    class Classroom(p2n.MagicLocation):
+    class Classroom(p2n.LocationDesigner):
         n_agents = 3
         only_exact_n_agents = False
 
         def nest(self):
             return School
 
-    class School(p2n.MagicLocation):
+    class School(p2n.LocationDesigner):
         pass
 
     creator.create(df=df, location_classes=[Classroom, School])
@@ -30,14 +30,14 @@ def test_1():
     model = p2n.Model()
     creator = p2n.Creator(model=model)
 
-    class Classroom(p2n.MagicLocation):
+    class Classroom(p2n.LocationDesigner):
         n_agents = 3
         only_exact_n_agents = True
 
         def nest(self):
             return School
 
-    class School(p2n.MagicLocation):
+    class School(p2n.LocationDesigner):
         pass
 
     creator.create(df=df, location_classes=[Classroom, School])
@@ -56,14 +56,14 @@ def test_2():
     model = p2n.Model()
     creator = p2n.Creator(model=model)
 
-    class Classroom(p2n.MagicLocation):
+    class Classroom(p2n.LocationDesigner):
         n_agents = 2
         only_exact_n_agents = True
 
         def nest(self):
             return School
 
-    class School(p2n.MagicLocation):
+    class School(p2n.LocationDesigner):
         n_agents = 4
         only_exact_n_agents = True
 

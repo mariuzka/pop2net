@@ -13,7 +13,7 @@ def test_1():
         }
     )
 
-    class ClassRoom(p2n.MagicLocation):
+    class ClassRoom(p2n.LocationDesigner):
         def filter(self, agent):
             return agent.status == "A"
 

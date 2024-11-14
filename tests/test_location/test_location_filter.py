@@ -14,16 +14,16 @@ def test_1():
     model = p2n.Model()
     creator = Creator(model)
 
-    class TestLocationA(p2n.MagicLocation):
+    class TestLocationA(p2n.LocationDesigner):
         def filter(self, agent):
             return agent.status == "A"
 
-    class TestLocationB(p2n.MagicLocation):
+    class TestLocationB(p2n.LocationDesigner):
         def filter(self, agent):
             return agent.status == "B"
 
     creator.create_agents(df=df)
-    creator.create_locations(location_classes=[TestLocationA, TestLocationB])
+    creator.create_locations(location_designers=[TestLocationA, TestLocationB])
 
     assert len(model.locations) == 2
     assert len(model.agents) == 5
@@ -44,16 +44,16 @@ def test_2():
     model = p2n.Model()
     creator = Creator(model)
 
-    class TestLocationA(p2n.MagicLocation):
+    class TestLocationA(p2n.LocationDesigner):
         def filter(self, agent):
             return agent.status == "A" and agent.sex == "w"
 
-    class TestLocationB(p2n.MagicLocation):
+    class TestLocationB(p2n.LocationDesigner):
         def filter(self, agent):
             return agent.status == "B" and agent.sex == "w"
 
     creator.create_agents(df=df)
-    creator.create_locations(location_classes=[TestLocationA, TestLocationB])
+    creator.create_locations(location_designers=[TestLocationA, TestLocationB])
 
     assert len(model.locations) == 2
     assert len(model.agents) == 5

@@ -31,7 +31,7 @@ def test_1():
         def filter(self, agent):
             return agent.status == "B"
 
-    class LocAB(p2n.MagicLocation):
+    class LocAB(p2n.LocationDesigner):
         def melt(self):
             return LocA, LocB
 
@@ -66,7 +66,7 @@ def test_1():
         def filter(self, agent):
             return agent.status == "B"
 
-    class LocAB(p2n.MagicLocation):
+    class LocAB(p2n.LocationDesigner):
         n_agents = 4
         only_exact_n_agents = True
 

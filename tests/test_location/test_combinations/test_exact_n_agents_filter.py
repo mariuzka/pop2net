@@ -13,7 +13,7 @@ def test_1():
     model = p2n.Model()
     creator = p2n.Creator(model=model)
 
-    class TestLocation(p2n.MagicLocation):
+    class TestLocation(p2n.LocationDesigner):
         only_exact_n_agents = False
         n_agents = 2
 
@@ -36,7 +36,7 @@ def test_1():
     model = p2n.Model()
     creator = p2n.Creator(model=model)
 
-    class TestLocation(p2n.MagicLocation):
+    class TestLocation(p2n.LocationDesigner):
         only_exact_n_agents = True
         n_agents = 2
 

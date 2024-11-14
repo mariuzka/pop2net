@@ -15,7 +15,7 @@ def test_1():
         }
     )
 
-    class TestLocation(p2n.MagicLocation):
+    class TestLocation(p2n.LocationDesigner):
         n_agents = 4
 
         def split(self, agent):

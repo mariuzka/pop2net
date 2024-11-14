@@ -13,7 +13,7 @@ def test_1():
     model = p2n.Model()
     creator = p2n.Creator(model)
 
-    class TestLocation(p2n.MagicLocation):
+    class TestLocation(p2n.LocationDesigner):
         def weight(self, agent):
             return 1
 
@@ -44,7 +44,7 @@ def test_2():
     model = p2n.Model()
     creator = p2n.Creator(model)
 
-    class TestLocation(p2n.MagicLocation):
+    class TestLocation(p2n.LocationDesigner):
         def weight(self, agent):
             if agent.status == "A":
                 return 1
@@ -81,7 +81,7 @@ def test_3():
     model = p2n.Model()
     creator = p2n.Creator(model)
 
-    class TestLocation(p2n.MagicLocation):
+    class TestLocation(p2n.LocationDesigner):
         def weight(self, agent):
             return agent.status
 

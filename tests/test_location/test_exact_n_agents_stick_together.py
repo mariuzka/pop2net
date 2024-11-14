@@ -8,7 +8,7 @@ def test_1():
         {"status": ["pupil", "pupil", "pupil", "pupil", "pupil"], "class_id": [1, 2, 1, 2, 1]}
     )
 
-    class Classroom(p2n.MagicLocation):
+    class Classroom(p2n.LocationDesigner):
         n_agents = 2
         only_exact_n_agents = False
 
@@ -17,7 +17,7 @@ def test_1():
 
     model = p2n.Model()
     creator = p2n.Creator(model=model)
-    creator.create(df=df, location_classes=[Classroom])
+    creator.create(df=df, location_designers=[Classroom])
 
     assert len(model.agents) == 5
     assert len(model.locations) == 2
@@ -25,10 +25,10 @@ def test_1():
     assert len(model.locations[1].agents) == 3
 
     for agent in model.agents:
-        assert agent.neighbors(location_classes=[Classroom])[0].class_id == agent.class_id
+        assert agent.neighbors(location_labels=["Classroom"])[0].class_id == agent.class_id
 
     # with exact agent set to True
-    class Classroom(p2n.MagicLocation):
+    class Classroom(p2n.LocationDesigner):
         n_agents = 2
         only_exact_n_agents = True
 
@@ -37,7 +37,7 @@ def test_1():
 
     model = p2n.Model()
     creator = p2n.Creator(model=model)
-    creator.create(df=df, location_classes=[Classroom])
+    creator.create(df=df, location_designers=[Classroom])
 
     inspector = p2n.NetworkInspector(model)
     inspector.plot_bipartite_network()
@@ -49,5 +49,5 @@ def test_1():
 
     for agent in model.agents:
         if agent.locations:
-            assert agent.neighbors(location_classes=[Classroom])[0].class_id == agent.class_id
+            assert agent.neighbors(location_labels=["Classroom"])[0].class_id == agent.class_id
     assert all(not agent.locations for agent in model.agents if agent.class_id == 1)

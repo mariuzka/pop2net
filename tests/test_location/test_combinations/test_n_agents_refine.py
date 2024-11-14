@@ -13,7 +13,7 @@ def n_agents_zero():
     model = p2n.Model()
     creator = p2n.Creator(model=model)
 
-    class TestLocation(p2n.MagicLocation):
+    class TestLocation(p2n.LocationDesigner):
         # TODO geht das?
         n_agents = 0
 
@@ -29,7 +29,7 @@ def test_1():
     model = p2n.Model()
     creator = p2n.Creator(model=model)
 
-    class TestLocationRemoveAgent(p2n.MagicLocation):
+    class TestLocationRemoveAgent(p2n.LocationDesigner):
         n_agents = 2
 
         def refine(self):
@@ -38,7 +38,7 @@ def test_1():
                     print("Test refine 1")
                     self.remove_agent(agent)
 
-    class TestLocationAddAgents(p2n.MagicLocation):
+    class TestLocationAddAgents(p2n.LocationDesigner):
         # workaround: no agents in this location at start
         def filter(self, agent):
             return agent._id == 0

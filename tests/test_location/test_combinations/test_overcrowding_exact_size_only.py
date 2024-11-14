@@ -11,17 +11,17 @@ def test_1():
         },
     )
 
-    class TestLocation(p2n.MagicLocation):
+    class TestLocation(p2n.LocationDesigner):
         overcrowding = None
         n_agents = 5
         only_exact_n_agents = False
 
-    class TestLocation2(p2n.MagicLocation):
+    class TestLocation2(p2n.LocationDesigner):
         overcrowding = True
         n_agents = 5
         only_exact_n_agents = False
 
-    class TestLocation3(p2n.MagicLocation):
+    class TestLocation3(p2n.LocationDesigner):
         overcrowding = False
         n_agents = 5
         only_exact_n_agents = False
@@ -62,17 +62,17 @@ def test_1():
         },
     )
 
-    class TestLocation(p2n.MagicLocation):
+    class TestLocation(p2n.LocationDesigner):
         overcrowding = None
         n_agents = 5
         only_exact_n_agents = True
 
-    class TestLocation2(p2n.MagicLocation):
+    class TestLocation2(p2n.LocationDesigner):
         overcrowding = True
         n_agents = 5
         only_exact_n_agents = True
 
-    class TestLocation3(p2n.MagicLocation):
+    class TestLocation3(p2n.LocationDesigner):
         overcrowding = False
         n_agents = 5
         only_exact_n_agents = True

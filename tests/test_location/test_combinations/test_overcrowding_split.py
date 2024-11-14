@@ -12,21 +12,21 @@ def test_1():
         },
     )
 
-    class TestLocation1(p2n.MagicLocation):
+    class TestLocation1(p2n.LocationDesigner):
         overcrowding = None
         n_agents = 5
 
         def split(self, agent):
             return agent.status
 
-    class TestLocation2(p2n.MagicLocation):
+    class TestLocation2(p2n.LocationDesigner):
         overcrowding = True
         n_agents = 5
 
         def split(self, agent):
             return agent.status
 
-    class TestLocation3(p2n.MagicLocation):
+    class TestLocation3(p2n.LocationDesigner):
         overcrowding = False
         n_agents = 5
 

@@ -12,7 +12,7 @@ def test_1():
         },
     )
 
-    class TestLocation(p2n.MagicLocation):
+    class TestLocation(p2n.LocationDesigner):
         n_agents = 2
         only_exact_n_agents = True
 

@@ -24,21 +24,22 @@ def test_create_locations():
     model = p2n.Model()
     creator = p2n.Creator(model=model)
 
-    class MyLocation(p2n.MagicLocation):
+    class MyLocationDesigner(p2n.LocationDesigner):
+        label = "MyLocation"
         n_locations = 5
 
     creator.create_agents(n=10)
-    creator.create_locations(location_classes=[MyLocation], clear=False)
+    creator.create_locations(location_designers=[MyLocationDesigner], clear=False)
 
     assert len(model.agents) == 10
     assert len(model.locations) == 5
 
-    creator.create_locations(location_classes=[MyLocation], clear=False)
+    creator.create_locations(location_designers=[MyLocationDesigner], clear=False)
 
     assert len(model.agents) == 10
     assert len(model.locations) == 10
 
-    creator.create_locations(location_classes=[MyLocation], clear=True)
+    creator.create_locations(location_designers=[MyLocationDesigner], clear=True)
 
     assert len(model.agents) == 10
     assert len(model.locations) == 5
@@ -50,13 +51,14 @@ def test_create():
     model = p2n.Model()
     creator = p2n.Creator(model=model)
 
-    class MyLocation(p2n.MagicLocation):
+    class MyLocationDesigner(p2n.LocationDesigner):
+        label = "MyLocation"
         n_locations = 5
 
     creator.create(
         n_agents=10,
         df=df,
-        location_classes=[MyLocation],
+        location_designers=[MyLocationDesigner],
         clear=False,
     )
 
@@ -66,7 +68,7 @@ def test_create():
     creator.create(
         n_agents=10,
         df=df,
-        location_classes=[MyLocation],
+        location_designers=[MyLocationDesigner],
         clear=False,
     )
 
@@ -76,7 +78,7 @@ def test_create():
     creator.create(
         n_agents=10,
         df=df,
-        location_classes=[MyLocation],
+        location_designers=[MyLocationDesigner],
         clear=True,
     )
 

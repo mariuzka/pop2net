@@ -16,10 +16,10 @@ def test_1():
         }
     )
 
-    class School(p2n.MagicLocation):
+    class School(p2n.LocationDesigner):
         n_agents = 4
 
-    class Classroom(p2n.MagicLocation):
+    class Classroom(p2n.LocationDesigner):
         n_agents = 2
 
         def split(self, agent):
@@ -49,10 +49,10 @@ def test_1():
         if location.type == "Classroom"
     )
 
-    class School(p2n.MagicLocation):
+    class School(p2n.LocationDesigner):
         n_agents = 4
 
-    class Classroom(p2n.MagicLocation):
+    class Classroom(p2n.LocationDesigner):
         n_agents = 2
 
         def split(self, agent):

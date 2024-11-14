@@ -10,42 +10,42 @@ def test_1():
         },
     )
 
-    class TestLocationA1(p2n.MagicLocation):
+    class TestLocationA1(p2n.LocationDesigner):
         overcrowding = None
         n_agents = 5
 
         def filter(self, agent):
             return agent.status == "A"
 
-    class TestLocationA2(p2n.MagicLocation):
+    class TestLocationA2(p2n.LocationDesigner):
         overcrowding = True
         n_agents = 5
 
         def filter(self, agent):
             return agent.status == "A"
 
-    class TestLocationA3(p2n.MagicLocation):
+    class TestLocationA3(p2n.LocationDesigner):
         overcrowding = False
         n_agents = 5
 
         def filter(self, agent):
             return agent.status == "A"
 
-    class TestLocationB1(p2n.MagicLocation):
+    class TestLocationB1(p2n.LocationDesigner):
         overcrowding = None
         n_agents = 5
 
         def filter(self, agent):
             return agent.status == "B"
 
-    class TestLocationB2(p2n.MagicLocation):
+    class TestLocationB2(p2n.LocationDesigner):
         overcrowding = True
         n_agents = 5
 
         def filter(self, agent):
             return agent.status == "B"
 
-    class TestLocationB3(p2n.MagicLocation):
+    class TestLocationB3(p2n.LocationDesigner):
         overcrowding = False
         n_agents = 5
 

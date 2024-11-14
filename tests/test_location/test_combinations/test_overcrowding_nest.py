@@ -14,11 +14,11 @@ def test_1():
         }
     )
 
-    class School(p2n.MagicLocation):
+    class School(p2n.LocationDesigner):
         overcrowding = False
         n_agents = 5
 
-    class Classroom(p2n.MagicLocation):
+    class Classroom(p2n.LocationDesigner):
         overcrowding = False
         n_agents = 5
 
@@ -53,10 +53,10 @@ def test_2():
         }
     )
 
-    class School(p2n.MagicLocation):
+    class School(p2n.LocationDesigner):
         n_agents = 4
 
-    class Classroom(p2n.MagicLocation):
+    class Classroom(p2n.LocationDesigner):
         n_agents = 2
 
         def split(self, agent):
@@ -90,10 +90,10 @@ def test_2():
     inspector.plot_bipartite_network()
     inspector.plot_agent_network(agent_attrs=df.columns, agent_color="id")
 
-    class School(p2n.MagicLocation):
+    class School(p2n.LocationDesigner):
         n_agents = 4
 
-    class Classroom(p2n.MagicLocation):
+    class Classroom(p2n.LocationDesigner):
         n_agents = 2
 
         def split(self, agent):
@@ -148,10 +148,10 @@ def test_2():
 
 
 def test_3():
-    class City(p2n.MagicLocation):
+    class City(p2n.LocationDesigner):
         n_agents = 4
 
-    class Group(p2n.MagicLocation):
+    class Group(p2n.LocationDesigner):
         n_agents = 2
 
         def split(self, agent):

@@ -22,7 +22,7 @@ def test_1():
         def filter(self, agent):
             return agent.status == "pupil"
 
-    class Classroom(p2n.MagicLocation):
+    class Classroom(p2n.LocationDesigner):
         def melt(self):
             return Teacher, Pupils
 
@@ -60,7 +60,7 @@ def test_2():
         def filter(self, agent):
             return agent.status == "pupil"
 
-    class Classroom(p2n.MagicLocation):
+    class Classroom(p2n.LocationDesigner):
         n_agents = 2
 
         def melt(self):

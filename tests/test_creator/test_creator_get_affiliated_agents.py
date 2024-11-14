@@ -13,7 +13,7 @@ def test_0():
         agent = p2n.Agent(model=model)
         agent.gender = "m"
 
-    class School(p2n.MagicLocation):
+    class School(p2n.LocationDesigner):
         pass
 
     school = School(model=model)
@@ -34,7 +34,7 @@ def test_0():
         agent = p2n.Agent(model=model)
         agent.gender = "m"
 
-    class School(p2n.MagicLocation):
+    class School(p2n.LocationDesigner):
         def filter(self, agent):
             return agent.gender == "w"
 

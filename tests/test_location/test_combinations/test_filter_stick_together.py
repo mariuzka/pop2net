@@ -11,7 +11,7 @@ def test_1():
         {"friend_group": [1, 2, 2, 3, 1, 3, 2], "filter_group": [1, 1, 2, 2, 1, 1, 2]}
     )
 
-    class TestLocationA(p2n.MagicLocation):
+    class TestLocationA(p2n.LocationDesigner):
         n_agents = 2
 
         def filter(self, agent):
@@ -20,7 +20,7 @@ def test_1():
         def stick_together(self, agent):
             return agent.friend_group
 
-    class TestLocationB(p2n.MagicLocation):
+    class TestLocationB(p2n.LocationDesigner):
         n_agents = 2
 
         def filter(self, agent):

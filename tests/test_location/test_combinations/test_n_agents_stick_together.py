@@ -6,7 +6,7 @@ import pop2net as p2n
 def test_1():
     df = pd.DataFrame({"status": ["pupil", "pupil", "pupil", "pupil"], "class_id": [1, 2, 1, 2]})
 
-    class Classroom(p2n.MagicLocation):
+    class Classroom(p2n.LocationDesigner):
         n_agents = 2
 
         def stick_together(self, agent):
@@ -33,7 +33,7 @@ def test_1():
 def test_2():
     df = pd.DataFrame({"status": ["pupil", "pupil", "pupil", "pupil"], "class_id": [1, 1, 1, 1]})
 
-    class Classroom(p2n.MagicLocation):
+    class Classroom(p2n.LocationDesigner):
         n_agents = 1
 
         def stick_together(self, agent):
@@ -60,7 +60,7 @@ def test_3():
         }
     )
 
-    class Classroom(p2n.MagicLocation):
+    class Classroom(p2n.LocationDesigner):
         n_agents = 1
 
         def stick_together(self, agent):

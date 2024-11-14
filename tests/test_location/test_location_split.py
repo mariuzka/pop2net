@@ -15,12 +15,12 @@ def test_1():
     model = p2n.Model()
     creator = p2n.Creator(model)
 
-    class TestLocation(p2n.MagicLocation):
+    class TestLocation(p2n.LocationDesigner):
         def split(self, agent):
             return agent.status
 
     creator.create_agents(df=df)
-    creator.create_locations(location_classes=[TestLocation])
+    creator.create_locations(location_designers=[TestLocation])
 
     assert len(model.locations) == 3
     assert len(model.agents) == 6
@@ -47,12 +47,12 @@ def test_2():
     model = p2n.Model()
     creator = p2n.Creator(model)
 
-    class TestLocation(p2n.MagicLocation):
+    class TestLocation(p2n.LocationDesigner):
         def split(self, agent):
             return [agent.status, agent.sex]
 
     creator.create_agents(df=df)
-    creator.create_locations(location_classes=[TestLocation])
+    creator.create_locations(location_designers=[TestLocation])
 
     assert len(model.locations) == 5
     assert len(model.agents) == 6
@@ -165,7 +165,7 @@ def test_3():
     model = p2n.Model()
     creator = p2n.Creator(model)
 
-    class TestLocation(p2n.MagicLocation):
+    class TestLocation(p2n.LocationDesigner):
         def split(self, agent):
             if agent.relevance == 1:
                 return agent.status
@@ -173,7 +173,7 @@ def test_3():
                 return agent.sex
 
     creator.create_agents(df=df)
-    creator.create_locations(location_classes=[TestLocation])
+    creator.create_locations(location_designers=[TestLocation])
 
     assert len(model.locations) == 5
     assert len(model.agents) == 6

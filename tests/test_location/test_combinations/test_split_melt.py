@@ -25,21 +25,21 @@ def test_1():
         }
     )
 
-    class PupilHelper(p2n.MagicLocation):
+    class PupilHelper(p2n.LocationDesigner):
         def filter(self, agent):
             return agent.status == "pupil"
 
         def split(self, agent):
             return agent.class_id
 
-    class TeacherHelper(p2n.MagicLocation):
+    class TeacherHelper(p2n.LocationDesigner):
         def filter(self, agent):
             return agent.status == "teacher"
 
         def split(self, agent):
             return agent.class_id
 
-    class ClassRoom(p2n.MagicLocation):
+    class ClassRoom(p2n.LocationDesigner):
         def melt(self):
             return PupilHelper, TeacherHelper
 
@@ -93,7 +93,7 @@ def test_2():
         def split(self, agent):
             return agent.class_id
 
-    class ClassRoom(p2n.MagicLocation):
+    class ClassRoom(p2n.LocationDesigner):
         def melt(self):
             return PupilHelper, TeacherHelper
 
@@ -101,7 +101,7 @@ def test_2():
         def filter(self, agent):
             return agent.status == "principal"
 
-    class School(p2n.MagicLocation):
+    class School(p2n.LocationDesigner):
         def melt(self):
             return ClassRoom, SchoolHelper
 

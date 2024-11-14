@@ -13,7 +13,7 @@ def test_1():
     model = p2n.Model()
     creator = p2n.Creator(model)
 
-    class TestLocation(p2n.MagicLocation):
+    class TestLocation(p2n.LocationDesigner):
         n_agents = 2
 
         def split(self, agent):
@@ -47,7 +47,7 @@ def test_2():
     model = p2n.Model()
     creator = p2n.Creator(model)
 
-    class TestLocation(p2n.MagicLocation):
+    class TestLocation(p2n.LocationDesigner):
         n_agents = 1
 
         def split(self, agent):
@@ -85,7 +85,7 @@ def test_3():
     model = p2n.Model()
     creator = p2n.Creator(model)
 
-    class TestLocation(p2n.MagicLocation):
+    class TestLocation(p2n.LocationDesigner):
         n_agents = 1
 
         def split(self, agent):

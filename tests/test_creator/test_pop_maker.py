@@ -58,8 +58,8 @@ def test_create_agents(soep_fixture, request):
             assert row[col_name] == getattr(agents[i], col_name)
 
 
-@pytest.mark.skip
-# @pytest.mark.parametrize("soep_fixture", ["soep100", "soep1000"])
+# @pytest.mark.skip
+@pytest.mark.parametrize("soep_fixture", ["soep100", "soep1000"])
 def test_create_locations():
     soep = simple_fake_data.copy()
     model = Model()
@@ -69,7 +69,7 @@ def test_create_locations():
     for agent in agents:
         model.env.add_agent(agent)
 
-    locations = creator.create_locations(agents=agents, location_classes=[Home, School])
+    locations = creator.create_locations(agents=agents, location_designers=[Home, School])
     for location in locations:
         model.env.add_location(location)
 

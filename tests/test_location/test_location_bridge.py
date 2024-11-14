@@ -15,13 +15,13 @@ def test_1():
         agent = p2n.Agent(model)
         agent.gender = "m"
 
-    class HeteroRelationship(p2n.MagicLocation):
+    class HeteroRelationship(p2n.LocationDesigner):
         recycle = False
 
         def bridge(self, agent):
             return agent.gender
 
-    creator.create_locations(location_classes=[HeteroRelationship])
+    creator.create_locations(location_designers=[HeteroRelationship])
 
     assert len(model.locations) == 2
     assert len(model.agents) == 5
@@ -52,14 +52,14 @@ def test_2():
         agent = p2n.Agent(model)
         agent.gender = "m"
 
-    class HeteroRelationship(p2n.MagicLocation):
+    class HeteroRelationship(p2n.LocationDesigner):
         recycle = False
         n_locations = 1
 
         def bridge(self, agent):
             return agent.gender
 
-    creator.create_locations(location_classes=[HeteroRelationship])
+    creator.create_locations(location_designers=[HeteroRelationship])
 
     assert len(model.locations) == 1
     assert len(model.agents) == 5
@@ -90,13 +90,13 @@ def test_3():
         agent = p2n.Agent(model)
         agent.gender = "m"
 
-    class HeteroRelationship(p2n.MagicLocation):
+    class HeteroRelationship(p2n.LocationDesigner):
         recycle = True
 
         def bridge(self, agent):
             return agent.gender
 
-    creator.create_locations(location_classes=[HeteroRelationship])
+    creator.create_locations(location_designers=[HeteroRelationship])
 
     assert len(model.locations) == 3
     assert len(model.agents) == 5
@@ -127,14 +127,14 @@ def test_4():
         agent = p2n.Agent(model)
         agent.gender = "m"
 
-    class HeteroRelationship(p2n.MagicLocation):
+    class HeteroRelationship(p2n.LocationDesigner):
         recycle = True
         n_locations = 1
 
         def bridge(self, agent):
             return agent.gender
 
-    creator.create_locations(location_classes=[HeteroRelationship])
+    creator.create_locations(location_designers=[HeteroRelationship])
 
     assert len(model.locations) == 1
     assert len(model.agents) == 5

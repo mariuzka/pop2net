@@ -12,32 +12,34 @@ def test_1():
         }
     )
 
-    class School(p2n.MagicLocation):
+    class SchoolDesigner(p2n.LocationDesigner):
+        label = "School"
         n_agents = 2
 
-    class Classroom(p2n.MagicLocation):
+    class ClassroomDesigner(p2n.LocationDesigner):
+        label = "Classroom"
         n_agents = 2
 
         def nest(self):
-            return School
+            return "School"
 
     model = p2n.Model()
     creator = p2n.Creator(model=model)
-    creator.create(df=df, location_classes=[School, Classroom])
+    creator.create(df=df, location_designers=[SchoolDesigner, ClassroomDesigner])
 
     assert len(model.agents) == 4
     assert len(model.locations) == 4
 
     for location in model.locations:
-        if location.type == "School":
+        if location.label == "School":
             assert len(location.agents) == 2
-        if location.type == "Classroom":
+        if location.label == "Classroom":
             assert len(location.agents) == 2
 
     for agent in model.agents:
         assert (
-            agent.neighbors(location_classes=[Classroom])[0]
-            is agent.neighbors(location_classes=[School])[0]
+            agent.neighbors(location_labels=["Classroom"])[0]
+            is agent.neighbors(location_labels=["School"])[0]
         )
 
     inspector = p2n.NetworkInspector(model)
@@ -53,10 +55,12 @@ def test_2():
         }
     )
 
-    class School(p2n.MagicLocation):
+    class SchoolDesigner(p2n.LocationDesigner):
+        label = "School"
         n_agents = 4
 
-    class Classroom(p2n.MagicLocation):
+    class ClassroomDesigner(p2n.LocationDesigner):
+        label = "Classroom"
         n_agents = 2
 
         def split(self, agent):
@@ -66,7 +70,7 @@ def test_2():
     creator = p2n.Creator(model=model)
     creator.create(
         df=df,
-        location_classes=[School, Classroom],
+        location_designers=[SchoolDesigner, ClassroomDesigner],
         delete_magic_agent_attributes=False,
     )
 
@@ -74,7 +78,7 @@ def test_2():
     assert len(model.locations) == 6
 
     for location in model.locations:
-        if location.type == "School":
+        if location.label == "School":
             assert len(location.agents) == 4
             counter = Counter([agent.group for agent in location.agents])
             assert counter[1] == 2
@@ -83,30 +87,32 @@ def test_2():
     assert not all(
         location.agents[0].School == location.agents[1].School
         for location in model.locations
-        if location.type == "Classroom"
+        if location.label == "Classroom"
     )
 
     inspector = p2n.NetworkInspector(model)
     inspector.plot_bipartite_network()
     inspector.plot_agent_network(agent_attrs=df.columns, agent_color="id")
 
-    class School(p2n.MagicLocation):
+    class SchoolDesigner(p2n.LocationDesigner):
+        label = "School"
         n_agents = 4
 
-    class Classroom(p2n.MagicLocation):
+    class ClassroomDesigner(p2n.LocationDesigner):
+        label = "Classroom"
         n_agents = 2
 
         def split(self, agent):
             return agent.group
 
         def nest(self):
-            return School
+            return "School"
 
     model = p2n.Model()
     creator = p2n.Creator(model=model)
     creator.create(
         df=df,
-        location_classes=[School, Classroom],
+        location_designers=[SchoolDesigner, ClassroomDesigner],
         delete_magic_agent_attributes=False,
     )
 
@@ -115,7 +121,7 @@ def test_2():
     assert all(
         location.agents[0].School == location.agents[1].School
         for location in model.locations
-        if location.type == "Classroom"
+        if location.label == "Classroom"
     )
 
     inspector = p2n.NetworkInspector(model)
@@ -123,25 +129,25 @@ def test_2():
     inspector.plot_agent_network(agent_attrs=df.columns, agent_color="group")
 
     for location in model.locations:
-        if location.type == "School":
+        if location.label == "School":
             assert len(location.agents) == 4
-        if location.type == "Classroom":
+        if location.label == "Classroom":
             assert len(location.agents) == 2
 
     for location in model.locations:
-        if location.type == "School":
+        if location.label == "School":
             assert len(location.agents) == 4
             counter = Counter([agent.group for agent in location.agents])
             assert counter[1] == 2
             assert counter[2] == 2
 
     assert any(
-        agent.neighbors(location_classes=[Classroom])
-        not in agent.neighbors(location_classes=[School])
+        agent.neighbors(location_labels=["Classroom"])
+        not in agent.neighbors(location_labels=["School"])
         for agent in model.agents
     )
 
     for location in model.locations:
-        if location.type == "School":
+        if location.label == "School":
             for agent in location.agents:
                 assert all(agent.School == nghbr.School for nghbr in agent.neighbors())

@@ -12,15 +12,15 @@ def test_1():
         }
     )
 
-    class PupilHelper(p2n.MagicLocation):
+    class PupilHelper(p2n.LocationDesigner):
         def filter(self, agent):
             return agent.status == "pupil"
 
-    class TeacherHelper(p2n.MagicLocation):
+    class TeacherHelper(p2n.LocationDesigner):
         def filter(self, agent):
             return agent.status == "teacher"
 
-    class ClassRoom(p2n.MagicLocation):
+    class ClassRoom(p2n.LocationDesigner):
         def melt(self):
             return PupilHelper, TeacherHelper
 
@@ -43,15 +43,15 @@ def test_2():
         }
     )
 
-    class PupilHelper(p2n.MagicLocation):
+    class PupilHelper(p2n.LocationDesigner):
         def filter(self, agent):
             return agent.status == "pupil"
 
-    class TeacherHelper(p2n.MagicLocation):
+    class TeacherHelper(p2n.LocationDesigner):
         def filter(self, agent):
             return agent.status == "teacher"
 
-    class ClassRoom(p2n.MagicLocation):
+    class ClassRoom(p2n.LocationDesigner):
         def filter(self, agent):
             return agent.classroom_id == 1
 

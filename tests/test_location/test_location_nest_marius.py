@@ -2,12 +2,12 @@ import pop2net as p2n
 
 
 def test_1():
-    class CityDesigner(p2n.MagicLocation):
-        location_name = "City"
+    class CityDesigner(p2n.LocationDesigner):
+        label = "City"
         n_agents = 4
 
-    class GroupDesigner(p2n.MagicLocation):
-        location_name = "Group"
+    class GroupDesigner(p2n.LocationDesigner):
+        label = "Group"
         n_agents = 2
 
         def split(self, agent):
@@ -21,17 +21,20 @@ def test_1():
         agent.group = i % 2
 
     creator.create_locations(
-        location_classes=[CityDesigner, GroupDesigner],
+        location_designers=[CityDesigner, GroupDesigner],
         delete_magic_agent_attributes=False,
     )
 
-    for location in model.locations.select(model.locations.type == "City"):
+    for agent in model.agents:
+        print(vars(agent))
+
+    for location in model.locations.select(model.locations.label == "City"):
         assert int(location.agents[0].group) == 0
         assert int(location.agents[1].group) == 1
         assert int(location.agents[2].group) == 0
         assert int(location.agents[3].group) == 1
 
-    for location in model.locations.select(model.locations.type == "Group"):
+    for location in model.locations.select(model.locations.label == "Group"):
         assert location.agents[0].group == location.agents[1].group
 
     # not all members of the same group are also in the same city (which is not desired)
@@ -46,17 +49,17 @@ def test_1():
     model = p2n.Model()
     creator = p2n.Creator(model=model)
     creator.create_locations(
-        location_classes=[CityDesigner, GroupNestedInCityDesigner],
+        location_designers=[CityDesigner, GroupNestedInCityDesigner],
         delete_magic_agent_attributes=False,
     )
 
-    for location in model.locations.select(model.locations.type == "City"):
+    for location in model.locations.select(model.locations.label == "City"):
         assert int(location.agents[0].group) == 0
         assert int(location.agents[1].group) == 1
         assert int(location.agents[2].group) == 0
         assert int(location.agents[3].group) == 1
 
-    for location in model.locations.select(model.locations.type == "Group"):
+    for location in model.locations.select(model.locations.label == "Group"):
         assert location.agents[0].group == location.agents[1].group
 
     # all members of a group are in the same city

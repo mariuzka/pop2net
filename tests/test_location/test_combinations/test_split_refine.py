@@ -18,7 +18,7 @@ def test_1():
         },
     )
 
-    class ClassRoom(p2n.MagicLocation):
+    class ClassRoom(p2n.LocationDesigner):
         def split(self, agent):
             return agent.status
 

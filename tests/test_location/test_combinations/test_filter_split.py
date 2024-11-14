@@ -14,14 +14,14 @@ def test_1():
     model = p2n.Model()
     creator = p2n.Creator(model)
 
-    class TestLocationA(p2n.MagicLocation):
+    class TestLocationA(p2n.LocationDesigner):
         def filter(self, agent):
             return agent.status == "A"
 
         def split(self, agent):
             return agent.sex
 
-    class TestLocationB(p2n.MagicLocation):
+    class TestLocationB(p2n.LocationDesigner):
         def filter(self, agent):
             return agent.status == "B"
 

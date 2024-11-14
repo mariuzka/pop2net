@@ -65,11 +65,11 @@ def test_location_size():
 #     only_exact_n_agents_pizza_group,
 #     only_exact_n_agents_pasta_group,
 # ):
-#     class Table(p2n.MagicLocation):
+#     class Table(p2n.LocationDesigner):
 #         recycle = recycle_
 
 #         def melt(self):
-#             class PizzaGroup(p2n.MagicLocation):
+#             class PizzaGroup(p2n.LocationDesigner):
 #                 n_agents = size_pizza_group
 #                 only_exact_n_agents = only_exact_n_agents_pizza_group
 
@@ -82,7 +82,7 @@ def test_location_size():
 #                 def weight(self, agent):
 #                     return 10
 
-#             class PastaGroup(p2n.MagicLocation):
+#             class PastaGroup(p2n.LocationDesigner):
 #                 n_agents = size_pasta_group
 #                 only_exact_n_agents = only_exact_n_agents_pasta_group
 

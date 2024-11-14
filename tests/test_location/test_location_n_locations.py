@@ -7,7 +7,7 @@ def test_1():
     model = p2n.Model()
     creator = p2n.Creator(model=model)
 
-    class ClassRoom(p2n.MagicLocation):
+    class ClassRoom(p2n.LocationDesigner):
         n_locations = 4
         n_agents = None
         only_exact_n_agents = False
@@ -27,7 +27,7 @@ def test_2():
     model = p2n.Model()
     creator = p2n.Creator(model=model)
 
-    class ClassRoom(p2n.MagicLocation):
+    class ClassRoom(p2n.LocationDesigner):
         n_locations = 4
         n_agents = 2
 
@@ -48,7 +48,7 @@ def test_3():
     model = p2n.Model()
     creator = p2n.Creator(model=model)
 
-    class ClassRoom(p2n.MagicLocation):
+    class ClassRoom(p2n.LocationDesigner):
         n_locations = 4
         n_agents = 2
         only_exact_n_agents = False
@@ -77,7 +77,7 @@ def test_4():
     model = p2n.Model()
     creator = p2n.Creator(model=model)
 
-    class ClassRoom(p2n.MagicLocation):
+    class ClassRoom(p2n.LocationDesigner):
         n_locations = 4
         n_agents = 3
         only_exact_n_agents = True

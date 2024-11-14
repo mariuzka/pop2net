@@ -8,7 +8,7 @@ def test_1():
     model = p2n.Model()
     creator = p2n.Creator(model=model)
 
-    class ClassRoom(p2n.MagicLocation):
+    class ClassRoom(p2n.LocationDesigner):
         n_locations = 3
 
         def refine(self):
@@ -32,7 +32,7 @@ def test_2():
     for _ in range(10):
         p2n.Agent(model=model)
 
-    class ClassRoom(p2n.MagicLocation):
+    class ClassRoom(p2n.LocationDesigner):
         n_locations = 2
 
         def refine(self):

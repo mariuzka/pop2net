@@ -13,10 +13,10 @@ def test_1():
         }
     )
 
-    class School(p2n.MagicLocation):
+    class School(p2n.LocationDesigner):
         n_locations = 1
 
-    class Classroom(p2n.MagicLocation):
+    class Classroom(p2n.LocationDesigner):
         n_locations = 2
 
         def nest(self):
@@ -54,10 +54,10 @@ def test_2():
         }
     )
 
-    class School(p2n.MagicLocation):
+    class School(p2n.LocationDesigner):
         n_locations = 2
 
-    class Classroom(p2n.MagicLocation):
+    class Classroom(p2n.LocationDesigner):
         n_locations = 1
 
         def nest(self):
