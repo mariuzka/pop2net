@@ -20,10 +20,7 @@ def test_1():
         def filter(self, agent):
             return agent.status == "A"
 
-    creator.create(df=df, location_classes=[TestLocation])
-    inspector = p2n.NetworkInspector(model=model)
-    inspector.plot_bipartite_network()
-    inspector.plot_agent_network(agent_attrs=["status"])
+    creator.create(df=df, location_designers=[TestLocation])
 
     assert len(model.agents) == 4
     assert len(model.locations) == 2
@@ -43,10 +40,7 @@ def test_1():
         def filter(self, agent):
             return agent.status == "A"
 
-    creator.create(df=df, location_classes=[TestLocation])
-    inspector = p2n.NetworkInspector(model=model)
-    inspector.plot_bipartite_network()
-    inspector.plot_agent_network(agent_attrs=["status"])
+    creator.create(df=df, location_designers=[TestLocation])
 
     assert len(model.agents) == 4
     assert len(model.locations) == 1

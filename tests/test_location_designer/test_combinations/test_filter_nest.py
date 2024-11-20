@@ -41,10 +41,7 @@ def test_1():
         def filter(self, agent):
             return agent.class_id == 1 or agent.class_id == 2
 
-    creator.create(df=df, location_classes=[Classroom1, Classroom2, School])
-    inspector = p2n.NetworkInspector(model=model)
-    inspector.plot_bipartite_network()
-    inspector.plot_agent_network(agent_attrs=["status", "class_id"])
+    creator.create(df=df, location_designers=[Classroom1, Classroom2, School])
 
     assert len(model.agents) == 9
     assert len(model.locations) == 3
@@ -54,7 +51,6 @@ def test_1():
     assert all(not agent.locations for agent in model.agents if agent.class_id == 3)
 
 
-# %%
 def test_2():
     df = pd.DataFrame(
         {
@@ -97,11 +93,7 @@ def test_2():
         def filter(self, agent):
             return agent.school_id == 2
 
-    creator.create(df=df, location_classes=[Classroom1, Classroom2, School1, School2])
-    inspector = p2n.NetworkInspector(model=model)
-    inspector.plot_bipartite_network()
-    inspector.plot_agent_network(agent_attrs=["status", "school_id"])
-    print(model.locations[3])
+    creator.create(df=df, location_designers=[Classroom1, Classroom2, School1, School2])
 
     assert len(model.agents) == 9
     assert len(model.locations) == 4

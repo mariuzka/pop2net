@@ -6,7 +6,7 @@ import pop2net as p2n
 def test_1():
     model = p2n.Model()
     creator = p2n.Creator(model=model)
-    inspector = p2n.NetworkInspector(model=model)
+
     df = pd.DataFrame(
         {
             "status": ["A", "B", "A", "B", "A"],
@@ -24,9 +24,7 @@ def test_1():
                 return 1
 
     creator.create_agents(df=df)
-    creator.create_locations(location_classes=[ClassRoom])
-    inspector.plot_bipartite_network()
-    inspector.plot_agent_network(agent_attrs=["status"])
+    creator.create_locations(location_designers=[ClassRoom])
 
     assert len(model.locations) == 1
     assert len(model.agents) == 5

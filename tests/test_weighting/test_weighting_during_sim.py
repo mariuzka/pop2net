@@ -131,6 +131,8 @@ def test_weighting_during_sim6():
 
 def test_weighting_during_sim7():
     class WeightedLocation(p2n.Location):
+        label = "WeightedLocation"
+
         def weight(self, agent):
             return self.model.t
 
@@ -143,7 +145,7 @@ def test_weighting_during_sim7():
             self.location2.add_agent(agent=self.agent, weight=10)
 
         def step(self):
-            self.update_weights(location_classes=[WeightedLocation])
+            self.update_weights(location_labels=["WeightedLocation"])
 
         def update(self):
             assert self.location.get_weight(agent=self.agent) == self.t

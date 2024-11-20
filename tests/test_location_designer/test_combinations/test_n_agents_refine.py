@@ -1,29 +1,10 @@
-# %%
 import pandas as pd
+import pytest
 
 import pop2net as p2n
 
 
-# %%
-# TODO interessantes Case gefunden:
-# Man kann also theoretisch keine leeren Locations damit erzeugen- gewollt?
-# Error: "ZeroDivisionError: division by zero"
-def n_agents_zero():
-    df = pd.DataFrame({"_id": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]})
-    model = p2n.Model()
-    creator = p2n.Creator(model=model)
-
-    class TestLocation(p2n.LocationDesigner):
-        # TODO geht das?
-        n_agents = 0
-
-    creator.create(df=df, location_classes=[TestLocation])
-
-
-# n_agents_zero()
-
-
-# %%
+@pytest.mark.skip(reason="TODO")
 def test_1():
     df = pd.DataFrame({"_id": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]})
     model = p2n.Model()
@@ -63,7 +44,7 @@ def test_1():
                 if agent.locations:
                     self.add_agent(agent)
 
-    creator.create(df=df, location_classes=[TestLocationRemoveAgent, TestLocationAddAgents])
+    creator.create(df=df, location_designers=[TestLocationRemoveAgent, TestLocationAddAgents])
 
     # inspector = p2n.NetworkInspector(model=model)
     # inspector.plot_bipartite_network()

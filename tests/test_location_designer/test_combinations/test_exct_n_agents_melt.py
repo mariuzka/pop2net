@@ -17,14 +17,14 @@ def test_1():
     model = p2n.Model()
     creator = p2n.Creator(model)
 
-    class LocA(p2n.MeltLocation):
+    class LocA(p2n.MeltLocationDesigner):
         n_agents = 2
         only_exact_n_agents = False
 
         def filter(self, agent):
             return agent.status == "A"
 
-    class LocB(p2n.MeltLocation):
+    class LocB(p2n.MeltLocationDesigner):
         n_agents = 2
         only_exact_n_agents = False
 
@@ -36,10 +36,7 @@ def test_1():
             return LocA, LocB
 
     creator.create_agents(df=df)
-    creator.create_locations(location_classes=[LocAB])
-    inspector = p2n.NetworkInspector(model)
-    inspector.plot_bipartite_network()
-    inspector.plot_agent_network(agent_attrs=["status"])
+    creator.create_locations(location_designers=[LocAB])
 
     assert len(model.agents) == 6
     assert len(model.locations) == 2
@@ -52,14 +49,14 @@ def test_1():
     model = p2n.Model()
     creator = p2n.Creator(model)
 
-    class LocA(p2n.MeltLocation):
+    class LocA(p2n.MeltLocationDesigner):
         n_agents = 2
         only_exact_n_agents = True
 
         def filter(self, agent):
             return agent.status == "A"
 
-    class LocB(p2n.MeltLocation):
+    class LocB(p2n.MeltLocationDesigner):
         n_agents = 2
         only_exact_n_agents = True
 
@@ -74,7 +71,7 @@ def test_1():
             return LocA, LocB
 
     creator.create_agents(df=df)
-    creator.create_locations(location_classes=[LocAB])
+    creator.create_locations(location_designers=[LocAB])
     inspector = p2n.NetworkInspector(model)
     inspector.plot_bipartite_network()
     inspector.plot_agent_network(agent_attrs=["status"])

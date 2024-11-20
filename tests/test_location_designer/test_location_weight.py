@@ -18,7 +18,7 @@ def test_1():
             return 1
 
     creator.create_agents(df=df)
-    creator.create_locations(location_classes=[TestLocation])
+    creator.create_locations(location_designers=[TestLocation])
 
     assert len(model.locations) == 1
     assert len(model.agents) == 5
@@ -52,7 +52,7 @@ def test_2():
                 return 5
 
     creator.create_agents(df=df)
-    creator.create_locations(location_classes=[TestLocation])
+    creator.create_locations(location_designers=[TestLocation])
 
     assert len(model.locations) == 1
     assert len(model.agents) == 5
@@ -86,7 +86,7 @@ def test_3():
             return agent.status
 
     creator.create_agents(df=df)
-    creator.create_locations(location_classes=[TestLocation])
+    creator.create_locations(location_designers=[TestLocation])
 
     assert len(model.locations) == 1
     assert len(model.agents) == 5

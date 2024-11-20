@@ -29,7 +29,7 @@ def test_1():
             return agent.sex
 
     creator.create_agents(df=df)
-    creator.create_locations(location_classes=[TestLocationA, TestLocationB])
+    creator.create_locations(location_designers=[TestLocationA, TestLocationB])
     assert len(model.locations) == 4
     assert len(model.agents) == 5
 

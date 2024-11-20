@@ -79,7 +79,7 @@ def test_model_connect_agents_and_disconnect_agents_2():
         location_cls=School,
     )
 
-    model.disconnect_agents(agents, location_classes=[Home], remove_locations=False)
+    model.disconnect_agents(agents, location_labels=[Home], remove_locations=False)
 
     assert len(model.agents) == 3
 
@@ -94,7 +94,7 @@ def test_model_connect_agents_and_disconnect_agents_2():
     assert len(agent2.locations) == 1
     assert len(agent3.locations) == 0
 
-    model.disconnect_agents(agents, location_classes=[School], remove_locations=False)
+    model.disconnect_agents(agents, location_labels=[School], remove_locations=False)
 
     assert len(model.agents) == 3
 
@@ -110,7 +110,7 @@ def test_model_connect_agents_and_disconnect_agents_2():
     assert len(agent3.locations) == 0
 
     model.connect_agents(agents=agents, location_cls=School)
-    model.disconnect_agents(agents=[agent1, agent2], location_classes=[School])
+    model.disconnect_agents(agents=[agent1, agent2], location_labels=[School])
 
     assert len(model.agents) == 3
 
@@ -151,7 +151,7 @@ def test_model_connect_agents_and_disconnect_agents_3():
         location_cls=School,
     )
 
-    model.disconnect_agents(agents, location_classes=[School], remove_locations=True)
+    model.disconnect_agents(agents, location_labels=[School], remove_locations=True)
 
     assert len(model.agents) == 3
 
@@ -164,7 +164,7 @@ def test_model_connect_agents_and_disconnect_agents_3():
     assert len(agent2.locations) == 1
     assert len(agent3.locations) == 1
 
-    model.disconnect_agents(agents, location_classes=[Home], remove_locations=True)
+    model.disconnect_agents(agents, location_labels=[Home], remove_locations=True)
 
     assert len(model.agents) == 3
 
@@ -222,8 +222,8 @@ def test_model_connect_agents_and_disconnect_agents_5():
         pass
 
     assert len(agent1.shared_locations(agent2)) == 0
-    assert len(agent1.shared_locations(agent=agent2, location_classes=[Home])) == 0
-    assert len(agent1.shared_locations(agent=agent2, location_classes=[School])) == 0
+    assert len(agent1.shared_locations(agent=agent2, location_labels=[Home])) == 0
+    assert len(agent1.shared_locations(agent=agent2, location_labels=[School])) == 0
 
     model.connect_agents(
         agents=[agent1, agent2],
@@ -231,8 +231,8 @@ def test_model_connect_agents_and_disconnect_agents_5():
     )
 
     assert len(agent1.shared_locations(agent=agent2)) == 1
-    assert len(agent1.shared_locations(agent=agent2, location_classes=[Home])) == 1
-    assert len(agent1.shared_locations(agent=agent2, location_classes=[School])) == 0
+    assert len(agent1.shared_locations(agent=agent2, location_labels=[Home])) == 1
+    assert len(agent1.shared_locations(agent=agent2, location_labels=[School])) == 0
 
     model.connect_agents(
         agents=[agent1, agent2],
@@ -240,11 +240,11 @@ def test_model_connect_agents_and_disconnect_agents_5():
     )
 
     assert len(agent1.shared_locations(agent=agent2)) == 2
-    assert len(agent1.shared_locations(agent=agent2, location_classes=[Home])) == 1
-    assert len(agent1.shared_locations(agent=agent2, location_classes=[School])) == 1
+    assert len(agent1.shared_locations(agent=agent2, location_labels=[Home])) == 1
+    assert len(agent1.shared_locations(agent=agent2, location_labels=[School])) == 1
 
     model.disconnect_agents(agents=[agent1, agent2], remove_locations=True)
 
     assert len(agent1.shared_locations(agent=agent2)) == 0
-    assert len(agent1.shared_locations(agent=agent2, location_classes=[Home])) == 0
-    assert len(agent1.shared_locations(agent=agent2, location_classes=[School])) == 0
+    assert len(agent1.shared_locations(agent=agent2, location_labels=[Home])) == 0
+    assert len(agent1.shared_locations(agent=agent2, location_labels=[School])) == 0

@@ -12,11 +12,11 @@ def test_1():
         }
     )
 
-    class PupilHelper(p2n.LocationDesigner):
+    class PupilHelper(p2n.MeltLocationDesigner):
         def filter(self, agent):
             return agent.status == "pupil"
 
-    class TeacherHelper(p2n.LocationDesigner):
+    class TeacherHelper(p2n.MeltLocationDesigner):
         def filter(self, agent):
             return agent.status == "teacher"
 
@@ -25,7 +25,7 @@ def test_1():
             return PupilHelper, TeacherHelper
 
     creator.create_agents(df=df)
-    creator.create_locations(location_classes=[ClassRoom])
+    creator.create_locations(location_designers=[ClassRoom])
 
     assert len(model.agents) == 5
     assert len(model.locations) == 1
@@ -43,11 +43,11 @@ def test_2():
         }
     )
 
-    class PupilHelper(p2n.LocationDesigner):
+    class PupilHelper(p2n.MeltLocationDesigner):
         def filter(self, agent):
             return agent.status == "pupil"
 
-    class TeacherHelper(p2n.LocationDesigner):
+    class TeacherHelper(p2n.MeltLocationDesigner):
         def filter(self, agent):
             return agent.status == "teacher"
 
@@ -59,7 +59,7 @@ def test_2():
             return PupilHelper, TeacherHelper
 
     creator.create_agents(df=df)
-    creator.create_locations(location_classes=[ClassRoom])
+    creator.create_locations(location_designers=[ClassRoom])
 
     assert len(model.agents) == 6
     assert len(model.locations) == 1

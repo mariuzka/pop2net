@@ -126,7 +126,7 @@ def test_to_list():
 
 
 def test_get_cls_as_str():
-    class MyLocation(p2n.MagicLocation):
+    class MyLocation(p2n.LocationDesigner):
         pass
 
     assert utils._get_cls_as_str(MyLocation) == "MyLocation"

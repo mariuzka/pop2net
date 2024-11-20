@@ -30,15 +30,12 @@ def test_1():
             return agent.friend_group
 
     creator.create_agents(df=df)
-    creator.create_locations(location_classes=[TestLocationA, TestLocationB])
-    inspector = p2n.NetworkInspector(model=model)
-    inspector.plot_bipartite_network()
-    inspector.plot_agent_network(agent_attrs=["friend_group", "filter_group"])
+    creator.create_locations(location_designers=[TestLocationA, TestLocationB])
 
     assert len(model.locations) == 4
     assert len(model.agents) == 7
-    assert len([location for location in model.locations if location.type == "TestLocationA"]) == 2
-    assert len([location for location in model.locations if location.type == "TestLocationB"]) == 2
+    assert len([location for location in model.locations if location.label == "TestLocationA"]) == 2
+    assert len([location for location in model.locations if location.label == "TestLocationB"]) == 2
 
     assert len(model.locations[0].agents) == 2
     assert all(agent.friend_group == 1 for agent in model.locations[0].agents)
