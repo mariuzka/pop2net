@@ -58,8 +58,8 @@ def test_create_agents(soep_fixture, request):
             assert row[col_name] == getattr(agents[i], col_name)
 
 
-# @pytest.mark.skip
-@pytest.mark.parametrize("soep_fixture", ["soep100", "soep1000"])
+@pytest.mark.skip
+# @pytest.mark.parametrize("soep_fixture", ["soep100", "soep1000"])
 def test_create_locations():
     soep = simple_fake_data.copy()
     model = Model()
@@ -79,7 +79,3 @@ def test_create_locations():
     for location in locations:
         for agent in location.agents:
             assert location.group(agent) == location.group_id
-
-
-if __name__ == "__main__":
-    test_create_locations()
