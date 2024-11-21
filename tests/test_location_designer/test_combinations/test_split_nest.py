@@ -29,7 +29,7 @@ def test_1():
     creator = p2n.Creator(model=model)
     creator.create(
         df=df,
-        location_classes=[School, Classroom],
+        location_designers=[School, Classroom],
         delete_magic_agent_attributes=False,
     )
 
@@ -37,7 +37,7 @@ def test_1():
     assert len(model.locations) == 6
 
     for location in model.locations:
-        if location.type == "School":
+        if location.label == "School":
             assert len(location.agents) == 4
             counter = Counter([agent.group for agent in location.agents])
             assert counter[1] == 2
@@ -46,7 +46,7 @@ def test_1():
     assert not all(
         location.agents[0].School == location.agents[1].School
         for location in model.locations
-        if location.type == "Classroom"
+        if location.label == "Classroom"
     )
 
     class School(p2n.LocationDesigner):
@@ -59,13 +59,13 @@ def test_1():
             return agent.group
 
         def nest(self):
-            return School
+            return "School"
 
     model = p2n.Model()
     creator = p2n.Creator(model=model)
     creator.create(
         df=df,
-        location_classes=[School, Classroom],
+        location_designers=[School, Classroom],
         delete_magic_agent_attributes=False,
     )
 
@@ -74,29 +74,29 @@ def test_1():
     assert all(
         location.agents[0].School == location.agents[1].School
         for location in model.locations
-        if location.type == "Classroom"
+        if location.label == "Classroom"
     )
 
     for location in model.locations:
-        if location.type == "School":
+        if location.label == "School":
             assert len(location.agents) == 4
-        if location.type == "Classroom":
+        if location.label == "Classroom":
             assert len(location.agents) == 2
 
     for location in model.locations:
-        if location.type == "School":
+        if location.label == "School":
             assert len(location.agents) == 4
             counter = Counter([agent.group for agent in location.agents])
             assert counter[1] == 2
             assert counter[2] == 2
 
     assert any(
-        agent.neighbors(location_classes=[Classroom])
-        not in agent.neighbors(location_classes=[School])
+        agent.neighbors(location_labels=["Classroom"])
+        not in agent.neighbors(location_labels=["School"])
         for agent in model.agents
     )
 
     for location in model.locations:
-        if location.type == "School":
+        if location.label == "School":
             for agent in location.agents:
                 assert all(agent.School == nghbr.School for nghbr in agent.neighbors())

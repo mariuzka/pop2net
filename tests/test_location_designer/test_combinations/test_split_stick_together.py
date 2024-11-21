@@ -25,7 +25,7 @@ def test_1():
             return agent.friend_group
 
     creator.create_agents(df=df)
-    creator.create_locations(location_classes=[TestLocation])
+    creator.create_locations(location_designers=[TestLocation])
 
     for i, location in enumerate(model.locations):
         print(f"Location;{i}")

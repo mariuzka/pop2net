@@ -27,7 +27,7 @@ def test_1():
 
     model = p2n.Model()
     creator = p2n.Creator(model=model)
-    creator.create(df=df, location_classes=[School, Classroom])
+    creator.create(df=df, location_designers=[School, Classroom])
     inspector = p2n.NetworkInspector(model)
     inspector.plot_bipartite_network()
     inspector.plot_agent_network(agent_attrs=df)
@@ -66,7 +66,7 @@ def test_2():
     creator = p2n.Creator(model=model)
     creator.create(
         df=df,
-        location_classes=[School, Classroom],
+        location_designers=[School, Classroom],
         delete_magic_agent_attributes=False,
     )
 
@@ -74,7 +74,7 @@ def test_2():
     assert len(model.locations) == 6
 
     for location in model.locations:
-        if location.type == "School":
+        if location.label == "School":
             assert len(location.agents) == 4
             counter = Counter([agent.group for agent in location.agents])
             assert counter[1] == 2
@@ -83,7 +83,7 @@ def test_2():
     assert not all(
         location.agents[0].School == location.agents[1].School
         for location in model.locations
-        if location.type == "Classroom"
+        if location.label == "Classroom"
     )
 
     inspector = p2n.NetworkInspector(model)
@@ -100,13 +100,13 @@ def test_2():
             return agent.group
 
         def nest(self):
-            return School
+            return "School"
 
     model = p2n.Model()
     creator = p2n.Creator(model=model)
     creator.create(
         df=df,
-        location_classes=[School, Classroom],
+        location_designers=[School, Classroom],
         delete_magic_agent_attributes=False,
     )
 
@@ -115,7 +115,7 @@ def test_2():
     assert all(
         location.agents[0].School == location.agents[1].School
         for location in model.locations
-        if location.type == "Classroom"
+        if location.label == "Classroom"
     )
 
     inspector = p2n.NetworkInspector(model)
@@ -123,26 +123,26 @@ def test_2():
     inspector.plot_agent_network(agent_attrs=df.columns, agent_color="group")
 
     for location in model.locations:
-        if location.type == "School":
+        if location.label == "School":
             assert len(location.agents) == 4
-        if location.type == "Classroom":
+        if location.label == "Classroom":
             assert len(location.agents) == 2
 
     for location in model.locations:
-        if location.type == "School":
+        if location.label == "School":
             assert len(location.agents) == 4
             counter = Counter([agent.group for agent in location.agents])
             assert counter[1] == 2
             assert counter[2] == 2
 
     assert any(
-        agent.neighbors(location_classes=[Classroom])
-        not in agent.neighbors(location_classes=[School])
+        agent.neighbors(location_labels=[Classroom])
+        not in agent.neighbors(location_labels=[School])
         for agent in model.agents
     )
 
     for location in model.locations:
-        if location.type == "School":
+        if location.label == "School":
             for agent in location.agents:
                 assert all(agent.School == nghbr.School for nghbr in agent.neighbors())
 
@@ -165,17 +165,17 @@ def test_3():
         agent.group = i % 2
 
     creator.create_locations(
-        location_classes=[City, Group],
+        location_designers=[City, Group],
         delete_magic_agent_attributes=False,
     )
 
-    for location in model.locations.select(model.locations.type == "City"):
+    for location in model.locations.select(model.locations.label == "City"):
         assert int(location.agents[0].group) == 0
         assert int(location.agents[1].group) == 1
         assert int(location.agents[2].group) == 0
         assert int(location.agents[3].group) == 1
 
-    for location in model.locations.select(model.locations.type == "Group"):
+    for location in model.locations.select(model.locations.label == "Group"):
         assert location.agents[0].group == location.agents[1].group
 
     # not all members of the same group are also in the same city (which is not desired)
@@ -190,17 +190,17 @@ def test_3():
     model = p2n.Model()
     creator = p2n.Creator(model=model)
     creator.create_locations(
-        location_classes=[City, GroupNestedInCity],
+        location_designers=[City, GroupNestedInCity],
         delete_magic_agent_attributes=False,
     )
 
-    for location in model.locations.select(model.locations.type == "City"):
+    for location in model.locations.select(model.locations.label == "City"):
         assert int(location.agents[0].group) == 0
         assert int(location.agents[1].group) == 1
         assert int(location.agents[2].group) == 0
         assert int(location.agents[3].group) == 1
 
-    for location in model.locations.select(model.locations.type == "Group"):
+    for location in model.locations.select(model.locations.label == "Group"):
         assert location.agents[0].group == location.agents[1].group
 
     # all members of a group are in the same city

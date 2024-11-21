@@ -1,6 +1,7 @@
 import pandas as pd
 
 import pop2net as p2n
+import pytest
 
 
 def test_1():
@@ -517,10 +518,11 @@ def test_split_2():
     assert len(model.locations[4].agents) == 2
 
 
+# TODO: Maybe bring back the compatibility of n_locations and split in the future
+@pytest.mark.skip(reason="n_locations and split are not compatible any more")
 def test_split_3():
     model = p2n.Model()
     creator = p2n.Creator(model)
-    inspector = p2n.NetworkInspector(model)
 
     class TestLocation(p2n.LocationDesigner):
         n_agents = 2
@@ -539,8 +541,6 @@ def test_split_3():
 
     creator.create_agents(df=df)
     creator.create_locations(location_designers=[TestLocation])
-
-    inspector.plot_bipartite_network()
 
     assert len(model.locations) == 3
     assert len(model.locations[0].agents) == 2

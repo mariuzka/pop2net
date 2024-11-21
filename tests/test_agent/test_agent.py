@@ -188,7 +188,7 @@ def test_chef_agents():
             return agent.food
 
         def nest(self):
-            return Town
+            return "Town"
 
         def assert_(self):
             # assert that affiliated agents are affiliated with the same Town
@@ -197,7 +197,7 @@ def test_chef_agents():
                     {
                         agent.locations.select(agent.locations.label == "Town")[0]
                         for agent in self.agents
-                        if isinstance(agent, MyAgent)  # Chef-agents are not affiliated with Towns
+                        if agent.type == "MyAgent"  # Chef-agents are not affiliated with Towns
                     },
                 )
                 == 1
@@ -225,10 +225,26 @@ def test_chef_agents():
 
             assert self.get_agent_weight(couple_agent) == 12 + 1
 
-            assert (
-                self.locations.select(self.locations.label == "Town")[0]
-                is self.shared_locations(couple_agent, location_labels=["Town"])[0]
-            )
+            print(self.locations)
+            for location in self.locations:
+                print(location.label)
+
+            print(self.shared_locations(couple_agent))
+            for l in self.shared_locations(couple_agent):
+                print(l.label)
+
+            print([location for location in self.locations if location.label == "Town"])
+            print(self.shared_locations(couple_agent, location_labels=["Town"]))
+
+            for location in self.locations:
+                print(location.label, location.id)
+
+            for location in couple_agent.locations:
+                print(location.label, location.id)
+
+            assert [location for location in self.locations if location.label == "Town"][
+                0
+            ] is self.shared_locations(couple_agent, location_labels=["Town"])[0]
 
     df = pd.DataFrame(
         {
@@ -306,7 +322,7 @@ def test_table_agents():
             return PizzaGroup, PastaGroup
 
         def nest(self):
-            return Restaurant
+            return "Restaurant"
 
         def weight(self, agent):
             return 5

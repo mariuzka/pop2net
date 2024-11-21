@@ -29,13 +29,13 @@ def test_1a():
     assert len(model.locations) == 2
     assert len(model.agents) == 3
 
-    assert agent_max.shared_locations(agent=agent_marius)[0].type == "Meeting1"
+    assert agent_max.shared_locations(agent=agent_marius)[0].label == "Meeting1"
     assert not bool(agent_max.shared_locations(agent=agent_lukas))
 
-    assert agent_marius.shared_locations(agent=agent_max)[0].type == "Meeting1"
-    assert agent_marius.shared_locations(agent=agent_lukas)[0].type == "Meeting2"
+    assert agent_marius.shared_locations(agent=agent_max)[0].label == "Meeting1"
+    assert agent_marius.shared_locations(agent=agent_lukas)[0].label == "Meeting2"
 
-    assert agent_lukas.shared_locations(agent=agent_marius)[0].type == "Meeting2"
+    assert agent_lukas.shared_locations(agent=agent_marius)[0].label == "Meeting2"
     assert not bool(agent_lukas.shared_locations(agent=agent_max))
 
 

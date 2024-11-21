@@ -1,10 +1,8 @@
-# %%
 import pandas as pd
 
 import pop2net as p2n
 
 
-# %%
 def test_1():
     df = pd.DataFrame(
         {
@@ -35,7 +33,7 @@ def test_1():
 
     model = p2n.Model()
     creator = p2n.Creator(model)
-    creator.create(df=df, location_classes=[TestLocation1])
+    creator.create(df=df, location_designers=[TestLocation1])
     assert len(model.agents) == 14
     assert len(model.locations) == 2
     assert len(model.locations[0].agents) == 7
@@ -45,7 +43,7 @@ def test_1():
 
     model = p2n.Model()
     creator = p2n.Creator(model)
-    creator.create(df=df, location_classes=[TestLocation2])
+    creator.create(df=df, location_designers=[TestLocation2])
     assert len(model.agents) == 14
     assert len(model.locations) == 2
     assert len(model.locations[0].agents) == 7
@@ -55,7 +53,7 @@ def test_1():
 
     model = p2n.Model()
     creator = p2n.Creator(model)
-    creator.create(df=df, location_classes=[TestLocation3])
+    creator.create(df=df, location_designers=[TestLocation3])
     assert len(model.agents) == 14
     assert len(model.locations) == 4
     assert len(model.locations[0].agents) == 5
@@ -66,6 +64,3 @@ def test_1():
     assert all(agent.status == "A" for agent in model.locations[1].agents)
     assert all(agent.status == "B" for agent in model.locations[2].agents)
     assert all(agent.status == "B" for agent in model.locations[3].agents)
-
-
-# %%

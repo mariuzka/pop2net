@@ -294,8 +294,7 @@ class Model(ap.Model):
             ),
         )
 
-    # TODO: evlt. filtern nach Klasse oder Key einbauen
-    def _objects_between_objects(self, object1, object2, object_classes: list | None = None):
+    def _objects_between_objects(self, object1, object2) -> list:
         paths = list(
             nx.all_simple_paths(
                 G=self.g,
@@ -304,56 +303,51 @@ class Model(ap.Model):
                 cutoff=2,
             ),
         )
+        return [self.g.nodes[path[1]]["_obj"] for path in paths]
 
-        objects_between = [self.g.nodes[path[1]]["_obj"] for path in paths]
-
-        if object_classes is not None:
-            if len(object_classes) < 1:
-                # TODO
-                raise Exception
-
-            object_classes = [
-                (utils._get_cls_as_str(cls) if not isinstance(cls, str) else cls)
-                for cls in object_classes
-            ]
-            filtered_objects_between = [o for o in objects_between if o.type in object_classes]
-            return filtered_objects_between
-        else:
-            return objects_between
-
-    def locations_between_agents(self, agent1, agent2, location_labels: list | None = None):
+    def locations_between_agents(self, agent1, agent2, location_labels: list[str] | None = None):
         """Return all locations the connect two agents.
 
         Args:
             agent1 (Agent): Agent 1.
             agent2 (Agent): Agent 2.
             location_labels (tuple, optional): Constrain the locations to the following types.
-                Defaults to ().
+                Defaults to None.
 
         Returns:
             LocationList: A list of locations.
         """
-        return LocationList(
+        locations = LocationList(
             model=self.model,
-            objs=self._objects_between_objects(agent1, agent2, location_labels),
+            objs=self._objects_between_objects(object1=agent1, object2=agent2),
         )
 
-    def agents_between_locations(self, location1, location2, agent_classes: list | None = None):
+        if location_labels is not None:
+            locations = [location for location in locations if location.label in location_labels]
+
+        return locations
+
+    def agents_between_locations(self, location1, location2, agent_types: list[str] | None = None):
         """Return all agents between two locations.
 
         Args:
             location1 (Location): Location 1.
             location2 (Location): Location 2.
-            agent_classes (tuple, optional): Constrain the agents to the following types.
-                Defaults to ().
+            agent_types (tuple, optional): Constrain the agents to the following types.
+                Defaults to None.
 
         Returns:
             AgentList: A list of agents.
         """
-        return AgentList(
+        agents = AgentList(
             model=self.model,
-            objs=self._objects_between_objects(location1, location2, agent_classes),
+            objs=self._objects_between_objects(location1, location2),
         )
+
+        if agent_types is not None:
+            agents = [agent for agent in agents if agent.type in agent_types]
+
+        return agents
 
     def set_weight(self, agent, location, weight: float | None = None) -> None:
         """Set the weight of an agent at a location.

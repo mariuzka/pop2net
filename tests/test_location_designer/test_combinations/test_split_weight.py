@@ -6,7 +6,7 @@ import pop2net as p2n
 def test_1():
     model = p2n.Model()
     creator = p2n.Creator(model=model)
-    inspector = p2n.NetworkInspector(model=model)
+
     df = pd.DataFrame({"status": ["A", "B", "B", "A", "A"]})
 
     class ClassRoom(p2n.LocationDesigner):
@@ -17,9 +17,7 @@ def test_1():
             return 5
 
     creator.create_agents(df=df)
-    creator.create_locations(location_classes=[ClassRoom])
-    inspector.plot_bipartite_network()
-    inspector.plot_agent_network()
+    creator.create_locations(location_designers=[ClassRoom])
 
     assert len(model.locations) == 2
     assert len(model.agents) == 5
@@ -28,12 +26,7 @@ def test_1():
     assert all(agent.status == "A" for agent in model.locations[0].agents)
     assert all(agent.status == "B" for agent in model.locations[1].agents)
 
-    # TODO Warum triggered das nicht assert?
-    # assert all([[location.get_weight(agent) == 4 for agent in location.agents] for location in model.locations])
-
-    # TODO
-    # keine Ahnung wie ich das effizienter ermitteln könnte
-    # List comprehension geschachtelt geht bei mir nicht siehe oben
+    #
     locations_weights = []
     # model sum weight
     for location in model.locations:
@@ -48,7 +41,7 @@ def test_1():
 def test_2():
     model = p2n.Model()
     creator = p2n.Creator(model=model)
-    inspector = p2n.NetworkInspector(model=model)
+
     df = pd.DataFrame(
         {
             "status": ["A", "B", "A", "B", "A"],
@@ -66,9 +59,7 @@ def test_2():
                 return 4
 
     creator.create_agents(df=df)
-    creator.create_locations(location_classes=[ClassRoom])
-    inspector.plot_bipartite_network()
-    inspector.plot_agent_network(agent_attrs=["status"])
+    creator.create_locations(location_designers=[ClassRoom])
 
     assert len(model.locations) == 2
     assert len(model.agents) == 5
@@ -102,7 +93,7 @@ def test_3():
             return agent.attention_span
 
     creator.create_agents(df=df)
-    creator.create_locations(location_classes=[ClassRoom])
+    creator.create_locations(location_designers=[ClassRoom])
 
     assert len(model.locations) == 2
     assert len(model.agents) == 4

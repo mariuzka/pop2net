@@ -54,7 +54,7 @@ def test_1():
 
     model = p2n.Model()
     creator = p2n.Creator(model)
-    creator.create(df=df, location_classes=[TestLocationA1, TestLocationB1])
+    creator.create(df=df, location_designers=[TestLocationA1, TestLocationB1])
     assert len(model.agents) == 14
     assert len(model.locations) == 2
     assert len(model.locations[0].agents) == 7
@@ -64,10 +64,7 @@ def test_1():
 
     model = p2n.Model()
     creator = p2n.Creator(model)
-    creator.create(df=df, location_classes=[TestLocationA2, TestLocationB2])
-    inspector = p2n.NetworkInspector(model)
-    inspector.plot_bipartite_network()
-    inspector.plot_agent_network(agent_attrs=df.columns, agent_color="status")
+    creator.create(df=df, location_designers=[TestLocationA2, TestLocationB2])
     assert len(model.agents) == 14
     assert len(model.locations) == 2
     assert len(model.locations[0].agents) == 7
@@ -77,9 +74,7 @@ def test_1():
 
     model = p2n.Model()
     creator = p2n.Creator(model)
-    creator.create(df=df, location_classes=[TestLocationA3, TestLocationB3])
-    inspector = p2n.NetworkInspector(model)
-    inspector.plot_agent_network(agent_attrs=df.columns, agent_color="status")
+    creator.create(df=df, location_designers=[TestLocationA3, TestLocationB3])
     assert len(model.agents) == 14
     assert len(model.locations) == 4
     assert len(model.locations[0].agents) == 5

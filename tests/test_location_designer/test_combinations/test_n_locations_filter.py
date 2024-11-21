@@ -26,7 +26,7 @@ def test_1():
             return agent.status == "B"
 
     creator.create_agents(df=df)
-    creator.create_locations(location_classes=[TestLocationA, TestLocationB])
+    creator.create_locations(location_designers=[TestLocationA, TestLocationB])
     inspector = p2n.NetworkInspector(model=model)
     inspector.plot_bipartite_network()
     inspector.plot_agent_network(agent_attrs=["status"])

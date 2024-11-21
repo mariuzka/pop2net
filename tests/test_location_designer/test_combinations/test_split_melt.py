@@ -1,10 +1,8 @@
-# %%
 import pandas as pd
 
 import pop2net as p2n
 
 
-# %%
 def test_1():
     model = p2n.Model()
     creator = p2n.Creator(model=model)
@@ -44,7 +42,7 @@ def test_1():
             return PupilHelper, TeacherHelper
 
     creator.create_agents(df=df)
-    creator.create_locations(location_classes=[ClassRoom])
+    creator.create_locations(location_designers=[ClassRoom])
 
     assert len(model.agents) == 9
     assert len(model.locations) == 3
@@ -54,10 +52,6 @@ def test_1():
         assert all(location.agents[0].class_id == agent.class_id for agent in location.agents)
 
 
-# %%
-# TODO Anwendungsbeispiel passt eher zu nest? aber zum testen von multi melt...
-# ...nicht schlecht?
-# 2-layer melts
 def test_2():
     model = p2n.Model()
     creator = p2n.Creator(model=model)
@@ -79,14 +73,14 @@ def test_2():
         }
     )
 
-    class PupilHelper(p2n.MeltLocation):
+    class PupilHelper(p2n.MeltLocationDesigner):
         def filter(self, agent):
             return agent.status == "pupil"
 
         def split(self, agent):
             return agent.class_id
 
-    class TeacherHelper(p2n.MeltLocation):
+    class TeacherHelper(p2n.MeltLocationDesigner):
         def filter(self, agent):
             return agent.status == "teacher"
 
@@ -97,7 +91,7 @@ def test_2():
         def melt(self):
             return PupilHelper, TeacherHelper
 
-    class SchoolHelper(p2n.MeltLocation):
+    class SchoolHelper(p2n.MeltLocationDesigner):
         def filter(self, agent):
             return agent.status == "principal"
 
@@ -106,13 +100,13 @@ def test_2():
             return ClassRoom, SchoolHelper
 
     creator.create_agents(df=df)
-    creator.create_locations(location_classes=[ClassRoom, School])
+    creator.create_locations(location_designers=[ClassRoom, School])
 
     assert len(model.agents) == 10
     assert len(model.locations) == 4
 
     for location in model.locations:
-        if location.type == "ClassRoom":
+        if location.label == "ClassRoom":
             assert len(location.agents) == 3
             assert all(location.agents[0].class_id == agent.class_id for agent in location.agents)
         else:

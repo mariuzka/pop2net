@@ -202,7 +202,7 @@ class Creator:
             # search for mother location assigned to this agent
             n_mother_locations_found = 0
             for location in agent.locations:
-                if location.label == utils._get_cls_as_str(dummy_location.nest()):
+                if location.label == dummy_location.nest():
                     mother_location = location
                     n_mother_locations_found += 1
 
@@ -555,11 +555,22 @@ class Creator:
                 dummy_location.n_agents = len(list(dummy_location.nxgraph.nodes))
 
                 if dummy_location.overcrowding is True:
-                    msg = """You cannot define location.overcrowding if location.nxgraph is used. 
+                    msg = f"""You cannot define {label}.overcrowding if {label}.nxgraph is used. 
                         It will be set to `False` automatically."""
                     warnings.warn(msg)
                 designer.overcrowding = False
                 dummy_location.overcrowding = False
+
+            # check if n_locations and split is used at the same time
+            if (
+                not all(dummy_location.split(agent) is None for agent in agents)
+                and dummy_location.n_locations is not None
+            ):
+                msg = f"""You cannot use {label}.n_locations and {label}.split() at the same time.
+                {label}.n_locations is ignored and set to None."""
+                warnings.warn(msg)
+                designer.n_locations = None
+                dummy_location.n_locations = None
 
             # bridge
             if not dummy_location.melt():

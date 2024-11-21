@@ -1,4 +1,3 @@
-# Hier muss man die Hierarchie berücksichtgigen und testen exact size only überschreibt das Verhalten von overcrrowd
 import pandas as pd
 
 import pop2net as p2n
@@ -28,27 +27,24 @@ def test_1():
 
     model = p2n.Model()
     creator = p2n.Creator(model)
-    creator.create(df=df, location_classes=[TestLocation])
-    inspector = p2n.NetworkInspector(model)
-    inspector.plot_agent_network(agent_attrs=df.columns, agent_color="status")
+    creator.create(df=df, location_designers=[TestLocation])
+
     assert len(model.agents) == 7
     assert len(model.locations) == 1
     assert len(model.locations[0].agents) == 7
 
     model = p2n.Model()
     creator = p2n.Creator(model)
-    creator.create(df=df, location_classes=[TestLocation2])
-    inspector = p2n.NetworkInspector(model)
-    inspector.plot_agent_network(agent_attrs=df.columns, agent_color="status")
+    creator.create(df=df, location_designers=[TestLocation2])
+
     assert len(model.agents) == 7
     assert len(model.locations) == 1
     assert len(model.locations[0].agents) == 7
 
     model = p2n.Model()
     creator = p2n.Creator(model)
-    creator.create(df=df, location_classes=[TestLocation3])
-    inspector = p2n.NetworkInspector(model)
-    inspector.plot_agent_network(agent_attrs=df.columns, agent_color="status")
+    creator.create(df=df, location_designers=[TestLocation3])
+
     assert len(model.agents) == 7
     assert len(model.locations) == 2
     assert len(model.locations[0].agents) == 5
@@ -79,9 +75,8 @@ def test_1():
 
     model = p2n.Model()
     creator = p2n.Creator(model)
-    creator.create(df=df, location_classes=[TestLocation])
-    inspector = p2n.NetworkInspector(model)
-    inspector.plot_agent_network(agent_attrs=df.columns, agent_color="status")
+    creator.create(df=df, location_designers=[TestLocation])
+
     assert len(model.agents) == 7
     assert len(model.locations) == 1
     assert len(model.locations[0].agents) == 5
@@ -89,9 +84,8 @@ def test_1():
 
     model = p2n.Model()
     creator = p2n.Creator(model)
-    creator.create(df=df, location_classes=[TestLocation2])
-    inspector = p2n.NetworkInspector(model)
-    inspector.plot_agent_network(agent_attrs=df.columns, agent_color="status")
+    creator.create(df=df, location_designers=[TestLocation2])
+
     assert len(model.agents) == 7
     assert len(model.locations) == 1
     assert len(model.locations[0].agents) == 5
@@ -99,9 +93,8 @@ def test_1():
 
     model = p2n.Model()
     creator = p2n.Creator(model)
-    creator.create(df=df, location_classes=[TestLocation3])
-    inspector = p2n.NetworkInspector(model)
-    inspector.plot_agent_network(agent_attrs=df.columns, agent_color="status")
+    creator.create(df=df, location_designers=[TestLocation3])
+
     assert len(model.agents) == 7
     assert len(model.locations) == 1
     assert len(model.locations[0].agents) == 5

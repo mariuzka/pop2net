@@ -24,7 +24,7 @@ def test_1():
 
     model = p2n.Model()
     creator = p2n.Creator(model=model)
-    creator.create(df=df, location_classes=[School, Classroom])
+    creator.create(df=df, location_designers=[School, Classroom])
     inspector = p2n.NetworkInspector(model)
     inspector.plot_bipartite_network()
 
@@ -38,8 +38,8 @@ def test_1():
             assert len(location.agents) == 2
 
     for agent in model.agents:
-        assert agent.neighbors(location_classes=[Classroom])[0] in agent.neighbors(
-            location_classes=[School]
+        assert agent.neighbors(location_labels=["Classroom"])[0] in agent.neighbors(
+            location_labels=["School"]
         )
 
 
@@ -65,7 +65,7 @@ def test_2():
 
     model = p2n.Model()
     creator = p2n.Creator(model=model)
-    creator.create(df=df, location_classes=[School, Classroom])
+    creator.create(df=df, location_designers=[School, Classroom])
     inspector = p2n.NetworkInspector(model)
     inspector.plot_bipartite_network()
     print(len(model.locations))
