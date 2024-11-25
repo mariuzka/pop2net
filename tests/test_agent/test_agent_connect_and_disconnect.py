@@ -39,7 +39,7 @@ def test_agent_connect_1():
 
     agent1.disconnect(
         agent2,
-        location_classes=None,
+        location_labels=None,
         remove_locations=False,
         remove_neighbor=True,
         remove_self=True,
@@ -70,7 +70,7 @@ def test_agent_disconnect_1():
 
     agent1.disconnect(
         agent2,
-        location_classes=None,
+        location_labels=None,
         remove_locations=False,
         remove_neighbor=True,
         remove_self=True,
@@ -92,7 +92,7 @@ def test_agent_disconnect_1():
 
     agent2.disconnect(
         agent3,
-        location_classes=None,
+        location_labels=None,
         remove_locations=False,
         remove_neighbor=True,
         remove_self=False,
@@ -137,7 +137,7 @@ def test_agent_disconnect_2():
 
     agent1.disconnect(
         agent2,
-        location_classes=[Home],
+        location_labels=["Home"],
         remove_locations=True,
         remove_neighbor=True,
         remove_self=True,
@@ -155,7 +155,7 @@ def test_agent_disconnect_2():
 
     agent1.disconnect(
         agent2,
-        location_classes=[School],
+        location_labels=["School"],
         remove_locations=False,
         remove_neighbor=False,
         remove_self=True,

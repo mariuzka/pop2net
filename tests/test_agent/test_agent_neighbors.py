@@ -29,7 +29,7 @@ def test_2a():
     class Lukas(p2n.Agent):
         pass
 
-    class WebexMeeting(p2n.MagicLocation):
+    class WebexMeeting(p2n.LocationDesigner):
         pass
 
     model = p2n.Model()
@@ -66,13 +66,13 @@ def test_2b():
     class Lukas(p2n.Agent):
         pass
 
-    class WebexMeeting(p2n.MagicLocation):
+    class WebexMeeting(p2n.LocationDesigner):
         pass
 
     _max = creator.create_agents(agent_class=Max, n=1)[0]
     _marius = creator.create_agents(agent_class=Marius, n=1)[0]
     _lukas = creator.create_agents(agent_class=Lukas, n=1)[0]
-    creator.create_locations(location_classes=[WebexMeeting])
+    creator.create_locations(location_designers=[WebexMeeting])
 
     assert len(model.locations) == 1
     assert len(model.agents) == 3
@@ -97,10 +97,10 @@ def test_3a():
     class Lukas(p2n.Agent):
         pass
 
-    class Meeting1(p2n.MagicLocation):
+    class Meeting1(p2n.Location):
         pass
 
-    class Meeting2(p2n.MagicLocation):
+    class Meeting2(p2n.Location):
         pass
 
     model = p2n.Model()
@@ -115,12 +115,12 @@ def test_3a():
     assert len(model.locations) == 2
     assert len(model.agents) == 3
 
-    assert agent_max.neighbors(location_classes=[Meeting1])[0].type == "Marius"
+    assert agent_max.neighbors(location_labels=["Meeting1"])[0].type == "Marius"
 
-    assert agent_marius.neighbors(location_classes=[Meeting1])[0].type == "Max"
-    assert agent_marius.neighbors(location_classes=[Meeting2])[0].type == "Lukas"
+    assert agent_marius.neighbors(location_labels=["Meeting1"])[0].type == "Max"
+    assert agent_marius.neighbors(location_labels=["Meeting2"])[0].type == "Lukas"
 
-    assert agent_lukas.neighbors(location_classes=[Meeting2])[0].type == "Marius"
+    assert agent_lukas.neighbors(location_labels=["Meeting2"])[0].type == "Marius"
 
 
 # two Locations
@@ -137,25 +137,29 @@ def test_3b():
     class Lukas(p2n.Agent):
         pass
 
-    class Meeting1(p2n.MagicLocation):
+    class Meeting1(p2n.LocationDesigner):
+        location_name = "Meeting1"
+
         def filter(self, agent):
             return agent.type in ["Max", "Marius"]
 
-    class Meeting2(p2n.MagicLocation):
+    class Meeting2(p2n.LocationDesigner):
+        location_name = "Meeting2"
+
         def filter(self, agent):
             return agent.type in ["Marius", "Lukas"]
 
     _max = creator.create_agents(agent_class=Max, n=1)
     _marius = creator.create_agents(agent_class=Marius, n=1)
     _lukas = creator.create_agents(agent_class=Lukas, n=1)
-    creator.create_locations(location_classes=[Meeting1, Meeting2])
+    creator.create_locations(location_designers=[Meeting1, Meeting2])
 
     assert len(model.locations) == 2
     assert len(model.agents) == 3
 
-    assert _max.neighbors(location_classes=[Meeting1])[0][0].type == "Marius"
+    assert _max.neighbors(location_labels=["Meeting1"])[0][0].type == "Marius"
 
-    assert _marius.neighbors(location_classes=[Meeting1])[0][0].type == "Max"
-    assert _marius.neighbors(location_classes=[Meeting2])[0][0].type == "Lukas"
+    assert _marius.neighbors(location_labels=["Meeting1"])[0][0].type == "Max"
+    assert _marius.neighbors(location_labels=["Meeting2"])[0][0].type == "Lukas"
 
-    assert _lukas.neighbors(location_classes=[Meeting2])[0][0].type == "Marius"
+    assert _lukas.neighbors(location_labels=["Meeting2"])[0][0].type == "Marius"
