@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import itertools
 import math
 import random
 import warnings
@@ -457,6 +458,48 @@ class Creator:
 
         return all_melted_groups
 
+    def _create_designer_mutations(self, location_designers: list) -> list:
+        # for each location designer class
+        for designer in location_designers:
+            # create a dummy location to use the location's methods
+            dummy_location = self._create_dummy_location(designer)
+
+            # if the user defined mutations
+            if dummy_location.mutate() is not None:
+                mutations = []
+
+                # create all possible combinations of the mutation values
+                # {key: [1, 2, 3], key2: [4, 5]} -> [{key: 1, key2: 4}, {key: 1, key2: 5}, ...]
+                combinations = [
+                    dict(zip(dummy_location.mutate().keys(), values))
+                    for values in itertools.product(*dummy_location.mutate().values())
+                ]
+
+                # create a new location designer class for each combination
+                for i, combo in enumerate(combinations):
+                    mutation = type(
+                        dummy_location.type,
+                        (designer,),
+                        {
+                            **combo,
+                            "label": f"{dummy_location.label}{i}",
+                        },
+                    )
+                    mutations.append(mutation)
+
+                # store the mutations in the designer class
+                designer._P2NTEMP_mutations = mutations
+
+        # replace the original location designer classes with the mutations
+        location_designers_with_mutations = []
+        for location_designer in location_designers:
+            if hasattr(location_designer, "_P2NTEMP_mutations"):
+                location_designers_with_mutations.extend(location_designer._P2NTEMP_mutations)
+            else:
+                location_designers_with_mutations.append(location_designer)
+
+        return location_designers_with_mutations
+
     def create_locations(
         self,
         location_designers: list,
@@ -478,6 +521,9 @@ class Creator:
         Returns:
             p2n.LocationList: A list of locations.
         """
+        # Create designer mutations
+        location_designers = self._create_designer_mutations(location_designers)
+
         # Check if all location classes have a unique label
         labels = []
         for designer in location_designers:
@@ -586,8 +632,8 @@ class Creator:
                     pass
 
                 elif len(bridge_values) == 1 and self.model.enable_p2n_warnings:
-                    msg = f"""{str_location_cls}.bridge() returned only one unique value.
-                    {str_location_cls}.bridge() must return at least two unique values in order 
+                    msg = f"""{dummy_location.label}.bridge() returned only one unique value.
+                    {dummy_location.label}.bridge() must return at least two unique values in order 
                     to create locations that bring together agents with different values on the 
                     same attribute.
                     """
