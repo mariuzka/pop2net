@@ -15,7 +15,6 @@ if typing.TYPE_CHECKING:
     from . import location as _location
 
 from pop2net.sequences import LocationList
-import pop2net.utils as utils
 
 
 class Model(ap.Model):

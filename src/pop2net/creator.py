@@ -554,7 +554,6 @@ class Creator:
                 designer.n_agents = len(list(dummy_location.nxgraph.nodes))
                 dummy_location.n_agents = len(list(dummy_location.nxgraph.nodes))
 
-
                 if dummy_location.overcrowding is True and self.model.enable_p2n_warnings:
                     msg = """You cannot define location.overcrowding if location.nxgraph is used. 
                         It will be set to `False` automatically."""
@@ -585,7 +584,6 @@ class Creator:
 
                 if len(bridge_values) == 0:
                     pass
-
 
                 elif len(bridge_values) == 1 and self.model.enable_p2n_warnings:
                     msg = f"""{str_location_cls}.bridge() returned only one unique value.

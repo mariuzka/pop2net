@@ -1,7 +1,7 @@
 import pandas as pd
+import pytest
 
 import pop2net as p2n
-import pytest
 
 
 def test_1():
