@@ -146,6 +146,14 @@ class LocationDesigner(Location):
             else:
                 return None
 
+    def mutate(self) -> None | dict[str:list]:
+        """Creates new versions of this location designer with different attributes.
+
+        Returns:
+            dict: A dictionary that specifies the values for each mutation.
+        """
+        return None
+
 
 class MeltLocationDesigner(Location):
     """Helper class to melt locations."""
