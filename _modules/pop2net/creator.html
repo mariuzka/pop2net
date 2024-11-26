@@ -81,6 +81,7 @@
 
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
 
+<span class="kn">import</span> <span class="nn">itertools</span>
 <span class="kn">import</span> <span class="nn">math</span>
 <span class="kn">import</span> <span class="nn">random</span>
 <span class="kn">import</span> <span class="nn">warnings</span>
@@ -115,8 +116,17 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_dummy_model</span> <span class="o">=</span> <span class="n">p2n</span><span class="o">.</span><span class="n">Model</span><span class="p">(</span><span class="n">parameters</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">p</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_temp_agent_attrs</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;_P2NTEMP_split_values&quot;</span><span class="p">,</span> <span class="s2">&quot;_P2NTEMP_melt_location_weight&quot;</span><span class="p">]</span>
 
-    <span class="k">def</span> <span class="nf">_create_dummy_location</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">location_cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">p2n</span><span class="o">.</span><span class="n">Location</span><span class="p">:</span>
-        <span class="n">location</span> <span class="o">=</span> <span class="n">location_cls</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_dummy_model</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">_create_dummy_location</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">designer</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">p2n</span><span class="o">.</span><span class="n">Location</span><span class="p">:</span>
+        <span class="n">lc</span> <span class="o">=</span> <span class="n">designer</span><span class="o">.</span><span class="n">location_class</span>
+        <span class="bp">cls</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span>
+            <span class="s2">&quot;Location&quot;</span> <span class="k">if</span> <span class="n">lc</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">utils</span><span class="o">.</span><span class="n">_get_cls_as_str</span><span class="p">(</span><span class="n">designer</span><span class="o">.</span><span class="n">location_class</span><span class="p">),</span>
+            <span class="p">(</span><span class="n">designer</span><span class="p">,)</span> <span class="k">if</span> <span class="n">lc</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="p">(</span><span class="n">designer</span><span class="p">,</span> <span class="n">designer</span><span class="o">.</span><span class="n">location_class</span><span class="p">),</span>
+            <span class="p">{},</span>  <span class="c1"># TODO: warum funktioniert das hier nicht?: {&quot;label&quot;: designer.label},</span>
+        <span class="p">)</span>
+        <span class="n">location</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_dummy_model</span><span class="p">)</span>
+        <span class="n">location</span><span class="o">.</span><span class="n">label</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">designer</span><span class="o">.</span><span class="n">label</span> <span class="k">if</span> <span class="n">designer</span><span class="o">.</span><span class="n">label</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">utils</span><span class="o">.</span><span class="n">_get_cls_as_str</span><span class="p">(</span><span class="n">designer</span><span class="p">)</span>
+        <span class="p">)</span>
         <span class="n">location</span><span class="o">.</span><span class="n">setup</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">location</span>
 
@@ -259,7 +269,7 @@
 
 
     <span class="k">def</span> <span class="nf">_get_affiliated_agents</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agents</span><span class="p">,</span> <span class="n">dummy_location</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
-        <span class="n">temp_filter_attr</span> <span class="o">=</span> <span class="s2">&quot;_P2NTEMP_filter_&quot;</span> <span class="o">+</span> <span class="n">dummy_location</span><span class="o">.</span><span class="n">type</span>
+        <span class="n">temp_filter_attr</span> <span class="o">=</span> <span class="s2">&quot;_P2NTEMP_filter_&quot;</span> <span class="o">+</span> <span class="n">dummy_location</span><span class="o">.</span><span class="n">label</span>
 
         <span class="n">affiliated_agents</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">agent</span> <span class="ow">in</span> <span class="n">agents</span><span class="p">:</span>
@@ -280,7 +290,7 @@
             <span class="c1"># search for mother location assigned to this agent</span>
             <span class="n">n_mother_locations_found</span> <span class="o">=</span> <span class="mi">0</span>
             <span class="k">for</span> <span class="n">location</span> <span class="ow">in</span> <span class="n">agent</span><span class="o">.</span><span class="n">locations</span><span class="p">:</span>
-                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">location</span><span class="p">,</span> <span class="n">dummy_location</span><span class="o">.</span><span class="n">nest</span><span class="p">()):</span>
+                <span class="k">if</span> <span class="n">location</span><span class="o">.</span><span class="n">label</span> <span class="o">==</span> <span class="n">dummy_location</span><span class="o">.</span><span class="n">nest</span><span class="p">():</span>
                     <span class="n">mother_location</span> <span class="o">=</span> <span class="n">location</span>
                     <span class="n">n_mother_locations_found</span> <span class="o">+=</span> <span class="mi">1</span>
 
@@ -313,7 +323,7 @@
                 <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">agent_values</span><span class="p">):</span>
                     <span class="n">mother_group_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_mother_group_id</span><span class="p">(</span><span class="n">agent</span><span class="p">,</span> <span class="n">dummy_location</span><span class="p">)</span>
                     <span class="n">agent_values</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;-&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">mother_group_id</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">value</span><span class="p">)])</span>
-                    <span class="n">temp_attr</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;_P2NTEMP_</span><span class="si">{</span><span class="n">dummy_location</span><span class="o">.</span><span class="n">type</span><span class="si">}</span><span class="s2">_mother_group_id&quot;</span>
+                    <span class="n">temp_attr</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;_P2NTEMP_</span><span class="si">{</span><span class="n">dummy_location</span><span class="o">.</span><span class="n">label</span><span class="si">}</span><span class="s2">_mother_group_id&quot;</span>
                     <span class="nb">setattr</span><span class="p">(</span><span class="n">agent</span><span class="p">,</span> <span class="n">temp_attr</span><span class="p">,</span> <span class="n">mother_group_id</span><span class="p">)</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">_temp_agent_attrs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">temp_attr</span><span class="p">)</span>
 
@@ -334,10 +344,10 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">stick_value</span>
 
-    <span class="k">def</span> <span class="nf">_get_groups</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agents</span><span class="p">,</span> <span class="n">location_cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">]:</span>
+    <span class="k">def</span> <span class="nf">_get_groups</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agents</span><span class="p">,</span> <span class="n">designer</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">]:</span>
         <span class="n">overcrowding_i</span> <span class="o">=</span> <span class="mi">0</span>
 
-        <span class="n">dummy_location</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_dummy_location</span><span class="p">(</span><span class="n">location_cls</span><span class="p">)</span>
+        <span class="n">dummy_location</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_dummy_location</span><span class="p">(</span><span class="n">designer</span><span class="p">)</span>
 
         <span class="n">n_location_groups_is_fixed</span> <span class="o">=</span> <span class="kc">False</span>
 
@@ -365,7 +375,7 @@
 
         <span class="k">elif</span> <span class="n">dummy_location</span><span class="o">.</span><span class="n">n_locations</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">dummy_location</span><span class="o">.</span><span class="n">n_agents</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">n_location_groups</span> <span class="o">=</span> <span class="n">dummy_location</span><span class="o">.</span><span class="n">n_locations</span>
-            <span class="n">location_cls</span><span class="o">.</span><span class="n">n_agents</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span>
+            <span class="n">designer</span><span class="o">.</span><span class="n">n_agents</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span>
                 <span class="n">math</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">agents</span><span class="p">)</span> <span class="o">/</span> <span class="n">n_location_groups</span><span class="p">),</span>
                 <span class="mi">1</span><span class="p">,</span>
             <span class="p">)</span>
@@ -382,7 +392,7 @@
 
         <span class="n">stick_values</span> <span class="o">=</span> <span class="p">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_stick_value</span><span class="p">(</span><span class="n">agent</span><span class="p">,</span> <span class="n">dummy_location</span><span class="p">)</span> <span class="k">for</span> <span class="n">agent</span> <span class="ow">in</span> <span class="n">agents</span><span class="p">}</span>
 
-        <span class="c1"># dummy_location = self._create_dummy_location(location_cls)</span>
+        <span class="c1"># dummy_location = self._create_dummy_location(designer)</span>
 
         <span class="c1"># for each group of sticky agents</span>
         <span class="k">for</span> <span class="n">stick_value</span> <span class="ow">in</span> <span class="n">stick_values</span><span class="p">:</span>
@@ -413,7 +423,7 @@
             <span class="k">if</span> <span class="ow">not</span> <span class="n">assigned</span><span class="p">:</span>
                 <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">groups</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">n_location_groups</span><span class="p">:</span>
                     <span class="n">new_group</span> <span class="o">=</span> <span class="p">[]</span>
-                    <span class="n">dummy_location</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_dummy_location</span><span class="p">(</span><span class="n">location_cls</span><span class="p">)</span>
+                    <span class="n">dummy_location</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_dummy_location</span><span class="p">(</span><span class="n">designer</span><span class="p">)</span>
                     <span class="c1"># assign agents</span>
                     <span class="k">for</span> <span class="n">agent</span> <span class="ow">in</span> <span class="n">sticky_agents</span><span class="p">:</span>
                         <span class="n">new_group</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">agent</span><span class="p">)</span>
@@ -443,8 +453,8 @@
 
         <span class="k">return</span> <span class="n">group_affiliated_agents</span>
 
-    <span class="k">def</span> <span class="nf">_get_melted_groups</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agents</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">location_cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">]:</span>
-        <span class="n">dummy_location</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_dummy_location</span><span class="p">(</span><span class="n">location_cls</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">_get_melted_groups</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agents</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">designer</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">]:</span>
+        <span class="n">dummy_location</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_dummy_location</span><span class="p">(</span><span class="n">designer</span><span class="p">)</span>
 
         <span class="c1"># get all mother locations the agents are nested in</span>
         <span class="n">all_mother_group_ids</span> <span class="o">=</span> <span class="p">{</span>
@@ -468,11 +478,11 @@
             <span class="n">groups_to_melt_by_location</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[]</span>
 
             <span class="c1"># for each location that shall be melted</span>
-            <span class="k">for</span> <span class="n">melt_location_cls</span> <span class="ow">in</span> <span class="n">dummy_location</span><span class="o">.</span><span class="n">melt</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">melt_designer</span> <span class="ow">in</span> <span class="n">dummy_location</span><span class="o">.</span><span class="n">melt</span><span class="p">():</span>
                 <span class="c1"># create dummy location</span>
-                <span class="n">melt_dummy_location</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_dummy_location</span><span class="p">(</span><span class="n">melt_location_cls</span><span class="p">)</span>
-                <span class="k">if</span> <span class="n">melt_location_cls</span><span class="o">.</span><span class="n">n_locations</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                    <span class="n">melt_location_cls</span><span class="o">.</span><span class="n">n_locations</span> <span class="o">=</span> <span class="n">location_cls</span><span class="o">.</span><span class="n">n_locations</span>
+                <span class="n">melt_dummy_location</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_dummy_location</span><span class="p">(</span><span class="n">melt_designer</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">melt_designer</span><span class="o">.</span><span class="n">n_locations</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">melt_designer</span><span class="o">.</span><span class="n">n_locations</span> <span class="o">=</span> <span class="n">designer</span><span class="o">.</span><span class="n">n_locations</span>
 
                 <span class="c1"># get all agents that should be assigned to this location</span>
                 <span class="c1"># filter by melt_location</span>
@@ -506,7 +516,7 @@
                     <span class="n">location_groups_to_melt</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">_get_groups</span><span class="p">(</span>
                             <span class="n">agents</span><span class="o">=</span><span class="n">melt_split_value_affiliated_agents</span><span class="p">,</span>
-                            <span class="n">location_cls</span><span class="o">=</span><span class="n">melt_location_cls</span><span class="p">,</span>
+                            <span class="n">designer</span><span class="o">=</span><span class="n">melt_designer</span><span class="p">,</span>
                         <span class="p">),</span>
                     <span class="p">)</span>
 
@@ -535,20 +545,61 @@
 
         <span class="k">return</span> <span class="n">all_melted_groups</span>
 
+    <span class="k">def</span> <span class="nf">_create_designer_mutations</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">location_designers</span><span class="p">:</span> <span class="nb">list</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+        <span class="c1"># for each location designer class</span>
+        <span class="k">for</span> <span class="n">designer</span> <span class="ow">in</span> <span class="n">location_designers</span><span class="p">:</span>
+            <span class="c1"># create a dummy location to use the location&#39;s methods</span>
+            <span class="n">dummy_location</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_dummy_location</span><span class="p">(</span><span class="n">designer</span><span class="p">)</span>
+
+            <span class="c1"># if the user defined mutations</span>
+            <span class="k">if</span> <span class="n">dummy_location</span><span class="o">.</span><span class="n">mutate</span><span class="p">()</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">mutations</span> <span class="o">=</span> <span class="p">[]</span>
+
+                <span class="c1"># create all possible combinations of the mutation values</span>
+                <span class="c1"># {key: [1, 2, 3], key2: [4, 5]} -&gt; [{key: 1, key2: 4}, {key: 1, key2: 5}, ...]</span>
+                <span class="n">combinations</span> <span class="o">=</span> <span class="p">[</span>
+                    <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">dummy_location</span><span class="o">.</span><span class="n">mutate</span><span class="p">()</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="n">values</span><span class="p">))</span>
+                    <span class="k">for</span> <span class="n">values</span> <span class="ow">in</span> <span class="n">itertools</span><span class="o">.</span><span class="n">product</span><span class="p">(</span><span class="o">*</span><span class="n">dummy_location</span><span class="o">.</span><span class="n">mutate</span><span class="p">()</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+                <span class="p">]</span>
+
+                <span class="c1"># create a new location designer class for each combination</span>
+                <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">combo</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">combinations</span><span class="p">):</span>
+                    <span class="n">mutation</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span>
+                        <span class="n">dummy_location</span><span class="o">.</span><span class="n">type</span><span class="p">,</span>
+                        <span class="p">(</span><span class="n">designer</span><span class="p">,),</span>
+                        <span class="p">{</span>
+                            <span class="o">**</span><span class="n">combo</span><span class="p">,</span>
+                            <span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">dummy_location</span><span class="o">.</span><span class="n">label</span><span class="si">}{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                        <span class="p">},</span>
+                    <span class="p">)</span>
+                    <span class="n">mutations</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mutation</span><span class="p">)</span>
+
+                <span class="c1"># store the mutations in the designer class</span>
+                <span class="n">designer</span><span class="o">.</span><span class="n">_P2NTEMP_mutations</span> <span class="o">=</span> <span class="n">mutations</span>
+
+        <span class="c1"># replace the original location designer classes with the mutations</span>
+        <span class="n">location_designers_with_mutations</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">location_designer</span> <span class="ow">in</span> <span class="n">location_designers</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">location_designer</span><span class="p">,</span> <span class="s2">&quot;_P2NTEMP_mutations&quot;</span><span class="p">):</span>
+                <span class="n">location_designers_with_mutations</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">location_designer</span><span class="o">.</span><span class="n">_P2NTEMP_mutations</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">location_designers_with_mutations</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">location_designer</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">location_designers_with_mutations</span>
+
 <div class="viewcode-block" id="Creator.create_locations">
 <a class="viewcode-back" href="../../api/creator.html#pop2net.creator.Creator.create_locations">[docs]</a>
     <span class="k">def</span> <span class="nf">create_locations</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">location_classes</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span>
+        <span class="n">location_designers</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span>
         <span class="n">agents</span><span class="p">:</span> <span class="nb">list</span> <span class="o">|</span> <span class="n">p2n</span><span class="o">.</span><span class="n">AgentList</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">clear</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-        <span class="c1"># TODO: delete_magic_location_attributes: bool = True,</span>
         <span class="n">delete_magic_agent_attributes</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">p2n</span><span class="o">.</span><span class="n">LocationList</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Creates location instances and connects them with the given agent population.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            location_classes (list): A list of location classes.</span>
+<span class="sd">            location_designers (list): A list of LocationDesigner classes.</span>
 <span class="sd">            agents (list | p2n.AgentList): A list of agents.</span>
 <span class="sd">            clear (bool): Should the locations already included in the model be removed?</span>
 <span class="sd">            delete_magic_location_attributes (bool): If True, all magic location attributes will be</span>
@@ -559,12 +610,31 @@
 <span class="sd">        Returns:</span>
 <span class="sd">            p2n.LocationList: A list of locations.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Create designer mutations</span>
+        <span class="n">location_designers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_designer_mutations</span><span class="p">(</span><span class="n">location_designers</span><span class="p">)</span>
+
+        <span class="c1"># Check if all location classes have a unique label</span>
+        <span class="n">labels</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">designer</span> <span class="ow">in</span> <span class="n">location_designers</span><span class="p">:</span>
+            <span class="n">dummy_location</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_dummy_location</span><span class="p">(</span><span class="n">designer</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">dummy_location</span><span class="o">.</span><span class="n">label</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">msg</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;LocationDesigner class </span><span class="si">{</span><span class="n">designer</span><span class="si">}</span><span class="s2"> has no label. Please define a unique label.&quot;</span>
+                <span class="p">)</span>
+                <span class="k">raise</span> <span class="n">Pop2netException</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">dummy_location</span><span class="o">.</span><span class="n">label</span> <span class="ow">in</span> <span class="n">labels</span><span class="p">:</span>
+                <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;LocationDesigner class </span><span class="si">{</span><span class="n">designer</span><span class="si">}</span><span class="s2"> has a duplicate label. </span>
+<span class="s2">                    Please define a unique label.&quot;&quot;&quot;</span>
+                <span class="k">raise</span> <span class="n">Pop2netException</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">labels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dummy_location</span><span class="o">.</span><span class="n">label</span><span class="p">)</span>
+
+        <span class="c1"># Remove all locations if clear is True</span>
         <span class="k">if</span> <span class="n">clear</span><span class="p">:</span>
-            <span class="c1"># Remove all locations</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">remove_locations</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">locations</span><span class="p">)</span>
 
+        <span class="c1"># Use the existing agents in the model if no agents are given if agents is None:</span>
         <span class="k">if</span> <span class="n">agents</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="c1"># Use the existing agents in the model if no agents are given</span>
             <span class="n">agents</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">agents</span>
 
         <span class="c1"># Create a list containing the names of all special location attributes</span>
@@ -574,39 +644,41 @@
         <span class="c1"># Add the agents to the dummy model</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_dummy_model</span><span class="o">.</span><span class="n">add_agents</span><span class="p">(</span><span class="n">agents</span><span class="p">)</span>
 
-        <span class="k">for</span> <span class="n">location_cls</span> <span class="ow">in</span> <span class="n">location_classes</span><span class="p">:</span>
-            <span class="n">dummy_location</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_dummy_location</span><span class="p">(</span><span class="n">location_cls</span><span class="p">)</span>
-            <span class="n">str_location_cls</span> <span class="o">=</span> <span class="n">dummy_location</span><span class="o">.</span><span class="n">type</span>
+        <span class="c1"># Create magic agent attributes for each location designer class</span>
+        <span class="k">for</span> <span class="n">designer</span> <span class="ow">in</span> <span class="n">location_designers</span><span class="p">:</span>
+            <span class="n">dummy_location</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_dummy_location</span><span class="p">(</span><span class="n">designer</span><span class="p">)</span>
+            <span class="n">label</span> <span class="o">=</span> <span class="n">dummy_location</span><span class="o">.</span><span class="n">label</span>
             <span class="k">for</span> <span class="n">agent</span> <span class="ow">in</span> <span class="n">agents</span><span class="p">:</span>
-                <span class="nb">setattr</span><span class="p">(</span><span class="n">agent</span><span class="p">,</span> <span class="n">str_location_cls</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-                <span class="n">magic_agent_attributes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">str_location_cls</span><span class="p">)</span>
+                <span class="nb">setattr</span><span class="p">(</span><span class="n">agent</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+                <span class="n">magic_agent_attributes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">label</span><span class="p">)</span>
 
-                <span class="nb">setattr</span><span class="p">(</span><span class="n">agent</span><span class="p">,</span> <span class="n">str_location_cls</span> <span class="o">+</span> <span class="s2">&quot;_assigned&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
-                <span class="n">magic_agent_attributes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">str_location_cls</span> <span class="o">+</span> <span class="s2">&quot;_assigned&quot;</span><span class="p">)</span>
+                <span class="nb">setattr</span><span class="p">(</span><span class="n">agent</span><span class="p">,</span> <span class="n">label</span> <span class="o">+</span> <span class="s2">&quot;_assigned&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+                <span class="n">magic_agent_attributes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">label</span> <span class="o">+</span> <span class="s2">&quot;_assigned&quot;</span><span class="p">)</span>
 
-                <span class="nb">setattr</span><span class="p">(</span><span class="n">agent</span><span class="p">,</span> <span class="n">str_location_cls</span> <span class="o">+</span> <span class="s2">&quot;_id&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-                <span class="n">magic_agent_attributes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">str_location_cls</span> <span class="o">+</span> <span class="s2">&quot;_id&quot;</span><span class="p">)</span>
+                <span class="nb">setattr</span><span class="p">(</span><span class="n">agent</span><span class="p">,</span> <span class="n">label</span> <span class="o">+</span> <span class="s2">&quot;_id&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+                <span class="n">magic_agent_attributes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">label</span> <span class="o">+</span> <span class="s2">&quot;_id&quot;</span><span class="p">)</span>
 
-                <span class="nb">setattr</span><span class="p">(</span><span class="n">agent</span><span class="p">,</span> <span class="n">str_location_cls</span> <span class="o">+</span> <span class="s2">&quot;_position&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-                <span class="n">magic_agent_attributes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">str_location_cls</span> <span class="o">+</span> <span class="s2">&quot;_position&quot;</span><span class="p">)</span>
+                <span class="nb">setattr</span><span class="p">(</span><span class="n">agent</span><span class="p">,</span> <span class="n">label</span> <span class="o">+</span> <span class="s2">&quot;_position&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+                <span class="n">magic_agent_attributes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">label</span> <span class="o">+</span> <span class="s2">&quot;_position&quot;</span><span class="p">)</span>
 
-                <span class="nb">setattr</span><span class="p">(</span><span class="n">agent</span><span class="p">,</span> <span class="n">str_location_cls</span> <span class="o">+</span> <span class="s2">&quot;_head&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-                <span class="n">magic_agent_attributes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">str_location_cls</span> <span class="o">+</span> <span class="s2">&quot;_head&quot;</span><span class="p">)</span>
+                <span class="nb">setattr</span><span class="p">(</span><span class="n">agent</span><span class="p">,</span> <span class="n">label</span> <span class="o">+</span> <span class="s2">&quot;_head&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+                <span class="n">magic_agent_attributes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">label</span> <span class="o">+</span> <span class="s2">&quot;_head&quot;</span><span class="p">)</span>
 
-                <span class="nb">setattr</span><span class="p">(</span><span class="n">agent</span><span class="p">,</span> <span class="n">str_location_cls</span> <span class="o">+</span> <span class="s2">&quot;_tail&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-                <span class="n">magic_agent_attributes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">str_location_cls</span> <span class="o">+</span> <span class="s2">&quot;_tail&quot;</span><span class="p">)</span>
+                <span class="nb">setattr</span><span class="p">(</span><span class="n">agent</span><span class="p">,</span> <span class="n">label</span> <span class="o">+</span> <span class="s2">&quot;_tail&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+                <span class="n">magic_agent_attributes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">label</span> <span class="o">+</span> <span class="s2">&quot;_tail&quot;</span><span class="p">)</span>
 
+        <span class="c1"># The list of all created location instances</span>
         <span class="n">locations</span> <span class="o">=</span> <span class="p">[]</span>
 
-        <span class="c1"># for each location class</span>
-        <span class="k">for</span> <span class="n">location_cls</span> <span class="ow">in</span> <span class="n">location_classes</span><span class="p">:</span>
+        <span class="c1"># For each designer: start of creation procedure</span>
+        <span class="k">for</span> <span class="n">designer</span> <span class="ow">in</span> <span class="n">location_designers</span><span class="p">:</span>
+            <span class="c1"># Set temporary location weight of MeltLocations to None</span>
             <span class="k">for</span> <span class="n">agent</span> <span class="ow">in</span> <span class="n">agents</span><span class="p">:</span>
                 <span class="n">agent</span><span class="o">.</span><span class="n">_P2NTEMP_melt_location_weight</span> <span class="o">=</span> <span class="kc">None</span>
 
             <span class="c1"># create location dummy in order to use the location&#39;s methods</span>
-            <span class="n">dummy_location</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_dummy_location</span><span class="p">(</span><span class="n">location_cls</span><span class="p">)</span>
-
-            <span class="n">str_location_cls</span> <span class="o">=</span> <span class="n">dummy_location</span><span class="o">.</span><span class="n">type</span>
+            <span class="n">dummy_location</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_dummy_location</span><span class="p">(</span><span class="n">designer</span><span class="p">)</span>
+            <span class="n">label</span> <span class="o">=</span> <span class="n">dummy_location</span><span class="o">.</span><span class="n">label</span>
 
             <span class="c1"># If nxgraph is used do some checks</span>
             <span class="k">if</span> <span class="n">dummy_location</span><span class="o">.</span><span class="n">nxgraph</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -614,15 +686,26 @@
                     <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;You cannot define location.n_agents if location.nxgraph is used. </span>
 <span class="s2">                        It will be set to the number of nodes in location.nxgraph automatically.&quot;&quot;&quot;</span>
                     <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
-                <span class="n">location_cls</span><span class="o">.</span><span class="n">n_agents</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">dummy_location</span><span class="o">.</span><span class="n">nxgraph</span><span class="o">.</span><span class="n">nodes</span><span class="p">))</span>
+                <span class="n">designer</span><span class="o">.</span><span class="n">n_agents</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">dummy_location</span><span class="o">.</span><span class="n">nxgraph</span><span class="o">.</span><span class="n">nodes</span><span class="p">))</span>
                 <span class="n">dummy_location</span><span class="o">.</span><span class="n">n_agents</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">dummy_location</span><span class="o">.</span><span class="n">nxgraph</span><span class="o">.</span><span class="n">nodes</span><span class="p">))</span>
 
                 <span class="k">if</span> <span class="n">dummy_location</span><span class="o">.</span><span class="n">overcrowding</span> <span class="ow">is</span> <span class="kc">True</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">enable_p2n_warnings</span><span class="p">:</span>
                     <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;You cannot define location.overcrowding if location.nxgraph is used. </span>
 <span class="s2">                        It will be set to `False` automatically.&quot;&quot;&quot;</span>
                     <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
-                <span class="n">location_cls</span><span class="o">.</span><span class="n">overcrowding</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="n">designer</span><span class="o">.</span><span class="n">overcrowding</span> <span class="o">=</span> <span class="kc">False</span>
                 <span class="n">dummy_location</span><span class="o">.</span><span class="n">overcrowding</span> <span class="o">=</span> <span class="kc">False</span>
+
+            <span class="c1"># check if n_locations and split is used at the same time</span>
+            <span class="k">if</span> <span class="p">(</span>
+                <span class="ow">not</span> <span class="nb">all</span><span class="p">(</span><span class="n">dummy_location</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">agent</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">for</span> <span class="n">agent</span> <span class="ow">in</span> <span class="n">agents</span><span class="p">)</span>
+                <span class="ow">and</span> <span class="n">dummy_location</span><span class="o">.</span><span class="n">n_locations</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="p">):</span>
+                <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;You cannot use </span><span class="si">{</span><span class="n">label</span><span class="si">}</span><span class="s2">.n_locations and </span><span class="si">{</span><span class="n">label</span><span class="si">}</span><span class="s2">.split() at the same time.</span>
+<span class="s2">                </span><span class="si">{</span><span class="n">label</span><span class="si">}</span><span class="s2">.n_locations is ignored and set to None.&quot;&quot;&quot;</span>
+                <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+                <span class="n">designer</span><span class="o">.</span><span class="n">n_locations</span> <span class="o">=</span> <span class="kc">None</span>
+                <span class="n">dummy_location</span><span class="o">.</span><span class="n">n_locations</span> <span class="o">=</span> <span class="kc">None</span>
 
             <span class="c1"># bridge</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">dummy_location</span><span class="o">.</span><span class="n">melt</span><span class="p">():</span>
@@ -638,8 +721,8 @@
                     <span class="k">pass</span>
 
                 <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">bridge_values</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">enable_p2n_warnings</span><span class="p">:</span>
-                    <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span><span class="si">{</span><span class="n">str_location_cls</span><span class="si">}</span><span class="s2">.bridge() returned only one unique value.</span>
-<span class="s2">                    </span><span class="si">{</span><span class="n">str_location_cls</span><span class="si">}</span><span class="s2">.bridge() must return at least two unique values in order </span>
+                    <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span><span class="si">{</span><span class="n">dummy_location</span><span class="o">.</span><span class="n">label</span><span class="si">}</span><span class="s2">.bridge() returned only one unique value.</span>
+<span class="s2">                    </span><span class="si">{</span><span class="n">dummy_location</span><span class="o">.</span><span class="n">label</span><span class="si">}</span><span class="s2">.bridge() must return at least two unique values in order </span>
 <span class="s2">                    to create locations that bring together agents with different values on the </span>
 <span class="s2">                    same attribute.</span>
 <span class="s2">                    &quot;&quot;&quot;</span>
@@ -647,8 +730,8 @@
 
                 <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">bridge_values</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">enable_p2n_warnings</span><span class="p">:</span>
                     <span class="k">if</span> <span class="n">dummy_location</span><span class="o">.</span><span class="n">n_agents</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                        <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;You cannot use </span><span class="si">{</span><span class="n">str_location_cls</span><span class="si">}</span><span class="s2">.n_agents and </span>
-<span class="s2">                        </span><span class="si">{</span><span class="n">str_location_cls</span><span class="si">}</span><span class="s2">.bridge() at the same time. </span><span class="si">{</span><span class="n">str_location_cls</span><span class="si">}</span><span class="s2">.n_agents</span>
+                        <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;You cannot use </span><span class="si">{</span><span class="n">label</span><span class="si">}</span><span class="s2">.n_agents and </span>
+<span class="s2">                        </span><span class="si">{</span><span class="n">label</span><span class="si">}</span><span class="s2">.bridge() at the same time. </span><span class="si">{</span><span class="n">label</span><span class="si">}</span><span class="s2">.n_agents</span>
 <span class="s2">                        is ignored.&quot;&quot;&quot;</span>
                         <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
 
@@ -662,7 +745,7 @@
 
                         <span class="n">dummy_melt_class</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span>
                             <span class="sa">f</span><span class="s2">&quot;dummy_meltlocation</span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">bridge_value</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
-                            <span class="p">(</span><span class="n">p2n</span><span class="o">.</span><span class="n">MeltLocation</span><span class="p">,),</span>
+                            <span class="p">(</span><span class="n">p2n</span><span class="o">.</span><span class="n">MeltLocationDesigner</span><span class="p">,),</span>
                             <span class="p">{</span>
                                 <span class="s2">&quot;filter&quot;</span><span class="p">:</span> <span class="nb">filter</span><span class="p">,</span>
                                 <span class="s2">&quot;n_agents&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
@@ -676,8 +759,8 @@
                     <span class="k">def</span> <span class="nf">melt</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
                         <span class="k">return</span> <span class="n">melt_list</span>
 
-                    <span class="n">location_cls</span><span class="o">.</span><span class="n">melt</span> <span class="o">=</span> <span class="n">melt</span>
-                    <span class="n">dummy_location</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_dummy_location</span><span class="p">(</span><span class="n">location_cls</span><span class="p">)</span>
+                    <span class="n">designer</span><span class="o">.</span><span class="n">melt</span> <span class="o">=</span> <span class="n">melt</span>
+                    <span class="n">dummy_location</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_dummy_location</span><span class="p">(</span><span class="n">designer</span><span class="p">)</span>
 
             <span class="k">if</span> <span class="ow">not</span> <span class="n">dummy_location</span><span class="o">.</span><span class="n">melt</span><span class="p">():</span>
                 <span class="c1"># get all agents that could be assigned to locations of this class</span>
@@ -689,8 +772,8 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">affiliated_agents</span> <span class="o">=</span> <span class="p">[]</span>
 
-                <span class="k">for</span> <span class="n">melt_location_cls</span> <span class="ow">in</span> <span class="n">dummy_location</span><span class="o">.</span><span class="n">melt</span><span class="p">():</span>
-                    <span class="n">melt_dummy_location</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_dummy_location</span><span class="p">(</span><span class="n">melt_location_cls</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">melt_designer</span> <span class="ow">in</span> <span class="n">dummy_location</span><span class="o">.</span><span class="n">melt</span><span class="p">():</span>
+                    <span class="n">melt_dummy_location</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_dummy_location</span><span class="p">(</span><span class="n">melt_designer</span><span class="p">)</span>
                     <span class="n">affiliated_agents</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">_get_affiliated_agents</span><span class="p">(</span>
                             <span class="n">agents</span><span class="o">=</span><span class="n">agents</span><span class="p">,</span>
@@ -724,23 +807,20 @@
                 <span class="k">if</span> <span class="ow">not</span> <span class="n">dummy_location</span><span class="o">.</span><span class="n">melt</span><span class="p">():</span>
                     <span class="n">group_lists</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_groups</span><span class="p">(</span>
                         <span class="n">agents</span><span class="o">=</span><span class="n">split_value_affiliated_agents</span><span class="p">,</span>
-                        <span class="n">location_cls</span><span class="o">=</span><span class="n">location_cls</span><span class="p">,</span>
+                        <span class="n">designer</span><span class="o">=</span><span class="n">designer</span><span class="p">,</span>
                     <span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">group_lists</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_melted_groups</span><span class="p">(</span>
                         <span class="n">agents</span><span class="o">=</span><span class="n">split_value_affiliated_agents</span><span class="p">,</span>
-                        <span class="n">location_cls</span><span class="o">=</span><span class="n">location_cls</span><span class="p">,</span>
+                        <span class="n">designer</span><span class="o">=</span><span class="n">designer</span><span class="p">,</span>
                     <span class="p">)</span>
 
                 <span class="c1"># for each group of agents</span>
                 <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">group_list</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">group_lists</span><span class="p">):</span>
                     <span class="n">group_count</span> <span class="o">+=</span> <span class="mi">1</span>
 
-                    <span class="n">dummy_location</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_dummy_location</span><span class="p">(</span><span class="n">location_cls</span><span class="p">)</span>
+                    <span class="n">dummy_location</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_dummy_location</span><span class="p">(</span><span class="n">designer</span><span class="p">)</span>
                     <span class="n">dummy_location</span><span class="o">.</span><span class="n">agents_</span> <span class="o">=</span> <span class="n">group_list</span>
-                    <span class="c1"># dummy_location.add_agents(agents)</span>
-
-                    <span class="c1"># dummy_location.group_agents = group_list</span>
 
                     <span class="c1"># get all subgroub values</span>
                     <span class="n">subsplit_values</span> <span class="o">=</span> <span class="p">{</span>
@@ -764,8 +844,33 @@
                             <span class="k">if</span> <span class="n">subsplit_value</span> <span class="ow">in</span> <span class="n">agent_subsplit_value</span><span class="p">:</span>
                                 <span class="n">subsplit_affiliated_agents</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">agent</span><span class="p">)</span>
 
+                        <span class="c1"># inspect the defined magic location class get all methods/attributes</span>
+                        <span class="c1"># that are not part of magic location class</span>
+                        <span class="n">keep_attrs</span> <span class="o">=</span> <span class="p">{}</span>
+                        <span class="k">for</span> <span class="n">attr</span> <span class="ow">in</span> <span class="nb">dir</span><span class="p">(</span><span class="n">designer</span><span class="p">):</span>
+                            <span class="k">if</span> <span class="n">attr</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">p2n</span><span class="o">.</span><span class="n">LocationDesigner</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">:</span>
+                                <span class="n">keep_attrs</span><span class="p">[</span><span class="n">attr</span><span class="p">]</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">designer</span><span class="p">,</span> <span class="n">attr</span><span class="p">)</span>
+
                         <span class="c1"># Build the final location</span>
-                        <span class="n">location</span> <span class="o">=</span> <span class="n">location_cls</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="n">designer</span><span class="o">.</span><span class="n">location_class</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                            <span class="n">location</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span>
+                                <span class="s2">&quot;Location&quot;</span><span class="p">,</span>
+                                <span class="p">(</span><span class="n">p2n</span><span class="o">.</span><span class="n">Location</span><span class="p">,),</span>
+                                <span class="n">keep_attrs</span><span class="p">,</span>
+                            <span class="p">)(</span><span class="n">model</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">)</span>
+
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">location</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span>
+                                <span class="n">utils</span><span class="o">.</span><span class="n">_get_cls_as_str</span><span class="p">(</span><span class="n">designer</span><span class="o">.</span><span class="n">location_class</span><span class="p">),</span>
+                                <span class="p">(</span><span class="n">designer</span><span class="o">.</span><span class="n">location_class</span><span class="p">,),</span>
+                                <span class="n">keep_attrs</span><span class="p">,</span>
+                            <span class="p">)(</span><span class="n">model</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">)</span>
+
+                        <span class="n">location</span><span class="o">.</span><span class="n">label</span> <span class="o">=</span> <span class="p">(</span>
+                            <span class="n">designer</span><span class="o">.</span><span class="n">label</span>
+                            <span class="k">if</span> <span class="n">designer</span><span class="o">.</span><span class="n">label</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+                            <span class="k">else</span> <span class="n">utils</span><span class="o">.</span><span class="n">_get_cls_as_str</span><span class="p">(</span><span class="n">designer</span><span class="p">)</span>
+                        <span class="p">)</span>
                         <span class="n">location</span><span class="o">.</span><span class="n">setup</span><span class="p">()</span>
                         <span class="n">location</span><span class="o">.</span><span class="n">split_value</span> <span class="o">=</span> <span class="n">split_value</span>
                         <span class="n">location</span><span class="o">.</span><span class="n">subsplit_value</span> <span class="o">=</span> <span class="n">subsplit_value</span>
@@ -790,18 +895,18 @@
                             <span class="p">)</span>
 
                             <span class="n">group_info_str</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;gv=</span><span class="si">{</span><span class="n">location</span><span class="o">.</span><span class="n">split_value</span><span class="si">}</span><span class="s2">,gid=</span><span class="si">{</span><span class="n">location</span><span class="o">.</span><span class="n">group_id</span><span class="si">}</span><span class="s2">&quot;</span>
-                            <span class="nb">setattr</span><span class="p">(</span><span class="n">agent</span><span class="p">,</span> <span class="n">str_location_cls</span><span class="p">,</span> <span class="n">group_info_str</span><span class="p">)</span>
-                            <span class="nb">setattr</span><span class="p">(</span><span class="n">agent</span><span class="p">,</span> <span class="n">str_location_cls</span> <span class="o">+</span> <span class="s2">&quot;_assigned&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
-                            <span class="nb">setattr</span><span class="p">(</span><span class="n">agent</span><span class="p">,</span> <span class="n">str_location_cls</span> <span class="o">+</span> <span class="s2">&quot;_id&quot;</span><span class="p">,</span> <span class="n">group_count</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
-                            <span class="nb">setattr</span><span class="p">(</span><span class="n">agent</span><span class="p">,</span> <span class="n">str_location_cls</span> <span class="o">+</span> <span class="s2">&quot;_position&quot;</span><span class="p">,</span> <span class="n">group_list</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">agent</span><span class="p">))</span>
+                            <span class="nb">setattr</span><span class="p">(</span><span class="n">agent</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="n">group_info_str</span><span class="p">)</span>
+                            <span class="nb">setattr</span><span class="p">(</span><span class="n">agent</span><span class="p">,</span> <span class="n">label</span> <span class="o">+</span> <span class="s2">&quot;_assigned&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+                            <span class="nb">setattr</span><span class="p">(</span><span class="n">agent</span><span class="p">,</span> <span class="n">label</span> <span class="o">+</span> <span class="s2">&quot;_id&quot;</span><span class="p">,</span> <span class="n">group_count</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+                            <span class="nb">setattr</span><span class="p">(</span><span class="n">agent</span><span class="p">,</span> <span class="n">label</span> <span class="o">+</span> <span class="s2">&quot;_position&quot;</span><span class="p">,</span> <span class="n">group_list</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">agent</span><span class="p">))</span>
                             <span class="nb">setattr</span><span class="p">(</span>
                                 <span class="n">agent</span><span class="p">,</span>
-                                <span class="n">str_location_cls</span> <span class="o">+</span> <span class="s2">&quot;_head&quot;</span><span class="p">,</span>
+                                <span class="n">label</span> <span class="o">+</span> <span class="s2">&quot;_head&quot;</span><span class="p">,</span>
                                 <span class="kc">True</span> <span class="k">if</span> <span class="n">group_list</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">agent</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="kc">False</span><span class="p">,</span>
                             <span class="p">)</span>
                             <span class="nb">setattr</span><span class="p">(</span>
                                 <span class="n">agent</span><span class="p">,</span>
-                                <span class="n">str_location_cls</span> <span class="o">+</span> <span class="s2">&quot;_tail&quot;</span><span class="p">,</span>
+                                <span class="n">label</span> <span class="o">+</span> <span class="s2">&quot;_tail&quot;</span><span class="p">,</span>
                                 <span class="kc">True</span> <span class="k">if</span> <span class="n">group_list</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">agent</span><span class="p">)</span> <span class="o">==</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">group_list</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="k">else</span> <span class="kc">False</span><span class="p">,</span>
                             <span class="p">)</span>
 
@@ -815,7 +920,7 @@
                         <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span>
                             <span class="nb">int</span><span class="p">(</span><span class="n">dummy_location</span><span class="o">.</span><span class="n">n_locations</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">split_value_locations</span><span class="p">))</span>
                         <span class="p">):</span>
-                            <span class="n">location</span> <span class="o">=</span> <span class="n">location_cls</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">)</span>
+                            <span class="n">location</span> <span class="o">=</span> <span class="n">designer</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">)</span>
                             <span class="n">location</span><span class="o">.</span><span class="n">setup</span><span class="p">()</span>
                             <span class="n">location</span><span class="o">.</span><span class="n">split_value</span> <span class="o">=</span> <span class="n">split_value</span>
                             <span class="n">location</span><span class="o">.</span><span class="n">subsplit_value</span> <span class="o">=</span> <span class="kc">None</span>
@@ -826,39 +931,16 @@
 
         <span class="n">locations</span> <span class="o">=</span> <span class="n">p2n</span><span class="o">.</span><span class="n">LocationList</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="n">objs</span><span class="o">=</span><span class="n">locations</span><span class="p">)</span>
 
-        <span class="c1"># execute an action after all locations have been created</span>
-        <span class="k">for</span> <span class="n">location</span> <span class="ow">in</span> <span class="n">locations</span><span class="p">:</span>
-            <span class="n">location</span><span class="o">.</span><span class="n">refine</span><span class="p">()</span>
-
         <span class="c1"># delete temporary agent attributes</span>
         <span class="k">for</span> <span class="n">agent</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dummy_model</span><span class="o">.</span><span class="n">agents</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">attr</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_temp_agent_attrs</span><span class="p">:</span>
                 <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">agent</span><span class="p">,</span> <span class="n">attr</span><span class="p">):</span>
                     <span class="nb">delattr</span><span class="p">(</span><span class="n">agent</span><span class="p">,</span> <span class="n">attr</span><span class="p">)</span>
 
-        <span class="c1"># delete magic location attributes</span>
-        <span class="n">magic_location_attributes</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="s2">&quot;filter&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;setup&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;bridge&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;split&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;weight&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;stick_together&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;nest&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;melt&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;refine&quot;</span><span class="p">,</span>
-        <span class="p">]</span>
-        <span class="c1"># TODO: delete magic location attributes</span>
-        <span class="k">if</span> <span class="kc">False</span><span class="p">:</span>  <span class="c1"># delete_magic_location_attributes:</span>
-            <span class="k">for</span> <span class="bp">cls</span> <span class="ow">in</span> <span class="n">location_classes</span><span class="p">:</span>
-                <span class="k">del</span> <span class="bp">cls</span><span class="o">.</span><span class="n">stick_together</span>
-                <span class="k">del</span> <span class="bp">cls</span><span class="o">.</span><span class="n">setup</span>
-
         <span class="n">magic_agent_attributes</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">magic_agent_attributes</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">delete_magic_agent_attributes</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">attr</span> <span class="ow">in</span> <span class="n">magic_agent_attributes</span><span class="p">:</span>
                 <span class="k">for</span> <span class="n">agent</span> <span class="ow">in</span> <span class="n">agents</span><span class="p">:</span>
-                    <span class="c1"># if hasattr(agent, attr):</span>
                     <span class="nb">delattr</span><span class="p">(</span><span class="n">agent</span><span class="p">,</span> <span class="n">attr</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">locations</span></div>
@@ -869,7 +951,7 @@
     <span class="k">def</span> <span class="nf">create</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
-        <span class="n">location_classes</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span>
+        <span class="n">location_designers</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span>
         <span class="n">agent_class</span><span class="p">:</span> <span class="nb">type</span><span class="p">[</span><span class="n">p2n</span><span class="o">.</span><span class="n">Agent</span><span class="p">]</span> <span class="o">=</span> <span class="n">p2n</span><span class="o">.</span><span class="n">Agent</span><span class="p">,</span>
         <span class="n">agent_class_attr</span><span class="p">:</span> <span class="kc">None</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">agent_class_dict</span><span class="p">:</span> <span class="kc">None</span> <span class="o">|</span> <span class="nb">dict</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -889,7 +971,7 @@
 <span class="sd">                the creation of agents. Each row is (potentially) translated into one agent.</span>
 <span class="sd">                Each column is translated into one agent attribute.</span>
 <span class="sd">            agent_class (type[p2n.Agent]): The class from which the agent instances are created.</span>
-<span class="sd">            location_classes (list): A list of classes from which the location instances are</span>
+<span class="sd">            location_designers (list): A list of classes from which the location instances are</span>
 <span class="sd">                created.</span>
 <span class="sd">            n_agents (Optional[int], optional): The number of agents that will be created.</span>
 <span class="sd">                If `n_agents` is set to None, each row of `df` is translated into exactly one agent.</span>
@@ -934,7 +1016,7 @@
         <span class="c1"># create locations</span>
         <span class="n">locations</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_locations</span><span class="p">(</span>
             <span class="n">agents</span><span class="o">=</span><span class="n">agents</span><span class="p">,</span>
-            <span class="n">location_classes</span><span class="o">=</span><span class="n">location_classes</span><span class="p">,</span>
+            <span class="n">location_designers</span><span class="o">=</span><span class="n">location_designers</span><span class="p">,</span>
             <span class="n">clear</span><span class="o">=</span><span class="n">clear</span><span class="p">,</span>
             <span class="n">delete_magic_agent_attributes</span><span class="o">=</span><span class="n">delete_magic_agent_attributes</span><span class="p">,</span>
         <span class="p">)</span>
