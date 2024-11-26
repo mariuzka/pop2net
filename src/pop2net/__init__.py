@@ -7,8 +7,8 @@ from .creator import Creator
 from .exceptions import Pop2netException
 from .inspector import NetworkInspector
 from .location import Location
-from .location import MagicLocation
-from .location import MeltLocation
+from .location_designer import LocationDesigner
+from .location_designer import MeltLocationDesigner
 from .model import Model
 from .sequences import LocationList
 
@@ -17,8 +17,8 @@ __all__ = [
     "Agent",
     "Pop2netException",
     "Location",
-    "MagicLocation",
-    "MeltLocation",
+    "LocationDesigner",
+    "MeltLocationDesigner",
     "NetworkInspector",
     "Model",
     "LocationList",

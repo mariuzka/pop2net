@@ -17,16 +17,16 @@ def test_del_magic_agent_attrs1(magic_agent_attributes):
     model = p2n.Model()
     creator = p2n.Creator(model=model)
 
-    class Location1(p2n.MagicLocation):
+    class Location1(p2n.LocationDesigner):
         pass
 
-    class Location2(p2n.MagicLocation):
+    class Location2(p2n.LocationDesigner):
         pass
 
     # First test: Do NOT delete magic agent attributes
     creator.create_agents(n=10)
     creator.create_locations(
-        location_classes=[Location1, Location2],
+        location_designers=[Location1, Location2],
         delete_magic_agent_attributes=False,
     )
 
@@ -37,7 +37,7 @@ def test_del_magic_agent_attrs1(magic_agent_attributes):
     # Second test: DELETE magic agent attributes
     creator.create_agents(n=10, clear=True)
     creator.create_locations(
-        location_classes=[Location1, Location2],
+        location_designers=[Location1, Location2],
         delete_magic_agent_attributes=True,
         clear=True,
     )
@@ -53,17 +53,17 @@ def test_del_magic_agent_attrs2(magic_agent_attributes):
     model = p2n.Model()
     creator = p2n.Creator(model=model)
 
-    class Location1(p2n.MagicLocation):
+    class Location1(p2n.LocationDesigner):
         pass
 
-    class Location2(p2n.MagicLocation):
+    class Location2(p2n.LocationDesigner):
         pass
 
     # First test: Do NOT delete magic agent attributes
     creator.create(
         df=df,
         n_agents=10,
-        location_classes=[Location1, Location2],
+        location_designers=[Location1, Location2],
         delete_magic_agent_attributes=False,
     )
 
@@ -75,7 +75,7 @@ def test_del_magic_agent_attrs2(magic_agent_attributes):
     creator.create(
         df=df,
         n_agents=10,
-        location_classes=[Location1, Location2],
+        location_designers=[Location1, Location2],
         delete_magic_agent_attributes=True,
         clear=True,
     )

@@ -79,6 +79,9 @@ def _to_list(x: object) -> list:
 
 
 def _get_cls_as_str(cls_):
+    # if isinstance(cls_, str):
+    #    # if cls_ is a string
+    #    return cls_
     if inspect.isclass(cls_):
         # if cls_ is a class
         return cls_.__name__

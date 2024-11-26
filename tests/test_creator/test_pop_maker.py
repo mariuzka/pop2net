@@ -69,7 +69,7 @@ def test_create_locations():
     for agent in agents:
         model.env.add_agent(agent)
 
-    locations = creator.create_locations(agents=agents, location_classes=[Home, School])
+    locations = creator.create_locations(agents=agents, location_designers=[Home, School])
     for location in locations:
         model.env.add_location(location)
 
@@ -79,7 +79,3 @@ def test_create_locations():
     for location in locations:
         for agent in location.agents:
             assert location.group(agent) == location.group_id
-
-
-if __name__ == "__main__":
-    test_create_locations()

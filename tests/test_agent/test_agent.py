@@ -156,7 +156,7 @@ def test_color_agents():
 
 
 def test_chef_agents():
-    class Town(p2n.MagicLocation):
+    class Town(p2n.LocationDesigner):
         n_agents = 4
 
         def stick_together(self, agent):
@@ -165,7 +165,7 @@ def test_chef_agents():
         def assert_(self):
             assert len(self.agents) == 4
 
-    class Home(p2n.MagicLocation):
+    class Home(p2n.LocationDesigner):
         def split(self, agent):
             return agent.couple
 
@@ -175,7 +175,7 @@ def test_chef_agents():
         def assert_(self):
             assert len({a.couple for a in self.agents}) == 1
 
-    class Restaurant(p2n.MagicLocation):
+    class Restaurant(p2n.LocationDesigner):
         def setup(self):
             chef = Chef(self.model)
             self.add_agent(chef)
@@ -188,16 +188,16 @@ def test_chef_agents():
             return agent.food
 
         def nest(self):
-            return Town
+            return "Town"
 
         def assert_(self):
             # assert that affiliated agents are affiliated with the same Town
             assert (
                 len(
                     {
-                        agent.locations.select(agent.locations.type == "Town")[0]
+                        agent.locations.select(agent.locations.label == "Town")[0]
                         for agent in self.agents
-                        if isinstance(agent, MyAgent)  # Chef-agents are not affiliated with Towns
+                        if agent.type == "MyAgent"  # Chef-agents are not affiliated with Towns
                     },
                 )
                 == 1
@@ -206,7 +206,7 @@ def test_chef_agents():
     class Chef(p2n.Agent):
         def assert_(self):
             assert len(self.locations) == 1
-            assert self.locations[0].type == "Restaurant"
+            assert self.locations[0].label == "Restaurant"
             assert self.get_location_weight(self.locations[0]) == 8
             assert (
                 len([1 for a in self.locations[0].neighbors(self) if self.get_agent_weight(a) != 2])
@@ -221,14 +221,30 @@ def test_chef_agents():
                 if agent.couple == self.couple and agent is not self
             ][0]
 
-            assert self.neighbors(location_classes=[Home])[0] is couple_agent
+            assert self.neighbors(location_labels=["Home"])[0] is couple_agent
 
             assert self.get_agent_weight(couple_agent) == 12 + 1
 
-            assert (
-                self.locations.select(self.locations.type == "Town")[0]
-                is self.shared_locations(couple_agent, location_classes=[Town])[0]
-            )
+            print(self.locations)
+            for location in self.locations:
+                print(location.label)
+
+            print(self.shared_locations(couple_agent))
+            for l in self.shared_locations(couple_agent):
+                print(l.label)
+
+            print([location for location in self.locations if location.label == "Town"])
+            print(self.shared_locations(couple_agent, location_labels=["Town"]))
+
+            for location in self.locations:
+                print(location.label, location.id)
+
+            for location in couple_agent.locations:
+                print(location.label, location.id)
+
+            assert [location for location in self.locations if location.label == "Town"][
+                0
+            ] is self.shared_locations(couple_agent, location_labels=["Town"])[0]
 
     df = pd.DataFrame(
         {
@@ -245,7 +261,7 @@ def test_chef_agents():
     creator.create_agents(df=df, agent_class=MyAgent)
 
     creator.create_locations(
-        location_classes=[
+        location_designers=[
             Town,
             Home,
             Restaurant,
@@ -279,11 +295,11 @@ def test_table_agents():
 
     creator.create_agents(df=df)
 
-    class Table(p2n.MagicLocation):
+    class Table(p2n.LocationDesigner):
         recycle = True
 
         def melt(self):
-            class PizzaGroup(p2n.MagicLocation):
+            class PizzaGroup(p2n.LocationDesigner):
                 n_agents = 3
                 only_exact_n_agents = False
 
@@ -296,7 +312,7 @@ def test_table_agents():
                 def weight(self, agent):
                     return 10
 
-            class PastaGroup(p2n.MagicLocation):
+            class PastaGroup(p2n.LocationDesigner):
                 n_agents = 2
                 only_exact_n_agents = False
 
@@ -306,12 +322,12 @@ def test_table_agents():
             return PizzaGroup, PastaGroup
 
         def nest(self):
-            return Restaurant
+            return "Restaurant"
 
         def weight(self, agent):
             return 5
 
-    class Restaurant(p2n.MagicLocation):
+    class Restaurant(p2n.LocationDesigner):
         n_agents = 10
 
         # def stick_together(self, agent):
@@ -321,7 +337,7 @@ def test_table_agents():
         #    return agent.Table
 
     creator.create_locations(
-        location_classes=[
+        location_designers=[
             Restaurant,
             Table,
         ],
