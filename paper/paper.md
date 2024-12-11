@@ -56,7 +56,7 @@ The model class is largely identical to the AgentPy model class, which holds all
 * Various methods for managing tasks such as connecting agents and locations or exporting the network.
 
 Agents are the (inter)acting entities of the simulation. 
-They extend AgentPy's agent class by adding methods to, for example, find neighbors within specific types of locations or connect with other agents through specific locations.
+They extend AgentPy's agent class by adding methods to, for example, access all locations that the agent is part of, find neighbors within specific types of locations or connect with other agents through specific locations.
 
 Locations represent the places or contexts where agents interact.
 In Pop2net, every connection between agents must be mediated by a location.
