@@ -1,44 +1,3 @@
-
----
-title: 'Gala: A Python package for galactic dynamics'
-tags:
-  - Python
-  - astronomy
-  - dynamics
-  - galactic dynamics
-  - milky way
-authors:
-  - name: Adrian M. Price-Whelan
-    orcid: 0000-0000-0000-0000
-    equal-contrib: true
-    affiliation: "1, 2" # (Multiple affiliations must be quoted)
-  - name: Author Without ORCID
-    equal-contrib: true # (This is how you can denote equal contributions between multiple authors)
-    affiliation: 2
-  - name: Author with no affiliation
-    corresponding: true # (This is how to denote the corresponding author)
-    affiliation: 3
-  - given-names: Ludwig
-    dropping-particle: van
-    surname: Beethoven
-    affiliation: 3
-affiliations:
- - name: Lyman Spitzer, Jr. Fellow, Princeton University, United States
-   index: 1
-   ror: 00hx57361
- - name: Institution Name, Country
-   index: 2
- - name: Independent Researcher, Country
-   index: 3
-date: 13 August 2017
-bibliography: paper.bib
-
-# Optional fields if submitting to a AAS journal too, see this blog post:
-# https://blog.joss.theoj.org/2018/12/a-new-collaboration-with-aas-publishing
-aas-doi: 10.3847/xxxxx <- update this with the DOI from AAS once you know it.
-aas-journal: Astrophysical Journal <- The name of the AAS journal.
----
-
 # Introduction
 Agent-based modeling is a scientific method used in fields such as social sciences, biology, and ecology to simulate the interactions of autonomous agents. 
 Relationships between agents, which structure these interactions, are often represented by network graphs. 
@@ -87,6 +46,28 @@ Pop2net includes tools for quickly analyzing the features of generated networks.
 These tools ensure that the generated networks meet the intended specifications and proportions.
 
 # Software structure
+Technically, Pop2net is a fork of AgentPy that modifies some of AgentPy's core object classes and adds additional object classes to the existing framework.
+
+In Pop2net, the core object classes that must be used are the model, agents, and locations.\
+The model class is largely identical to the AgentPy model class, which holds all entities and parameters of the simulation while defining and executing the simulation procedure. In Pop2net, the model object is extended by the following features:
+
+* A graph object that stores all agents and locations as well as their relationships.
+* An agent list and a location list, which provide convenient access to agent and location objects.
+* Various methods for managing tasks such as connecting agents and locations or exporting the network.
+
+Agents are the (inter)acting entities of the simulation. 
+They extend AgentPy's agent class by adding methods to, for example, find neighbors within specific types of locations or connect with other agents through specific locations.
+
+Locations represent the places or contexts where agents interact.
+In Pop2net, every connection between agents must be mediated by a location.
+
+In addition to these three core object classes, which enable basic network creation and simulation, Pop2net introduces three additional object classes that enhance network generation and validation.
+The Creator, in combination with the LocationDesigner, facilitates the flexible creation of agents and locations and their connections as defined by the LocationDesigner class.
+The Inspector class provides methods for quick network analysis, such as visualization and the calculation of network measures.
+
+
+
+
 ![](software_structure.png)
 
 
