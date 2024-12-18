@@ -183,6 +183,7 @@ class Creator:
 
     def _get_affiliated_agents(self, agents, dummy_location) -> list:
         temp_filter_attr = "_P2NTEMP_filter_" + dummy_location.label
+        self._temp_agent_attrs.append(temp_filter_attr)
 
         affiliated_agents = []
         for agent in agents:
@@ -418,6 +419,7 @@ class Creator:
 
                 for agent in melt_location_affiliated_agents:
                     agent._P2NTEMP_melt_location_weight = melt_dummy_location.weight(agent)
+                    self._temp_agent_attrs.append("_P2NTEMP_melt_location_weight")
 
                 # for each split value: get groups and collect them in one list for all values
                 location_groups_to_melt: list[list] = []
@@ -843,7 +845,7 @@ class Creator:
         locations = p2n.LocationList(model=self.model, objs=locations)
 
         # delete temporary agent attributes
-        for agent in self._dummy_model.agents:
+        for agent in agents:
             for attr in self._temp_agent_attrs:
                 if hasattr(agent, attr):
                     delattr(agent, attr)
