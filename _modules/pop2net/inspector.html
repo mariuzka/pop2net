@@ -149,11 +149,14 @@
             <span class="n">agent_attrs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">agent_color</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">location_attrs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">location_attrs</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span>
+            <span class="n">location_attrs</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">,</span> <span class="s2">&quot;label&quot;</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">location_attrs</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">location_attrs</span><span class="p">)</span>
             <span class="k">if</span> <span class="s2">&quot;type&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">location_attrs</span><span class="p">:</span>
                 <span class="n">location_attrs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="s2">&quot;label&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">location_attrs</span><span class="p">:</span>
+                <span class="n">location_attrs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;label&quot;</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">location_color</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">location_color</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">location_attrs</span><span class="p">:</span>
             <span class="n">location_attrs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">location_color</span><span class="p">)</span>
@@ -171,7 +174,6 @@
             <span class="n">node_color_lv1</span><span class="o">=</span><span class="s2">&quot;black&quot;</span> <span class="k">if</span> <span class="n">location_color</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">location_color</span><span class="p">,</span>
             <span class="n">edge_alpha</span><span class="o">=</span><span class="n">edge_alpha</span><span class="p">,</span>
             <span class="n">edge_color</span><span class="o">=</span><span class="n">edge_color</span><span class="p">,</span>
-            <span class="c1"># node_palette=&quot;random&quot;,</span>
         <span class="p">)</span></div>
 
 
@@ -262,7 +264,6 @@
             <span class="n">location_attrs</span><span class="o">=</span><span class="n">location_attrs</span><span class="p">,</span>
             <span class="n">edge_color</span><span class="o">=</span><span class="n">edge_color</span><span class="p">,</span>
             <span class="n">edge_alpha</span><span class="o">=</span><span class="n">edge_alpha</span><span class="p">,</span>
-            <span class="c1"># include_0_weights=include_0_weights,</span>
         <span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">plot_agent_network</span><span class="p">(</span>
@@ -286,14 +287,17 @@
         <span class="n">df1</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
             <span class="p">[</span>
                 <span class="p">{</span>
-                    <span class="s2">&quot;location_class&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">location</span><span class="p">))</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;&#39;&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span>
+                    <span class="s2">&quot;location_label&quot;</span><span class="p">:</span> <span class="n">location</span><span class="o">.</span><span class="n">label</span><span class="p">,</span>
                     <span class="s2">&quot;n_agents&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">location</span><span class="o">.</span><span class="n">agents</span><span class="p">),</span>
                 <span class="p">}</span>
                 <span class="k">for</span> <span class="n">location</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">locations</span>
             <span class="p">],</span>
         <span class="p">)</span>
 
-        <span class="n">df1</span> <span class="o">=</span> <span class="n">df1</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;location_class&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span>
+        <span class="n">utils</span><span class="o">.</span><span class="n">print_header</span><span class="p">(</span><span class="s2">&quot;Number of locations&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">df1</span><span class="o">.</span><span class="n">location_label</span><span class="o">.</span><span class="n">value_counts</span><span class="p">())</span>
+
+        <span class="n">df1</span> <span class="o">=</span> <span class="n">df1</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;location_label&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span>
         <span class="n">df1</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">df1</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">droplevel</span><span class="p">()</span>
         <span class="n">df1</span> <span class="o">=</span> <span class="n">df1</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s2">&quot;count&quot;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
@@ -406,24 +410,25 @@
 
 <div class="viewcode-block" id="NetworkInspector.network_measures">
 <a class="viewcode-back" href="../../api/inspector.html#pop2net.inspector.NetworkInspector.network_measures">[docs]</a>
-    <span class="k">def</span> <span class="nf">network_measures</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node_attrs</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Creates nx networkgraph and calculates common network measures.</span>
+    <span class="k">def</span> <span class="nf">network_measures</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent_attrs</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculates common network measures for the agent-level network graph.</span>
 
 <span class="sd">        If the created network consist of independent groups of nodes</span>
 <span class="sd">        subgraphs are created and measures are calculated for each subgraph</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            node_attrs: A list of agent attributes</span>
+<span class="sd">            agent_attrs: A list of agent attributes</span>
 
 <span class="sd">        Return:</span>
-<span class="sd">            dictionary/or list of dictionaries of the common network</span>
-<span class="sd">            measure results</span>
+<span class="sd">            list of dictionaries of the common network measure results</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">result_dict</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="n">nx_graph</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">export_agent_network</span><span class="p">(</span><span class="n">node_attrs</span><span class="o">=</span><span class="n">node_attrs</span><span class="p">)</span>
+        <span class="n">nx_graph</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">export_agent_network</span><span class="p">(</span><span class="n">node_attrs</span><span class="o">=</span><span class="n">agent_attrs</span><span class="p">)</span>
 
         <span class="c1"># make distinction between multiple independent networks and one network</span>
-        <span class="k">if</span> <span class="n">nx</span><span class="o">.</span><span class="n">is_connected</span><span class="p">(</span><span class="n">nx_graph</span><span class="p">):</span>
+
+        <span class="k">def</span> <span class="nf">get_network_measures</span><span class="p">(</span><span class="n">nx_graph</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+            <span class="n">result_dict</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="n">result_dict</span><span class="p">[</span><span class="s2">&quot;n_nodes&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">number_of_nodes</span><span class="p">(</span><span class="n">nx_graph</span><span class="p">)</span>
             <span class="n">result_dict</span><span class="p">[</span><span class="s2">&quot;diameter&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">diameter</span><span class="p">(</span><span class="n">nx_graph</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="s2">&quot;weight&quot;</span><span class="p">)</span>
             <span class="n">result_dict</span><span class="p">[</span><span class="s2">&quot;density&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">density</span><span class="p">(</span><span class="n">nx_graph</span><span class="p">)</span>
             <span class="n">result_dict</span><span class="p">[</span><span class="s2">&quot;transitivity&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">transitivity</span><span class="p">(</span><span class="n">nx_graph</span><span class="p">)</span>
@@ -435,51 +440,24 @@
                 <span class="n">nx_graph</span><span class="p">,</span>
                 <span class="n">weight</span><span class="o">=</span><span class="s2">&quot;weight&quot;</span><span class="p">,</span>
             <span class="p">)</span>
-            <span class="c1"># result_dict[&quot;periphery&quot;] = nx.periphery(nx_graph, weight = &quot;weight&quot;)</span>
-            <span class="c1"># result_dict[&quot;center&quot;] = nx.center(nx_graph, weight = &quot;weight&quot;)</span>
-            <span class="c1"># result_dict[&quot;centrality&quot;] = nx.degree_centrality(nx_graph)</span>
             <span class="k">return</span> <span class="n">result_dict</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="c1"># sort subgraph component size(=num of nodes) in ascending order</span>
-            <span class="n">component_list</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span>
-                <span class="n">nx</span><span class="o">.</span><span class="n">connected_components</span><span class="p">(</span><span class="n">nx_graph</span><span class="p">),</span>
-                <span class="n">key</span><span class="o">=</span><span class="nb">len</span><span class="p">,</span>
-                <span class="n">reverse</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-            <span class="p">)</span>
 
-            <span class="c1"># create graph for each component and calculate network measures</span>
-            <span class="n">result_list</span> <span class="o">=</span> <span class="p">[]</span>
-            <span class="k">for</span> <span class="n">component</span> <span class="ow">in</span> <span class="n">component_list</span><span class="p">:</span>
-                <span class="n">result_dict_subgraph</span> <span class="o">=</span> <span class="p">{}</span>
-                <span class="k">try</span><span class="p">:</span>
-                    <span class="n">nx_subgraph</span> <span class="o">=</span> <span class="n">nx_graph</span><span class="o">.</span><span class="n">subgraph</span><span class="p">(</span><span class="n">component</span><span class="p">)</span>
-                <span class="k">except</span> <span class="n">nx</span><span class="o">.</span><span class="n">NetworkXError</span><span class="p">:</span>
-                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Cant make graph out of component&quot;</span><span class="p">)</span>
-                    <span class="k">break</span>
+        <span class="n">network_components</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">nx</span><span class="o">.</span><span class="n">connected_components</span><span class="p">(</span><span class="n">nx_graph</span><span class="p">))</span>
+        <span class="n">network_components</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">network_components</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="nb">len</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-                <span class="n">result_dict_subgraph</span><span class="p">[</span><span class="s2">&quot;diameter&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">diameter</span><span class="p">(</span>
-                    <span class="n">nx_subgraph</span><span class="p">,</span>
-                    <span class="n">weight</span><span class="o">=</span><span class="s2">&quot;weight&quot;</span><span class="p">,</span>
-                <span class="p">)</span>
-                <span class="n">result_dict_subgraph</span><span class="p">[</span><span class="s2">&quot;density&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">density</span><span class="p">(</span><span class="n">nx_subgraph</span><span class="p">)</span>
-                <span class="n">result_dict_subgraph</span><span class="p">[</span><span class="s2">&quot;transitivity&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">transitivity</span><span class="p">(</span><span class="n">nx_subgraph</span><span class="p">)</span>
-                <span class="n">result_dict_subgraph</span><span class="p">[</span><span class="s2">&quot;avg_clustering&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">average_clustering</span><span class="p">(</span>
-                    <span class="n">nx_subgraph</span><span class="p">,</span>
-                    <span class="n">weight</span><span class="o">=</span><span class="s2">&quot;weight&quot;</span><span class="p">,</span>
-                <span class="p">)</span>
-                <span class="n">result_dict_subgraph</span><span class="p">[</span><span class="s2">&quot;avg_path_length&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">average_shortest_path_length</span><span class="p">(</span>
-                    <span class="n">nx_subgraph</span><span class="p">,</span>
-                    <span class="n">weight</span><span class="o">=</span><span class="s2">&quot;weight&quot;</span><span class="p">,</span>
-                <span class="p">)</span>
+        <span class="c1"># create graph for each component and calculate network measures</span>
+        <span class="n">result_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">component</span> <span class="ow">in</span> <span class="n">network_components</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">nx_subgraph</span> <span class="o">=</span> <span class="n">nx_graph</span><span class="o">.</span><span class="n">subgraph</span><span class="p">(</span><span class="n">component</span><span class="p">)</span>
+            <span class="k">except</span> <span class="n">nx</span><span class="o">.</span><span class="n">NetworkXError</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Cant make graph out of component&quot;</span><span class="p">)</span>
+                <span class="k">break</span>
 
-                <span class="c1"># result_dict_subgraph[&quot;centrality&quot;] = nx.degree_centrality(nx_subgraph)</span>
-                <span class="c1"># result_dict_subgraph[&quot;periphery&quot;] = nx.periphery(nx_subgraph, weight = &quot;weight&quot;)</span>
-                <span class="c1"># result_dict_subgraph[&quot;center&quot;] = nx.center(nx_subgraph, weight = &quot;weight&quot;)</span>
-                <span class="n">result_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">result_dict_subgraph</span><span class="p">)</span>
-            <span class="k">return</span> <span class="n">result_list</span></div>
+            <span class="n">result_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">get_network_measures</span><span class="p">(</span><span class="n">nx_subgraph</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">result_list</span></div>
 
 
-    <span class="c1">## TODO wie gebe ich hier den richtigen Datentyp an???</span>
 <div class="viewcode-block" id="NetworkInspector.location_crosstab">
 <a class="viewcode-back" href="../../api/inspector.html#pop2net.inspector.NetworkInspector.location_crosstab">[docs]</a>
     <span class="k">def</span> <span class="nf">location_crosstab</span><span class="p">(</span>
