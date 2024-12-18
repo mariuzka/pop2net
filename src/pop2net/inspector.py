@@ -66,11 +66,14 @@ class NetworkInspector:
             agent_attrs.append(agent_color)
 
         if location_attrs is None:
-            location_attrs = ["type"]
+            location_attrs = ["type", "label"]
         else:
             location_attrs = list(location_attrs)
             if "type" not in location_attrs:
                 location_attrs.append("type")
+
+            if "label" not in location_attrs:
+                location_attrs.append("label")
 
         if location_color is not None and location_color not in location_attrs:
             location_attrs.append(location_color)
@@ -88,7 +91,6 @@ class NetworkInspector:
             node_color_lv1="black" if location_color is None else location_color,
             edge_alpha=edge_alpha,
             edge_color=edge_color,
-            # node_palette="random",
         )
 
     def plot_agent_network(
@@ -173,7 +175,6 @@ class NetworkInspector:
             location_attrs=location_attrs,
             edge_color=edge_color,
             edge_alpha=edge_alpha,
-            # include_0_weights=include_0_weights,
         )
 
         self.plot_agent_network(
@@ -194,14 +195,17 @@ class NetworkInspector:
         df1 = pd.DataFrame(
             [
                 {
-                    "location_class": str(type(location)).split(".")[-1].split("'")[0],
+                    "location_label": location.label,
                     "n_agents": len(location.agents),
                 }
                 for location in self.model.locations
             ],
         )
 
-        df1 = df1.groupby("location_class").describe()
+        utils.print_header("Number of locations")
+        print(df1.location_label.value_counts())
+
+        df1 = df1.groupby("location_label").describe()
         df1.columns = df1.columns.droplevel()
         df1 = df1.drop("count", axis=1)
 
@@ -308,24 +312,25 @@ class NetworkInspector:
         if return_df:
             return df
 
-    def network_measures(self, node_attrs=None) -> dict | list[dict]:
-        """Creates nx networkgraph and calculates common network measures.
+    def network_measures(self, agent_attrs=None) -> list[dict]:
+        """Calculates common network measures for the agent-level network graph.
 
         If the created network consist of independent groups of nodes
         subgraphs are created and measures are calculated for each subgraph
 
         Args:
-            node_attrs: A list of agent attributes
+            agent_attrs: A list of agent attributes
 
         Return:
-            dictionary/or list of dictionaries of the common network
-            measure results
+            list of dictionaries of the common network measure results
         """
-        result_dict = {}
-        nx_graph = self.model.export_agent_network(node_attrs=node_attrs)
+        nx_graph = self.model.export_agent_network(node_attrs=agent_attrs)
 
         # make distinction between multiple independent networks and one network
-        if nx.is_connected(nx_graph):
+
+        def get_network_measures(nx_graph) -> dict:
+            result_dict = {}
+            result_dict["n_nodes"] = nx.number_of_nodes(nx_graph)
             result_dict["diameter"] = nx.diameter(nx_graph, weight="weight")
             result_dict["density"] = nx.density(nx_graph)
             result_dict["transitivity"] = nx.transitivity(nx_graph)
@@ -337,50 +342,23 @@ class NetworkInspector:
                 nx_graph,
                 weight="weight",
             )
-            # result_dict["periphery"] = nx.periphery(nx_graph, weight = "weight")
-            # result_dict["center"] = nx.center(nx_graph, weight = "weight")
-            # result_dict["centrality"] = nx.degree_centrality(nx_graph)
             return result_dict
-        else:
-            # sort subgraph component size(=num of nodes) in ascending order
-            component_list = sorted(
-                nx.connected_components(nx_graph),
-                key=len,
-                reverse=False,
-            )
 
-            # create graph for each component and calculate network measures
-            result_list = []
-            for component in component_list:
-                result_dict_subgraph = {}
-                try:
-                    nx_subgraph = nx_graph.subgraph(component)
-                except nx.NetworkXError:
-                    print("Cant make graph out of component")
-                    break
+        network_components = list(nx.connected_components(nx_graph))
+        network_components = sorted(network_components, key=len, reverse=True)
 
-                result_dict_subgraph["diameter"] = nx.diameter(
-                    nx_subgraph,
-                    weight="weight",
-                )
-                result_dict_subgraph["density"] = nx.density(nx_subgraph)
-                result_dict_subgraph["transitivity"] = nx.transitivity(nx_subgraph)
-                result_dict_subgraph["avg_clustering"] = nx.average_clustering(
-                    nx_subgraph,
-                    weight="weight",
-                )
-                result_dict_subgraph["avg_path_length"] = nx.average_shortest_path_length(
-                    nx_subgraph,
-                    weight="weight",
-                )
+        # create graph for each component and calculate network measures
+        result_list = []
+        for component in network_components:
+            try:
+                nx_subgraph = nx_graph.subgraph(component)
+            except nx.NetworkXError:
+                print("Cant make graph out of component")
+                break
 
-                # result_dict_subgraph["centrality"] = nx.degree_centrality(nx_subgraph)
-                # result_dict_subgraph["periphery"] = nx.periphery(nx_subgraph, weight = "weight")
-                # result_dict_subgraph["center"] = nx.center(nx_subgraph, weight = "weight")
-                result_list.append(result_dict_subgraph)
-            return result_list
+            result_list.append(get_network_measures(nx_subgraph))
+        return result_list
 
-    ## TODO wie gebe ich hier den richtigen Datentyp an???
     def location_crosstab(
         self,
         select_locations: _location.location | list[_location.Location],
