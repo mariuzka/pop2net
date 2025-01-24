@@ -1,5 +1,29 @@
+
 ---
-title: 'Pop2net'
+title: "Pop2net: A Python package for bipartite networks in agent-based simulations"
+tags:
+  - Python
+  - Agent-based modeling
+  - Network generation
+  - Bipartite networks
+  - AgentPy
+
+authors:
+  - name: Marius Kaffai
+    orcid: 0000-0002-8619-3362
+    equal-contrib: true
+    affiliation: 1
+
+  - name: Lukas Erhard
+    orcid: 0000-0002-4977-2947
+    equal-contrib: true
+    affiliation: 1
+  
+affiliations:
+ - name: University of Stuttgart, Germany
+   index: 1
+
+date: 27.01.2025
 bibliography: paper.bib
 ---
 
@@ -31,7 +55,7 @@ We identify three core features of Pop2net that existing software for agent-base
 
 1. **A bipartite approach to networks.**
     Pop2net implements a bipartite approach to networks, which simplifies the creation and management of relations between agents in simulation models.
-    The approach of creating a network based on agents and locations is not entirely new, but it is already common in epidemiological agent-based models (CITE?).
+    The approach of creating a network based on agents and locations is not entirely new, but it is already common in epidemiological agent-based models (e.g., @kerr_covasim_2020, @vermeulen_social_2021, @kaffai_modeling_2021).
     However, Pop2net is the first software package to implement this approach in a general package for network generation and management in agent-based modeling.
 
 2. **Scalable and modular network generation.**
@@ -86,6 +110,9 @@ This not only describes the package's API, but also provides detailed tutorials 
 
 ## Acknowledgements
 
+This work was funded by Deutsche Forschungsgemeinschaft (DFG, German Research Foundation) under Germany´s Excellence Strategy – EXC 2075 – 390740016. 
+
 We acknowledge the support of the Deutsche Forschungsgemeinschaft (DFG, German Research Foundation under the DFG reference number UP 31/1) for the Stuttgart Research Focus Interchange Forum for Reflecting on Intelligent Systems (IRIS).
+
 
 ## References
