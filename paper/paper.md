@@ -28,7 +28,7 @@ bibliography: paper.bib
 ---
 
 
-## Introduction
+# Introduction
 
 Agent-based modeling is a scientific method used in fields such as social science, biology, and ecology to simulate the interactions of autonomous agents and study the resulting emergent phenomena.
 The relationships between agents that structure the simulated interactions are often represented by network graphs.
@@ -42,11 +42,11 @@ This makes it easy to generate and manage custom network structures in an agent-
 Pop2net is mainly an extension to the existing agent-based modeling framework AgentPy [@foramitti_agentpy_2021], but it can also be used to generate networks for other modeling frameworks.
 
 
-## Statement of Need
+# Statement of Need
 
 Currently, there are only a few tools designed to create and manage networks for agent-based modeling.
 General-purpose agent-based modeling packages such as Mesa [@kazil_utilizing_2020], AgentPy [@foramitti_agentpy_2021] or Melodie [@yu_melodie_2023], provide basic data types to represent networks, but they lack tools to create these network structures and do not provide bipartite graphs.
-Existing network generators explicitly designed for agent-based modeling, such as SynthPops (CITE), lack generalization and are often domain-specific and limited in scope.
+Existing network generators explicitly designed for agent-based modeling, such as SynthPops [@mistry_synthpops_2021], lack generalization and are often domain-specific and limited in scope.
 Thus, most agent-based models rely on highly abstract network models, e.g., using NetworkX in Python [@hagberg_exploring_2008] and randomly placing agents within these graphs [@amblard_which_2015].
 This approach generates networks with low realism and custom modifications to adapt the network to the research design are often complicated and inflexible.
 
@@ -69,7 +69,7 @@ We identify three core features of Pop2net that existing software for agent-base
     This enables users---especially from the social sciences---to ground network generation in empirical data, even in the absence of detailed network data.
 
 
-## Software structure
+# Software structure
 
 Pop2net's components can be categorized into three sectors.
 
@@ -101,18 +101,18 @@ Pop2net's components can be categorized into three sectors.
 3. **Inspection tools.**
     The NetworkInspector class provides methods for quick network analysis, such as visualization and the calculation of network measures.
 
-## Documentation
+# Documentation
 
 To make Pop2net as user-friendly as possible, we also provide comprehensive documentation.
 This not only describes the package's API, but also provides detailed tutorials that explain how to create agents, locations and networks using interactive network diagrams and simulations with sample data sets.[^1]
 
 [^1]: The tutorials are available at: [https://mariuzka.github.io/pop2net/section_introduction.html](https://mariuzka.github.io/pop2net/section_introduction.html)
 
-## Acknowledgements
+# Acknowledgements
 
 This work was funded by Deutsche Forschungsgemeinschaft (DFG, German Research Foundation) under Germany´s Excellence Strategy – EXC 2075 – 390740016. 
 
 We acknowledge the support of the Deutsche Forschungsgemeinschaft (DFG, German Research Foundation under the DFG reference number UP 31/1) for the Stuttgart Research Focus Interchange Forum for Reflecting on Intelligent Systems (IRIS).
 
 
-## References
+# References
