@@ -412,7 +412,7 @@ class NetworkInspector:
             agent_dfs = {}
             if agent_attributes:
                 for i, location_instance in enumerate(valid_locations):
-                    title = f'{i+1}.Location: {str(location_instance).split(" ")[0]}'
+                    title = f"{i + 1}.Location: {str(location_instance).split(' ')[0]}"
                     df = pd.DataFrame([vars(agent) for agent in location_instance.agents])
                     df = df[list(agent_attributes)]
                     agent_dfs[title] = df
@@ -437,7 +437,7 @@ class NetworkInspector:
             agent_dfs = {}
             result_list = []
             for i, location_instance in enumerate(valid_locations):
-                title = f'{i+1}.Location: {str(location_instance).split(" ")[0]}'
+                title = f"{i + 1}.Location: {str(location_instance).split(' ')[0]}"
                 location_type = str(location_instance).split(" ")[0]
                 df = pd.DataFrame([vars(agent) for agent in location_instance.agents])
 
@@ -524,7 +524,7 @@ class NetworkInspector:
         if agent_attributes:
             for i, location_instance in enumerate(valid_locations):
                 # Create the title of printout
-                title = f'{i+1}.Location: {str(location_instance).split(" ")[0]}'
+                title = f"{i + 1}.Location: {str(location_instance).split(' ')[0]}"
                 location_type = str(location_instance).split(" ")[0]
                 # get all agents per location instance, subset df by agent-attributes
                 df = pd.DataFrame([vars(agent) for agent in location_instance.agents])
@@ -533,7 +533,7 @@ class NetworkInspector:
                 agent_dfs[title] = df
         else:
             for i, location_instance in enumerate(valid_locations):
-                title = f'{i+1}.Location: {str(location_instance).split(" ")[0]}'
+                title = f"{i + 1}.Location: {str(location_instance).split(' ')[0]}"
                 location_type = str(location_instance).split(" ")[0]
                 df = pd.DataFrame([vars(agent) for agent in location_instance.agents])
                 df.drop(df.iloc[:, 0:7], axis=1, inplace=True)
