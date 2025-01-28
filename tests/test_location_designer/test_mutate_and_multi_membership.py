@@ -31,9 +31,6 @@ def test_1():
 
     creator.create_locations(location_designers=[TestLocation])
 
-    for location in model.locations:
-        print(location, len(location.agents))
-
     assert len(model.agents) == 10
     assert len(model.locations) == 4
     assert len(model.locations[0].agents) == 2
