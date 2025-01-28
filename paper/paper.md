@@ -78,7 +78,7 @@ Pop2net's components can be categorized into three sectors.
     The Model class is largely identical to the AgentPy Model class, which holds all entities and parameters of the simulation while defining and executing the simulation procedure.
     In Pop2net, Agentpy's Model object is extended by the following features:
 
-    * A graph object that stores all agents and locations as well as their relationships.
+    * A NetworkX graph object [@hagberg_exploring_2008] that stores all agents, locations, and their relationships.
     * An agent list and a location list that provide convenient access to agent and location objects.
     * Various methods for managing tasks such as connecting agents and locations or exporting the network.
 
