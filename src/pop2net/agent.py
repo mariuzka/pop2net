@@ -112,6 +112,15 @@ class Agent(ap.Agent):
         """
         return self.model.locations_of_agent(self)
 
+    @property
+    def location_labels(self) -> list[str]:
+        """Returns a list of labels of the locations this agent is associated with.
+
+        Returns:
+            list[str]: A list of location labels.
+        """
+        return [location.label for location in self.locations]
+
     def get_agent_weight(self, agent: Agent, location_labels: list | None = None) -> float:
         """Return the edge weight between this agent and a given other agent.
 
