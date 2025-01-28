@@ -47,8 +47,8 @@ Pop2net extends the existing agent-based modeling framework AgentPy [@foramitti_
 Currently, there are only a few tools designed to create and manage networks in agent-based models.
 General-purpose agent-based modeling frameworks, such as NetLogo [@wilensky_netlogo_1999], Mesa [@kazil_utilizing_2020], AgentPy [@foramitti_agentpy_2021], and Melodie [@yu_melodie_2023], offer basic data types for representing networks but lack advanced tools for creating custom network structures and provide only limited support for bipartite graphs out of the box.
 Existing network generators designed specifically for agent-based modeling, such as SynthPops [@mistry_synthpops_2021], often lack generalization, being domain-specific and limited in scope.
-As a result, most agent-based models rely on highly abstract network models, often utilizing tools like NetworkX in Python [@hagberg_exploring_2008] and randomly placing agents within these graphs [@amblard_which_2015].
-This approach typically produces networks with low realism, and custom modifications to tailor the network to specific research designs are often complex and inflexible.
+As a result, most agent-based models rely on highly abstract network models [@amblard_which_2015].
+Custom modifications to tailor such network models to specific research designs are often complex and inflexible.
 
 Pop2net aims to address this gap in the toolkit of agent-based modelers by offering a framework for creating and managing custom network structures, with the flexibility to integrate empirical data and traditional network models.
 We identify three core features of Pop2net that are currently lacking in existing software for agent-based modeling:
