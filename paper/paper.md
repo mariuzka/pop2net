@@ -1,6 +1,7 @@
 
 ---
 title: "Pop2net: A Python package for bipartite networks in agent-based simulations"
+
 tags:
   - Python
   - Agent-based modeling
@@ -24,6 +25,7 @@ affiliations:
    index: 1
 
 date: 27.01.2025
+
 bibliography: paper.bib
 ---
 
