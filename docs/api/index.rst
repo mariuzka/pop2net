@@ -10,7 +10,7 @@ API Reference
 
    agent
    location
-   magiclocation
+   location_designer
    creator
    model
    inspector
