@@ -45,15 +45,12 @@ class LocationDesigner(Location):
     def filter(self, agent: _agent.Agent) -> bool:  # noqa: ARG002
         """Check whether the agent is meant to join this type of location.
 
-        This is a boilerplate implementation of this method which always returns True; i.e. all
-        agents will always be allowed at this location. Override this method in your own
-        implementations as you seem fit.
-
         Args:
             agent: The agent that is currently processed by the Creator.
 
         Returns:
             True if the agent is allowed to join the location, False otherwise.
+            Returns True by default.
         """
         return True
 
@@ -115,10 +112,6 @@ class LocationDesigner(Location):
             None | list | tuple: A list or tuple of location classes.
         """
         return []
-
-    def refine(self):
-        """An action that is performed after all location instances have been created."""
-        pass
 
     def _subsplit(self, agent: _agent.Agent) -> str | float | list | None:  # noqa: ARG002
         """Splits a location instance into sub-instances to create a certain network structure.
