@@ -294,7 +294,7 @@ class Creator:
                 math.floor(len(agents) / n_location_groups),
                 1,
             )
-            
+
             groups: list[list] = [[] for _ in range(n_location_groups)]
 
         elif dummy_location.n_locations is not None and dummy_location.n_agents is not None:
