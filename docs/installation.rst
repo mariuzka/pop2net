@@ -23,11 +23,11 @@ The most recent version of Pop2net can be cloned from Github:
 
 	$ git clone https://github.com/mariuzka/pop2net.git
 
-Once you have a copy of the source, you can install it with:
+Once you have a copy of the source, you can install it using [Poetry](https://python-poetry.org/docs/):
 
 .. code-block:: console
 
-    $ pip install -e
+    $ poetry install
 
 
 .. _Github repository: https://github.com/mariuzka/pop2net

@@ -289,10 +289,12 @@ class Creator:
 
         elif dummy_location.n_locations is not None and dummy_location.n_agents is None:
             n_location_groups = dummy_location.n_locations
+            designer._P2NTEMP_ori_n_agents = dummy_location.n_agents
             designer.n_agents = max(
                 math.floor(len(agents) / n_location_groups),
                 1,
             )
+
             groups: list[list] = [[] for _ in range(n_location_groups)]
 
         elif dummy_location.n_locations is not None and dummy_location.n_agents is not None:
@@ -843,6 +845,12 @@ class Creator:
                             locations.append(location)
 
         locations = p2n.LocationList(model=self.model, objs=locations)
+
+        # Reset location_designer.n_agents if it was changed
+        for designer in location_designers:
+            if hasattr(designer, "_P2NTEMP_ori_n_agents"):
+                designer.n_agents = designer._P2NTEMP_ori_n_agents
+                delattr(designer, "_P2NTEMP_ori_n_agents")
 
         # delete temporary agent attributes
         for agent in agents:
