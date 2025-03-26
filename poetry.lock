@@ -194,14 +194,14 @@ xyzservices = ">=2021.09.1"
 
 [[package]]
 name = "bokehgraph"
-version = "1.0.0"
+version = "1.1.0"
 description = "Interactive Graph visualization for networkX Graphs"
 optional = false
 python-versions = "<4.0,>=3.9"
 groups = ["main"]
 files = [
-    {file = "bokehgraph-1.0.0-py3-none-any.whl", hash = "sha256:13a3384f37ec83dadd5539d5e91c1c73c6d676a5b79fdb889258aa1a9ff895a1"},
-    {file = "bokehgraph-1.0.0.tar.gz", hash = "sha256:ab21eaf6223092a078fa0e781797055e4960cceac1fa26518cf00f1c8a297f3e"},
+    {file = "bokehgraph-1.1.0-py3-none-any.whl", hash = "sha256:788c5404c85f9cac28034bcce953a21140518255e6a9ec67872a7cba80d1e95a"},
+    {file = "bokehgraph-1.1.0.tar.gz", hash = "sha256:d93a96c343fa60a780cd1864d082969068ffef4ea1c23f26a27c516d53aae609"},
 ]
 
 [package.dependencies]
@@ -3548,4 +3548,4 @@ type = ["pytest-mypy"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.9,<4.0"
-content-hash = "7f70eb295dbdbcef9e296d66304e936c545bc26f8ed92321d43432760bb53bea"
+content-hash = "510b7f68f2519f7ce9ffcc641d662c3803b68b01642870d90e9ca0c153f456a7"
