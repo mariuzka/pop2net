@@ -35,7 +35,8 @@ class NetworkInspector:
         location_color: str | None = None,
         edge_alpha: str = "weight",
         edge_color: str = "black",
-        edge_size: int = 2,
+        edge_size: int = 1,
+        node_size: int = 10,
     ) -> None:
         """Plots the two-mode network of agents and locations.
 
@@ -101,6 +102,7 @@ class NetworkInspector:
             edge_alpha=edge_alpha,
             edge_color=edge_color,
             edge_size=edge_size,
+            node_size=node_size,
         )
 
     def plot_agent_network(
@@ -110,7 +112,8 @@ class NetworkInspector:
         edge_alpha: str = "weight",
         edge_color: str = "black",
         include_0_weights: bool = True,
-        edge_size: int = 2,
+        edge_size: int = 1,
+        node_size: int = 10,
     ) -> None:
         """Plots the agent network.
 
@@ -147,9 +150,11 @@ class NetworkInspector:
         plot.layout(layout=graph_layout)
         plot.draw(
             node_color="firebrick" if agent_color is None else agent_color,
+            node_size=node_size,
             edge_alpha=edge_alpha,
             edge_color=edge_color,
             edge_size=edge_size,
+            
         )
 
     def plot_networks(
@@ -161,7 +166,8 @@ class NetworkInspector:
         edge_alpha: str = "weight",
         edge_color: str = "black",
         include_0_weights: bool = True,
-        edge_size: int = 2,
+        edge_size: int = 1,
+        node_size: int = 10,
     ) -> None:
         """Plots the two-mode network and the agent network.
 
@@ -189,6 +195,7 @@ class NetworkInspector:
             edge_color=edge_color,
             edge_alpha=edge_alpha,
             edge_size=edge_size,
+            node_size=node_size,
         )
 
         self.plot_agent_network(
@@ -198,6 +205,7 @@ class NetworkInspector:
             edge_alpha=edge_alpha,
             include_0_weights=include_0_weights,
             edge_size=edge_size,
+            node_size=node_size,
         )
 
     def eval_affiliations(self, return_data=False) -> tuple[pd.DataFrame, pd.DataFrame] | None:
