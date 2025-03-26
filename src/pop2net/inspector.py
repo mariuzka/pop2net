@@ -85,19 +85,19 @@ class NetworkInspector:
 
         graph_layout = nx.drawing.spring_layout(graph)
         plot = BokehGraph(
-            graph, 
-            width=400, 
-            height=400, 
-            hover_edges=True, 
+            graph,
+            width=400,
+            height=400,
+            hover_edges=True,
             bipartite=True,
-            )
+        )
         plot.layout(layout=graph_layout)
 
         plot.draw(
             node_color=(
-                agent_color if agent_color is not None else "firebrick", 
+                agent_color if agent_color is not None else "firebrick",
                 location_color if location_color is not None else "steelblue",
-                ),
+            ),
             edge_alpha=edge_alpha,
             edge_color=edge_color,
             edge_size=edge_size,
@@ -141,7 +141,7 @@ class NetworkInspector:
             node_attrs=agent_attrs,
             include_0_weights=include_0_weights,
         )
-        
+
         graph_layout = nx.drawing.spring_layout(graph)
         plot = BokehGraph(graph, width=400, height=400, hover_edges=True)
         plot.layout(layout=graph_layout)
