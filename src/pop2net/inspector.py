@@ -159,7 +159,6 @@ class NetworkInspector:
             edge_color=edge_color,
             edge_size=edge_size,
             node_alpha=node_alpha,
-            
         )
 
     def plot_networks(
