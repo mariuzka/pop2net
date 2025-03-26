@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import typing
 
-from bokehgraph import BokehBipartiteGraph
 from bokehgraph import BokehGraph
 import networkx as nx
 import pandas as pd
@@ -36,6 +35,7 @@ class NetworkInspector:
         location_color: str | None = None,
         edge_alpha: str = "weight",
         edge_color: str = "black",
+        edge_size: int = 2,
     ) -> None:
         """Plots the two-mode network of agents and locations.
 
@@ -84,13 +84,23 @@ class NetworkInspector:
         )
 
         graph_layout = nx.drawing.spring_layout(graph)
-        plot = BokehBipartiteGraph(graph, width=400, height=400, hover_edges=True)
+        plot = BokehGraph(
+            graph,
+            width=400,
+            height=400,
+            hover_edges=True,
+            bipartite=True,
+        )
         plot.layout(layout=graph_layout)
+
         plot.draw(
-            node_color_lv0="firebrick" if agent_color is None else agent_color,
-            node_color_lv1="black" if location_color is None else location_color,
+            node_color=(
+                agent_color if agent_color is not None else "firebrick",
+                location_color if location_color is not None else "steelblue",
+            ),
             edge_alpha=edge_alpha,
             edge_color=edge_color,
+            edge_size=edge_size,
         )
 
     def plot_agent_network(
@@ -100,6 +110,7 @@ class NetworkInspector:
         edge_alpha: str = "weight",
         edge_color: str = "black",
         include_0_weights: bool = True,
+        edge_size: int = 2,
     ) -> None:
         """Plots the agent network.
 
@@ -138,6 +149,7 @@ class NetworkInspector:
             node_color="firebrick" if agent_color is None else agent_color,
             edge_alpha=edge_alpha,
             edge_color=edge_color,
+            edge_size=edge_size,
         )
 
     def plot_networks(
@@ -149,6 +161,7 @@ class NetworkInspector:
         edge_alpha: str = "weight",
         edge_color: str = "black",
         include_0_weights: bool = True,
+        edge_size: int = 2,
     ) -> None:
         """Plots the two-mode network and the agent network.
 
@@ -175,6 +188,7 @@ class NetworkInspector:
             location_attrs=location_attrs,
             edge_color=edge_color,
             edge_alpha=edge_alpha,
+            edge_size=edge_size,
         )
 
         self.plot_agent_network(
@@ -183,6 +197,7 @@ class NetworkInspector:
             edge_color=edge_color,
             edge_alpha=edge_alpha,
             include_0_weights=include_0_weights,
+            edge_size=edge_size,
         )
 
     def eval_affiliations(self, return_data=False) -> tuple[pd.DataFrame, pd.DataFrame] | None:
