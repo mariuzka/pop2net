@@ -7,6 +7,8 @@ import warnings
 
 import agentpy as ap
 
+from pop2net.location import Location
+
 if typing.TYPE_CHECKING:
     from . import location as _location
     from . import sequences as _sequences
@@ -150,7 +152,7 @@ class Agent(ap.Agent):
         """
         return self.model.get_weight(agent=self, location=location)
 
-    def connect(self, agent: Agent, location_cls: type, weight: float | None = None):
+    def connect(self, agent: Agent, location_cls: _location = Location, weight: float | None = None):
         """Connects this agent with a given other agent via an instance of a given location class.
 
         Args:
