@@ -152,7 +152,9 @@ class Agent(ap.Agent):
         """
         return self.model.get_weight(agent=self, location=location)
 
-    def connect(self, agent: Agent, location_cls: _location = Location, weight: float | None = None):
+    def connect(
+        self, agent: Agent, location_cls: _location = Location, weight: float | None = None
+    ):
         """Connects this agent with a given other agent via an instance of a given location class.
 
         Args:
