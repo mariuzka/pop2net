@@ -35,25 +35,27 @@ class NetworkInspector:
         location_color: str | None = None,
         edge_alpha: str = "weight",
         edge_color: str = "black",
-        edge_size: int = 2,
+        edge_size: int = 1,
+        node_size: int = 10,
+        node_alpha=0.5,
     ) -> None:
-        """Plots the two-mode network of agents and locations.
+        """Plots the bipartite network of agents and locations.
 
         Args:
-            agent_color (str, optional): The agent attribute that determines the
-                color of the agent nodes.
             agent_attrs (list | None, optional): A list of agent attributes that
                 should be shown as node attributes in the network graph. Defaults to None.
-            location_color (str, optional): The location attribute that determines the
-                color of the location nodes.
             location_attrs (list | None, optional): A list of location attributes that
                 should be shown as node attributes in the network graph. Defaults to None.
-            edge_alpha (str, optional): The node attribute that determines the edges' transparency.
+            agent_color (str | None, optional): The agent attribute that determines the
+            color of the agent nodes. Defaults to None.
+            location_color (str | None, optional): The location attribute that determines the
+            color of the location nodes. Defaults to None.
+            edge_alpha (str, optional): The edge attribute that determines the edges' transparency.
                 Defaults to "weight".
-            edge_color (str, optional): The node attribute that determines the edges' color.
-                Defaults to "black".
-            include_0_weights (bool, optional): Should edges with a weight of zero be included in
-                the plot? Defaults to True.
+            edge_color (str, optional): The color of the edges. Defaults to "black".
+            edge_size (int, optional): The size of the edges. Defaults to 1.
+            node_size (int, optional): The size of the nodes. Defaults to 10.
+            node_alpha (float, optional): The transparency of the nodes. Defaults to 0.5.
         """
         if agent_attrs is None:
             agent_attrs = ["type"]
@@ -101,6 +103,8 @@ class NetworkInspector:
             edge_alpha=edge_alpha,
             edge_color=edge_color,
             edge_size=edge_size,
+            node_size=node_size,
+            node_alpha=node_alpha,
         )
 
     def plot_agent_network(
@@ -110,22 +114,25 @@ class NetworkInspector:
         edge_alpha: str = "weight",
         edge_color: str = "black",
         include_0_weights: bool = True,
-        edge_size: int = 2,
+        edge_size: int = 1,
+        node_size: int = 10,
+        node_alpha=0.5,
     ) -> None:
         """Plots the agent network.
 
         Args:
-            agent_color (str, optional): The node attribute that determines the
-                color of the nodes. If None, the node color represents whether
-                it is a location or an agent instance.
+            agent_color (str | None, optional): The agent attribute that determines the
+            color of the agent nodes. Defaults to None.
             agent_attrs (list | None, optional): A list of agent attributes that
                 should be shown as node attributes in the network graph. Defaults to None.
-            edge_alpha (str, optional): The node attribute that determines the edges' transparency.
+            edge_alpha (str, optional): The edge attribute that determines the edges' transparency.
                 Defaults to "weight".
-            edge_color (str, optional): The node attribute that determines the edges' color.
-                Defaults to "black".
+            edge_color (str, optional): The color of the edges. Defaults to "black".
             include_0_weights (bool, optional): Should edges with a weight of zero be included in
                 the plot? Defaults to True.
+            edge_size (int, optional): The size of the edges. Defaults to 1.
+            node_size (int, optional): The size of the nodes. Defaults to 10.
+            node_alpha (float, optional): The transparency of the nodes. Defaults to 0.5.
         """
         if agent_attrs is None:
             agent_attrs = ["type"]
@@ -147,9 +154,11 @@ class NetworkInspector:
         plot.layout(layout=graph_layout)
         plot.draw(
             node_color="firebrick" if agent_color is None else agent_color,
+            node_size=node_size,
             edge_alpha=edge_alpha,
             edge_color=edge_color,
             edge_size=edge_size,
+            node_alpha=node_alpha,
         )
 
     def plot_networks(
@@ -161,25 +170,29 @@ class NetworkInspector:
         edge_alpha: str = "weight",
         edge_color: str = "black",
         include_0_weights: bool = True,
-        edge_size: int = 2,
+        edge_size: int = 1,
+        node_size: int = 10,
+        node_alpha: float = 0.5,
     ) -> None:
-        """Plots the two-mode network and the agent network.
+        """Plots the bipartite network and the agent network.
 
         Args:
-            agent_color (str, optional): The agent attribute that determines the
-                color of the agent nodes.
             agent_attrs (list | None, optional): A list of agent attributes that
                 should be shown as node attributes in the network graph. Defaults to None.
-            location_color (str, optional): The location attribute that determines the
-                color of the location nodes.
             location_attrs (list | None, optional): A list of location attributes that
                 should be shown as node attributes in the network graph. Defaults to None.
-            edge_alpha (str, optional): The node attribute that determines the edges' transparency.
+            agent_color (str | None, optional): The agent attribute that determines the
+                color of the agent nodes. Defaults to None.
+            location_color (str | None, optional): The location attribute that determines the
+                color of the location nodes. Defaults to None.
+            edge_alpha (str, optional): The edge attribute that determines the edges' transparency.
                 Defaults to "weight".
-            edge_color (str, optional): The node attribute that determines the edges' color.
-                Defaults to "black".
-            include_0_weights (bool): Should edges with a weight of zero be included in
+            edge_color (str, optional): The color of the edges. Defaults to "black".
+            include_0_weights (bool, optional): Should edges with a weight of zero be included in
                 the plot? Defaults to True.
+            edge_size (int, optional): The size of the edges. Defaults to 1.
+            node_size (int, optional): The size of the nodes. Defaults to 10.
+            node_alpha (float, optional): The transparency of the nodes. Defaults to 0.5.
         """
         self.plot_bipartite_network(
             agent_color=agent_color,
@@ -189,6 +202,8 @@ class NetworkInspector:
             edge_color=edge_color,
             edge_alpha=edge_alpha,
             edge_size=edge_size,
+            node_size=node_size,
+            node_alpha=node_alpha,
         )
 
         self.plot_agent_network(
@@ -198,6 +213,8 @@ class NetworkInspector:
             edge_alpha=edge_alpha,
             include_0_weights=include_0_weights,
             edge_size=edge_size,
+            node_size=node_size,
+            node_alpha=node_alpha,
         )
 
     def eval_affiliations(self, return_data=False) -> tuple[pd.DataFrame, pd.DataFrame] | None:
