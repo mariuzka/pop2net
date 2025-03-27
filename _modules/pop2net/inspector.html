@@ -79,29 +79,28 @@
   <h1>Source code for pop2net.inspector</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;A module that helps with creating insights into the network.&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
-<span class="kn">import</span> <span class="nn">typing</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">typing</span>
 
-<span class="kn">from</span> <span class="nn">bokehgraph</span> <span class="kn">import</span> <span class="n">BokehBipartiteGraph</span>
-<span class="kn">from</span> <span class="nn">bokehgraph</span> <span class="kn">import</span> <span class="n">BokehGraph</span>
-<span class="kn">import</span> <span class="nn">networkx</span> <span class="k">as</span> <span class="nn">nx</span>
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
-<span class="kn">from</span> <span class="nn">tabulate</span> <span class="kn">import</span> <span class="n">tabulate</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">bokehgraph</span><span class="w"> </span><span class="kn">import</span> <span class="n">BokehGraph</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">networkx</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">nx</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">seaborn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sns</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tabulate</span><span class="w"> </span><span class="kn">import</span> <span class="n">tabulate</span>
 
-<span class="kn">import</span> <span class="nn">pop2net.utils</span> <span class="k">as</span> <span class="nn">utils</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pop2net.utils</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">utils</span>
 
 <span class="k">if</span> <span class="n">typing</span><span class="o">.</span><span class="n">TYPE_CHECKING</span><span class="p">:</span>
-    <span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">location</span> <span class="k">as</span> <span class="n">_location</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">.</span><span class="w"> </span><span class="kn">import</span> <span class="n">location</span> <span class="k">as</span> <span class="n">_location</span>
 
 
 <div class="viewcode-block" id="NetworkInspector">
 <a class="viewcode-back" href="../../api/inspector.html#pop2net.inspector.NetworkInspector">[docs]</a>
-<span class="k">class</span> <span class="nc">NetworkInspector</span><span class="p">:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">NetworkInspector</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Helper class that contains functions to inspect the network of a pop2net model.&quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Initiate a NetworkInspector.</span>
 
 <span class="sd">        Args:</span>
@@ -111,7 +110,7 @@
 
 <div class="viewcode-block" id="NetworkInspector.plot_bipartite_network">
 <a class="viewcode-back" href="../../api/inspector.html#pop2net.inspector.NetworkInspector.plot_bipartite_network">[docs]</a>
-    <span class="k">def</span> <span class="nf">plot_bipartite_network</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">plot_bipartite_network</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">agent_attrs</span><span class="p">:</span> <span class="nb">list</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">location_attrs</span><span class="p">:</span> <span class="nb">list</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -119,24 +118,27 @@
         <span class="n">location_color</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">edge_alpha</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;weight&quot;</span><span class="p">,</span>
         <span class="n">edge_color</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;black&quot;</span><span class="p">,</span>
+        <span class="n">edge_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="n">node_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
+        <span class="n">node_alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Plots the two-mode network of agents and locations.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Plots the bipartite network of agents and locations.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            agent_color (str, optional): The agent attribute that determines the</span>
-<span class="sd">                color of the agent nodes.</span>
 <span class="sd">            agent_attrs (list | None, optional): A list of agent attributes that</span>
 <span class="sd">                should be shown as node attributes in the network graph. Defaults to None.</span>
-<span class="sd">            location_color (str, optional): The location attribute that determines the</span>
-<span class="sd">                color of the location nodes.</span>
 <span class="sd">            location_attrs (list | None, optional): A list of location attributes that</span>
 <span class="sd">                should be shown as node attributes in the network graph. Defaults to None.</span>
-<span class="sd">            edge_alpha (str, optional): The node attribute that determines the edges&#39; transparency.</span>
+<span class="sd">            agent_color (str | None, optional): The agent attribute that determines the</span>
+<span class="sd">            color of the agent nodes. Defaults to None.</span>
+<span class="sd">            location_color (str | None, optional): The location attribute that determines the</span>
+<span class="sd">            color of the location nodes. Defaults to None.</span>
+<span class="sd">            edge_alpha (str, optional): The edge attribute that determines the edges&#39; transparency.</span>
 <span class="sd">                Defaults to &quot;weight&quot;.</span>
-<span class="sd">            edge_color (str, optional): The node attribute that determines the edges&#39; color.</span>
-<span class="sd">                Defaults to &quot;black&quot;.</span>
-<span class="sd">            include_0_weights (bool, optional): Should edges with a weight of zero be included in</span>
-<span class="sd">                the plot? Defaults to True.</span>
+<span class="sd">            edge_color (str, optional): The color of the edges. Defaults to &quot;black&quot;.</span>
+<span class="sd">            edge_size (int, optional): The size of the edges. Defaults to 1.</span>
+<span class="sd">            node_size (int, optional): The size of the nodes. Defaults to 10.</span>
+<span class="sd">            node_alpha (float, optional): The transparency of the nodes. Defaults to 0.5.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">agent_attrs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">agent_attrs</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span>
@@ -167,40 +169,56 @@
         <span class="p">)</span>
 
         <span class="n">graph_layout</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">drawing</span><span class="o">.</span><span class="n">spring_layout</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
-        <span class="n">plot</span> <span class="o">=</span> <span class="n">BokehBipartiteGraph</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span> <span class="n">hover_edges</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">plot</span> <span class="o">=</span> <span class="n">BokehGraph</span><span class="p">(</span>
+            <span class="n">graph</span><span class="p">,</span>
+            <span class="n">width</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span>
+            <span class="n">height</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span>
+            <span class="n">hover_edges</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">bipartite</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="p">)</span>
         <span class="n">plot</span><span class="o">.</span><span class="n">layout</span><span class="p">(</span><span class="n">layout</span><span class="o">=</span><span class="n">graph_layout</span><span class="p">)</span>
+
         <span class="n">plot</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span>
-            <span class="n">node_color_lv0</span><span class="o">=</span><span class="s2">&quot;firebrick&quot;</span> <span class="k">if</span> <span class="n">agent_color</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">agent_color</span><span class="p">,</span>
-            <span class="n">node_color_lv1</span><span class="o">=</span><span class="s2">&quot;black&quot;</span> <span class="k">if</span> <span class="n">location_color</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">location_color</span><span class="p">,</span>
+            <span class="n">node_color</span><span class="o">=</span><span class="p">(</span>
+                <span class="n">agent_color</span> <span class="k">if</span> <span class="n">agent_color</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="s2">&quot;firebrick&quot;</span><span class="p">,</span>
+                <span class="n">location_color</span> <span class="k">if</span> <span class="n">location_color</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="s2">&quot;steelblue&quot;</span><span class="p">,</span>
+            <span class="p">),</span>
             <span class="n">edge_alpha</span><span class="o">=</span><span class="n">edge_alpha</span><span class="p">,</span>
             <span class="n">edge_color</span><span class="o">=</span><span class="n">edge_color</span><span class="p">,</span>
+            <span class="n">edge_size</span><span class="o">=</span><span class="n">edge_size</span><span class="p">,</span>
+            <span class="n">node_size</span><span class="o">=</span><span class="n">node_size</span><span class="p">,</span>
+            <span class="n">node_alpha</span><span class="o">=</span><span class="n">node_alpha</span><span class="p">,</span>
         <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="NetworkInspector.plot_agent_network">
 <a class="viewcode-back" href="../../api/inspector.html#pop2net.inspector.NetworkInspector.plot_agent_network">[docs]</a>
-    <span class="k">def</span> <span class="nf">plot_agent_network</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">plot_agent_network</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">agent_color</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">agent_attrs</span><span class="p">:</span> <span class="nb">list</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">edge_alpha</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;weight&quot;</span><span class="p">,</span>
         <span class="n">edge_color</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;black&quot;</span><span class="p">,</span>
         <span class="n">include_0_weights</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">edge_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="n">node_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
+        <span class="n">node_alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Plots the agent network.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            agent_color (str, optional): The node attribute that determines the</span>
-<span class="sd">                color of the nodes. If None, the node color represents whether</span>
-<span class="sd">                it is a location or an agent instance.</span>
+<span class="sd">            agent_color (str | None, optional): The agent attribute that determines the</span>
+<span class="sd">            color of the agent nodes. Defaults to None.</span>
 <span class="sd">            agent_attrs (list | None, optional): A list of agent attributes that</span>
 <span class="sd">                should be shown as node attributes in the network graph. Defaults to None.</span>
-<span class="sd">            edge_alpha (str, optional): The node attribute that determines the edges&#39; transparency.</span>
+<span class="sd">            edge_alpha (str, optional): The edge attribute that determines the edges&#39; transparency.</span>
 <span class="sd">                Defaults to &quot;weight&quot;.</span>
-<span class="sd">            edge_color (str, optional): The node attribute that determines the edges&#39; color.</span>
-<span class="sd">                Defaults to &quot;black&quot;.</span>
+<span class="sd">            edge_color (str, optional): The color of the edges. Defaults to &quot;black&quot;.</span>
 <span class="sd">            include_0_weights (bool, optional): Should edges with a weight of zero be included in</span>
 <span class="sd">                the plot? Defaults to True.</span>
+<span class="sd">            edge_size (int, optional): The size of the edges. Defaults to 1.</span>
+<span class="sd">            node_size (int, optional): The size of the nodes. Defaults to 10.</span>
+<span class="sd">            node_alpha (float, optional): The transparency of the nodes. Defaults to 0.5.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">agent_attrs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">agent_attrs</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span>
@@ -222,14 +240,17 @@
         <span class="n">plot</span><span class="o">.</span><span class="n">layout</span><span class="p">(</span><span class="n">layout</span><span class="o">=</span><span class="n">graph_layout</span><span class="p">)</span>
         <span class="n">plot</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span>
             <span class="n">node_color</span><span class="o">=</span><span class="s2">&quot;firebrick&quot;</span> <span class="k">if</span> <span class="n">agent_color</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">agent_color</span><span class="p">,</span>
+            <span class="n">node_size</span><span class="o">=</span><span class="n">node_size</span><span class="p">,</span>
             <span class="n">edge_alpha</span><span class="o">=</span><span class="n">edge_alpha</span><span class="p">,</span>
             <span class="n">edge_color</span><span class="o">=</span><span class="n">edge_color</span><span class="p">,</span>
+            <span class="n">edge_size</span><span class="o">=</span><span class="n">edge_size</span><span class="p">,</span>
+            <span class="n">node_alpha</span><span class="o">=</span><span class="n">node_alpha</span><span class="p">,</span>
         <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="NetworkInspector.plot_networks">
 <a class="viewcode-back" href="../../api/inspector.html#pop2net.inspector.NetworkInspector.plot_networks">[docs]</a>
-    <span class="k">def</span> <span class="nf">plot_networks</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">plot_networks</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">agent_attrs</span><span class="p">:</span> <span class="nb">list</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">location_attrs</span><span class="p">:</span> <span class="nb">list</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -238,24 +259,29 @@
         <span class="n">edge_alpha</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;weight&quot;</span><span class="p">,</span>
         <span class="n">edge_color</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;black&quot;</span><span class="p">,</span>
         <span class="n">include_0_weights</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">edge_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="n">node_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
+        <span class="n">node_alpha</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Plots the two-mode network and the agent network.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Plots the bipartite network and the agent network.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            agent_color (str, optional): The agent attribute that determines the</span>
-<span class="sd">                color of the agent nodes.</span>
 <span class="sd">            agent_attrs (list | None, optional): A list of agent attributes that</span>
 <span class="sd">                should be shown as node attributes in the network graph. Defaults to None.</span>
-<span class="sd">            location_color (str, optional): The location attribute that determines the</span>
-<span class="sd">                color of the location nodes.</span>
 <span class="sd">            location_attrs (list | None, optional): A list of location attributes that</span>
 <span class="sd">                should be shown as node attributes in the network graph. Defaults to None.</span>
-<span class="sd">            edge_alpha (str, optional): The node attribute that determines the edges&#39; transparency.</span>
+<span class="sd">            agent_color (str | None, optional): The agent attribute that determines the</span>
+<span class="sd">                color of the agent nodes. Defaults to None.</span>
+<span class="sd">            location_color (str | None, optional): The location attribute that determines the</span>
+<span class="sd">                color of the location nodes. Defaults to None.</span>
+<span class="sd">            edge_alpha (str, optional): The edge attribute that determines the edges&#39; transparency.</span>
 <span class="sd">                Defaults to &quot;weight&quot;.</span>
-<span class="sd">            edge_color (str, optional): The node attribute that determines the edges&#39; color.</span>
-<span class="sd">                Defaults to &quot;black&quot;.</span>
-<span class="sd">            include_0_weights (bool): Should edges with a weight of zero be included in</span>
+<span class="sd">            edge_color (str, optional): The color of the edges. Defaults to &quot;black&quot;.</span>
+<span class="sd">            include_0_weights (bool, optional): Should edges with a weight of zero be included in</span>
 <span class="sd">                the plot? Defaults to True.</span>
+<span class="sd">            edge_size (int, optional): The size of the edges. Defaults to 1.</span>
+<span class="sd">            node_size (int, optional): The size of the nodes. Defaults to 10.</span>
+<span class="sd">            node_alpha (float, optional): The transparency of the nodes. Defaults to 0.5.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">plot_bipartite_network</span><span class="p">(</span>
             <span class="n">agent_color</span><span class="o">=</span><span class="n">agent_color</span><span class="p">,</span>
@@ -264,6 +290,9 @@
             <span class="n">location_attrs</span><span class="o">=</span><span class="n">location_attrs</span><span class="p">,</span>
             <span class="n">edge_color</span><span class="o">=</span><span class="n">edge_color</span><span class="p">,</span>
             <span class="n">edge_alpha</span><span class="o">=</span><span class="n">edge_alpha</span><span class="p">,</span>
+            <span class="n">edge_size</span><span class="o">=</span><span class="n">edge_size</span><span class="p">,</span>
+            <span class="n">node_size</span><span class="o">=</span><span class="n">node_size</span><span class="p">,</span>
+            <span class="n">node_alpha</span><span class="o">=</span><span class="n">node_alpha</span><span class="p">,</span>
         <span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">plot_agent_network</span><span class="p">(</span>
@@ -272,12 +301,15 @@
             <span class="n">edge_color</span><span class="o">=</span><span class="n">edge_color</span><span class="p">,</span>
             <span class="n">edge_alpha</span><span class="o">=</span><span class="n">edge_alpha</span><span class="p">,</span>
             <span class="n">include_0_weights</span><span class="o">=</span><span class="n">include_0_weights</span><span class="p">,</span>
+            <span class="n">edge_size</span><span class="o">=</span><span class="n">edge_size</span><span class="p">,</span>
+            <span class="n">node_size</span><span class="o">=</span><span class="n">node_size</span><span class="p">,</span>
+            <span class="n">node_alpha</span><span class="o">=</span><span class="n">node_alpha</span><span class="p">,</span>
         <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="NetworkInspector.eval_affiliations">
 <a class="viewcode-back" href="../../api/inspector.html#pop2net.inspector.NetworkInspector.eval_affiliations">[docs]</a>
-    <span class="k">def</span> <span class="nf">eval_affiliations</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">return_data</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">eval_affiliations</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">return_data</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Prints information on the distribution of agents per location and locations per agent.</span>
 
 <span class="sd">        Raises:</span>
@@ -327,7 +359,7 @@
     <span class="c1"># TODO: calculate relative freqs</span>
 <div class="viewcode-block" id="NetworkInspector.create_contact_matrix">
 <a class="viewcode-back" href="../../api/inspector.html#pop2net.inspector.NetworkInspector.create_contact_matrix">[docs]</a>
-    <span class="k">def</span> <span class="nf">create_contact_matrix</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_contact_matrix</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">agents</span><span class="p">:</span> <span class="nb">list</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">attr</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;id&quot;</span><span class="p">,</span>
@@ -410,7 +442,7 @@
 
 <div class="viewcode-block" id="NetworkInspector.network_measures">
 <a class="viewcode-back" href="../../api/inspector.html#pop2net.inspector.NetworkInspector.network_measures">[docs]</a>
-    <span class="k">def</span> <span class="nf">network_measures</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent_attrs</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">network_measures</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent_attrs</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculates common network measures for the agent-level network graph.</span>
 
 <span class="sd">        If the created network consist of independent groups of nodes</span>
@@ -426,7 +458,7 @@
 
         <span class="c1"># make distinction between multiple independent networks and one network</span>
 
-        <span class="k">def</span> <span class="nf">get_network_measures</span><span class="p">(</span><span class="n">nx_graph</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">get_network_measures</span><span class="p">(</span><span class="n">nx_graph</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
             <span class="n">result_dict</span> <span class="o">=</span> <span class="p">{}</span>
             <span class="n">result_dict</span><span class="p">[</span><span class="s2">&quot;n_nodes&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">number_of_nodes</span><span class="p">(</span><span class="n">nx_graph</span><span class="p">)</span>
             <span class="n">result_dict</span><span class="p">[</span><span class="s2">&quot;diameter&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">diameter</span><span class="p">(</span><span class="n">nx_graph</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="s2">&quot;weight&quot;</span><span class="p">)</span>
@@ -460,7 +492,7 @@
 
 <div class="viewcode-block" id="NetworkInspector.location_crosstab">
 <a class="viewcode-back" href="../../api/inspector.html#pop2net.inspector.NetworkInspector.location_crosstab">[docs]</a>
-    <span class="k">def</span> <span class="nf">location_crosstab</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">location_crosstab</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">select_locations</span><span class="p">:</span> <span class="n">_location</span><span class="o">.</span><span class="n">location</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="n">_location</span><span class="o">.</span><span class="n">Location</span><span class="p">],</span>
         <span class="n">agent_attributes</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
@@ -562,7 +594,7 @@
 
 <div class="viewcode-block" id="NetworkInspector.location_information">
 <a class="viewcode-back" href="../../api/inspector.html#pop2net.inspector.NetworkInspector.location_information">[docs]</a>
-    <span class="k">def</span> <span class="nf">location_information</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">location_information</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">select_locations</span><span class="p">:</span> <span class="n">_location</span><span class="o">.</span><span class="n">Location</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="n">_location</span><span class="o">.</span><span class="n">Location</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">agent_attributes</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>

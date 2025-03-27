@@ -79,27 +79,27 @@
   <h1>Source code for pop2net.creator</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;Create a population for the simulation.&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
-<span class="kn">import</span> <span class="nn">itertools</span>
-<span class="kn">import</span> <span class="nn">math</span>
-<span class="kn">import</span> <span class="nn">random</span>
-<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">itertools</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
 
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 
-<span class="kn">import</span> <span class="nn">pop2net</span> <span class="k">as</span> <span class="nn">p2n</span>
-<span class="kn">import</span> <span class="nn">pop2net.utils</span> <span class="k">as</span> <span class="nn">utils</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pop2net</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">p2n</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pop2net.utils</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">utils</span>
 
-<span class="kn">from</span> <span class="nn">.exceptions</span> <span class="kn">import</span> <span class="n">Pop2netException</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.exceptions</span><span class="w"> </span><span class="kn">import</span> <span class="n">Pop2netException</span>
 
 
 <div class="viewcode-block" id="Creator">
 <a class="viewcode-back" href="../../api/creator.html#pop2net.creator.Creator">[docs]</a>
-<span class="k">class</span> <span class="nc">Creator</span><span class="p">:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Creator</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Creates and connects agents and locations.&quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">model</span><span class="p">:</span> <span class="n">p2n</span><span class="o">.</span><span class="n">Model</span><span class="p">,</span>
         <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -116,7 +116,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_dummy_model</span> <span class="o">=</span> <span class="n">p2n</span><span class="o">.</span><span class="n">Model</span><span class="p">(</span><span class="n">parameters</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">p</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_temp_agent_attrs</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;_P2NTEMP_split_values&quot;</span><span class="p">,</span> <span class="s2">&quot;_P2NTEMP_melt_location_weight&quot;</span><span class="p">]</span>
 
-    <span class="k">def</span> <span class="nf">_create_dummy_location</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">designer</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">p2n</span><span class="o">.</span><span class="n">Location</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_create_dummy_location</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">designer</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">p2n</span><span class="o">.</span><span class="n">Location</span><span class="p">:</span>
         <span class="n">lc</span> <span class="o">=</span> <span class="n">designer</span><span class="o">.</span><span class="n">location_class</span>
         <span class="bp">cls</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span>
             <span class="s2">&quot;Location&quot;</span> <span class="k">if</span> <span class="n">lc</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">utils</span><span class="o">.</span><span class="n">_get_cls_as_str</span><span class="p">(</span><span class="n">designer</span><span class="o">.</span><span class="n">location_class</span><span class="p">),</span>
@@ -132,7 +132,7 @@
 
 <div class="viewcode-block" id="Creator.draw_sample">
 <a class="viewcode-back" href="../../api/creator.html#pop2net.creator.Creator.draw_sample">[docs]</a>
-    <span class="k">def</span> <span class="nf">draw_sample</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">draw_sample</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
         <span class="n">n</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -206,7 +206,7 @@
 
 <div class="viewcode-block" id="Creator.create_agents">
 <a class="viewcode-back" href="../../api/creator.html#pop2net.creator.Creator.create_agents">[docs]</a>
-    <span class="k">def</span> <span class="nf">create_agents</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_agents</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">agent_class</span><span class="o">=</span><span class="n">p2n</span><span class="o">.</span><span class="n">Agent</span><span class="p">,</span>
         <span class="n">agent_class_attr</span><span class="p">:</span> <span class="kc">None</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -268,7 +268,7 @@
         <span class="k">return</span> <span class="n">agents</span></div>
 
 
-    <span class="k">def</span> <span class="nf">_get_affiliated_agents</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agents</span><span class="p">,</span> <span class="n">dummy_location</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_affiliated_agents</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agents</span><span class="p">,</span> <span class="n">dummy_location</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
         <span class="n">temp_filter_attr</span> <span class="o">=</span> <span class="s2">&quot;_P2NTEMP_filter_&quot;</span> <span class="o">+</span> <span class="n">dummy_location</span><span class="o">.</span><span class="n">label</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_temp_agent_attrs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">temp_filter_attr</span><span class="p">)</span>
 
@@ -283,7 +283,7 @@
 
         <span class="k">return</span> <span class="n">affiliated_agents</span>
 
-    <span class="k">def</span> <span class="nf">_get_mother_group_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent</span><span class="p">,</span> <span class="n">dummy_location</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_mother_group_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent</span><span class="p">,</span> <span class="n">dummy_location</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">dummy_location</span><span class="o">.</span><span class="n">nest</span><span class="p">()</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="s2">&quot;None&quot;</span>
 
@@ -309,7 +309,7 @@
 
             <span class="k">return</span> <span class="s2">&quot;-&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">mother_location</span><span class="o">.</span><span class="n">split_value</span><span class="p">),</span> <span class="nb">str</span><span class="p">(</span><span class="n">mother_location</span><span class="o">.</span><span class="n">group_id</span><span class="p">)])</span>
 
-    <span class="k">def</span> <span class="nf">_get_split_values</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_split_values</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">agents</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span>
         <span class="n">dummy_location</span><span class="p">,</span>
@@ -338,14 +338,14 @@
 
         <span class="k">return</span> <span class="n">all_values</span>
 
-    <span class="k">def</span> <span class="nf">_get_stick_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent</span><span class="p">,</span> <span class="n">dummy_location</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_stick_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent</span><span class="p">,</span> <span class="n">dummy_location</span><span class="p">):</span>
         <span class="n">stick_value</span> <span class="o">=</span> <span class="n">dummy_location</span><span class="o">.</span><span class="n">stick_together</span><span class="p">(</span><span class="n">agent</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">stick_value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="s2">&quot;None&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">agent</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">stick_value</span>
 
-    <span class="k">def</span> <span class="nf">_get_groups</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agents</span><span class="p">,</span> <span class="n">designer</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_groups</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agents</span><span class="p">,</span> <span class="n">designer</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">]:</span>
         <span class="n">overcrowding_i</span> <span class="o">=</span> <span class="mi">0</span>
 
         <span class="n">dummy_location</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_dummy_location</span><span class="p">(</span><span class="n">designer</span><span class="p">)</span>
@@ -445,7 +445,7 @@
 
         <span class="k">return</span> <span class="n">groups</span>
 
-    <span class="k">def</span> <span class="nf">_get_split_value_affiliated_agents</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_split_value_affiliated_agents</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">agents</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span>
         <span class="n">split_value</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">str</span><span class="p">,</span>
@@ -456,7 +456,7 @@
 
         <span class="k">return</span> <span class="n">group_affiliated_agents</span>
 
-    <span class="k">def</span> <span class="nf">_get_melted_groups</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agents</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">designer</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_melted_groups</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agents</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">designer</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">]:</span>
         <span class="n">dummy_location</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_dummy_location</span><span class="p">(</span><span class="n">designer</span><span class="p">)</span>
 
         <span class="c1"># get all mother locations the agents are nested in</span>
@@ -549,7 +549,7 @@
 
         <span class="k">return</span> <span class="n">all_melted_groups</span>
 
-    <span class="k">def</span> <span class="nf">_create_designer_mutations</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">location_designers</span><span class="p">:</span> <span class="nb">list</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_create_designer_mutations</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">location_designers</span><span class="p">:</span> <span class="nb">list</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
         <span class="c1"># for each location designer class</span>
         <span class="k">for</span> <span class="n">designer</span> <span class="ow">in</span> <span class="n">location_designers</span><span class="p">:</span>
             <span class="c1"># create a dummy location to use the location&#39;s methods</span>
@@ -593,7 +593,7 @@
 
 <div class="viewcode-block" id="Creator.create_locations">
 <a class="viewcode-back" href="../../api/creator.html#pop2net.creator.Creator.create_locations">[docs]</a>
-    <span class="k">def</span> <span class="nf">create_locations</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_locations</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">location_designers</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span>
         <span class="n">agents</span><span class="p">:</span> <span class="nb">list</span> <span class="o">|</span> <span class="n">p2n</span><span class="o">.</span><span class="n">AgentList</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -744,7 +744,7 @@
                     <span class="c1"># create one MeltLocation for each bridge_value</span>
                     <span class="k">for</span> <span class="n">bridge_value</span> <span class="ow">in</span> <span class="n">bridge_values</span><span class="p">:</span>
 
-                        <span class="k">def</span> <span class="nf">filter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent</span><span class="p">):</span>
+                        <span class="k">def</span><span class="w"> </span><span class="nf">filter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent</span><span class="p">):</span>
                             <span class="k">return</span> <span class="n">dummy_location</span><span class="o">.</span><span class="n">bridge</span><span class="p">(</span><span class="n">agent</span><span class="p">)</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">bridge_value</span>
 
                         <span class="n">dummy_melt_class</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span>
@@ -760,7 +760,7 @@
                         <span class="n">melt_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dummy_melt_class</span><span class="p">)</span>
 
                     <span class="c1"># set the created MeltLocations as return values of melt()</span>
-                    <span class="k">def</span> <span class="nf">melt</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+                    <span class="k">def</span><span class="w"> </span><span class="nf">melt</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
                         <span class="k">return</span> <span class="n">melt_list</span>
 
                     <span class="n">designer</span><span class="o">.</span><span class="n">melt</span> <span class="o">=</span> <span class="n">melt</span>
@@ -958,7 +958,7 @@
 
 <div class="viewcode-block" id="Creator.create">
 <a class="viewcode-back" href="../../api/creator.html#pop2net.creator.Creator.create">[docs]</a>
-    <span class="k">def</span> <span class="nf">create</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
         <span class="n">location_designers</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span>
@@ -1036,7 +1036,7 @@
 
 <div class="viewcode-block" id="Creator.get_df_agents">
 <a class="viewcode-back" href="../../api/creator.html#pop2net.creator.Creator.get_df_agents">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_df_agents</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_df_agents</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">columns</span><span class="p">:</span> <span class="kc">None</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">drop_agentpy_columns</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>

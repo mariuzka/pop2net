@@ -116,8 +116,8 @@
 <p class="rubric">Examples</p>
 <p>For instance, agents could all be instatiated with the <cite>is_infected</cite> attribute set to
 false:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">InfectionAgent</span><span class="p">(</span><span class="n">Agent</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">InfectionAgent</span><span class="p">(</span><span class="n">Agent</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">is_infected</span> <span class="o">=</span> <span class="kc">False</span>
 </pre></div>
 </div>
@@ -159,7 +159,7 @@ Defaults to None.</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pop2net.Agent.connect">
-<span class="sig-name descname"><span class="pre">connect</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">location_cls</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pop2net/agent.html#Agent.connect"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pop2net.Agent.connect" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">connect</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">location_cls=&lt;class</span> <span class="pre">'pop2net.location.Location'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weight=None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pop2net/agent.html#Agent.connect"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pop2net.Agent.connect" title="Link to this definition"></a></dt>
 <dd><p>Connects this agent with a given other agent via an instance of a given location class.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>

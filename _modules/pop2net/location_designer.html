@@ -77,20 +77,20 @@
            <div itemprop="articleBody">
              
   <h1>Source code for pop2net.location_designer</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
-<span class="kn">import</span> <span class="nn">networkx</span> <span class="k">as</span> <span class="nn">nx</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">networkx</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">nx</span>
 
-<span class="kn">from</span> <span class="nn">pop2net.location</span> <span class="kn">import</span> <span class="n">Location</span>
-<span class="kn">import</span> <span class="nn">pop2net.utils</span> <span class="k">as</span> <span class="nn">utils</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pop2net.location</span><span class="w"> </span><span class="kn">import</span> <span class="n">Location</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pop2net.utils</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">utils</span>
 
-<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">agent</span> <span class="k">as</span> <span class="n">_agent</span>
-<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">model</span> <span class="k">as</span> <span class="n">_model</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.</span><span class="w"> </span><span class="kn">import</span> <span class="n">agent</span> <span class="k">as</span> <span class="n">_agent</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.</span><span class="w"> </span><span class="kn">import</span> <span class="n">model</span> <span class="k">as</span> <span class="n">_model</span>
 
 
 <div class="viewcode-block" id="LocationDesigner">
 <a class="viewcode-back" href="../../api/location_designer.html#pop2net.LocationDesigner">[docs]</a>
-<span class="k">class</span> <span class="nc">LocationDesigner</span><span class="p">(</span><span class="n">Location</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">LocationDesigner</span><span class="p">(</span><span class="n">Location</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Helper class to create locations from inside the Creator.&quot;&quot;&quot;</span>
 
     <span class="n">label</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
@@ -105,7 +105,7 @@
     <span class="n">recycle</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
     <span class="n">nxgraph</span><span class="p">:</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">_model</span><span class="o">.</span><span class="n">Model</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">_model</span><span class="o">.</span><span class="n">Model</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a helper class to create locations.</span>
 
 <span class="sd">        Args:</span>
@@ -119,7 +119,7 @@
 
 <div class="viewcode-block" id="LocationDesigner.setup">
 <a class="viewcode-back" href="../../api/location_designer.html#pop2net.LocationDesigner.setup">[docs]</a>
-    <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Use this method to set instance attributes, for instance.</span>
 
 <span class="sd">        This method is called automatically by the creator after creating an instance.</span>
@@ -128,7 +128,7 @@
 
 <div class="viewcode-block" id="LocationDesigner.filter">
 <a class="viewcode-back" href="../../api/location_designer.html#pop2net.LocationDesigner.filter">[docs]</a>
-    <span class="k">def</span> <span class="nf">filter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent</span><span class="p">:</span> <span class="n">_agent</span><span class="o">.</span><span class="n">Agent</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>  <span class="c1"># noqa: ARG002</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">filter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent</span><span class="p">:</span> <span class="n">_agent</span><span class="o">.</span><span class="n">Agent</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>  <span class="c1"># noqa: ARG002</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Check whether the agent is meant to join this type of location.</span>
 
 <span class="sd">        Args:</span>
@@ -143,7 +143,7 @@
 
 <div class="viewcode-block" id="LocationDesigner.bridge">
 <a class="viewcode-back" href="../../api/location_designer.html#pop2net.LocationDesigner.bridge">[docs]</a>
-    <span class="k">def</span> <span class="nf">bridge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent</span><span class="p">:</span> <span class="n">_agent</span><span class="o">.</span><span class="n">Agent</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">list</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># noqa: ARG002</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">bridge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent</span><span class="p">:</span> <span class="n">_agent</span><span class="o">.</span><span class="n">Agent</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">list</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># noqa: ARG002</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Create locations with one agent for each unique value returned.</span>
 
 <span class="sd">        Cannot be used in combination with melt().</span>
@@ -160,7 +160,7 @@
 
 <div class="viewcode-block" id="LocationDesigner.split">
 <a class="viewcode-back" href="../../api/location_designer.html#pop2net.LocationDesigner.split">[docs]</a>
-    <span class="k">def</span> <span class="nf">split</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent</span><span class="p">:</span> <span class="n">_agent</span><span class="o">.</span><span class="n">Agent</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">list</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># noqa: ARG002</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">split</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent</span><span class="p">:</span> <span class="n">_agent</span><span class="o">.</span><span class="n">Agent</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">list</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># noqa: ARG002</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Creates seperate location instances for each unique returned value.</span>
 
 <span class="sd">        Args:</span>
@@ -175,7 +175,7 @@
 
 <div class="viewcode-block" id="LocationDesigner.stick_together">
 <a class="viewcode-back" href="../../api/location_designer.html#pop2net.LocationDesigner.stick_together">[docs]</a>
-    <span class="k">def</span> <span class="nf">stick_together</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent</span><span class="p">:</span> <span class="n">_agent</span><span class="o">.</span><span class="n">Agent</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span> <span class="o">|</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">stick_together</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent</span><span class="p">:</span> <span class="n">_agent</span><span class="o">.</span><span class="n">Agent</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span> <span class="o">|</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Assigns agents with a shared value on an attribute to the same location instance.</span>
 
 <span class="sd">        Args:</span>
@@ -189,7 +189,7 @@
 
 <div class="viewcode-block" id="LocationDesigner.nest">
 <a class="viewcode-back" href="../../api/location_designer.html#pop2net.LocationDesigner.nest">[docs]</a>
-    <span class="k">def</span> <span class="nf">nest</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">type</span><span class="p">[</span><span class="n">Location</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">nest</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">type</span><span class="p">[</span><span class="n">Location</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Nests this location class into another location class.</span>
 
 <span class="sd">        Ensures that the agents assigned to the same instance of this location class</span>
@@ -203,7 +203,7 @@
 
 <div class="viewcode-block" id="LocationDesigner.melt">
 <a class="viewcode-back" href="../../api/location_designer.html#pop2net.LocationDesigner.melt">[docs]</a>
-    <span class="k">def</span> <span class="nf">melt</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Location</span><span class="p">]</span> <span class="o">|</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Location</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">melt</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Location</span><span class="p">]</span> <span class="o">|</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Location</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Allows to assign agents with different attribute values to the same location.</span>
 
 <span class="sd">        Merges the agents assigned to the instances of the returned location classes</span>
@@ -215,7 +215,7 @@
         <span class="k">return</span> <span class="p">[]</span></div>
 
 
-    <span class="k">def</span> <span class="nf">_subsplit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent</span><span class="p">:</span> <span class="n">_agent</span><span class="o">.</span><span class="n">Agent</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">float</span> <span class="o">|</span> <span class="nb">list</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># noqa: ARG002</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_subsplit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent</span><span class="p">:</span> <span class="n">_agent</span><span class="o">.</span><span class="n">Agent</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">float</span> <span class="o">|</span> <span class="nb">list</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># noqa: ARG002</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Splits a location instance into sub-instances to create a certain network structure.</span>
 
 <span class="sd">        Args:</span>
@@ -243,7 +243,7 @@
 
 <div class="viewcode-block" id="LocationDesigner.mutate">
 <a class="viewcode-back" href="../../api/location_designer.html#pop2net.LocationDesigner.mutate">[docs]</a>
-    <span class="k">def</span> <span class="nf">mutate</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span> <span class="o">|</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">:</span><span class="nb">list</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">mutate</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span> <span class="o">|</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">:</span><span class="nb">list</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Creates new versions of this location designer with different attributes.</span>
 
 <span class="sd">        Returns:</span>
@@ -254,7 +254,7 @@
 
 
 
-<span class="k">class</span> <span class="nc">MeltLocationDesigner</span><span class="p">(</span><span class="n">Location</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">MeltLocationDesigner</span><span class="p">(</span><span class="n">Location</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Helper class to melt locations.&quot;&quot;&quot;</span>
 
     <span class="n">label</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
@@ -266,7 +266,7 @@
     <span class="n">only_exact_n_agents</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="n">n_locations</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
 
-    <span class="k">def</span> <span class="nf">filter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent</span><span class="p">:</span> <span class="n">_agent</span><span class="o">.</span><span class="n">Agent</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>  <span class="c1"># noqa: ARG002</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">filter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent</span><span class="p">:</span> <span class="n">_agent</span><span class="o">.</span><span class="n">Agent</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>  <span class="c1"># noqa: ARG002</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Check whether the agent is meant to join this type of location.</span>
 
 <span class="sd">        This is a boilerplate implementation of this method which always returns True; i.e. all</span>
@@ -281,7 +281,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="kc">True</span>
 
-    <span class="k">def</span> <span class="nf">stick_together</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent</span><span class="p">:</span> <span class="n">_agent</span><span class="o">.</span><span class="n">Agent</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span> <span class="o">|</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">stick_together</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent</span><span class="p">:</span> <span class="n">_agent</span><span class="o">.</span><span class="n">Agent</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span> <span class="o">|</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Assigns agents with a shared value on an attribute to the same location instance.</span>
 
 <span class="sd">        Args:</span>
@@ -292,7 +292,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">agent</span><span class="o">.</span><span class="n">id</span>
 
-    <span class="k">def</span> <span class="nf">split</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent</span><span class="p">:</span> <span class="n">_agent</span><span class="o">.</span><span class="n">Agent</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">list</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># noqa: ARG002</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">split</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent</span><span class="p">:</span> <span class="n">_agent</span><span class="o">.</span><span class="n">Agent</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">list</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># noqa: ARG002</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Creates seperate location instances for each unique returned value.</span>
 
 <span class="sd">        Args:</span>
@@ -304,7 +304,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="kc">None</span>
 
-    <span class="k">def</span> <span class="nf">weight</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent</span><span class="p">:</span> <span class="n">_agent</span><span class="o">.</span><span class="n">Agent</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># noqa: ARG002</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">weight</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent</span><span class="p">:</span> <span class="n">_agent</span><span class="o">.</span><span class="n">Agent</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># noqa: ARG002</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Defines the edge weight between the agent and the location instance.</span>
 
 <span class="sd">        Defines how the edge weight between an agent and the location is determined.</span>
