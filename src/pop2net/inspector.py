@@ -390,7 +390,6 @@ class NetworkInspector:
 
             result_list.append(get_network_measures(nx_subgraph))
         return result_list
-    
 
     def location_crosstab(
         self,
