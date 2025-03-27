@@ -235,7 +235,7 @@ class NetworkInspector:
         )
 
         utils.print_header("Number of locations")
-        print(df1.location_label.value_counts())
+        print(df1.location_label.value_counts().to_frame())
 
         df1 = df1.groupby("location_label").describe()
         df1.columns = df1.columns.droplevel()
@@ -257,7 +257,7 @@ class NetworkInspector:
         df2 = df2.drop("count", axis=0)
 
         utils.print_header("Number of affiliated locations per agent")
-        print(df2)
+        print(df2.to_frame())
 
         if return_data:
             return df1, df2
