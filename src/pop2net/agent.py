@@ -14,7 +14,7 @@ if typing.TYPE_CHECKING:
     from . import sequences as _sequences
 
 
-class Agent(ap.Agent):
+class Agent:
     """This is a Base class to represent agents in the simulation.
 
     Agents' behavior can be implemented in classes that inherit from this.
@@ -28,23 +28,12 @@ class Agent(ap.Agent):
                     self.is_infected = False
     """
 
-    def __init__(self, model, *args, **kwargs) -> None:
+    def __init__(self, *args, **kwargs) -> None:
         """Agent Constructor.
 
         All parameters will be passed to the :class:`agentpy.Agent` parent.
         """
-        super().__init__(model, *args, **kwargs)
-
-        self.model = model
-
-        self.model.add_agent(self)
-        self.setup()
-
-    def setup(self) -> None:
-        """Instantiate an Agent.
-
-        This is executed on the instantiation of each agent.
-        """
+        self.env = None
 
     def neighbors(self, location_labels: list[str] | None = None) -> ap.AgentList:
         """Return all neighbors of an agent.
@@ -58,10 +47,10 @@ class Agent(ap.Agent):
         Returns:
             All agents co-located with this agent over all locations.
         """
-        return self.model.neighbors_of_agent(self, location_labels=location_labels)
+        return self.env.neighbors_of_agent(self, location_labels=location_labels)
 
     def shared_locations(self, agent, location_labels: list[str] | None = None):
-        return self.model.locations_between_agents(
+        return self.env.locations_between_agents(
             agent1=self,
             agent2=agent,
             location_labels=location_labels,
@@ -75,7 +64,7 @@ class Agent(ap.Agent):
             weight (float | None): The edge weight between the agent and the location.
                 Defaults to None.
         """
-        self.model.add_agent_to_location(agent=self, location=location, weight=weight)
+        self.env.add_agent_to_location(agent=self, location=location, weight=weight)
 
     def add_locations(self, locations: list, weight: float | None = None) -> None:
         """Add this agent to multiple locations.
@@ -94,7 +83,7 @@ class Agent(ap.Agent):
         Args:
             location: Remove agent from this location.
         """
-        self.model.remove_agent_from_location(self, location)
+        self.env.remove_agent_from_location(self, location)
 
     def remove_locations(self, locations: list) -> None:
         """Remove this Agent from the given locations.
@@ -112,7 +101,7 @@ class Agent(ap.Agent):
         Returns:
             A list of locations.
         """
-        return self.model.locations_of_agent(self)
+        return self.env.locations_of_agent(self)
 
     @property
     def location_labels(self) -> list[str]:
@@ -150,7 +139,7 @@ class Agent(ap.Agent):
         Returns:
             float: The edge weight.
         """
-        return self.model.get_weight(agent=self, location=location)
+        return self.env.get_weight(agent=self, location=location)
 
     def connect(
         self, agent: Agent, location_cls: _location = Location, weight: float | None = None
@@ -163,7 +152,7 @@ class Agent(ap.Agent):
             weight(float | None): The edge weight between the agents and the location.
                 Defaults to None.
         """
-        self.model.connect_agents(agents=[self, agent], location_cls=location_cls, weight=weight)
+        self.env.connect_agents(agents=[self, agent], location_cls=location_cls, weight=weight)
 
     def disconnect(
         self,
@@ -222,7 +211,7 @@ class Agent(ap.Agent):
                     warnings.warn(msg)
 
             if remove_locations:
-                self.model.remove_location(location)
+                self.env.remove_location(location)
 
                 if warn:
                     msg = "You have removed a location to which other agents were still connected."
