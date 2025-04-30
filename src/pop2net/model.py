@@ -17,7 +17,7 @@ if typing.TYPE_CHECKING:
 from pop2net.sequences import LocationList
 
 
-class Model(ap.Model):
+class Model:
     """Class the encapsulates a full simluation.
 
     This very closely follows the logic of the :class:`agentpy.Model` package. See
@@ -40,21 +40,18 @@ class Model(ap.Model):
             Defaults to None.
             **kwargs: Optional parameters that are all passed to :class:`agentpy.Model`.
         """
-        super().__init__(parameters, _run_id, **kwargs)
         self.g = nx.Graph()
         self.enable_p2n_warnings = enable_p2n_warnings
 
     @property
-    def agents(self) -> AgentList:
+    def agents(self) -> list:
         """Show a iterable view of all agents in the environment.
 
         Returns:
-            AgentList: A non-mutable AgentList of all agents in the environment.
+            list: A non-mutable list of all agents in the environment.
         """
-        return AgentList(
-            model=self.model,
-            objs=[data["_obj"] for _, data in self.g.nodes(data=True) if data["bipartite"] == 0],
-        )
+        return [data["_obj"] for _, data in self.g.nodes(data=True) if data["bipartite"] == 0]
+        
 
     @property
     def agents_by_id(self) -> dict:
@@ -81,10 +78,7 @@ class Model(ap.Model):
         Returns:
             LocationList: a non-mutable LocationList of all locations in the environment.
         """
-        return LocationList(
-            model=self.model,
-            objs=[data["_obj"] for _, data in self.g.nodes(data=True) if data["bipartite"] == 1],
-        )
+        return [data["_obj"] for _, data in self.g.nodes(data=True) if data["bipartite"] == 1]
 
     def add_agent(self, agent: _agent.Agent) -> None:
         """Add an agent to the environment.
@@ -237,10 +231,7 @@ class Model(ap.Model):
             A list of agents.
         """
         nodes = self.g.neighbors(location.id)
-        return AgentList(
-            self.model,
-            (self.g.nodes[node]["_obj"] for node in nodes if self.g.nodes[node]["bipartite"] == 0),
-        )
+        return [self.g.nodes[node]["_obj"] for node in nodes if self.g.nodes[node]["bipartite"] == 0]
 
     def locations_of_agent(self, agent: _agent.Agent) -> LocationList:
         """Return the list of locations associated with a specific agent.
@@ -252,10 +243,7 @@ class Model(ap.Model):
             A list of locations.
         """
         nodes = self.g.neighbors(agent.id)
-        return LocationList(
-            self.model,
-            (self.g.nodes[node]["_obj"] for node in nodes if self.g.nodes[node]["bipartite"] == 1),
-        )
+        return [self.g.nodes[node]["_obj"] for node in nodes if self.g.nodes[node]["bipartite"] == 1]
 
     def neighbors_of_agent(
         self,
@@ -291,14 +279,7 @@ class Model(ap.Model):
             for agent_id in self.g.neighbors(location_id)
             if self.g.nodes[agent_id]["bipartite"] == 0
         }
-        return AgentList(
-            self.model,
-            (
-                self.g.nodes[agent_id]["_obj"]
-                for agent_id in neighbor_agents
-                if agent_id != agent.id
-            ),
-        )
+        return [self.g.nodes[agent_id]["_obj"] for agent_id in neighbor_agents if agent_id != agent.id]
 
     def _objects_between_objects(self, object1, object2) -> list:
         paths = list(
@@ -312,7 +293,7 @@ class Model(ap.Model):
         return [self.g.nodes[path[1]]["_obj"] for path in paths]
 
     def locations_between_agents(self, agent1, agent2, location_labels: list[str] | None = None):
-        """Return all locations the connect two agents.
+        """Return all locations that connects two agents.
 
         Args:
             agent1 (Agent): Agent 1.
@@ -323,11 +304,8 @@ class Model(ap.Model):
         Returns:
             LocationList: A list of locations.
         """
-        locations = LocationList(
-            model=self.model,
-            objs=self._objects_between_objects(object1=agent1, object2=agent2),
-        )
-
+        locations = self._objects_between_objects(object1=agent1, object2=agent2)
+        
         if location_labels is not None:
             locations = [location for location in locations if location.label in location_labels]
 
@@ -345,10 +323,7 @@ class Model(ap.Model):
         Returns:
             AgentList: A list of agents.
         """
-        agents = AgentList(
-            model=self.model,
-            objs=self._objects_between_objects(location1, location2),
-        )
+        agents = self._objects_between_objects(location1, location2)
 
         if agent_types is not None:
             agents = [agent for agent in agents if agent.type in agent_types]
