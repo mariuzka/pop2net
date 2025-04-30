@@ -60,7 +60,7 @@ class Model:
         Returns:
             dict: A dictionary which stores the model's agents by their id.
         """
-        return {agent.id: agent for agent in self.agents}
+        return {agent.id_p2n: agent for agent in self.agents}
 
     @property
     def locations_by_id(self) -> dict:
@@ -69,7 +69,7 @@ class Model:
         Returns:
             dict: A dictionary which stores the model's locations by their id.
         """
-        return {location.id: location for location in self.locations}
+        return {location.id_p2n: location for location in self.locations}
 
     @property
     def locations(self) -> LocationList:
@@ -89,8 +89,8 @@ class Model:
         Args:
             agent: Agent to be added to the environment.
         """
-        if not self.g.has_node(agent.id):
-            self.g.add_node(agent.id, bipartite=0, _obj=agent)
+        if not self.g.has_node(agent.id_p2n):
+            self.g.add_node(agent.id_p2n, bipartite=0, _obj=agent)
 
     def add_agents(self, agents: list) -> None:
         """Add agents to the environment.
@@ -110,8 +110,8 @@ class Model:
         Args:
             location: Location to be added to the environment.
         """
-        if not self.g.has_node(location.id):
-            self.g.add_node(location.id, bipartite=1, _obj=location)
+        if not self.g.has_node(location.id_p2n):
+            self.g.add_node(location.id_p2n, bipartite=1, _obj=location)
 
     def add_locations(self, locations: list) -> None:
         """Add multiple locations to the environment at once.
@@ -145,14 +145,14 @@ class Model:
             Exception: Raised if the agent does not exist in the environment.
         """
         # TODO: Create custom exceptions
-        if not self.g.has_node(location.id):
+        if not self.g.has_node(location.id_p2n):
             msg = f"Location {location} does not exist in Environment!"
             raise Exception(msg)
-        if not self.g.has_node(agent.id):
+        if not self.g.has_node(agent.id_p2n):
             msg = f"Agent {agent} does not exist in Environment!"
             raise Exception(msg)
 
-        self.g.add_edge(agent.id, location.id, **kwargs)
+        self.g.add_edge(agent.id_p2n, location.id_p2n, **kwargs)
         self.set_weight(agent=agent, location=location, weight=weight)
 
     def remove_agent(self, agent: _agent.Agent) -> None:
@@ -163,8 +163,8 @@ class Model:
         Args:
             agent: Agent to be removed.
         """
-        if self.g.has_node(agent.id):
-            self.g.remove_node(agent.id)
+        if self.g.has_node(agent.id_p2n):
+            self.g.remove_node(agent.id_p2n)
 
     def remove_agents(self, agents: list) -> None:
         """Remove multiple agents from the environment at once.
@@ -183,8 +183,8 @@ class Model:
         Args:
             location: Location to be removed.
         """
-        if self.g.has_node(location.id):
-            self.g.remove_node(location.id)
+        if self.g.has_node(location.id_p2n):
+            self.g.remove_node(location.id_p2n)
 
     def remove_locations(self, locations: list) -> None:
         """Remove multiple locations at once.
@@ -211,15 +211,15 @@ class Model:
             Exception: Raised if the agent does not exist in the environment.
         """
         # TODO: use custom exceptions
-        if not self.g.has_node(location.id):
+        if not self.g.has_node(location.id_p2n):
             msg = f"Location {location} does not exist in Environment!"
             raise Exception(msg)
-        if not self.g.has_node(agent.id):
+        if not self.g.has_node(agent.id_p2n):
             msg = f"Agent {agent} does not exist in Environment!"
             raise Exception(msg)
 
-        if self.g.has_edge(agent.id, location.id):
-            self.g.remove_edge(agent.id, location.id)
+        if self.g.has_edge(agent.id_p2n, location.id_p2n):
+            self.g.remove_edge(agent.id_p2n, location.id_p2n)
 
     def agents_of_location(self, location: _location.Location) -> AgentList:
         """Return the list of agents associated with a specific location.
@@ -230,7 +230,7 @@ class Model:
         Returns:
             A list of agents.
         """
-        nodes = self.g.neighbors(location.id)
+        nodes = self.g.neighbors(location.id_p2n)
         return [self.g.nodes[node]["_obj"] for node in nodes if self.g.nodes[node]["bipartite"] == 0]
 
     def locations_of_agent(self, agent: _agent.Agent) -> LocationList:
@@ -242,7 +242,7 @@ class Model:
         Returns:
             A list of locations.
         """
-        nodes = self.g.neighbors(agent.id)
+        nodes = self.g.neighbors(agent.id_p2n)
         return [self.g.nodes[node]["_obj"] for node in nodes if self.g.nodes[node]["bipartite"] == 1]
 
     def neighbors_of_agent(
@@ -264,13 +264,13 @@ class Model:
         if location_labels:
             locations = (
                 node
-                for node in self.g.neighbors(agent.id)
+                for node in self.g.neighbors(agent.id_p2n)
                 if self.g.nodes[node]["bipartite"] == 1
                 and self.g.nodes[node]["_obj"].label in location_labels
             )
         else:
             locations = (
-                node for node in self.g.neighbors(agent.id) if self.g.nodes[node]["bipartite"] == 1
+                node for node in self.g.neighbors(agent.id_p2n) if self.g.nodes[node]["bipartite"] == 1
             )
 
         neighbor_agents = {
@@ -279,14 +279,14 @@ class Model:
             for agent_id in self.g.neighbors(location_id)
             if self.g.nodes[agent_id]["bipartite"] == 0
         }
-        return [self.g.nodes[agent_id]["_obj"] for agent_id in neighbor_agents if agent_id != agent.id]
+        return [self.g.nodes[agent_id]["_obj"] for agent_id in neighbor_agents if agent_id != agent.id_p2n]
 
     def _objects_between_objects(self, object1, object2) -> list:
         paths = list(
             nx.all_simple_paths(
                 G=self.g,
-                source=object1.id,
-                target=object2.id,
+                source=object1.id_p2n,
+                target=object2.id_p2n,
                 cutoff=2,
             ),
         )
@@ -340,7 +340,7 @@ class Model:
             location (Location): The location.
             weight (int): The weight
         """
-        self.g[agent.id][location.id]["weight"] = (
+        self.g[agent.id_p2n][location.id_p2n]["weight"] = (
             location.weight(agent) if weight is None else weight
         )
 
@@ -354,7 +354,7 @@ class Model:
         Returns:
             int: The weight.
         """
-        return self.g[agent.id][location.id]["weight"]
+        return self.g[agent.id_p2n][location.id_p2n]["weight"]
 
     def connect_agents(self, agents: list, location_cls: type, weight: float | None = None):
         """Connects multiple agents via an instance of a given location class.
@@ -469,21 +469,21 @@ class Model:
 
         # create nodes
         for agent in self.agents:
-            if not graph.has_node(agent.id):
+            if not graph.has_node(agent.id_p2n):
                 node_attr_dict = (
                     {node_attr: vars(agent)[node_attr] for node_attr in node_attrs}
                     if node_attrs is not None
                     else {}
                 )
-                graph.add_node(agent.id, **node_attr_dict)
+                graph.add_node(agent.id_p2n, **node_attr_dict)
 
         # create edges
         for agent in self.agents:
             for agent_v in agent.neighbors():
-                if not graph.has_edge(agent.id, agent_v.id):
+                if not graph.has_edge(agent.id_p2n, agent_v.id_p2n):
                     weight = agent.get_agent_weight(agent_v)
                     if include_0_weights or weight > 0:
-                        graph.add_edge(agent.id, agent_v.id, weight=weight)
+                        graph.add_edge(agent.id_p2n, agent_v.id_p2n, weight=weight)
 
         return graph
 
