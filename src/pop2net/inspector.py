@@ -17,15 +17,15 @@ if typing.TYPE_CHECKING:
 
 
 class NetworkInspector:
-    """Helper class that contains functions to inspect the network of a pop2net model."""
+    """Helper class that contains functions to inspect the network of a pop2net environment."""
 
-    def __init__(self, model) -> None:
+    def __init__(self, env) -> None:
         """Initiate a NetworkInspector.
 
         Args:
             model (Model): The model.
         """
-        self.model = model
+        self.env = env # TODO: make instances of inspector without a fixed env possible
 
     def plot_bipartite_network(
         self,
@@ -80,7 +80,7 @@ class NetworkInspector:
         if location_color is not None and location_color not in location_attrs:
             location_attrs.append(location_color)
 
-        graph = self.model.export_bipartite_network(
+        graph = self.env.export_bipartite_network(
             agent_attrs=agent_attrs,
             location_attrs=location_attrs,
         )
@@ -144,7 +144,7 @@ class NetworkInspector:
         if agent_color is not None and agent_color not in agent_attrs:
             agent_attrs.append(agent_color)
 
-        graph = self.model.export_agent_network(
+        graph = self.env.export_agent_network(
             node_attrs=agent_attrs,
             include_0_weights=include_0_weights,
         )
@@ -230,7 +230,7 @@ class NetworkInspector:
                     "location_label": location.label,
                     "n_agents": len(location.agents),
                 }
-                for location in self.model.locations
+                for location in self.env.locations
             ],
         )
 
@@ -250,7 +250,7 @@ class NetworkInspector:
                     "agent_id": agent.id,
                     "n_affiliated_locations": len(agent.locations),
                 }
-                for agent in self.model.agents
+                for agent in self.env.agents
             ],
         )
         df2 = df2.n_affiliated_locations.describe()
@@ -273,7 +273,7 @@ class NetworkInspector:
         annot: bool = False,
         return_df: bool = False,
     ) -> pd.DataFrame:
-        """Create a contact matrix as a DataFrame from a given model's agent list.
+        """Create a contact matrix as a DataFrame from a given env's agent list.
 
         Args:
             agents: A list of agents.
@@ -287,7 +287,7 @@ class NetworkInspector:
             A DataFrame containing a contact matrix based on `attr`.
         """
         if agents is None:
-            agents = self.model.agents
+            agents = self.env.agents
 
         contact_data = []
         attr_values = []
@@ -356,7 +356,7 @@ class NetworkInspector:
         Return:
             list of dictionaries of the common network measure results
         """
-        nx_graph = self.model.export_agent_network(node_attrs=agent_attrs)
+        nx_graph = self.env.export_agent_network(node_attrs=agent_attrs)
 
         # make distinction between multiple independent networks and one network
 
@@ -410,12 +410,12 @@ class NetworkInspector:
         # determine eligible locations classes
         valid_locations = []
         if select_locations:
-            for location_instance in self.model.locations:
+            for location_instance in self.env.locations:
                 for locationtype in select_locations:
                     if isinstance(location_instance, locationtype):
                         valid_locations.append(location_instance)
         else:
-            valid_locations = list(self.model.locations)
+            valid_locations = list(self.env.locations)
 
         # create agent df per location instance
         if output_format == "table":
@@ -522,12 +522,12 @@ class NetworkInspector:
         # determine eligible locations classes
         valid_locations = []
         if select_locations:
-            for location_instance in self.model.locations:
+            for location_instance in self.env.locations:
                 for locationtype in select_locations:
                     if isinstance(location_instance, locationtype):
                         valid_locations.append(location_instance)
         else:
-            valid_locations = list(self.model.locations)
+            valid_locations = list(self.env.locations)
 
         # create agent df per location instance
         agent_dfs = {}
