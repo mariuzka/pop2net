@@ -33,7 +33,11 @@ class Agent:
 
         All parameters will be passed to the :class:`agentpy.Agent` parent.
         """
-        self.env = None
+        
+        self.env_p2n = None
+        self.id_p2n = None
+        super().__init__(*args, **kwargs)
+        
 
     def neighbors(self, location_labels: list[str] | None = None) -> ap.AgentList:
         """Return all neighbors of an agent.
@@ -47,10 +51,10 @@ class Agent:
         Returns:
             All agents co-located with this agent over all locations.
         """
-        return self.env.neighbors_of_agent(self, location_labels=location_labels)
+        return self.env_p2n.neighbors_of_agent(self, location_labels=location_labels)
 
     def shared_locations(self, agent, location_labels: list[str] | None = None):
-        return self.env.locations_between_agents(
+        return self.env_p2n.locations_between_agents(
             agent1=self,
             agent2=agent,
             location_labels=location_labels,
@@ -64,7 +68,7 @@ class Agent:
             weight (float | None): The edge weight between the agent and the location.
                 Defaults to None.
         """
-        self.env.add_agent_to_location(agent=self, location=location, weight=weight)
+        self.env_p2n.add_agent_to_location(agent=self, location=location, weight=weight)
 
     def add_locations(self, locations: list, weight: float | None = None) -> None:
         """Add this agent to multiple locations.
@@ -83,7 +87,7 @@ class Agent:
         Args:
             location: Remove agent from this location.
         """
-        self.env.remove_agent_from_location(self, location)
+        self.env_p2n.remove_agent_from_location(self, location)
 
     def remove_locations(self, locations: list) -> None:
         """Remove this Agent from the given locations.
@@ -101,7 +105,7 @@ class Agent:
         Returns:
             A list of locations.
         """
-        return self.env.locations_of_agent(self)
+        return self.env_p2n.locations_of_agent(self)
 
     @property
     def location_labels(self) -> list[str]:
@@ -139,7 +143,7 @@ class Agent:
         Returns:
             float: The edge weight.
         """
-        return self.env.get_weight(agent=self, location=location)
+        return self.env_p2n.get_weight(agent=self, location=location)
 
     def connect(
         self, agent: Agent, location_cls: _location = Location, weight: float | None = None
@@ -152,7 +156,7 @@ class Agent:
             weight(float | None): The edge weight between the agents and the location.
                 Defaults to None.
         """
-        self.env.connect_agents(agents=[self, agent], location_cls=location_cls, weight=weight)
+        self.env_p2n.connect_agents(agents=[self, agent], location_cls=location_cls, weight=weight)
 
     def disconnect(
         self,
@@ -211,7 +215,7 @@ class Agent:
                     warnings.warn(msg)
 
             if remove_locations:
-                self.env.remove_location(location)
+                self.env_p2n.remove_location(location)
 
                 if warn:
                     msg = "You have removed a location to which other agents were still connected."
