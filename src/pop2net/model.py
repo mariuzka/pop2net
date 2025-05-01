@@ -42,6 +42,12 @@ class Model:
         """
         self.g = nx.Graph()
         self.enable_p2n_warnings = enable_p2n_warnings
+        self._fresh_id = 0
+    
+    def attach_fresh_id(self, obj):
+        if obj.id_p2n is None:
+            obj.id_p2n = self._fresh_id
+            self._fresh_id += 1
 
     @property
     def agents(self) -> list:
@@ -89,6 +95,9 @@ class Model:
         Args:
             agent: Agent to be added to the environment.
         """
+        if agent.id_p2n is None:
+            self.attach_fresh_id(agent)
+
         if not self.g.has_node(agent.id_p2n):
             self.g.add_node(agent.id_p2n, bipartite=0, _obj=agent)
 
@@ -110,6 +119,9 @@ class Model:
         Args:
             location: Location to be added to the environment.
         """
+        if location.id_p2n is None:
+            self.attach_fresh_id(location)
+
         if not self.g.has_node(location.id_p2n):
             self.g.add_node(location.id_p2n, bipartite=1, _obj=location)
 
