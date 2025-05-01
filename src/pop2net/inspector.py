@@ -57,25 +57,25 @@ class NetworkInspector:
             node_size (int, optional): The size of the nodes. Defaults to 10.
             node_alpha (float, optional): The transparency of the nodes. Defaults to 0.5.
         """
-        if agent_attrs is None:
-            agent_attrs = ["type"]
-        else:
-            agent_attrs = list(agent_attrs)
-            if "type" not in agent_attrs:
-                agent_attrs.append("type")
+        #if agent_attrs is None:
+        #    agent_attrs = ["type"]
+        #else:
+        #    agent_attrs = list(agent_attrs)
+        #    if "type" not in agent_attrs:
+        #        agent_attrs.append("type")
 
         if agent_color is not None and agent_color not in agent_attrs:
             agent_attrs.append(agent_color)
 
-        if location_attrs is None:
-            location_attrs = ["type", "label"]
-        else:
-            location_attrs = list(location_attrs)
-            if "type" not in location_attrs:
-                location_attrs.append("type")
-
-            if "label" not in location_attrs:
-                location_attrs.append("label")
+        #if location_attrs is None:
+        #    location_attrs = ["type", "label"]
+        #else:
+        #    location_attrs = list(location_attrs)
+        #    if "type" not in location_attrs:
+        #        location_attrs.append("type")
+        
+        #    if "label" not in location_attrs:
+        #        location_attrs.append("label")
 
         if location_color is not None and location_color not in location_attrs:
             location_attrs.append(location_color)
@@ -134,12 +134,12 @@ class NetworkInspector:
             node_size (int, optional): The size of the nodes. Defaults to 10.
             node_alpha (float, optional): The transparency of the nodes. Defaults to 0.5.
         """
-        if agent_attrs is None:
-            agent_attrs = ["type"]
-        else:
-            agent_attrs = list(agent_attrs)
-            if "type" not in agent_attrs:
-                agent_attrs.append("type")
+        #if agent_attrs is None:
+        #    agent_attrs = ["type"]
+        #else:
+        #    agent_attrs = list(agent_attrs)
+        #    if "type" not in agent_attrs:
+        #        agent_attrs.append("type")
 
         if agent_color is not None and agent_color not in agent_attrs:
             agent_attrs.append(agent_color)
