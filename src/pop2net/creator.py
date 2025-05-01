@@ -343,7 +343,6 @@ class Creator:
                     #    # assign agents
                     for agent in sticky_agents:
                         group.append(agent)
-                        print(vars(dummy_location))
                         #dummy_location.add_agent(agent)
 
                     assigned = True
