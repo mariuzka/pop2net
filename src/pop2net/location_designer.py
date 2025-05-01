@@ -24,13 +24,13 @@ class LocationDesigner(Location):
     recycle: bool = True
     nxgraph: nx.Graph | None = None
 
-    def __init__(self, model: _model.Model) -> None:
+    def __init__(self) -> None:
         """Create a helper class to create locations.
 
         Args:
             model (_model.Model):  The model.
         """
-        super().__init__(model)
+        super().__init__()
         self.group_id: int | None = None
         self.subgroup_id: int | None = None
         self.group_value: int | str | None = None
