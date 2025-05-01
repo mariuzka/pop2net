@@ -6,7 +6,6 @@ import itertools
 import typing
 import warnings
 
-import agentpy as ap
 from agentpy import AgentList
 import networkx as nx
 
@@ -16,9 +15,11 @@ if typing.TYPE_CHECKING:
 
 from pop2net.sequences import LocationList
 
+from pop2net.creator import Creator
+from pop2net.inspector import NetworkInspector
 
-class Model:
-    """Class the encapsulates a full simluation.
+class Environment:
+    """Class that encapsulates a full simluation.
 
     This very closely follows the logic of the :class:`agentpy.Model` package. See
     :class:`agentpy.Model` for more information.
@@ -26,10 +27,9 @@ class Model:
 
     def __init__(
         self,
-        parameters=None,
-        _run_id=None,
+        model = None,
         enable_p2n_warnings=True,
-        **kwargs,
+        framework: str | None = None
     ):
         """Initiate a simulation.
 
@@ -40,14 +40,48 @@ class Model:
             Defaults to None.
             **kwargs: Optional parameters that are all passed to :class:`agentpy.Model`.
         """
-        self.g = nx.Graph()
+
+        # settings
+        self.framework: str | None = framework # TODO: if framework=="agentpy" return everything as AgentLists etc.
         self.enable_p2n_warnings = enable_p2n_warnings
+        
+        # import framework dependencies, if required
+        if self.framework is None:
+            pass
+        elif self.framework == "agentpy":
+            import agentpy
+            self._agentpy = agentpy
+        elif self.framework == "mesa":
+            import mesa
+            self._mesa = mesa
+        else:
+            raise ValueError(f"Invalid framework selected: {self.framework}")
+        
+        # connected objects
+        self.model = model
+        self.g = nx.Graph()
+        self.creator = Creator(env=self)
+        self.inspector = NetworkInspector(env=self)
+        
+        # dynamic attributes
         self._fresh_id = 0
-    
-    def attach_fresh_id(self, obj):
+
+    def _attach_fresh_id(self, obj):
         if obj.id_p2n is None:
             obj.id_p2n = self._fresh_id
             self._fresh_id += 1
+
+    def _to_framework(self, objects):
+        if self.framework is None:
+            return objects
+        elif self.framework == "agentpy":
+            return self._agentpy.AgentList(model=self.model, objs=objects)
+        elif self.framework == "mesa":
+            return self._mesa.agent.AgentSet(agents=objects, random=self.model.random)
+
+    def _get_objects(self, type_bipartite, nodes):
+        objects = [data["_obj"] for _, data in nodes if data["bipartite"] == type_bipartite]
+        return self._to_framework(objects=objects)
 
     @property
     def agents(self) -> list:
@@ -56,7 +90,7 @@ class Model:
         Returns:
             list: A non-mutable list of all agents in the environment.
         """
-        return [data["_obj"] for _, data in self.g.nodes(data=True) if data["bipartite"] == 0]
+        return self._get_objects(nodes=self.g.nodes(data=True), type_bipartite=0)
         
 
     @property
@@ -84,7 +118,8 @@ class Model:
         Returns:
             LocationList: a non-mutable LocationList of all locations in the environment.
         """
-        return [data["_obj"] for _, data in self.g.nodes(data=True) if data["bipartite"] == 1]
+        return self._get_objects(nodes=self.g.nodes(data=True), type_bipartite=1)
+        
 
     # TODO: def add_obj as a common parent method for add_agent & add_location
     def add_agent(self, agent: _agent.Agent) -> None:
@@ -97,11 +132,11 @@ class Model:
             agent: Agent to be added to the environment.
         """
         if agent.id_p2n is None:
-            self.attach_fresh_id(agent)
+            self._attach_fresh_id(agent)
 
         if not self.g.has_node(agent.id_p2n):
             self.g.add_node(agent.id_p2n, bipartite=0, _obj=agent)
-            agent.env_p2n = self
+            agent.env = self
         
 
     def add_agents(self, agents: list) -> None:
@@ -123,11 +158,11 @@ class Model:
             location: Location to be added to the environment.
         """
         if location.id_p2n is None:
-            self.attach_fresh_id(location)
+            self._attach_fresh_id(location)
 
         if not self.g.has_node(location.id_p2n):
             self.g.add_node(location.id_p2n, bipartite=1, _obj=location)
-            location.env_p2n = self
+            location.env = self
 
     def add_locations(self, locations: list) -> None:
         """Add multiple locations to the environment at once.
@@ -246,8 +281,8 @@ class Model:
         Returns:
             A list of agents.
         """
-        nodes = self.g.neighbors(location.id_p2n)
-        return [self.g.nodes[node]["_obj"] for node in nodes if self.g.nodes[node]["bipartite"] == 0]
+        return self._get_objects(nodes=self.g.neighbors(location.id_p2n), type_bipartite=0)
+    
 
     def locations_of_agent(self, agent: _agent.Agent) -> LocationList:
         """Return the list of locations associated with a specific agent.
@@ -258,8 +293,7 @@ class Model:
         Returns:
             A list of locations.
         """
-        nodes = self.g.neighbors(agent.id_p2n)
-        return [self.g.nodes[node]["_obj"] for node in nodes if self.g.nodes[node]["bipartite"] == 1]
+        return self._get_objects(nodes=self.g.neighbors(agent.id_p2n), type_bipartite=1)
 
     def neighbors_of_agent(
         self,
@@ -295,7 +329,10 @@ class Model:
             for agent_id in self.g.neighbors(location_id)
             if self.g.nodes[agent_id]["bipartite"] == 0
         }
-        return [self.g.nodes[agent_id]["_obj"] for agent_id in neighbor_agents if agent_id != agent.id_p2n]
+
+        return self._to_framework(
+            [self.g.nodes[agent_id]["_obj"] for agent_id in neighbor_agents if agent_id != agent.id_p2n]
+            )
 
     def _objects_between_objects(self, object1, object2) -> list:
         paths = list(
@@ -325,7 +362,7 @@ class Model:
         if location_labels is not None:
             locations = [location for location in locations if location.label in location_labels]
 
-        return locations
+        return self._to_framework(locations)
 
     def agents_between_locations(self, location1, location2, agent_types: list[str] | None = None):
         """Return all agents between two locations.
@@ -344,7 +381,7 @@ class Model:
         if agent_types is not None:
             agents = [agent for agent in agents if agent.type in agent_types]
 
-        return agents
+        return self._to_framework(agents)
 
     def set_weight(self, agent, location, weight: float | None = None) -> None:
         """Set the weight of an agent at a location.
@@ -381,7 +418,8 @@ class Model:
             weight (float | None): The edge weight between the agents and the location.
                 Defaults to None.
         """
-        location = location_cls(model=self)
+        location = location_cls()
+        self.add_location(location=location)
         location.add_agents(agents=agents, weight=weight)
 
     def disconnect_agents(
@@ -521,3 +559,4 @@ class Model:
         ):
             for agent in location.agents:
                 location.set_weight(agent=agent, weight=location.weight(agent=agent))
+

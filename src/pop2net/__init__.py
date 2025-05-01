@@ -9,7 +9,7 @@ from .inspector import NetworkInspector
 from .location import Location
 from .location_designer import LocationDesigner
 from .location_designer import MeltLocationDesigner
-from .model import Model
+from .environment import Environment
 from .sequences import LocationList
 
 __all__ = [
@@ -20,7 +20,7 @@ __all__ = [
     "LocationDesigner",
     "MeltLocationDesigner",
     "NetworkInspector",
-    "Model",
+    "Environment",
     "LocationList",
     "Creator",
 ]
