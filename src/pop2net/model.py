@@ -86,6 +86,7 @@ class Model:
         """
         return [data["_obj"] for _, data in self.g.nodes(data=True) if data["bipartite"] == 1]
 
+    # TODO: def add_obj as a common parent method for add_agent & add_location
     def add_agent(self, agent: _agent.Agent) -> None:
         """Add an agent to the environment.
 
@@ -100,6 +101,8 @@ class Model:
 
         if not self.g.has_node(agent.id_p2n):
             self.g.add_node(agent.id_p2n, bipartite=0, _obj=agent)
+            agent.env_p2n = self
+        
 
     def add_agents(self, agents: list) -> None:
         """Add agents to the environment.
@@ -124,6 +127,7 @@ class Model:
 
         if not self.g.has_node(location.id_p2n):
             self.g.add_node(location.id_p2n, bipartite=1, _obj=location)
+            location.env_p2n = self
 
     def add_locations(self, locations: list) -> None:
         """Add multiple locations to the environment at once.
