@@ -6,7 +6,7 @@ from pop2net.location import Location
 import pop2net.utils as utils
 
 from . import agent as _agent
-from . import model as _model
+#from . import environment as _model
 
 
 class LocationDesigner(Location):
@@ -89,7 +89,7 @@ class LocationDesigner(Location):
         Returns:
             float | str: A value that defines the groups of agents.
         """
-        return agent.id
+        return agent.id_p2n
 
     def nest(self) -> type[Location] | None:
         """Nests this location class into another location class.
@@ -184,7 +184,7 @@ class MeltLocationDesigner(Location):
         Returns:
             float | str: A value that defines the groups of agents.
         """
-        return agent.id
+        return agent.id_p2n
 
     def split(self, agent: _agent.Agent) -> float | str | list | None:  # noqa: ARG002
         """Creates seperate location instances for each unique returned value.
