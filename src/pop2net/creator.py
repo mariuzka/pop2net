@@ -2,12 +2,14 @@
 
 from __future__ import annotations
 
+import copy
 import itertools
 import math
 import random
 import warnings
 
 import pandas as pd
+
 
 import pop2net as p2n
 import pop2net.utils as utils
@@ -20,8 +22,9 @@ class Creator:
 
     def __init__(
         self,
-        model: p2n.Model,
+        env: p2n.Model,
         seed: int = None,
+        model = None #TODO: add type hints ap.Model and mesa.Model
     ) -> None:
         """Instantiate a creator for a specific model.
 
@@ -29,10 +32,11 @@ class Creator:
             model (p2n.Model): Model, for which a population should be created
             seed (int, optional): A seed for reproducibility. Defaults to 999.
         """
-        self.model = model
+        self.env = env
         self.seed = seed
         self.rng = random.Random(seed)
-        self._dummy_model = p2n.Model(parameters=self.model.p)
+        self.model = model
+        self._dummy_model = type(self.model)()
         self._temp_agent_attrs = ["_P2NTEMP_split_values", "_P2NTEMP_melt_location_weight"]
 
     def _create_dummy_location(self, designer) -> p2n.Location:
@@ -42,7 +46,8 @@ class Creator:
             (designer,) if lc is None else (designer, designer.location_class),
             {},  # TODO: warum funktioniert das hier nicht?: {"label": designer.label},
         )
-        location = cls(model=self._dummy_model)
+        #location = cls(model=self._dummy_model)
+        location = cls()
         location.label = (
             designer.label if designer.label is not None else utils._get_cls_as_str(designer)
         )
@@ -149,7 +154,7 @@ class Creator:
             A list of agents.
         """
         if clear:
-            self.model.remove_agents(self.model.agents)
+            self.env.remove_agents(self.env.agents)
 
         if df is not None:
             df = df.copy()
@@ -158,7 +163,10 @@ class Creator:
             agents = []
             for _, row in df.iterrows():
                 if agent_class_dict is None:
-                    agent = agent_class(model=self.model)
+                    if self.model is None:
+                        agent = agent_class()
+                    else:
+                        agent = agent_class(model=self.model)
                 else:
                     agent = agent_class_dict[row[agent_class_attr]](model=self.model)
 
@@ -172,13 +180,17 @@ class Creator:
 
         else:
             if n is not None:
-                agents = [agent_class(model=self.model) for _ in range(n)]
+                if self.model is None:
+                    agents = [agent_class() for _ in range(n)]
+                else:
+                    agents = [agent_class(model=self.model) for _ in range(n)]
+                
             else:
                 msg = "Either `df` or `n` must be not None."
                 raise Exception(msg)
-
-        agents = p2n.AgentList(model=self.model, objs=agents)
-
+        
+        # add agents to environment
+        self.env.add_agents(agents)
         return agents
 
     def _get_affiliated_agents(self, agents, dummy_location) -> list:
@@ -209,7 +221,7 @@ class Creator:
                     n_mother_locations_found += 1
 
             # Check if the number of mother locations is not 1
-            if n_mother_locations_found > 1 and self.model.enable_p2n_warnings:
+            if n_mother_locations_found > 1 and self.env.enable_p2n_warnings:
                 warnings.warn(
                     f"""For agent {agent},
                     {n_mother_locations_found} locations of class
@@ -331,7 +343,8 @@ class Creator:
                     #    # assign agents
                     for agent in sticky_agents:
                         group.append(agent)
-                        dummy_location.add_agent(agent)
+                        print(vars(dummy_location))
+                        #dummy_location.add_agent(agent)
 
                     assigned = True
                     break
@@ -343,7 +356,7 @@ class Creator:
                     # assign agents
                     for agent in sticky_agents:
                         new_group.append(agent)
-                        dummy_location.add_agent(agent)
+                        #dummy_location.add_agent(agent)
 
                     groups.append(new_group)
 
@@ -546,18 +559,15 @@ class Creator:
 
         # Remove all locations if clear is True
         if clear:
-            self.model.remove_locations(self.model.locations)
+            self.env.remove_locations(self.env.locations)
 
         # Use the existing agents in the model if no agents are given if agents is None:
         if agents is None:
-            agents = self.model.agents
+            agents = self.env.agents
 
         # Create a list containing the names of all special location attributes
         # to delete those attributes later
         magic_agent_attributes = []
-
-        # Add the agents to the dummy model
-        self._dummy_model.add_agents(agents)
 
         # Create magic agent attributes for each location designer class
         for designer in location_designers:
@@ -597,14 +607,14 @@ class Creator:
 
             # If nxgraph is used do some checks
             if dummy_location.nxgraph is not None:
-                if dummy_location.n_agents is not None and self.model.enable_p2n_warnings:
+                if dummy_location.n_agents is not None and self.env.enable_p2n_warnings:
                     msg = """You cannot define location.n_agents if location.nxgraph is used. 
                         It will be set to the number of nodes in location.nxgraph automatically."""
                     warnings.warn(msg)
                 designer.n_agents = len(list(dummy_location.nxgraph.nodes))
                 dummy_location.n_agents = len(list(dummy_location.nxgraph.nodes))
 
-                if dummy_location.overcrowding is True and self.model.enable_p2n_warnings:
+                if dummy_location.overcrowding is True and self.env.enable_p2n_warnings:
                     msg = """You cannot define location.overcrowding if location.nxgraph is used. 
                         It will be set to `False` automatically."""
                     warnings.warn(msg)
@@ -635,7 +645,7 @@ class Creator:
                 if len(bridge_values) == 0:
                     pass
 
-                elif len(bridge_values) == 1 and self.model.enable_p2n_warnings:
+                elif len(bridge_values) == 1 and self.env.enable_p2n_warnings:
                     msg = f"""{dummy_location.label}.bridge() returned only one unique value.
                     {dummy_location.label}.bridge() must return at least two unique values in order 
                     to create locations that bring together agents with different values on the 
@@ -643,7 +653,7 @@ class Creator:
                     """
                     warnings.warn(msg)
 
-                elif len(bridge_values) > 1 and self.model.enable_p2n_warnings:
+                elif len(bridge_values) > 1 and self.env.enable_p2n_warnings:
                     if dummy_location.n_agents is not None:
                         msg = f"""You cannot use {label}.n_agents and 
                         {label}.bridge() at the same time. {label}.n_agents
@@ -772,14 +782,14 @@ class Creator:
                                 "Location",
                                 (p2n.Location,),
                                 keep_attrs,
-                            )(model=self.model)
+                            )()
 
                         else:
                             location = type(
                                 utils._get_cls_as_str(designer.location_class),
                                 (designer.location_class,),
                                 keep_attrs,
-                            )(model=self.model)
+                            )()
 
                         location.label = (
                             designer.label
@@ -791,6 +801,8 @@ class Creator:
                         location.subsplit_value = subsplit_value
                         location.group_id = i
                         location.subgroup_id = j
+
+                        self.env.add_location(location=location)
 
                         split_value_locations.append(location)
 
@@ -835,16 +847,17 @@ class Creator:
                         for _ in range(
                             int(dummy_location.n_locations - len(split_value_locations))
                         ):
-                            location = designer(model=self.model)
+                            location = designer()
                             location.setup()
                             location.split_value = split_value
                             location.subsplit_value = None
                             location.group_id = None
                             location.subgroup_id = None
-
+                            
+                            self.env.add_location(location=location)
                             locations.append(location)
 
-        locations = p2n.LocationList(model=self.model, objs=locations)
+        #locations = p2n.LocationList(model=self.model, objs=locations)
 
         # Reset location_designer.n_agents if it was changed
         for designer in location_designers:
