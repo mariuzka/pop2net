@@ -2,10 +2,11 @@ import pop2net as p2n
 
 
 def test_agent_connect_1():
-    model = p2n.Model()
-    agent1 = p2n.Agent(model)
-    agent2 = p2n.Agent(model)
-    agent3 = p2n.Agent(model)
+    env = p2n.Environment()
+    agent1 = p2n.Agent()
+    agent2 = p2n.Agent()
+    agent3 = p2n.Agent()
+    env.add_agents([agent1, agent2, agent3])
 
     class Home(p2n.Location):
         pass
@@ -23,19 +24,19 @@ def test_agent_connect_1():
         location_cls=School,
     )
 
-    assert len(model.agents) == 3
+    assert len(env.agents) == 3
 
-    assert isinstance(model.locations[0], Home)
-    assert isinstance(model.locations[1], School)
+    assert isinstance(env.locations[0], Home)
+    assert isinstance(env.locations[1], School)
 
-    assert agent1 in model.locations[0].agents
-    assert agent1 not in model.locations[1].agents
+    assert agent1 in env.locations[0].agents
+    assert agent1 not in env.locations[1].agents
 
-    assert agent2 in model.locations[0].agents
-    assert agent2 in model.locations[1].agents
+    assert agent2 in env.locations[0].agents
+    assert agent2 in env.locations[1].agents
 
-    assert agent3 not in model.locations[0].agents
-    assert agent3 in model.locations[1].agents
+    assert agent3 not in env.locations[0].agents
+    assert agent3 in env.locations[1].agents
 
     agent1.disconnect(
         agent2,
@@ -47,10 +48,11 @@ def test_agent_connect_1():
 
 
 def test_agent_disconnect_1():
-    model = p2n.Model()
-    agent1 = p2n.Agent(model)
-    agent2 = p2n.Agent(model)
-    agent3 = p2n.Agent(model)
+    env = p2n.Environment()
+    agent1 = p2n.Agent()
+    agent2 = p2n.Agent()
+    agent3 = p2n.Agent()
+    env.add_agents([agent1, agent2, agent3])
 
     class Home(p2n.Location):
         pass
@@ -76,19 +78,19 @@ def test_agent_disconnect_1():
         remove_self=True,
     )
 
-    assert len(model.agents) == 3
+    assert len(env.agents) == 3
 
-    assert isinstance(model.locations[0], Home)
-    assert isinstance(model.locations[1], School)
+    assert isinstance(env.locations[0], Home)
+    assert isinstance(env.locations[1], School)
 
-    assert agent1 not in model.locations[0].agents
-    assert agent1 not in model.locations[1].agents
+    assert agent1 not in env.locations[0].agents
+    assert agent1 not in env.locations[1].agents
 
-    assert agent2 not in model.locations[0].agents
-    assert agent2 in model.locations[1].agents
+    assert agent2 not in env.locations[0].agents
+    assert agent2 in env.locations[1].agents
 
-    assert agent3 not in model.locations[0].agents
-    assert agent3 in model.locations[1].agents
+    assert agent3 not in env.locations[0].agents
+    assert agent3 in env.locations[1].agents
 
     agent2.disconnect(
         agent3,
@@ -98,26 +100,27 @@ def test_agent_disconnect_1():
         remove_self=False,
     )
 
-    assert len(model.agents) == 3
+    assert len(env.agents) == 3
 
-    assert isinstance(model.locations[0], Home)
-    assert isinstance(model.locations[1], School)
+    assert isinstance(env.locations[0], Home)
+    assert isinstance(env.locations[1], School)
 
-    assert agent1 not in model.locations[0].agents
-    assert agent1 not in model.locations[1].agents
+    assert agent1 not in env.locations[0].agents
+    assert agent1 not in env.locations[1].agents
 
-    assert agent2 not in model.locations[0].agents
-    assert agent2 in model.locations[1].agents
+    assert agent2 not in env.locations[0].agents
+    assert agent2 in env.locations[1].agents
 
-    assert agent3 not in model.locations[0].agents
-    assert agent3 not in model.locations[1].agents
+    assert agent3 not in env.locations[0].agents
+    assert agent3 not in env.locations[1].agents
 
 
 def test_agent_disconnect_2():
-    model = p2n.Model()
-    agent1 = p2n.Agent(model)
-    agent2 = p2n.Agent(model)
-    agent3 = p2n.Agent(model)
+    env = p2n.Environment()
+    agent1 = p2n.Agent()
+    agent2 = p2n.Agent()
+    agent3 = p2n.Agent()
+    env.add_agents([agent1, agent2, agent3])
 
     class Home(p2n.Location):
         pass
@@ -143,15 +146,15 @@ def test_agent_disconnect_2():
         remove_self=True,
     )
 
-    assert len(model.agents) == 3
+    assert len(env.agents) == 3
 
-    assert isinstance(model.locations[0], School)
+    assert isinstance(env.locations[0], School)
 
-    assert agent1 in model.locations[0].agents
+    assert agent1 in env.locations[0].agents
 
-    assert agent2 in model.locations[0].agents
+    assert agent2 in env.locations[0].agents
 
-    assert agent3 not in model.locations[0].agents
+    assert agent3 not in env.locations[0].agents
 
     agent1.disconnect(
         agent2,
@@ -161,12 +164,12 @@ def test_agent_disconnect_2():
         remove_self=True,
     )
 
-    assert len(model.agents) == 3
+    assert len(env.agents) == 3
 
-    assert isinstance(model.locations[0], School)
+    assert isinstance(env.locations[0], School)
 
-    assert agent1 not in model.locations[0].agents
+    assert agent1 not in env.locations[0].agents
 
-    assert agent2 in model.locations[0].agents
+    assert agent2 in env.locations[0].agents
 
-    assert agent3 not in model.locations[0].agents
+    assert agent3 not in env.locations[0].agents

@@ -1,101 +1,33 @@
-import pytest
-
-from pop2net import AgentList
 from pop2net.agent import Agent
 from pop2net.location import Location
-from pop2net.model import Model
+from pop2net.environment import Environment
 
 
-@pytest.fixture(scope="module")
-def two_agent_location():
-    model = Model()
-    loc = Location(model=model)
-    agent1 = Agent(model=model)
-    agent2 = Agent(model=model)
-    loc.add_agent(agent1, visit_weight=1)
-    loc.add_agent(agent2, visit_weight=1)
+def test_location():
+    env = Environment()
+    
+    loc = Location()
+    
+    agent1 = Agent()
+    agent2 = Agent()
+    
+    env.add_location(loc)
+    env.add_agents([agent1, agent2])
+    
+    assert loc.agents == []
 
-    return loc
+    loc.add_agent(agent1, weight=1)
 
+    assert loc.agents == [agent1]
 
-def test_agent_property():
-    model = Model()
-    loc = Location(model=model)
-    agent1 = Agent(model=model)
-    agent2 = Agent(model=model)
-    loc.add_agent(agent1)
-    loc.add_agent(agent2)
+    loc.add_agent(agent2, weight=1)
 
-    assert AgentList(model, [agent1, agent2]) == loc.agents
+    assert loc.agents == [agent1, agent2]
 
-
-def test_create_location():
-    model = Model()
-    loc = Location(model=model)
-    agent1 = Agent(model=model)
-    agent2 = Agent(model=model)
-    loc.add_agent(agent1)
-    loc.add_agent(agent2)
-
-    neighbours = list(loc.neighbors(agent1))
-    assert neighbours
-
-
-def test_location_size():
-    model = Model()
-    loc = Location(model=model)
-    agent1 = Agent(model=model)
-    agent2 = Agent(model=model)
-
-    assert len(loc.agents) == 0
-    loc.add_agent(agent1)
-    assert len(loc.agents) == 1
-    loc.add_agent(agent2)
-    assert len(loc.agents) == 2
     loc.remove_agent(agent1)
-    assert len(loc.agents) == 1
+
+    assert loc.agents == [agent2]
+
     loc.remove_agent(agent2)
-    assert len(loc.agents) == 0
 
-
-# def test_melt(
-#     size_pizza_group,
-#     size_pasta_group,
-#     recycle_,
-#     only_exact_n_agents_pizza_group,
-#     only_exact_n_agents_pasta_group,
-# ):
-#     class Table(p2n.LocationDesigner):
-#         recycle = recycle_
-
-#         def melt(self):
-#             class PizzaGroup(p2n.LocationDesigner):
-#                 n_agents = size_pizza_group
-#                 only_exact_n_agents = only_exact_n_agents_pizza_group
-
-#                 def filter(self, agent):
-#                     return agent.food == "pizza"
-
-#                 # def split(self, agent):
-#                 #    return agent.age
-
-#                 def weight(self, agent):
-#                     return 10
-
-#             class PastaGroup(p2n.LocationDesigner):
-#                 n_agents = size_pasta_group
-#                 only_exact_n_agents = only_exact_n_agents_pasta_group
-
-#                 def filter(self, agent):
-#                     return agent.food == "pasta"
-
-#             return PizzaGroup, PastaGroup
-
-#     df = pd.DataFrame({"food": ["pizza", "pasta"] * 10})
-#     model = p2n.Model()
-
-#     creator = Creator(model)
-#     creator.create_agents(df=df)
-#     creator.create_locations(location_classes=[Table])
-
-#     return model
+    assert loc.agents == []

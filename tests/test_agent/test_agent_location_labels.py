@@ -5,9 +5,13 @@ def test_agent_location_labels():
     class MyLocation(p2n.Location):
         pass
 
-    model = p2n.Model()
-    location = MyLocation(model=model)
-    agent = p2n.Agent(model=model)
+    env = p2n.Environment()
+    
+    location = MyLocation()
+    env.add_location(location)
+
+    agent = p2n.Agent()
+    env.add_agent(agent)
 
     agent.add_location(location)
 

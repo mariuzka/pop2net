@@ -2,15 +2,18 @@ import pop2net as p2n
 
 
 def test_1():
-    model = p2n.Model()
-    agent1 = p2n.Agent(model)
-    agent2 = p2n.Agent(model)
-    location1 = p2n.Location(model)
+    env = p2n.Environment()
+    agent1 = p2n.Agent()
+    agent2 = p2n.Agent()
+    location1 = p2n.Location()
+
+    env.add_agents([agent1, agent2])
+    env.add_location(location1)
 
     location1.add_agents([agent1, agent2])
 
-    assert len(model.agents) == 2
-    assert len(model.locations) == 1
+    assert len(env.agents) == 2
+    assert len(env.locations) == 1
 
     assert len(agent1.neighbors()) == 1
     assert agent1.neighbors()[0] is agent2
