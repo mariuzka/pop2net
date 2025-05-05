@@ -88,7 +88,7 @@ class Environment:
         Returns:
             list: A non-mutable list of all agents in the environment.
         """
-        return [data["_obj"] for _, data in self.g.nodes(data=True) if data["bipartite"] == 0]
+        return self._to_framework([data["_obj"] for _, data in self.g.nodes(data=True) if data["bipartite"] == 0])
         
 
     @property
@@ -116,7 +116,7 @@ class Environment:
         Returns:
             LocationList: a non-mutable LocationList of all locations in the environment.
         """
-        return [data["_obj"] for _, data in self.g.nodes(data=True) if data["bipartite"] == 1]
+        return self._to_framework([data["_obj"] for _, data in self.g.nodes(data=True) if data["bipartite"] == 1])
     
 
     # TODO: def add_obj as a common parent method for add_agent & add_location
@@ -281,7 +281,8 @@ class Environment:
             A list of agents.
         """
         nodes = self.g.neighbors(location.id_p2n)
-        return [self.g.nodes[node]["_obj"] for node in nodes if self.g.nodes[node]["bipartite"] == 0]
+        agents = [self.g.nodes[node]["_obj"] for node in nodes if self.g.nodes[node]["bipartite"] == 0]
+        return self._to_framework(agents)
     
 
     def locations_of_agent(self, agent: _agent.Agent) -> LocationList:
@@ -294,7 +295,8 @@ class Environment:
             A list of locations.
         """
         nodes = self.g.neighbors(agent.id_p2n)
-        return [self.g.nodes[node]["_obj"] for node in nodes if self.g.nodes[node]["bipartite"] == 1]
+        locations = [self.g.nodes[node]["_obj"] for node in nodes if self.g.nodes[node]["bipartite"] == 1]
+        return self._to_framework(locations)
 
     def neighbors_of_agent(
         self,
