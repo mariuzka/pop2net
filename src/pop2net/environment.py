@@ -60,6 +60,8 @@ class Environment:
         # connected objects
         self.model = model
         self.g = nx.Graph()
+
+        # TODO: should we add creator and inspector as attributes?
         self.creator = Creator(env=self)
         self.inspector = NetworkInspector(env=self)
         
@@ -79,10 +81,6 @@ class Environment:
         elif self.framework == "mesa":
             return self._mesa.agent.AgentSet(agents=objects, random=self.model.random)
 
-    def _get_objects(self, type_bipartite, nodes):
-        objects = [data["_obj"] for _, data in nodes if data["bipartite"] == type_bipartite]
-        return self._to_framework(objects=objects)
-
     @property
     def agents(self) -> list:
         """Show a iterable view of all agents in the environment.
@@ -90,7 +88,7 @@ class Environment:
         Returns:
             list: A non-mutable list of all agents in the environment.
         """
-        return self._get_objects(nodes=self.g.nodes(data=True), type_bipartite=0)
+        return [data["_obj"] for _, data in self.g.nodes(data=True) if data["bipartite"] == 0]
         
 
     @property
@@ -118,8 +116,8 @@ class Environment:
         Returns:
             LocationList: a non-mutable LocationList of all locations in the environment.
         """
-        return self._get_objects(nodes=self.g.nodes(data=True), type_bipartite=1)
-        
+        return [data["_obj"] for _, data in self.g.nodes(data=True) if data["bipartite"] == 1]
+    
 
     # TODO: def add_obj as a common parent method for add_agent & add_location
     def add_agent(self, agent: _agent.Agent) -> None:
@@ -272,6 +270,7 @@ class Environment:
         if self.g.has_edge(agent.id_p2n, location.id_p2n):
             self.g.remove_edge(agent.id_p2n, location.id_p2n)
 
+
     def agents_of_location(self, location: _location.Location) -> AgentList:
         """Return the list of agents associated with a specific location.
 
@@ -281,7 +280,8 @@ class Environment:
         Returns:
             A list of agents.
         """
-        return self._get_objects(nodes=self.g.neighbors(location.id_p2n), type_bipartite=0)
+        nodes = self.g.neighbors(location.id_p2n)
+        return [self.g.nodes[node]["_obj"] for node in nodes if self.g.nodes[node]["bipartite"] == 0]
     
 
     def locations_of_agent(self, agent: _agent.Agent) -> LocationList:
@@ -293,7 +293,8 @@ class Environment:
         Returns:
             A list of locations.
         """
-        return self._get_objects(nodes=self.g.neighbors(agent.id_p2n), type_bipartite=1)
+        nodes = self.g.neighbors(agent.id_p2n)
+        return [self.g.nodes[node]["_obj"] for node in nodes if self.g.nodes[node]["bipartite"] == 1]
 
     def neighbors_of_agent(
         self,
