@@ -50,10 +50,10 @@ class Environment:
             pass
         elif self.framework == "agentpy":
             import agentpy
-            self._agentpy = agentpy
+            self._framework = agentpy
         elif self.framework == "mesa":
             import mesa
-            self._mesa = mesa
+            self._framework = mesa
         else:
             raise ValueError(f"Invalid framework selected: {self.framework}")
         
@@ -77,9 +77,9 @@ class Environment:
         if self.framework is None:
             return objects
         elif self.framework == "agentpy":
-            return self._agentpy.AgentList(model=self.model, objs=objects)
+            return self._framework.AgentList(model=self.model, objs=objects)
         elif self.framework == "mesa":
-            return self._mesa.agent.AgentSet(agents=objects, random=self.model.random)
+            return self._framework.agent.AgentSet(agents=objects, random=self.model.random)
 
     @property
     def agents(self) -> list:
@@ -421,7 +421,19 @@ class Environment:
             weight (float | None): The edge weight between the agents and the location.
                 Defaults to None.
         """
-        location = location_cls()
+        if location_cls is None:
+            if self.framework is None:
+                location_cls = Location
+            else:
+                class Location_with_framework(p2n.Location, self.env._framework.Agent):
+                    pass
+                location_cls = Location_with_framework
+        
+        if self.framework is None:
+            location = location_cls()
+        else:
+            location = location_cls(model=self.model)
+
         self.add_location(location=location)
         location.add_agents(agents=agents, weight=weight)
 

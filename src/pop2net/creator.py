@@ -191,7 +191,12 @@ class Creator:
         
         # add agents to environment
         self.env.add_agents(agents)
-        return agents
+
+        if self.env.framework is None:
+            return agents
+        else:
+            return self.env._to_framework(agents)
+        
 
     def _get_affiliated_agents(self, agents, dummy_location) -> list:
         temp_filter_attr = "_P2NTEMP_filter_" + dummy_location.label
@@ -775,20 +780,36 @@ class Creator:
                             if attr not in p2n.LocationDesigner.__dict__:
                                 keep_attrs[attr] = getattr(designer, attr)
 
-                        # Build the final location
+
+                        # Create the final location class
                         if designer.location_class is None:
-                            location = type(
-                                "Location",
-                                (p2n.Location,),
-                                keep_attrs,
-                            )()
+                            
+                            if self.env.framework is None:
+                                location_class = type(
+                                    "Location",
+                                    (p2n.Location, ),
+                                    keep_attrs,
+                                )
+                            
+                            else:
+                                location_class = type(
+                                    "Location",
+                                    (p2n.Location, self.env._framework.Agent), # inherit from framework.Agent
+                                    keep_attrs,
+                                )
 
                         else:
-                            location = type(
+                            location_class = type(
                                 utils._get_cls_as_str(designer.location_class),
                                 (designer.location_class,),
                                 keep_attrs,
-                            )()
+                            )
+                        
+                        # Create the final location instance
+                        if self.env.framework is None:
+                            location = location_class()
+                        else:
+                            location = location_class(model=self.env.model)
 
                         location.label = (
                             designer.label
@@ -856,8 +877,6 @@ class Creator:
                             self.env.add_location(location=location)
                             locations.append(location)
 
-        #locations = p2n.LocationList(model=self.model, objs=locations)
-
         # Reset location_designer.n_agents if it was changed
         for designer in location_designers:
             if hasattr(designer, "_P2NTEMP_ori_n_agents"):
@@ -876,7 +895,8 @@ class Creator:
                 for agent in agents:
                     delattr(agent, attr)
 
-        return locations
+        return self.env._to_framework(locations)
+        
 
     def create(
         self,

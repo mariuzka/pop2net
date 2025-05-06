@@ -33,9 +33,9 @@ class Agent:
 
         All parameters will be passed to the :class:`agentpy.Agent` parent.
         """
-        
         self.env = None
         self.id_p2n = None
+        self.model = None
         super().__init__(*args, **kwargs)
         
 
@@ -146,7 +146,7 @@ class Agent:
         return self.env.get_weight(agent=self, location=location)
 
     def connect(
-        self, agent: Agent, location_cls: _location = Location, weight: float | None = None
+        self, agent: Agent, location_cls: _location = None, weight: float | None = None
     ):
         """Connects this agent with a given other agent via an instance of a given location class.
 
