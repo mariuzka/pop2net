@@ -14,15 +14,17 @@ class Location:
 
     label: str | None = None
 
-    def __init__(self) -> None:
+    def __init__(self, *args, **kwargs) -> None:
         """Location constructor.
 
         Args:
             model: Model this Location should be associated with.
         """
         self.label = self.__class__.__name__ if self.label is None else self.label
-        self.id_p2n = None
         self.env = None
+        self.id_p2n = None
+        self.model = None
+        super().__init__(*args, **kwargs)
     
     def setup(self):
         pass
