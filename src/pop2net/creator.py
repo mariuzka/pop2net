@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import copy
 import itertools
 import math
 import random
@@ -20,7 +21,7 @@ class Creator:
 
     def __init__(
         self,
-        env: p2n.Model,
+        env: p2n.Environment,
         seed: int = None,
     ) -> None:
         """Instantiate a creator for a specific model.
@@ -32,16 +33,29 @@ class Creator:
         self.seed = seed
         self.rng = random.Random(seed)
         self._temp_actor_attrs = ["_P2NTEMP_split_values", "_P2NTEMP_melt_location_weight"]
+        self.model = self.env.model
+        
+        #if self.model is not None:
+        #    self._dummy_model = type(self.model)()
+        
+        if self.env.framework is not None:
+            self._dummy_model = self.env._framework.Model()
 
     def _create_dummy_location(self, designer) -> p2n.Location:
         lc = designer.location_class
+
+        cls_name = "Location" if lc is None else utils._get_cls_as_str(designer.location_class)
+        
         cls = type(
-            "Location" if lc is None else utils._get_cls_as_str(designer.location_class),
-            (designer,) if lc is None else (designer, designer.location_class),
+            cls_name,
+            (designer,) if lc is None else (designer, designer.location_class), #TODO
             {},
         )
-        # location = cls(model=self._dummy_model)
-        location = cls()
+        if self.model is None:
+            location = cls()
+        else:
+            location = cls() #TODO
+        
         location.label = (
             designer.label if designer.label is not None else utils._get_cls_as_str(designer)
         )
@@ -121,7 +135,7 @@ class Creator:
 
     def create_actors(
         self,
-        actor_class=p2n.Actor,
+        actor_class=None,
         actor_class_attr: None | str = None,
         actor_class_dict: None | dict = None,
         df: pd.DataFrame | None = None,
@@ -149,6 +163,18 @@ class Creator:
         """
         if clear:
             self.env.remove_actors(self.env.actors)
+
+        # if no actor class was provided
+        if actor_class is None:
+            # if no framework ist used, use default actor class
+            if  self.env.framework is None:   
+                actor_class = p2n.Actor
+            
+            # if a framework is used, create mixed actor class
+            else:
+                class MixedActor(p2n.Actor, self.env._framework.Agent):
+                    pass
+                actor_class = MixedActor
 
         if df is not None:
             df = df.copy()
@@ -186,10 +212,7 @@ class Creator:
         # add actors to environment
         self.env.add_actors(actors)
 
-        if self.env.framework is None:
-            return actors
-        else:
-            return self.env._to_framework(actors)
+        return self.env._to_framework(actors)
 
     def _get_affiliated_actors(self, actors, dummy_location) -> list:
         temp_filter_attr = "_P2NTEMP_filter_" + dummy_location.label
