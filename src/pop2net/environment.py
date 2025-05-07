@@ -25,7 +25,7 @@ class Environment:
 
         Args:
             model (agentpy.Model | mesa.Model, optional): A simulation model. Defaults to None.
-            framework (str | None, optional): The ABM-framework you you want to use. 
+            framework (str | None, optional): The ABM-framework you you want to use.
                 Options are: "agentpy" & "mesa". Defaults to None.
             enable_p2n_warnings (bool, optional): Should pop2net warnings be shown? Defaults to True.
 
@@ -78,9 +78,9 @@ class Environment:
     @property
     def actors(self) -> list:
         """Show a iterable view of all actors in the environment.
-        
+
         Important: While you can make changes to the objects in this list, you
-        cannot modify this attribute itself. Instead you have to use methods like 
+        cannot modify this attribute itself. Instead you have to use methods like
         Environment.add_actor() or Environment.remove_actor(), for instance.
 
         Returns:
@@ -95,7 +95,7 @@ class Environment:
         """Show a iterable view of all locations in the environment.
 
         Important: While you can make changes to the objects in this list, you
-        cannot modify this attribute itself. Instead you have to use methods like 
+        cannot modify this attribute itself. Instead you have to use methods like
         Environment.add_location() or Environment.remove_location(), for instance.
 
         Returns:
@@ -341,7 +341,9 @@ class Environment:
         )
         return [self.g.nodes[path[1]]["_obj"] for path in paths]
 
-    def locations_between_actors(self, actor1, actor2, location_labels: list[str] | None = None) -> list:
+    def locations_between_actors(
+        self, actor1, actor2, location_labels: list[str] | None = None
+    ) -> list:
         """Return all locations that connects two actors.
 
         Args:

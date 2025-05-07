@@ -12,7 +12,7 @@ if typing.TYPE_CHECKING:
 class Actor:
     """This is a Base class to represent actors in the simulation.
 
-    Actors' behavior can be implemented in classes that inherit from this.    
+    Actors' behavior can be implemented in classes that inherit from this.
     """
 
     def __init__(self, *args, **kwargs) -> None:
@@ -143,7 +143,7 @@ class Actor:
 
     def connect(self, actor: Actor, location_cls: _location = None, weight: float | None = None):
         """Connects this actor with a given other actor via an instance of a given location class.
-        If location_cls is None, the default pop2net.Location class is used to create a new location 
+        If location_cls is None, the default pop2net.Location class is used to create a new location
         instance. If weight is None, it will be set to 1.
 
         Args:
