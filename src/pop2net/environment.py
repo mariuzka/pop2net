@@ -12,9 +12,9 @@ if typing.TYPE_CHECKING:
     from . import actor as _actor
     from . import location as _location
 
-from pop2net import Location
 from pop2net.creator import Creator
 from pop2net.inspector import NetworkInspector
+import pop2net as p2n
 
 
 class Environment:
@@ -55,8 +55,8 @@ class Environment:
         self.g = nx.Graph()
 
         # TODO: should we add creator and inspector as attributes?
-        self.creator = Creator(env=self)
-        self.inspector = NetworkInspector(env=self)
+        #self.creator = Creator(env=self)
+        #self.inspector = NetworkInspector(env=self)
 
         # a unique id that is added to the objects of this environment
         self._fresh_id = 0
@@ -420,10 +420,10 @@ class Environment:
         """
         if location_cls is None:
             if self.framework is None:
-                location_cls = Location
+                location_cls = p2n.Location
             else:
 
-                class Location_with_framework(Location, self._framework.Agent):
+                class Location_with_framework(p2n.Location, self._framework.Agent):
                     pass
 
                 location_cls = Location_with_framework
