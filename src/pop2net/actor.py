@@ -7,7 +7,6 @@ import warnings
 
 if typing.TYPE_CHECKING:
     from . import location as _location
-    from . import sequences as _sequences
 
 
 class Actor:

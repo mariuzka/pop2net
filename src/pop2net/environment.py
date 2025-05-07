@@ -18,21 +18,19 @@ from pop2net.inspector import NetworkInspector
 
 
 class Environment:
-    """Class that encapsulates a full simluation.
+    """Class that organizes actors and locations."""
 
-    This very closely follows the logic of the :class:`agentpy.Model` package. See
-    :class:`agentpy.Model` for more information.
-    """
-
-    def __init__(self, model=None, enable_p2n_warnings=True, framework: str | None = None):
-        """Initiate a simulation.
+    def __init__(self, model=None, framework: str | None = None, enable_p2n_warnings=True):
+        """Initialize a new environment.
 
         Args:
-            parameters (dict, optional): An optional parameter dict that is passed to
-            :class:`agentpy.Model`. Defaults to None.
-            _run_id (int, optional): An optional _run_id that is passed to :class:`agentpy.Model`.
-            Defaults to None.
-            **kwargs: Optional parameters that are all passed to :class:`agentpy.Model`.
+            model (agentpy.Model | mesa.Model, optional): A simulation model. Defaults to None.
+            framework (str | None, optional): The ABM-framework you you want to use. 
+                Options are: "agentpy" & "mesa". Defaults to None.
+            enable_p2n_warnings (bool, optional): Should pop2net warnings be shown? Defaults to True.
+
+        Raises:
+            ValueError: _description_
         """
         # settings
         self.framework: str | None = framework
@@ -60,13 +58,12 @@ class Environment:
         self.creator = Creator(env=self)
         self.inspector = NetworkInspector(env=self)
 
-        # dynamic attributes
+        # a unique id that is added to the objects of this environment
         self._fresh_id = 0
 
     def _attach_fresh_id(self, obj):
-        if obj.id_p2n is None:
-            obj.id_p2n = self._fresh_id
-            self._fresh_id += 1
+        obj.id_p2n = self._fresh_id
+        self._fresh_id += 1
 
     def _to_framework(self, objects):
         if self.framework is None:
@@ -81,6 +78,10 @@ class Environment:
     @property
     def actors(self) -> list:
         """Show a iterable view of all actors in the environment.
+        
+        Important: While you can make changes to the objects in this list, you
+        cannot modify this attribute itself. Instead you have to use methods like 
+        Environment.add_actor() or Environment.remove_actor(), for instance.
 
         Returns:
             list: A non-mutable list of all actors in the environment.
@@ -90,26 +91,12 @@ class Environment:
         )
 
     @property
-    def actors_by_id(self) -> dict:
-        """Returns a dictionary which stores the model's actors by their id.
-
-        Returns:
-            dict: A dictionary which stores the model's actors by their id.
-        """
-        return {actor.id_p2n: actor for actor in self.actors}
-
-    @property
-    def locations_by_id(self) -> dict:
-        """Returns a dictionary which stores the model's locations by their id.
-
-        Returns:
-            dict: A dictionary which stores the model's locations by their id.
-        """
-        return {location.id_p2n: location for location in self.locations}
-
-    @property
-    def locations(self) -> LocationList:
+    def locations(self) -> list:
         """Show a iterable view of all locations in the environment.
+
+        Important: While you can make changes to the objects in this list, you
+        cannot modify this attribute itself. Instead you have to use methods like 
+        Environment.add_location() or Environment.remove_location(), for instance.
 
         Returns:
             LocationList: a non-mutable LocationList of all locations in the environment.
@@ -213,7 +200,7 @@ class Environment:
         if self.g.has_node(actor.id_p2n):
             self.g.remove_node(actor.id_p2n)
 
-    def remove_actors(self, actors: list) -> None:
+    def remove_actors(self, actors: list[_actor.Actor]) -> None:
         """Remove multiple actors from the environment at once.
 
         Args:
@@ -233,7 +220,7 @@ class Environment:
         if self.g.has_node(location.id_p2n):
             self.g.remove_node(location.id_p2n)
 
-    def remove_locations(self, locations: list) -> None:
+    def remove_locations(self, locations: list[_location.Location]) -> None:
         """Remove multiple locations at once.
 
         Args:
@@ -283,7 +270,7 @@ class Environment:
         ]
         return self._to_framework(actors)
 
-    def locations_of_actor(self, actor: _actor.Actor):
+    def locations_of_actor(self, actor: _actor.Actor) -> list[_location.Location]:
         """Return the list of locations associated with a specific actor.
 
         Args:
@@ -302,7 +289,7 @@ class Environment:
         self,
         actor: _actor.Actor,
         location_labels: list | None = None,
-    ) -> list:
+    ) -> list[_actor.Actor]:
         """Return a list of neighboring actors for a specific actor.
 
         The locations to be considered can be defined with location_labels.
@@ -354,7 +341,7 @@ class Environment:
         )
         return [self.g.nodes[path[1]]["_obj"] for path in paths]
 
-    def locations_between_actors(self, actor1, actor2, location_labels: list[str] | None = None):
+    def locations_between_actors(self, actor1, actor2, location_labels: list[str] | None = None) -> list:
         """Return all locations that connects two actors.
 
         Args:
@@ -509,7 +496,7 @@ class Environment:
         self,
         actor_attrs: list | None = None,
         location_attrs: list | None = None,
-    ):
+    ) -> nx.graph:
         graph = self.g.copy()
 
         for i in graph:
