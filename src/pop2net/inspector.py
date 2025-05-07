@@ -23,7 +23,7 @@ class NetworkInspector:
         """Initiate a NetworkInspector.
 
         Args:
-            model (Model): The model.
+            env (Environment): The environment this NetworkInspector belongs to.
         """
         self.env = env  # TODO: make instances of inspector without a fixed env possible
 

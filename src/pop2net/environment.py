@@ -1,4 +1,4 @@
-"""The model class. It encapsulates the full simulation."""
+"""The environment class. It encapsulates the full simulation."""
 
 from __future__ import annotations
 
@@ -444,10 +444,10 @@ class Environment:
 
         If a list of location types is given, only shared locations of the given types are
         considered. Turn on `remove_locations` in order to not only remove the given actors from the
-        given location instance but also to remove the location instance from the model.
+        given location instance but also to remove the location instance from the environment.
         Use this method with care because removing actors from locations also disconnects those
         actors from all other actors connected to the location. Removing the location instance from
-        the model could have even more sideeffects to those actors still connected with this
+        the environment could have even more sideeffects to those actors still connected with this
         location!
 
         Args:
@@ -455,7 +455,7 @@ class Environment:
             location_labels (list | None, optional): A list of location types to specify which
             shared locations are considered. Defaults to None.
             remove_locations (bool, optional): A bool that determines whether the shared locations
-                shall be removed from the model. Defaults to False.
+                shall be removed from the environment. Defaults to False.
         """
         pairs = list(itertools.combinations(actors, 2))
 
@@ -520,15 +520,15 @@ class Environment:
         node_attrs: list | None = None,
         include_0_weights: bool = True,
     ) -> nx.Graph:
-        """Creates a projection of the model's bipartite network.
+        """Creates a projection of the environment's bipartite network.
 
         Args:
             node_attrs: A list of actor attributes
             include_0_weights: Should edges with weight 0 be displayed?
 
         Returns:
-            A weighted graph created from a model's actor list. Actors are connected if they are
-            neighbors in the model. Their connecting edge include the contact_weight as "weight"
+            A weighted graph created from a environment's actor list. Actors are connected if they are
+            neighbors in the environment. Their connecting edge include the contact_weight as "weight"
             attribute.
         """
         graph = nx.Graph()

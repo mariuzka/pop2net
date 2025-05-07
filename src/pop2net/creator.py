@@ -22,19 +22,15 @@ class Creator:
         self,
         env: p2n.Model,
         seed: int = None,
-        model=None,  # TODO: add type hints ap.Model and mesa.Model
     ) -> None:
         """Instantiate a creator for a specific model.
 
         Args:
-            model (p2n.Model): Model, for which a population should be created
             seed (int, optional): A seed for reproducibility. Defaults to 999.
         """
         self.env = env
         self.seed = seed
         self.rng = random.Random(seed)
-        self.model = model
-        self._dummy_model = type(self.model)()
         self._temp_actor_attrs = ["_P2NTEMP_split_values", "_P2NTEMP_melt_location_weight"]
 
     def _create_dummy_location(self, designer) -> p2n.Location:
@@ -42,7 +38,7 @@ class Creator:
         cls = type(
             "Location" if lc is None else utils._get_cls_as_str(designer.location_class),
             (designer,) if lc is None else (designer, designer.location_class),
-            {},  # TODO: warum funktioniert das hier nicht?: {"label": designer.label},
+            {},
         )
         # location = cls(model=self._dummy_model)
         location = cls()
