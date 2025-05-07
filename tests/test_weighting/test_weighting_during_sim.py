@@ -1,11 +1,16 @@
+import agentpy as ap
+
 import pop2net as p2n
 
 
 def test_weighting_during_sim1():
-    class WeightedModel(p2n.Model):
+    class WeightedModel(ap.Model):
         def setup(self):
-            self.location = p2n.Location(model=self)
-            self.agent = p2n.Agent(model=self)
+            self.env = p2n.Environment()
+            self.location = p2n.Location()
+            self.agent = p2n.Agent()
+            self.env.add_agent(self.agent)
+            self.env.add_location(self.location)
             self.location.add_agent(agent=self.agent, weight=None)
 
         def step(self):
@@ -14,17 +19,20 @@ def test_weighting_during_sim1():
         def update(self):
             assert self.location.get_weight(agent=self.agent) == 1
             assert self.agent.get_location_weight(location=self.location) == 1
-            assert self.get_weight(location=self.location, agent=self.agent) == 1
+            assert self.env.get_weight(location=self.location, agent=self.agent) == 1
 
     model = WeightedModel()
     model.run(steps=10)
 
 
 def test_weighting_during_sim2():
-    class WeightedModel(p2n.Model):
+    class WeightedModel(ap.Model):
         def setup(self):
-            self.location = p2n.Location(model=self)
-            self.agent = p2n.Agent(model=self)
+            self.env = p2n.Environment()
+            self.location = p2n.Location()
+            self.agent = p2n.Agent()
+            self.env.add_agent(self.agent)
+            self.env.add_location(self.location)
             self.location.add_agent(agent=self.agent, weight=self.t)
 
         def step(self):
@@ -33,7 +41,7 @@ def test_weighting_during_sim2():
         def update(self):
             assert self.location.get_weight(agent=self.agent) == self.t
             assert self.agent.get_location_weight(location=self.location) == self.t
-            assert self.get_weight(location=self.location, agent=self.agent) == self.t
+            assert self.env.get_weight(location=self.location, agent=self.agent) == self.t
 
     model = WeightedModel()
     model.run(steps=10)
