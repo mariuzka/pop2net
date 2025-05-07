@@ -7,8 +7,6 @@ import pop2net.utils as utils
 
 from . import actor as _actor
 
-# from . import environment as _model
-
 
 class LocationDesigner(Location):
     """Helper class to create locations from inside the Creator."""
@@ -26,17 +24,14 @@ class LocationDesigner(Location):
     nxgraph: nx.Graph | None = None
 
     def __init__(self) -> None:
-        """Create a helper class to create locations.
-
-        Args:
-            model (_model.Model):  The model.
-        """
+        """Create a helper class to create locations."""
         super().__init__()
         self.group_id: int | None = None
         self.subgroup_id: int | None = None
         self.group_value: int | str | None = None
         self.subgroup_value: int | str | None = None
 
+    # TODO: remove this methods?
     def setup(self) -> None:
         """Use this method to set instance attributes, for instance.
 

@@ -7,35 +7,23 @@ import warnings
 
 if typing.TYPE_CHECKING:
     from . import location as _location
-    from . import sequences as _sequences
 
 
 class Actor:
     """This is a Base class to represent actors in the simulation.
 
     Actors' behavior can be implemented in classes that inherit from this.
-
-    Examples:
-        For instance, actors could all be instatiated with the `is_infected` attribute set to
-        false::
-
-            class InfectionActor(Actor):
-                def setup(self):
-                    self.is_infected = False
     """
 
     def __init__(self, *args, **kwargs) -> None:
-        """Actor Constructor.
-
-        All parameters will be passed to the :class:`actorpy.Actor` parent.
-        """
+        """Actor Constructor."""
         self.env = None
         self.id_p2n = None
         self.model = None
-        self.label = "Actor"
+        self.label = self.__class__.__name__ if self.label is None else self.label
         super().__init__(*args, **kwargs)
 
-    def neighbors(self, location_labels: list[str] | None = None) -> ap.ActorList:
+    def neighbors(self, location_labels: list[str] | None = None) -> list:
         """Return all neighbors of an actor.
 
         Convenience method that returns all neighbors over all locations this actor is currently
@@ -49,7 +37,18 @@ class Actor:
         """
         return self.env.neighbors_of_actor(self, location_labels=location_labels)
 
-    def shared_locations(self, actor, location_labels: list[str] | None = None):
+    def shared_locations(self, actor, location_labels: list[str] | None = None) -> list:
+        """Returns all locations that this actor shares with another actor.
+        Use location_labels to specify which type of locations should be included in the search
+        for shared locations.
+
+        Args:
+            actor (p2n.Actor): The other actor.
+            location_labels (list[str] | None, optional): A list of location_labels. Defaults to None.
+
+        Returns:
+            list: Shared locations.
+        """
         return self.env.locations_between_actors(
             actor1=self,
             actor2=actor,
@@ -57,7 +56,8 @@ class Actor:
         )
 
     def add_location(self, location: _location.Location, weight: float | None = None) -> None:
-        """Add this Actor to a given location.
+        """Add this actor to a given location.
+        If weight is None, it will be set to 1.
 
         Args:
             location: Add actor to this location.
@@ -78,7 +78,7 @@ class Actor:
             self.add_location(location=location, weight=weight)
 
     def remove_location(self, location: _location.Location) -> None:
-        """Remove this Actor from a given location.
+        """Remove this actor from a given location.
 
         Args:
             location: Remove actor from this location.
@@ -95,8 +95,8 @@ class Actor:
             self.remove_location(location)
 
     @property
-    def locations(self) -> _sequences.LocationList:
-        """Return a list of locations that this actor is associated with.
+    def locations(self) -> list:
+        """Returns a list of locations that this actor is associated with.
 
         Returns:
             A list of locations.
@@ -113,7 +113,7 @@ class Actor:
         return [location.label for location in self.locations]
 
     def get_actor_weight(self, actor: Actor, location_labels: list | None = None) -> float:
-        """Return the edge weight between this actor and a given other actor.
+        """Returns the edge weight between this actor and a given other actor.
 
         This is summed over all shared locations.
 
@@ -143,9 +143,11 @@ class Actor:
 
     def connect(self, actor: Actor, location_cls: _location = None, weight: float | None = None):
         """Connects this actor with a given other actor via an instance of a given location class.
+        If location_cls is None, the default pop2net.Location class is used to create a new location
+        instance. If weight is None, it will be set to 1.
 
         Args:
-            actor (list): An actor to connect with.
+            actor (p2n.Actor): An actor to connect with.
             location_cls (type): The location class that is used to create a location instance.
             weight(float | None): The edge weight between the actors and the location.
                 Defaults to None.
