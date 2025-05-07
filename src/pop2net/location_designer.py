@@ -6,7 +6,8 @@ from pop2net.location import Location
 import pop2net.utils as utils
 
 from . import actor as _actor
-#from . import environment as _model
+
+# from . import environment as _model
 
 
 class LocationDesigner(Location):

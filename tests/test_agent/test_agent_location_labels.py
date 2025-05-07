@@ -6,7 +6,7 @@ def test_agent_location_labels():
         pass
 
     env = p2n.Environment()
-    
+
     location = MyLocation()
     env.add_location(location)
 

@@ -34,7 +34,6 @@ class Actor:
         self.model = None
         self.label = "Actor"
         super().__init__(*args, **kwargs)
-        
 
     def neighbors(self, location_labels: list[str] | None = None) -> ap.ActorList:
         """Return all neighbors of an actor.
@@ -142,9 +141,7 @@ class Actor:
         """
         return self.env.get_weight(actor=self, location=location)
 
-    def connect(
-        self, actor: Actor, location_cls: _location = None, weight: float | None = None
-    ):
+    def connect(self, actor: Actor, location_cls: _location = None, weight: float | None = None):
         """Connects this actor with a given other actor via an instance of a given location class.
 
         Args:

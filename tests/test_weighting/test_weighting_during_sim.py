@@ -1,5 +1,6 @@
-import pop2net as p2n
 import agentpy as ap
+
+import pop2net as p2n
 
 
 def test_weighting_during_sim1():

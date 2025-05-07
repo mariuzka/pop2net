@@ -2,14 +2,12 @@
 
 from __future__ import annotations
 
-import copy
 import itertools
 import math
 import random
 import warnings
 
 import pandas as pd
-
 
 import pop2net as p2n
 import pop2net.utils as utils
@@ -24,7 +22,7 @@ class Creator:
         self,
         env: p2n.Model,
         seed: int = None,
-        model = None #TODO: add type hints ap.Model and mesa.Model
+        model=None,  # TODO: add type hints ap.Model and mesa.Model
     ) -> None:
         """Instantiate a creator for a specific model.
 
@@ -46,7 +44,7 @@ class Creator:
             (designer,) if lc is None else (designer, designer.location_class),
             {},  # TODO: warum funktioniert das hier nicht?: {"label": designer.label},
         )
-        #location = cls(model=self._dummy_model)
+        # location = cls(model=self._dummy_model)
         location = cls()
         location.label = (
             designer.label if designer.label is not None else utils._get_cls_as_str(designer)
@@ -184,11 +182,11 @@ class Creator:
                     actors = [actor_class() for _ in range(n)]
                 else:
                     actors = [actor_class(model=self.model) for _ in range(n)]
-                
+
             else:
                 msg = "Either `df` or `n` must be not None."
                 raise Exception(msg)
-        
+
         # add actors to environment
         self.env.add_actors(actors)
 
@@ -196,7 +194,6 @@ class Creator:
             return actors
         else:
             return self.env._to_framework(actors)
-        
 
     def _get_affiliated_actors(self, actors, dummy_location) -> list:
         temp_filter_attr = "_P2NTEMP_filter_" + dummy_location.label
@@ -348,7 +345,7 @@ class Creator:
                     #    # assign actors
                     for actor in sticky_actors:
                         group.append(actor)
-                        #dummy_location.add_actor(actor)
+                        # dummy_location.add_actor(actor)
 
                     assigned = True
                     break
@@ -360,7 +357,7 @@ class Creator:
                     # assign actors
                     for actor in sticky_actors:
                         new_group.append(actor)
-                        #dummy_location.add_actor(actor)
+                        # dummy_location.add_actor(actor)
 
                     groups.append(new_group)
 
@@ -780,21 +777,22 @@ class Creator:
                             if attr not in p2n.LocationDesigner.__dict__:
                                 keep_attrs[attr] = getattr(designer, attr)
 
-
                         # Create the final location class
                         if designer.location_class is None:
-                            
                             if self.env.framework is None:
                                 location_class = type(
                                     "Location",
-                                    (p2n.Location, ),
+                                    (p2n.Location,),
                                     keep_attrs,
                                 )
-                            
+
                             else:
                                 location_class = type(
                                     "Location",
-                                    (p2n.Location, self.env._framework.Agent), # inherit from framework.Actor
+                                    (
+                                        p2n.Location,
+                                        self.env._framework.Agent,
+                                    ),  # inherit from framework.Actor
                                     keep_attrs,
                                 )
 
@@ -804,7 +802,7 @@ class Creator:
                                 (designer.location_class,),
                                 keep_attrs,
                             )
-                        
+
                         # Create the final location instance
                         if self.env.framework is None:
                             location = location_class()
@@ -873,7 +871,7 @@ class Creator:
                             location.subsplit_value = None
                             location.group_id = None
                             location.subgroup_id = None
-                            
+
                             self.env.add_location(location=location)
                             locations.append(location)
 
@@ -896,7 +894,6 @@ class Creator:
                     delattr(actor, attr)
 
         return self.env._to_framework(locations)
-        
 
     def create(
         self,

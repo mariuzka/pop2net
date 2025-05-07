@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-
 from . import actor as _actor
 
 
@@ -22,7 +21,7 @@ class Location:
         self.id_p2n = None
         self.model = None
         super().__init__(*args, **kwargs)
-    
+
     def setup(self):
         pass
 

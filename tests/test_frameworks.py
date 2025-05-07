@@ -1,7 +1,8 @@
-import pop2net as p2n
 import agentpy as ap
 import mesa
 import pytest
+
+import pop2net as p2n
 
 N_AGENTS = 2
 N_LOCATIONS = 2
@@ -12,6 +13,7 @@ agentlist = {
     "mesa": mesa.agent.AgentSet,
 }
 
+
 @pytest.mark.parametrize("framework", ["agentpy", "mesa"])
 def test_p2n_with_framework(framework: str):
     if framework == "agentpy":
@@ -21,16 +23,18 @@ def test_p2n_with_framework(framework: str):
 
     class Model(framework_.Model):
         if framework == "agentpy":
+
             def setup(self):
                 self.create_env()
         elif framework == "mesa":
+
             def __init__(self):
                 super().__init__()
                 self.create_env()
 
         def create_env(self):
             self.env = p2n.Environment(model=self, framework=framework)
-            
+
             # create agents and locations
             if framework == "agentpy":
                 locations = framework_.AgentList(model=self, objs=N_LOCATIONS, cls=Location)
@@ -40,7 +44,7 @@ def test_p2n_with_framework(framework: str):
                 actors = Actor.create_agents(model=self, n=N_AGENTS)
             else:
                 assert False, "Invalid framework."
-            
+
             # add/connect actors and locations
             self.env.add_locations(locations=locations)
             self.env.add_actors(actors=actors)
@@ -55,31 +59,34 @@ def test_p2n_with_framework(framework: str):
                 self.env.actors.do("increase_x")
                 self.env.locations.do("increase_y")
 
-
     class Actor(p2n.Actor, framework_.Agent):
         if framework == "agentpy":
+
             def setup(self):
                 self.x = 0
         elif framework == "mesa":
+
             def __init__(self, model):
                 super().__init__(model)
                 self.x = 0
-        
+
         def increase_x(self):
             self.x += 1
-    
+
     class Location(p2n.Location, framework_.Agent):
         if framework == "agentpy":
+
             def setup(self):
                 self.y = 0
         elif framework == "mesa":
+
             def __init__(self, model):
                 super().__init__(model)
                 self.y = 0
-        
+
         def increase_y(self):
             self.y += 1
-    
+
     # create model
     model = Model()
 
@@ -100,7 +107,7 @@ def test_p2n_with_framework(framework: str):
         assert isinstance(actor, Actor)
         assert isinstance(actor, p2n.Actor)
         assert isinstance(actor, framework_.Agent)
-    
+
     # check the types of the locations and the location list
     assert isinstance(model.env.locations, agentlist[framework])
     for location in model.env.locations:
@@ -126,7 +133,7 @@ def test_p2n_with_framework(framework: str):
     for actor in model.env.actors:
         assert isinstance(actor.neighbors(), agentlist[framework])
         assert len(actor.neighbors()) == 1
-    
+
     # check actor.shared_locations()
     shared_locations = model.env.actors[0].shared_locations(model.env.actors[1])
     assert len(shared_locations) == 2
@@ -137,7 +144,7 @@ def test_p2n_with_framework(framework: str):
     susi = model.env.actors[1]
     carl.name = "Carl"
     susi.name = "Susi"
-    
+
     if framework == "agentpy":
         list_with_carl = model.env.actors.select(model.env.actors.name == "Carl")
     elif framework == "mesa":
@@ -150,13 +157,16 @@ def test_p2n_with_framework(framework: str):
     # check Actor.connect()
     class TestLocation(p2n.Location, framework_.Agent):
         pass
+
     carl.connect(susi, location_cls=TestLocation)
     assert len(carl.shared_locations(susi, location_labels=["TestLocation"])) == 1
 
     if framework == "agentpy":
-        assert len(model.env.locations.select(model.env.locations.label == "TestLocation")) == 1 
+        assert len(model.env.locations.select(model.env.locations.label == "TestLocation")) == 1
     elif framework == "mesa":
-        assert len(model.env.locations.select(lambda location: location.label == "TestLocation")) == 1
+        assert (
+            len(model.env.locations.select(lambda location: location.label == "TestLocation")) == 1
+        )
 
     # check Actor.disconnect()
     carl.disconnect(susi, location_labels=["TestLocation"], remove_locations=True)
@@ -164,4 +174,6 @@ def test_p2n_with_framework(framework: str):
     if framework == "agentpy":
         assert len(model.env.locations.select(model.env.locations.label == "TestLocation")) == 0
     elif framework == "mesa":
-        assert len(model.env.locations.select(lambda location: location.label == "TestLocation")) == 0 
+        assert (
+            len(model.env.locations.select(lambda location: location.label == "TestLocation")) == 0
+        )

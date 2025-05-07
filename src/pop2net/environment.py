@@ -12,9 +12,10 @@ if typing.TYPE_CHECKING:
     from . import actor as _actor
     from . import location as _location
 
+from pop2net import Location
 from pop2net.creator import Creator
 from pop2net.inspector import NetworkInspector
-from pop2net import Location
+
 
 class Environment:
     """Class that encapsulates a full simluation.
@@ -23,12 +24,7 @@ class Environment:
     :class:`agentpy.Model` for more information.
     """
 
-    def __init__(
-        self,
-        model = None,
-        enable_p2n_warnings=True,
-        framework: str | None = None
-    ):
+    def __init__(self, model=None, enable_p2n_warnings=True, framework: str | None = None):
         """Initiate a simulation.
 
         Args:
@@ -38,23 +34,24 @@ class Environment:
             Defaults to None.
             **kwargs: Optional parameters that are all passed to :class:`agentpy.Model`.
         """
-
         # settings
         self.framework: str | None = framework
         self.enable_p2n_warnings = enable_p2n_warnings
-        
+
         # import framework dependencies, if required
         if self.framework is None:
             pass
         elif self.framework == "agentpy":
             import agentpy
+
             self._framework = agentpy
         elif self.framework == "mesa":
             import mesa
+
             self._framework = mesa
         else:
             raise ValueError(f"Invalid framework selected: {self.framework}")
-        
+
         # connected objects
         self.model = model
         self.g = nx.Graph()
@@ -62,7 +59,7 @@ class Environment:
         # TODO: should we add creator and inspector as attributes?
         self.creator = Creator(env=self)
         self.inspector = NetworkInspector(env=self)
-        
+
         # dynamic attributes
         self._fresh_id = 0
 
@@ -88,8 +85,9 @@ class Environment:
         Returns:
             list: A non-mutable list of all actors in the environment.
         """
-        return self._to_framework([data["_obj"] for _, data in self.g.nodes(data=True) if data["bipartite"] == 0])
-        
+        return self._to_framework(
+            [data["_obj"] for _, data in self.g.nodes(data=True) if data["bipartite"] == 0]
+        )
 
     @property
     def actors_by_id(self) -> dict:
@@ -116,8 +114,9 @@ class Environment:
         Returns:
             LocationList: a non-mutable LocationList of all locations in the environment.
         """
-        return self._to_framework([data["_obj"] for _, data in self.g.nodes(data=True) if data["bipartite"] == 1])
-    
+        return self._to_framework(
+            [data["_obj"] for _, data in self.g.nodes(data=True) if data["bipartite"] == 1]
+        )
 
     # TODO: def add_obj as a common parent method for add_actor & add_location
     def add_actor(self, actor: _actor.Actor) -> None:
@@ -135,7 +134,6 @@ class Environment:
         if not self.g.has_node(actor.id_p2n):
             self.g.add_node(actor.id_p2n, bipartite=0, _obj=actor)
             actor.env = self
-        
 
     def add_actors(self, actors: list) -> None:
         """Add actors to the environment.
@@ -270,7 +268,6 @@ class Environment:
         if self.g.has_edge(actor.id_p2n, location.id_p2n):
             self.g.remove_edge(actor.id_p2n, location.id_p2n)
 
-
     def actors_of_location(self, location: _location.Location):
         """Return the list of actors associated with a specific location.
 
@@ -281,9 +278,10 @@ class Environment:
             A list of actors.
         """
         nodes = self.g.neighbors(location.id_p2n)
-        actors = [self.g.nodes[node]["_obj"] for node in nodes if self.g.nodes[node]["bipartite"] == 0]
+        actors = [
+            self.g.nodes[node]["_obj"] for node in nodes if self.g.nodes[node]["bipartite"] == 0
+        ]
         return self._to_framework(actors)
-    
 
     def locations_of_actor(self, actor: _actor.Actor):
         """Return the list of locations associated with a specific actor.
@@ -295,7 +293,9 @@ class Environment:
             A list of locations.
         """
         nodes = self.g.neighbors(actor.id_p2n)
-        locations = [self.g.nodes[node]["_obj"] for node in nodes if self.g.nodes[node]["bipartite"] == 1]
+        locations = [
+            self.g.nodes[node]["_obj"] for node in nodes if self.g.nodes[node]["bipartite"] == 1
+        ]
         return self._to_framework(locations)
 
     def neighbors_of_actor(
@@ -323,7 +323,9 @@ class Environment:
             )
         else:
             locations = (
-                node for node in self.g.neighbors(actor.id_p2n) if self.g.nodes[node]["bipartite"] == 1
+                node
+                for node in self.g.neighbors(actor.id_p2n)
+                if self.g.nodes[node]["bipartite"] == 1
             )
 
         neighbor_actors = {
@@ -334,8 +336,12 @@ class Environment:
         }
 
         return self._to_framework(
-            [self.g.nodes[actor_id]["_obj"] for actor_id in neighbor_actors if actor_id != actor.id_p2n]
-            )
+            [
+                self.g.nodes[actor_id]["_obj"]
+                for actor_id in neighbor_actors
+                if actor_id != actor.id_p2n
+            ]
+        )
 
     def _objects_between_objects(self, object1, object2) -> list:
         paths = list(
@@ -361,13 +367,15 @@ class Environment:
             LocationList: A list of locations.
         """
         locations = self._objects_between_objects(object1=actor1, object2=actor2)
-        
+
         if location_labels is not None:
             locations = [location for location in locations if location.label in location_labels]
 
         return self._to_framework(locations)
 
-    def actors_between_locations(self, location1, location2, actor_types: list[str] | None = None) -> list:
+    def actors_between_locations(
+        self, location1, location2, actor_types: list[str] | None = None
+    ) -> list:
         """Return all actors between two locations.
 
         Args:
@@ -425,10 +433,12 @@ class Environment:
             if self.framework is None:
                 location_cls = Location
             else:
+
                 class Location_with_framework(Location, self._framework.Agent):
                     pass
+
                 location_cls = Location_with_framework
-        
+
         if self.framework is None:
             location = location_cls()
         else:
@@ -574,4 +584,3 @@ class Environment:
         ):
             for actor in location.actors:
                 location.set_weight(actor=actor, weight=location.weight(actor=actor))
-

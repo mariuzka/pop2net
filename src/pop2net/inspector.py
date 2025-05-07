@@ -25,7 +25,7 @@ class NetworkInspector:
         Args:
             model (Model): The model.
         """
-        self.env = env # TODO: make instances of inspector without a fixed env possible
+        self.env = env  # TODO: make instances of inspector without a fixed env possible
 
     def plot_bipartite_network(
         self,
@@ -57,9 +57,9 @@ class NetworkInspector:
             node_size (int, optional): The size of the nodes. Defaults to 10.
             node_alpha (float, optional): The transparency of the nodes. Defaults to 0.5.
         """
-        #if actor_attrs is None:
+        # if actor_attrs is None:
         #    actor_attrs = ["type"]
-        #else:
+        # else:
         #    actor_attrs = list(actor_attrs)
         #    if "type" not in actor_attrs:
         #        actor_attrs.append("type")
@@ -67,13 +67,13 @@ class NetworkInspector:
         if actor_color is not None and actor_color not in actor_attrs:
             actor_attrs.append(actor_color)
 
-        #if location_attrs is None:
+        # if location_attrs is None:
         #    location_attrs = ["type", "label"]
-        #else:
+        # else:
         #    location_attrs = list(location_attrs)
         #    if "type" not in location_attrs:
         #        location_attrs.append("type")
-        
+
         #    if "label" not in location_attrs:
         #        location_attrs.append("label")
 
@@ -134,9 +134,9 @@ class NetworkInspector:
             node_size (int, optional): The size of the nodes. Defaults to 10.
             node_alpha (float, optional): The transparency of the nodes. Defaults to 0.5.
         """
-        #if actor_attrs is None:
+        # if actor_attrs is None:
         #    actor_attrs = ["type"]
-        #else:
+        # else:
         #    actor_attrs = list(actor_attrs)
         #    if "type" not in actor_attrs:
         #        actor_attrs.append("type")
