@@ -6,17 +6,15 @@ import itertools
 import typing
 import warnings
 
-from agentpy import AgentList
 import networkx as nx
 
 if typing.TYPE_CHECKING:
-    from . import agent as _agent
+    from . import actor as _actor
     from . import location as _location
-
-from pop2net.sequences import LocationList
 
 from pop2net.creator import Creator
 from pop2net.inspector import NetworkInspector
+from pop2net import Location
 
 class Environment:
     """Class that encapsulates a full simluation.
@@ -42,7 +40,7 @@ class Environment:
         """
 
         # settings
-        self.framework: str | None = framework # TODO: if framework=="agentpy" return everything as AgentLists etc.
+        self.framework: str | None = framework
         self.enable_p2n_warnings = enable_p2n_warnings
         
         # import framework dependencies, if required
@@ -80,25 +78,27 @@ class Environment:
             return self._framework.AgentList(model=self.model, objs=objects)
         elif self.framework == "mesa":
             return self._framework.agent.AgentSet(agents=objects, random=self.model.random)
+        else:
+            raise ValueError("Invalid framework.")
 
     @property
-    def agents(self) -> list:
-        """Show a iterable view of all agents in the environment.
+    def actors(self) -> list:
+        """Show a iterable view of all actors in the environment.
 
         Returns:
-            list: A non-mutable list of all agents in the environment.
+            list: A non-mutable list of all actors in the environment.
         """
         return self._to_framework([data["_obj"] for _, data in self.g.nodes(data=True) if data["bipartite"] == 0])
         
 
     @property
-    def agents_by_id(self) -> dict:
-        """Returns a dictionary which stores the model's agents by their id.
+    def actors_by_id(self) -> dict:
+        """Returns a dictionary which stores the model's actors by their id.
 
         Returns:
-            dict: A dictionary which stores the model's agents by their id.
+            dict: A dictionary which stores the model's actors by their id.
         """
-        return {agent.id_p2n: agent for agent in self.agents}
+        return {actor.id_p2n: actor for actor in self.actors}
 
     @property
     def locations_by_id(self) -> dict:
@@ -119,37 +119,37 @@ class Environment:
         return self._to_framework([data["_obj"] for _, data in self.g.nodes(data=True) if data["bipartite"] == 1])
     
 
-    # TODO: def add_obj as a common parent method for add_agent & add_location
-    def add_agent(self, agent: _agent.Agent) -> None:
-        """Add an agent to the environment.
+    # TODO: def add_obj as a common parent method for add_actor & add_location
+    def add_actor(self, actor: _actor.Actor) -> None:
+        """Add an actor to the environment.
 
-        The added agent will have no connections to other agents or locatons by default.
-        If the agent is already in the current environment, this methods does nothing.
+        The added actor will have no connections to other actors or locatons by default.
+        If the actor is already in the current environment, this methods does nothing.
 
         Args:
-            agent: Agent to be added to the environment.
+            actor: Actor to be added to the environment.
         """
-        if agent.id_p2n is None:
-            self._attach_fresh_id(agent)
+        if actor.id_p2n is None:
+            self._attach_fresh_id(actor)
 
-        if not self.g.has_node(agent.id_p2n):
-            self.g.add_node(agent.id_p2n, bipartite=0, _obj=agent)
-            agent.env = self
+        if not self.g.has_node(actor.id_p2n):
+            self.g.add_node(actor.id_p2n, bipartite=0, _obj=actor)
+            actor.env = self
         
 
-    def add_agents(self, agents: list) -> None:
-        """Add agents to the environment.
+    def add_actors(self, actors: list) -> None:
+        """Add actors to the environment.
 
         Args:
-            agents (list): A list of the agents to be added.
+            actors (list): A list of the actors to be added.
         """
-        for agent in agents:
-            self.add_agent(agent)
+        for actor in actors:
+            self.add_actor(actor)
 
     def add_location(self, location: _location.Location) -> None:
         """Add a location to the environment.
 
-        The added location will have no connections to other agents or locatons by default.
+        The added location will have no connections to other actors or locatons by default.
         If the location is already in the current environment, this methods does nothing.
 
         Args:
@@ -171,58 +171,58 @@ class Environment:
         for location in locations:
             self.add_location(location)
 
-    def add_agent_to_location(
+    def add_actor_to_location(
         self,
         location: _location.Location,
-        agent: _agent.Agent,
+        actor: _actor.Actor,
         weight: float | None = None,
         **kwargs,
     ) -> None:
-        """Add an agent to a specific location.
+        """Add an actor to a specific location.
 
-        Both the agent and the location have to be defined beforehand. All additional keyword
+        Both the actor and the location have to be defined beforehand. All additional keyword
         arguments will be edge attributes for this connection.
 
         Args:
-            location: Location the agent is to be added to.
-            agent: Agent to be added to the location.
+            location: Location the actor is to be added to.
+            actor: Actor to be added to the location.
             weight: An optional weight for the connection.
             **kwargs: Additional edge attributes.
 
         Raises:
             Exception: Raised if the location does not exist in the environment.
-            Exception: Raised if the agent does not exist in the environment.
+            Exception: Raised if the actor does not exist in the environment.
         """
         # TODO: Create custom exceptions
         if not self.g.has_node(location.id_p2n):
             msg = f"Location {location} does not exist in Environment!"
             raise Exception(msg)
-        if not self.g.has_node(agent.id_p2n):
-            msg = f"Agent {agent} does not exist in Environment!"
+        if not self.g.has_node(actor.id_p2n):
+            msg = f"Actor {actor} does not exist in Environment!"
             raise Exception(msg)
 
-        self.g.add_edge(agent.id_p2n, location.id_p2n, **kwargs)
-        self.set_weight(agent=agent, location=location, weight=weight)
+        self.g.add_edge(actor.id_p2n, location.id_p2n, **kwargs)
+        self.set_weight(actor=actor, location=location, weight=weight)
 
-    def remove_agent(self, agent: _agent.Agent) -> None:
-        """Remove an agent from the environment.
+    def remove_actor(self, actor: _actor.Actor) -> None:
+        """Remove an actor from the environment.
 
-        If the agent does not exist in the environment, this method does nothing.
-
-        Args:
-            agent: Agent to be removed.
-        """
-        if self.g.has_node(agent.id_p2n):
-            self.g.remove_node(agent.id_p2n)
-
-    def remove_agents(self, agents: list) -> None:
-        """Remove multiple agents from the environment at once.
+        If the actor does not exist in the environment, this method does nothing.
 
         Args:
-            agents (list): An iterable over multiple agents.
+            actor: Actor to be removed.
         """
-        for agent in agents:
-            self.remove_agent(agent)
+        if self.g.has_node(actor.id_p2n):
+            self.g.remove_node(actor.id_p2n)
+
+    def remove_actors(self, actors: list) -> None:
+        """Remove multiple actors from the environment at once.
+
+        Args:
+            actors (list): An iterable over multiple actors.
+        """
+        for actor in actors:
+            self.remove_actor(actor)
 
     def remove_location(self, location: _location.Location) -> None:
         """Remove a location from the environment.
@@ -244,97 +244,97 @@ class Environment:
         for location in locations:
             self.remove_location(location)
 
-    def remove_agent_from_location(
+    def remove_actor_from_location(
         self,
         location: _location.Location,
-        agent: _agent.Agent,
+        actor: _actor.Actor,
     ) -> None:
-        """Remove an agent from a location.
+        """Remove an actor from a location.
 
         Args:
-            location: Location, the agent is to be removed from.
-            agent: Agent to be disassociated with the location.
+            location: Location, the actor is to be removed from.
+            actor: Actor to be disassociated with the location.
 
         Raises:
             Exception: Raised if the location does not exist in the environment.
-            Exception: Raised if the agent does not exist in the environment.
+            Exception: Raised if the actor does not exist in the environment.
         """
         # TODO: use custom exceptions
         if not self.g.has_node(location.id_p2n):
             msg = f"Location {location} does not exist in Environment!"
             raise Exception(msg)
-        if not self.g.has_node(agent.id_p2n):
-            msg = f"Agent {agent} does not exist in Environment!"
+        if not self.g.has_node(actor.id_p2n):
+            msg = f"Actor {actor} does not exist in Environment!"
             raise Exception(msg)
 
-        if self.g.has_edge(agent.id_p2n, location.id_p2n):
-            self.g.remove_edge(agent.id_p2n, location.id_p2n)
+        if self.g.has_edge(actor.id_p2n, location.id_p2n):
+            self.g.remove_edge(actor.id_p2n, location.id_p2n)
 
 
-    def agents_of_location(self, location: _location.Location) -> AgentList:
-        """Return the list of agents associated with a specific location.
+    def actors_of_location(self, location: _location.Location):
+        """Return the list of actors associated with a specific location.
 
         Args:
             location: The desired location.
 
         Returns:
-            A list of agents.
+            A list of actors.
         """
         nodes = self.g.neighbors(location.id_p2n)
-        agents = [self.g.nodes[node]["_obj"] for node in nodes if self.g.nodes[node]["bipartite"] == 0]
-        return self._to_framework(agents)
+        actors = [self.g.nodes[node]["_obj"] for node in nodes if self.g.nodes[node]["bipartite"] == 0]
+        return self._to_framework(actors)
     
 
-    def locations_of_agent(self, agent: _agent.Agent) -> LocationList:
-        """Return the list of locations associated with a specific agent.
+    def locations_of_actor(self, actor: _actor.Actor):
+        """Return the list of locations associated with a specific actor.
 
         Args:
-            agent: The desired agent.
+            actor: The desired actor.
 
         Returns:
             A list of locations.
         """
-        nodes = self.g.neighbors(agent.id_p2n)
+        nodes = self.g.neighbors(actor.id_p2n)
         locations = [self.g.nodes[node]["_obj"] for node in nodes if self.g.nodes[node]["bipartite"] == 1]
         return self._to_framework(locations)
 
-    def neighbors_of_agent(
+    def neighbors_of_actor(
         self,
-        agent: _agent.Agent,
+        actor: _actor.Actor,
         location_labels: list | None = None,
-    ) -> AgentList:
-        """Return a list of neighboring agents for a specific agent.
+    ) -> list:
+        """Return a list of neighboring actors for a specific actor.
 
         The locations to be considered can be defined with location_labels.
 
         Args:
-            agent: Agent of whom the neighbors are to be returned.
+            actor: Actor of whom the neighbors are to be returned.
             location_labels: A list of location_labels.
 
         Returns:
-            The list of neighbors for the specified agent.
+            The list of neighbors for the specified actor.
         """
         if location_labels:
             locations = (
                 node
-                for node in self.g.neighbors(agent.id_p2n)
+                for node in self.g.neighbors(actor.id_p2n)
                 if self.g.nodes[node]["bipartite"] == 1
                 and self.g.nodes[node]["_obj"].label in location_labels
             )
         else:
             locations = (
-                node for node in self.g.neighbors(agent.id_p2n) if self.g.nodes[node]["bipartite"] == 1
+                node for node in self.g.neighbors(actor.id_p2n) if self.g.nodes[node]["bipartite"] == 1
             )
 
-        neighbor_agents = {
-            agent_id
+        neighbor_actors = {
+            actor_id
             for location_id in locations
-            for agent_id in self.g.neighbors(location_id)
-            if self.g.nodes[agent_id]["bipartite"] == 0
+            for actor_id in self.g.neighbors(location_id)
+            if self.g.nodes[actor_id]["bipartite"] == 0
         }
 
         return self._to_framework(
-            [self.g.nodes[agent_id]["_obj"] for agent_id in neighbor_agents if agent_id != agent.id_p2n]
+            [self.g.nodes[actor_id]["_obj"] for actor_id in neighbor_actors if actor_id != actor.id_p2n]
             )
 
     def _objects_between_objects(self, object1, object2) -> list:
@@ -348,84 +348,84 @@ class Environment:
         )
         return [self.g.nodes[path[1]]["_obj"] for path in paths]
 
-    def locations_between_agents(self, agent1, agent2, location_labels: list[str] | None = None):
-        """Return all locations that connects two agents.
+    def locations_between_actors(self, actor1, actor2, location_labels: list[str] | None = None):
+        """Return all locations that connects two actors.
 
         Args:
-            agent1 (Agent): Agent 1.
-            agent2 (Agent): Agent 2.
+            actor1 (Actor): Actor 1.
+            actor2 (Actor): Actor 2.
             location_labels (tuple, optional): Constrain the locations to the following types.
                 Defaults to None.
 
         Returns:
             LocationList: A list of locations.
         """
-        locations = self._objects_between_objects(object1=agent1, object2=agent2)
+        locations = self._objects_between_objects(object1=actor1, object2=actor2)
         
         if location_labels is not None:
             locations = [location for location in locations if location.label in location_labels]
 
         return self._to_framework(locations)
 
-    def agents_between_locations(self, location1, location2, agent_types: list[str] | None = None):
-        """Return all agents between two locations.
+    def actors_between_locations(self, location1, location2, actor_types: list[str] | None = None) -> list:
+        """Return all actors between two locations.
 
         Args:
             location1 (Location): Location 1.
             location2 (Location): Location 2.
-            agent_types (tuple, optional): Constrain the agents to the following types.
+            actor_types (tuple, optional): Constrain the actors to the following types.
                 Defaults to None.
 
         Returns:
-            AgentList: A list of agents.
+            List: A list of actors.
         """
-        agents = self._objects_between_objects(location1, location2)
+        actors = self._objects_between_objects(location1, location2)
 
-        if agent_types is not None:
-            agents = [agent for agent in agents if agent.type in agent_types]
+        if actor_types is not None:
+            actors = [actor for actor in actors if actor.type in actor_types]
 
-        return self._to_framework(agents)
+        return self._to_framework(actors)
 
-    def set_weight(self, agent, location, weight: float | None = None) -> None:
-        """Set the weight of an agent at a location.
+    def set_weight(self, actor, location, weight: float | None = None) -> None:
+        """Set the weight of an actor at a location.
 
         If weight is None the method location.weight() will be used to generate a weight.
 
         Args:
-            agent (Agent): The agent.
+            actor (Actor): The actor.
             location (Location): The location.
             weight (int): The weight
         """
-        self.g[agent.id_p2n][location.id_p2n]["weight"] = (
-            location.weight(agent) if weight is None else weight
+        self.g[actor.id_p2n][location.id_p2n]["weight"] = (
+            location.weight(actor) if weight is None else weight
         )
 
-    def get_weight(self, agent, location) -> int:
-        """Get the weight of an agent at a location.
+    def get_weight(self, actor, location) -> int:
+        """Get the weight of an actor at a location.
 
         Args:
-            agent (Agent): The agent.
+            actor (Actor): The actor.
             location (Location): The location.
 
         Returns:
             int: The weight.
         """
-        return self.g[agent.id_p2n][location.id_p2n]["weight"]
+        return self.g[actor.id_p2n][location.id_p2n]["weight"]
 
-    def connect_agents(self, agents: list, location_cls: type, weight: float | None = None):
-        """Connects multiple agents via an instance of a given location class.
+    def connect_actors(self, actors: list, location_cls: type, weight: float | None = None):
+        """Connects multiple actors via an instance of a given location class.
 
         Args:
-            agents (list): A list of agents.
+            actors (list): A list of actors.
             location_cls (type): The location class that is used to create a location instance.
-            weight (float | None): The edge weight between the agents and the location.
+            weight (float | None): The edge weight between the actors and the location.
                 Defaults to None.
         """
         if location_cls is None:
             if self.framework is None:
                 location_cls = Location
             else:
-                class Location_with_framework(p2n.Location, self.env._framework.Agent):
+                class Location_with_framework(Location, self._framework.Agent):
                     pass
                 location_cls = Location_with_framework
         
@@ -435,40 +435,40 @@ class Environment:
             location = location_cls(model=self.model)
 
         self.add_location(location=location)
-        location.add_agents(agents=agents, weight=weight)
+        location.add_actors(actors=actors, weight=weight)
 
-    def disconnect_agents(
+    def disconnect_actors(
         self,
-        agents: list,
+        actors: list,
         location_labels: list | None = None,
         remove_locations: bool = False,
     ):
-        """Disconnects agents by removing them from shared locations.
+        """Disconnects actors by removing them from shared locations.
 
         If a list of location types is given, only shared locations of the given types are
-        considered. Turn on `remove_locations` in order to not only remove the given agents from the
+        considered. Turn on `remove_locations` in order to not only remove the given actors from the
         given location instance but also to remove the location instance from the model.
-        Use this method with care because removing agents from locations also disconnects those
-        agents from all other agents connected to the location. Removing the location instance from
-        the model could have even more sideeffects to those agents still connected with this
+        Use this method with care because removing actors from locations also disconnects those
+        actors from all other actors connected to the location. Removing the location instance from
+        the model could have even more sideeffects to those actors still connected with this
         location!
 
         Args:
-            agents (list): A list of agents.
+            actors (list): A list of actors.
             location_labels (list | None, optional): A list of location types to specify which
             shared locations are considered. Defaults to None.
             remove_locations (bool, optional): A bool that determines whether the shared locations
                 shall be removed from the model. Defaults to False.
         """
-        pairs = list(itertools.combinations(agents, 2))
+        pairs = list(itertools.combinations(actors, 2))
 
         shared_locations = []
 
-        for agent1, agent2 in pairs:
+        for actor1, actor2 in pairs:
             shared_locations.extend(
-                self.locations_between_agents(
-                    agent1=agent1,
-                    agent2=agent2,
+                self.locations_between_actors(
+                    actor1=actor1,
+                    actor2=actor2,
                     location_labels=location_labels,
                 )
             )
@@ -477,36 +477,36 @@ class Environment:
 
         for location in shared_locations:
             warn = False
-            for agent in location.agents:
-                if agent not in agents:
+            for actor in location.actors:
+                if actor not in actors:
                     warn = True
                     break
 
             if warn and self.enable_p2n_warnings:
-                msg = "There are other agents at the location from which you have removed agents."
+                msg = "There are other actors at the location from which you have removed actors."
                 warnings.warn(msg)
 
-            location.remove_agents(agents)
+            location.remove_actors(actors)
 
             if remove_locations:
                 self.remove_location(location=location)
 
                 if warn and self.enable_p2n_warnings:
-                    msg = "You have removed a location to which other agents were still connected."
+                    msg = "You have removed a location to which other actors were still connected."
                     warnings.warn(msg)
 
     def export_bipartite_network(
         self,
-        agent_attrs: list | None = None,
+        actor_attrs: list | None = None,
         location_attrs: list | None = None,
     ):
         graph = self.g.copy()
 
         for i in graph:
             if graph.nodes[i]["bipartite"] == 0:
-                if agent_attrs is not None:
-                    for agent_attr in agent_attrs:
-                        graph.nodes[i][agent_attr] = getattr(graph.nodes[i]["_obj"], agent_attr)
+                if actor_attrs is not None:
+                    for actor_attr in actor_attrs:
+                        graph.nodes[i][actor_attr] = getattr(graph.nodes[i]["_obj"], actor_attr)
 
             elif graph.nodes[i]["bipartite"] == 1:
                 if location_attrs is not None:
@@ -518,7 +518,7 @@ class Environment:
             del graph.nodes[i]["_obj"]
         return graph
 
-    def export_agent_network(
+    def export_actor_network(
         self,
         node_attrs: list | None = None,
         include_0_weights: bool = True,
@@ -526,38 +526,38 @@ class Environment:
         """Creates a projection of the model's bipartite network.
 
         Args:
-            node_attrs: A list of agent attributes
+            node_attrs: A list of actor attributes
             include_0_weights: Should edges with weight 0 be displayed?
 
         Returns:
-            A weighted graph created from a model's agent list. Agents are connected if they are
+            A weighted graph created from a model's actor list. Actors are connected if they are
             neighbors in the model. Their connecting edge include the contact_weight as "weight"
             attribute.
         """
         graph = nx.Graph()
 
         # create nodes
-        for agent in self.agents:
-            if not graph.has_node(agent.id_p2n):
+        for actor in self.actors:
+            if not graph.has_node(actor.id_p2n):
                 node_attr_dict = (
-                    {node_attr: vars(agent)[node_attr] for node_attr in node_attrs}
+                    {node_attr: vars(actor)[node_attr] for node_attr in node_attrs}
                     if node_attrs is not None
                     else {}
                 )
-                graph.add_node(agent.id_p2n, **node_attr_dict)
+                graph.add_node(actor.id_p2n, **node_attr_dict)
 
         # create edges
-        for agent in self.agents:
-            for agent_v in agent.neighbors():
-                if not graph.has_edge(agent.id_p2n, agent_v.id_p2n):
-                    weight = agent.get_agent_weight(agent_v)
+        for actor in self.actors:
+            for actor_v in actor.neighbors():
+                if not graph.has_edge(actor.id_p2n, actor_v.id_p2n):
+                    weight = actor.get_actor_weight(actor_v)
                     if include_0_weights or weight > 0:
-                        graph.add_edge(agent.id_p2n, agent_v.id_p2n, weight=weight)
+                        graph.add_edge(actor.id_p2n, actor_v.id_p2n, weight=weight)
 
         return graph
 
     def update_weights(self, location_labels: list | None = None) -> None:
-        """Updates the edge weights between agents and locations.
+        """Updates the edge weights between actors and locations.
 
         If you only want to update the weights of specific types of locations
         specify those types in location_labels.
@@ -572,6 +572,6 @@ class Environment:
             if location_labels is None
             else [location for location in self.locations if location.label in location_labels]
         ):
-            for agent in location.agents:
-                location.set_weight(agent=agent, weight=location.weight(agent=agent))
+            for actor in location.actors:
+                location.set_weight(actor=actor, weight=location.weight(actor=actor))
 

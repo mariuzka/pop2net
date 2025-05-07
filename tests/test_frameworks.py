@@ -34,29 +34,29 @@ def test_p2n_with_framework(framework: str):
             # create agents and locations
             if framework == "agentpy":
                 locations = framework_.AgentList(model=self, objs=N_LOCATIONS, cls=Location)
-                agents = framework_.AgentList(model=self, objs=N_AGENTS, cls=Agent)
+                actors = framework_.AgentList(model=self, objs=N_AGENTS, cls=Actor)
             elif framework == "mesa":
                 locations = Location.create_agents(model=self, n=N_LOCATIONS)
-                agents = Agent.create_agents(model=self, n=N_AGENTS)
+                actors = Actor.create_agents(model=self, n=N_AGENTS)
             else:
                 assert False, "Invalid framework."
             
-            # add/connect agents and locations
+            # add/connect actors and locations
             self.env.add_locations(locations=locations)
-            self.env.add_agents(agents=agents)
+            self.env.add_actors(actors=actors)
             for location in self.env.locations:
-                location.add_agents(self.env.agents)
+                location.add_actors(self.env.actors)
 
         def step(self):
             if framework == "agentpy":
-                self.env.agents.increase_x()
+                self.env.actors.increase_x()
                 self.env.locations.increase_y()
             elif framework == "mesa":
-                self.env.agents.do("increase_x")
+                self.env.actors.do("increase_x")
                 self.env.locations.do("increase_y")
 
 
-    class Agent(p2n.Agent, framework_.Agent):
+    class Actor(p2n.Actor, framework_.Agent):
         if framework == "agentpy":
             def setup(self):
                 self.x = 0
@@ -90,16 +90,16 @@ def test_p2n_with_framework(framework: str):
         for _ in range(N_STEPS):
             model.step()
 
-    # check the number of agents/locations
+    # check the number of actors/locations
     assert len(model.env.locations) == N_LOCATIONS
-    assert len(model.env.agents) == N_AGENTS
+    assert len(model.env.actors) == N_AGENTS
 
-    # check the types of the agents and the agent list
-    assert isinstance(model.env.agents, agentlist[framework])
-    for agent in model.env.agents:
-        assert isinstance(agent, Agent)
-        assert isinstance(agent, p2n.Agent)
-        assert isinstance(agent, framework_.Agent)
+    # check the types of the actors and the agent list
+    assert isinstance(model.env.actors, agentlist[framework])
+    for actor in model.env.actors:
+        assert isinstance(actor, Actor)
+        assert isinstance(actor, p2n.Actor)
+        assert isinstance(actor, framework_.Agent)
     
     # check the types of the locations and the location list
     assert isinstance(model.env.locations, agentlist[framework])
@@ -108,46 +108,46 @@ def test_p2n_with_framework(framework: str):
         assert isinstance(location, p2n.Location)
         assert isinstance(location, framework_.Agent)
 
-    # check if the agents/locations-methods have been executed
-    assert all([agent.x == N_STEPS for agent in model.env.agents])
+    # check if the actors/locations-methods have been executed
+    assert all([actor.x == N_STEPS for actor in model.env.actors])
     assert all([location.y == N_STEPS for location in model.env.locations])
 
-    # check location.agents
+    # check location.actors
     for location in model.env.locations:
-        assert isinstance(location.agents, agentlist[framework])
-        assert len(location.agents) == 2
+        assert isinstance(location.actors, agentlist[framework])
+        assert len(location.actors) == 2
 
-    # check agents.locations
-    for agent in model.env.agents:
-        assert isinstance(agent.locations, agentlist[framework])
-        assert len(agent.locations) == 2
+    # check actors.locations
+    for actor in model.env.actors:
+        assert isinstance(actor.locations, agentlist[framework])
+        assert len(actor.locations) == 2
 
-    # check agent.neighbor()
-    for agent in model.env.agents:
-        assert isinstance(agent.neighbors(), agentlist[framework])
-        assert len(agent.neighbors()) == 1
+    # check actor.neighbor()
+    for actor in model.env.actors:
+        assert isinstance(actor.neighbors(), agentlist[framework])
+        assert len(actor.neighbors()) == 1
     
-    # check agent.shared_locations()
-    shared_locations = model.env.agents[0].shared_locations(model.env.agents[1])
+    # check actor.shared_locations()
+    shared_locations = model.env.actors[0].shared_locations(model.env.actors[1])
     assert len(shared_locations) == 2
     assert isinstance(shared_locations, agentlist[framework])
 
-    # check agentList functionality
-    carl = model.env.agents[0]
-    susi = model.env.agents[1]
+    # check actorList functionality
+    carl = model.env.actors[0]
+    susi = model.env.actors[1]
     carl.name = "Carl"
     susi.name = "Susi"
     
     if framework == "agentpy":
-        list_with_carl = model.env.agents.select(model.env.agents.name == "Carl")
+        list_with_carl = model.env.actors.select(model.env.actors.name == "Carl")
     elif framework == "mesa":
-        list_with_carl = model.env.agents.select(lambda agent: agent.name == "Carl")
+        list_with_carl = model.env.actors.select(lambda actor: actor.name == "Carl")
 
     assert isinstance(list_with_carl, agentlist[framework])
     assert len(list_with_carl) == 1
     assert list_with_carl[0].name == "Carl"
 
-    # check Agent.connect()
+    # check Actor.connect()
     class TestLocation(p2n.Location, framework_.Agent):
         pass
     carl.connect(susi, location_cls=TestLocation)
@@ -158,7 +158,7 @@ def test_p2n_with_framework(framework: str):
     elif framework == "mesa":
         assert len(model.env.locations.select(lambda location: location.label == "TestLocation")) == 1
 
-    # check Agent.disconnect()
+    # check Actor.disconnect()
     carl.disconnect(susi, location_labels=["TestLocation"], remove_locations=True)
     assert len(carl.shared_locations(susi, location_labels=["TestLocation"])) == 0
     if framework == "agentpy":
