@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import copy
 import itertools
 import math
 import random
@@ -34,10 +33,10 @@ class Creator:
         self.rng = random.Random(seed)
         self._temp_actor_attrs = ["_P2NTEMP_split_values", "_P2NTEMP_melt_location_weight"]
         self.model = self.env.model
-        
-        #if self.model is not None:
+
+        # if self.model is not None:
         #    self._dummy_model = type(self.model)()
-        
+
         if self.env.framework is not None:
             self._dummy_model = self.env._framework.Model()
 
@@ -45,17 +44,17 @@ class Creator:
         lc = designer.location_class
 
         cls_name = "Location" if lc is None else utils._get_cls_as_str(designer.location_class)
-        
+
         cls = type(
             cls_name,
-            (designer,) if lc is None else (designer, designer.location_class), #TODO
+            (designer,) if lc is None else (designer, designer.location_class),  # TODO
             {},
         )
         if self.model is None:
             location = cls()
         else:
-            location = cls() #TODO
-        
+            location = cls()  # TODO
+
         location.label = (
             designer.label if designer.label is not None else utils._get_cls_as_str(designer)
         )
@@ -167,13 +166,15 @@ class Creator:
         # if no actor class was provided
         if actor_class is None:
             # if no framework ist used, use default actor class
-            if  self.env.framework is None:   
+            if self.env.framework is None:
                 actor_class = p2n.Actor
-            
+
             # if a framework is used, create mixed actor class
             else:
+
                 class MixedActor(p2n.Actor, self.env._framework.Agent):
                     pass
+
                 actor_class = MixedActor
 
         if df is not None:
