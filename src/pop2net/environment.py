@@ -421,10 +421,10 @@ class Environment:
                 location_cls = p2n.Location
             else:
 
-                class Location_with_framework(p2n.Location, self._framework.Agent):
+                class Location(p2n.Location, self._framework.Agent):
                     pass
 
-                location_cls = Location_with_framework
+                location_cls = Location
 
         if self.framework is None:
             location = location_cls()
