@@ -1,3 +1,5 @@
+
+#%%
 import pop2net as p2n
 
 
@@ -47,41 +49,44 @@ def test_1a():
     assert len(actor_lukas.shared_locations(actor=actor_max)) == 0
     assert not bool(actor_lukas.shared_locations(actor=actor_max))
 
-
+#%%
 def test_1b():
-    model = p2n.Model()
-    creator = p2n.Creator(model=model)
+    env = p2n.Environment()
+    creator = p2n.Creator(env=env)
 
-    class Max(p2n.Agent):
+    class Max(p2n.Actor):
         pass
 
-    class Marius(p2n.Agent):
+    class Marius(p2n.Actor):
         pass
 
-    class Lukas(p2n.Agent):
+    class Lukas(p2n.Actor):
         pass
 
     class Meeting1(p2n.LocationDesigner):
-        def filter(self, agent):
-            return agent.type in ["Max", "Marius"]
+        def filter(self, actor):
+            return actor.label in ["Max", "Marius"]
 
     class Meeting2(p2n.LocationDesigner):
-        def filter(self, agent):
-            return agent.type in ["Marius", "Lukas"]
+        def filter(self, actor):
+            return actor.label in ["Marius", "Lukas"]
 
-    _max = creator.create_agents(agent_class=Max, n=1)[0]
-    _marius = creator.create_agents(agent_class=Marius, n=1)[0]
-    _lukas = creator.create_agents(agent_class=Lukas, n=1)[0]
+    _max = creator.create_actors(actor_class=Max, n=1)[0]
+    _marius = creator.create_actors(actor_class=Marius, n=1)[0]
+    _lukas = creator.create_actors(actor_class=Lukas, n=1)[0]
     creator.create_locations(location_designers=[Meeting1, Meeting2])
 
-    assert len(model.locations) == 2
-    assert len(model.agents) == 3
+    print(len(env.locations))
+    assert len(env.locations) == 2
+    assert len(env.agents) == 3
 
-    assert _max.shared_locations(agent=_marius)[0].label == "Meeting1"
-    assert not bool(_max.shared_locations(agent=_lukas))
+    assert _max.shared_locations(actor=_marius)[0].label == "Meeting1"
+    assert not bool(_max.shared_locations(actor=_lukas))
 
-    assert _marius.shared_locations(agent=_max)[0].label == "Meeting1"
-    assert _marius.shared_locations(agent=_lukas)[0].label == "Meeting2"
+    assert _marius.shared_locations(actor=_max)[0].label == "Meeting1"
+    assert _marius.shared_locations(actor=_lukas)[0].label == "Meeting2"
 
-    assert _lukas.shared_locations(agent=_marius)[0].label == "Meeting2"
-    assert not bool(_lukas.shared_locations(agent=_max))
+    assert _lukas.shared_locations(actor=_marius)[0].label == "Meeting2"
+    assert not bool(_lukas.shared_locations(actor=_max))
+test_1b()
+# %%
