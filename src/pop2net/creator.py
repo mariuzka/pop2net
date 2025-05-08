@@ -53,11 +53,11 @@ class Creator:
                 location_name = utils._get_cls_as_str(designer.location_class)
                 dummy_location_class = type(location_name, (designer, designer.location_class), {})
             dummy_location = dummy_location_class()
-        
+
         else:
             if designer.location_class is None:
                 # case 3: framework & default location class
-                dummy_location_class = type("Location", (designer, self.env._framework.Agent), {}) 
+                dummy_location_class = type("Location", (designer, self.env._framework.Agent), {})
             else:
                 # case 4: framework & custom location class
                 location_name = utils._get_cls_as_str(designer.location_class)
