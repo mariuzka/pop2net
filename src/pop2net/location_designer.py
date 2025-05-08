@@ -23,15 +23,14 @@ class LocationDesigner(Location):
     recycle: bool = True
     nxgraph: nx.Graph | None = None
 
-    def __init__(self) -> None:
+    def __init__(self, *args, **kwargs) -> None:
         """Create a helper class to create locations."""
-        super().__init__()
+        super().__init__(*args, **kwargs)
         self.group_id: int | None = None
         self.subgroup_id: int | None = None
         self.group_value: int | str | None = None
         self.subgroup_value: int | str | None = None
 
-    # TODO: remove this methods?
     def setup(self) -> None:
         """Use this method to set instance attributes, for instance.
 

@@ -42,25 +42,33 @@ class Creator:
             self._dummy_model = self.env._framework.Model()
 
     def _create_dummy_location(self, designer) -> p2n.Location:
-        lc = designer.location_class
+        # TODO: Organize this code better
 
-        cls_name = "Location" if lc is None else utils._get_cls_as_str(designer.location_class)
-        
-        cls = type(
-            cls_name,
-            (designer,) if lc is None else (designer, designer.location_class), #TODO
-            {},
-        )
         if self.model is None:
-            location = cls()
-        else:
-            location = cls() #TODO
+            if designer.location_class is None:
+                # case 1: no framework & default location class
+                dummy_location_class = type("Location", (designer,), {})
+            else:
+                # case 2: no framework & custom location class
+                location_name = utils._get_cls_as_str(designer.location_class)
+                dummy_location_class = type(location_name, (designer, designer.location_class), {})
+            dummy_location = dummy_location_class()
         
-        location.label = (
+        else:
+            if designer.location_class is None:
+                # case 3: framework & default location class
+                dummy_location_class = type("Location", (designer, self.env._framework.Agent), {}) 
+            else:
+                # case 4: framework & custom location class
+                location_name = utils._get_cls_as_str(designer.location_class)
+                dummy_location_class = type(location_name, (designer, designer.location_class), {})
+            dummy_location = dummy_location_class(model=self.model)
+
+        dummy_location.label = (
             designer.label if designer.label is not None else utils._get_cls_as_str(designer)
         )
-        location.setup()
-        return location
+        dummy_location.setup()
+        return dummy_location
 
     def draw_sample(
         self,
