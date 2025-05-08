@@ -1,5 +1,3 @@
-
-#%%
 import pop2net as p2n
 
 
@@ -49,7 +47,7 @@ def test_1a():
     assert len(actor_lukas.shared_locations(actor=actor_max)) == 0
     assert not bool(actor_lukas.shared_locations(actor=actor_max))
 
-#%%
+
 def test_1b():
     env = p2n.Environment()
     creator = p2n.Creator(env=env)
@@ -65,20 +63,19 @@ def test_1b():
 
     class Meeting1(p2n.LocationDesigner):
         def filter(self, actor):
-            return actor.label in ["Max", "Marius"]
+            return actor.type in ["Max", "Marius"]
 
     class Meeting2(p2n.LocationDesigner):
         def filter(self, actor):
-            return actor.label in ["Marius", "Lukas"]
+            return actor.type in ["Marius", "Lukas"]
 
     _max = creator.create_actors(actor_class=Max, n=1)[0]
     _marius = creator.create_actors(actor_class=Marius, n=1)[0]
     _lukas = creator.create_actors(actor_class=Lukas, n=1)[0]
     creator.create_locations(location_designers=[Meeting1, Meeting2])
 
-    print(len(env.locations))
     assert len(env.locations) == 2
-    assert len(env.agents) == 3
+    assert len(env.actors) == 3
 
     assert _max.shared_locations(actor=_marius)[0].label == "Meeting1"
     assert not bool(_max.shared_locations(actor=_lukas))
@@ -88,5 +85,3 @@ def test_1b():
 
     assert _lukas.shared_locations(actor=_marius)[0].label == "Meeting2"
     assert not bool(_lukas.shared_locations(actor=_max))
-test_1b()
-# %%
