@@ -8,7 +8,7 @@ import pop2net as p2n
 
 
 @pytest.mark.parametrize("location_class", ["default", "custom"])
-def test_agentpy_p_transfer_with_custom_location_class(location_class):
+def test_agentpy_p_transfer_in_location_designer(location_class):
     """Tests whether a MagicLocation can access the parameters p of the model
     when the Creator is working."""
     

@@ -42,6 +42,7 @@ class Creator:
 
     def _create_dummy_location(self, designer) -> p2n.Location:
         # TODO: Organize this code better
+        # TODO: Add the case where a model is provided but no framework
 
         if self.model is None:
             if designer.location_class is None:
