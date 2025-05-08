@@ -21,7 +21,7 @@ class Actor:
         self.id_p2n = None
         self.model = None
         self.type = type(self).__name__
-        
+
         super().__init__(*args, **kwargs)
 
     def neighbors(self, location_labels: list[str] | None = None) -> list:
