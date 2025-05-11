@@ -10,9 +10,9 @@ def test_agent_location_labels():
     location = MyLocation()
     env.add_location(location)
 
-    agent = p2n.Agent()
-    env.add_agent(agent)
+    actor = p2n.Actor()
+    env.add_actor(actor)
 
-    agent.add_location(location)
+    actor.add_location(location)
 
-    assert agent.location_labels == ["MyLocation"]
+    assert actor.location_labels == ["MyLocation"]
