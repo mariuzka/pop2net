@@ -247,7 +247,7 @@ class NetworkInspector:
         df2 = pd.DataFrame(
             [
                 {
-                    "actor_id": actor.id,
+                    "actor_id": actor.id_p2n,
                     "n_affiliated_locations": len(actor.locations),
                 }
                 for actor in self.env.actors
@@ -306,14 +306,14 @@ class NetworkInspector:
                     if attr_v is not None:
                         attr_values.append(attr_v)
 
-                        pair = {actor_u.id, actor_v.id}
+                        pair = {actor_u.id_p2n, actor_v.id_p2n}
 
                         if pair not in pairs:
                             contact_data.append(
                                 {
-                                    "id_u": actor_u.id,
+                                    "id_u": actor_u.id_p2n,
                                     attr_u_name: attr_u,
-                                    "id_v": actor_v.id,
+                                    "id_v": actor_v.id_p2n,
                                     attr_v_name: attr_v,
                                     "weight": actor_u.get_actor_weight(actor_v),
                                 },
