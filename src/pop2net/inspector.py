@@ -57,25 +57,25 @@ class NetworkInspector:
             node_size (int, optional): The size of the nodes. Defaults to 10.
             node_alpha (float, optional): The transparency of the nodes. Defaults to 0.5.
         """
-        # if actor_attrs is None:
-        #    actor_attrs = ["type"]
-        # else:
-        #    actor_attrs = list(actor_attrs)
-        #    if "type" not in actor_attrs:
-        #        actor_attrs.append("type")
+        if actor_attrs is None:
+            actor_attrs = ["type"]
+        else:
+            actor_attrs = list(actor_attrs)
+            if "type" not in actor_attrs:
+                actor_attrs.append("type")
 
         if actor_color is not None and actor_color not in actor_attrs:
             actor_attrs.append(actor_color)
 
-        # if location_attrs is None:
-        #    location_attrs = ["type", "label"]
-        # else:
-        #    location_attrs = list(location_attrs)
-        #    if "type" not in location_attrs:
-        #        location_attrs.append("type")
+        if location_attrs is None:
+            location_attrs = ["type", "label"]
+        else:
+            location_attrs = list(location_attrs)
+            if "type" not in location_attrs:
+                location_attrs.append("type")
 
-        #    if "label" not in location_attrs:
-        #        location_attrs.append("label")
+            if "label" not in location_attrs:
+                location_attrs.append("label")
 
         if location_color is not None and location_color not in location_attrs:
             location_attrs.append(location_color)
@@ -134,12 +134,12 @@ class NetworkInspector:
             node_size (int, optional): The size of the nodes. Defaults to 10.
             node_alpha (float, optional): The transparency of the nodes. Defaults to 0.5.
         """
-        # if actor_attrs is None:
-        #    actor_attrs = ["type"]
-        # else:
-        #    actor_attrs = list(actor_attrs)
-        #    if "type" not in actor_attrs:
-        #        actor_attrs.append("type")
+        if actor_attrs is None:
+            actor_attrs = ["type"]
+        else:
+            actor_attrs = list(actor_attrs)
+            if "type" not in actor_attrs:
+                actor_attrs.append("type")
 
         if actor_color is not None and actor_color not in actor_attrs:
             actor_attrs.append(actor_color)
@@ -247,7 +247,7 @@ class NetworkInspector:
         df2 = pd.DataFrame(
             [
                 {
-                    "actor_id": actor.id,
+                    "actor_id": actor.id_p2n,
                     "n_affiliated_locations": len(actor.locations),
                 }
                 for actor in self.env.actors
@@ -306,14 +306,14 @@ class NetworkInspector:
                     if attr_v is not None:
                         attr_values.append(attr_v)
 
-                        pair = {actor_u.id, actor_v.id}
+                        pair = {actor_u.id_p2n, actor_v.id_p2n}
 
                         if pair not in pairs:
                             contact_data.append(
                                 {
-                                    "id_u": actor_u.id,
+                                    "id_u": actor_u.id_p2n,
                                     attr_u_name: attr_u,
-                                    "id_v": actor_v.id,
+                                    "id_v": actor_v.id_p2n,
                                     attr_v_name: attr_v,
                                     "weight": actor_u.get_actor_weight(actor_v),
                                 },
