@@ -2,15 +2,16 @@ import pandas as pd
 import pytest
 
 import pop2net as p2n
-from pop2net.agent import Agent
+from pop2net.actor import Actor
 from pop2net.location import Location
 
 
-class Model(p2n.Model):
-    pass
+# TODO wie das übersetzen? 
+#class Model(p2n.Model):
+   # pass
 
 
-class MyAgent(Agent):
+class MyAgent(Actor):
     pass
 
 
@@ -18,20 +19,20 @@ class Home(Location):
     def setup(self):
         self.is_home = True
 
-    def group(self, agent):
-        return agent.hid
+    def group(self, actor):
+        return actor.hid
 
 
 class School(Location):
-    n_agents = 10
+    n_actors = 10
 
-    def group(self, agent):
-        return 0 if agent.age <= 14 else 1
+    def group(self, actor):
+        return 0 if actor.age <= 14 else 1
 
-    def join(self, agent):
-        return 6 <= agent.age <= 18
+    def join(self, actor):
+        return 6 <= actor.age <= 18
 
-    def can_visit(self, agent):
+    def can_visit(self, actor):
         pass
 
 
@@ -45,37 +46,40 @@ simple_fake_data = pd.DataFrame(
 
 
 @pytest.mark.parametrize("soep_fixture", ["soep100", "soep1000", "soep10_000"])
-def test_create_agents(soep_fixture, request):
+def test_create_actors(soep_fixture, request):
     soep = request.getfixturevalue(soep_fixture)
+    env = p2n.Environment()
+    creator = p2n.Creator(env=env)
+    actors = creator.create_actors(df=soep, actor_class=MyAgent)
 
-    creator = p2n.Creator(model=Model())
-    agents = creator.create_agents(df=soep, agent_class=MyAgent)
-
-    assert len(agents) == len(soep)
+    assert len(actors) == len(soep)
 
     for i, row in soep.iterrows():
         for col_name in soep.columns:
-            assert row[col_name] == getattr(agents[i], col_name)
+            assert row[col_name] == getattr(actors[i], col_name)
 
 
 @pytest.mark.skip
 # @pytest.mark.parametrize("soep_fixture", ["soep100", "soep1000"])
 def test_create_locations():
     soep = simple_fake_data.copy()
-    model = Model()
-    creator = p2n.Creator(model=model)
+    env = p2n.Environment()
+    creator = p2n.Creator(env=env)
 
-    agents = creator.create_agents(df=soep, agent_class=MyAgent)
-    for agent in agents:
-        model.env.add_agent(agent)
+    actors = creator.create_actors(df=soep, actor_class=MyAgent)
+    for actor in actors:
+        env.add_actor(actor)
 
-    locations = creator.create_locations(agents=agents, location_designers=[Home, School])
+    locations = creator.create_locations(agents=actors, location_designers=[Home, School])
     for location in locations:
-        model.env.add_location(location)
+        env.add_location(location)
 
     assert len([location for location in locations if isinstance(location, Home)]) == 4
     assert len([location for location in locations if isinstance(location, School)]) == 2
 
     for location in locations:
-        for agent in location.agents:
-            assert location.group(agent) == location.group_id
+        for actor in location.actors:
+            assert location.group(actor) == location.group_id
+
+test_create_actors()
+test_create_locations()
