@@ -297,7 +297,7 @@ class Creator:
     def _get_stick_value(self, actor, dummy_location):
         stick_value = dummy_location.stick_together(actor)
         if stick_value is None:
-            return "None" + str(actor.id)
+            return "None" + str(actor.id_p2n)
         else:
             return stick_value
 
