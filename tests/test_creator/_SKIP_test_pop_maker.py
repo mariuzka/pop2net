@@ -81,5 +81,4 @@ def test_create_locations():
         for actor in location.actors:
             assert location.group(actor) == location.group_id
 
-test_create_actors()
 test_create_locations()
