@@ -130,7 +130,7 @@ def test_get_cls_as_str():
         pass
 
     assert utils._get_cls_as_str(MyLocation) == "MyLocation"
-    assert utils._get_cls_as_str(p2n.Agent) == "Agent"
+    assert utils._get_cls_as_str(p2n.Actor) == "Actor"
 
 
 def test_join_positions():
