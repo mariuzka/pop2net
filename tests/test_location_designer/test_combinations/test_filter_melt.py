@@ -4,8 +4,8 @@ import pop2net as p2n
 
 
 def test_1():
-    model = p2n.Model()
-    creator = p2n.Creator(model=model)
+    env = p2n.Environment()
+    creator = p2n.Creator(env=env)
     df = pd.DataFrame(
         {
             "status": ["pupil", "pupil", "pupil", "pupil", "teacher"],
@@ -13,29 +13,29 @@ def test_1():
     )
 
     class PupilHelper(p2n.MeltLocationDesigner):
-        def filter(self, agent):
-            return agent.status == "pupil"
+        def filter(self, actor):
+            return actor.status == "pupil"
 
     class TeacherHelper(p2n.MeltLocationDesigner):
-        def filter(self, agent):
-            return agent.status == "teacher"
+        def filter(self, actor):
+            return actor.status == "teacher"
 
     class ClassRoom(p2n.LocationDesigner):
         def melt(self):
             return PupilHelper, TeacherHelper
 
-    creator.create_agents(df=df)
+    creator.create_actors(df=df)
     creator.create_locations(location_designers=[ClassRoom])
 
-    assert len(model.agents) == 5
-    assert len(model.locations) == 1
-    assert len(model.locations[0].agents) == 5
-    assert sum(agent.status == "pupil" for agent in model.locations[0].agents) == 4
+    assert len(env.actors) == 5
+    assert len(env.locations) == 1
+    assert len(env.locations[0].actors) == 5
+    assert sum(actor.status == "pupil" for actor in env.locations[0].actors) == 4
 
 
 def test_2():
-    model = p2n.Model()
-    creator = p2n.Creator(model=model)
+    env = p2n.Environment()
+    creator = p2n.Creator(env=env)
     df = pd.DataFrame(
         {
             "status": ["pupil", "pupil", "pupil", "pupil", "teacher", "teacher"],
@@ -44,26 +44,26 @@ def test_2():
     )
 
     class PupilHelper(p2n.MeltLocationDesigner):
-        def filter(self, agent):
-            return agent.status == "pupil"
+        def filter(self, actor):
+            return actor.status == "pupil"
 
     class TeacherHelper(p2n.MeltLocationDesigner):
-        def filter(self, agent):
-            return agent.status == "teacher"
+        def filter(self, actor):
+            return actor.status == "teacher"
 
     class ClassRoom(p2n.LocationDesigner):
-        def filter(self, agent):
-            return agent.classroom_id == 1
+        def filter(self, actor):
+            return actor.classroom_id == 1
 
         def melt(self):
             return PupilHelper, TeacherHelper
 
-    creator.create_agents(df=df)
+    creator.create_actors(df=df)
     creator.create_locations(location_designers=[ClassRoom])
 
-    assert len(model.agents) == 6
-    assert len(model.locations) == 1
-    assert len(model.locations[0].agents) == 3
-    assert sum(agent.status == "pupil" for agent in model.locations[0].agents) == 2
-    assert sum(agent.status == "teacher" for agent in model.locations[0].agents) == 1
-    assert sum(not agent.locations for agent in model.agents) == 3
+    assert len(env.actors) == 6
+    assert len(env.locations) == 1
+    assert len(env.locations[0].actors) == 3
+    assert sum(actor.status == "pupil" for actor in env.locations[0].actors) == 2
+    assert sum(actor.status == "teacher" for actor in env.locations[0].actors) == 1
+    assert sum(not actor.locations for actor in env.actors) == 3

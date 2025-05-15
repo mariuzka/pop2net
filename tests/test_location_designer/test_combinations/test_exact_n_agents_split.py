@@ -9,46 +9,46 @@ def test_1():
             "status": ["A", "A", "A", "B", "B", "B"],
         }
     )
-    model = p2n.Model()
-    creator = p2n.Creator(model=model)
+    env = p2n.Environment()
+    creator = p2n.Creator(env=env)
 
     class TestLocation(p2n.LocationDesigner):
-        only_exact_n_agents = False
-        n_agents = 2
+        only_exact_n_actors = False
+        n_actors = 2
 
-        def split(self, agent):
-            return agent.status
+        def split(self, actor):
+            return actor.status
 
     creator.create(df=df, location_designers=[TestLocation])
 
-    assert len(model.agents) == 6
-    assert len(model.locations) == 4
-    assert len(model.locations[0].agents) == 2
-    assert all(agent.status == "A" for agent in model.locations[0].agents)
-    assert len(model.locations[1].agents) == 1
-    assert all(agent.status == "A" for agent in model.locations[1].agents)
-    assert len(model.locations[2].agents) == 2
-    assert all(agent.status == "B" for agent in model.locations[2].agents)
-    assert len(model.locations[3].agents) == 1
-    assert all(agent.status == "B" for agent in model.locations[3].agents)
+    assert len(env.actors) == 6
+    assert len(env.locations) == 4
+    assert len(env.locations[0].actors) == 2
+    assert all(actor.status == "A" for actor in env.locations[0].actors)
+    assert len(env.locations[1].actors) == 1
+    assert all(actor.status == "A" for actor in env.locations[1].actors)
+    assert len(env.locations[2].actors) == 2
+    assert all(actor.status == "B" for actor in env.locations[2].actors)
+    assert len(env.locations[3].actors) == 1
+    assert all(actor.status == "B" for actor in env.locations[3].actors)
 
-    model = p2n.Model()
-    creator = p2n.Creator(model=model)
+    env = p2n.Environment()
+    creator = p2n.Creator(env=env)
 
     class TestLocation(p2n.LocationDesigner):
-        only_exact_n_agents = True
-        n_agents = 2
+        only_exact_n_actors = True
+        n_actors = 2
 
-        def split(self, agent):
-            return agent.status
+        def split(self, actor):
+            return actor.status
 
     creator.create(df=df, location_designers=[TestLocation])
 
-    assert len(model.agents) == 6
-    assert len(model.locations) == 2
-    assert len(model.locations[0].agents) == 2
-    assert all(agent.status == "A" for agent in model.locations[0].agents)
-    assert len(model.locations[1].agents) == 2
-    assert all(agent.status == "B" for agent in model.locations[1].agents)
-    assert sum(not agent.locations for agent in model.agents if agent.status == "B") == 1
-    assert sum(not agent.locations for agent in model.agents if agent.status == "A") == 1
+    assert len(env.actors) == 6
+    assert len(env.locations) == 2
+    assert len(env.locations[0].actors) == 2
+    assert all(actor.status == "A" for actor in env.locations[0].actors)
+    assert len(env.locations[1].actors) == 2
+    assert all(actor.status == "B" for actor in env.locations[1].actors)
+    assert sum(not actor.locations for actor in env.actors if actor.status == "B") == 1
+    assert sum(not actor.locations for actor in env.actors if actor.status == "A") == 1

@@ -1,11 +1,8 @@
-# %%
-
 import pandas as pd
 
 import pop2net as p2n
 
 
-# %%
 def test_1():
     df = pd.DataFrame(
         {
@@ -22,28 +19,27 @@ def test_1():
         def nest(self):
             return School
 
-    model = p2n.Model()
-    creator = p2n.Creator(model=model)
+    env = p2n.Environment()
+    creator = p2n.Creator(env=env)
     creator.create(df=df, location_designers=[School, Classroom])
-    inspector = p2n.NetworkInspector(model)
+    inspector = p2n.NetworkInspector(env)
     inspector.plot_bipartite_network()
 
-    assert len(model.agents) == 4
-    assert len(model.locations) == 3
+    assert len(env.actors) == 4
+    assert len(env.locations) == 3
 
-    for location in model.locations:
+    for location in env.locations:
         if location.type == "School":
-            assert len(location.agents) == 4
+            assert len(location.actors) == 4
         if location.type == "Classroom":
-            assert len(location.agents) == 2
+            assert len(location.actors) == 2
 
-    for agent in model.agents:
-        assert agent.neighbors(location_labels=["Classroom"])[0] in agent.neighbors(
+    for actor in env.actors:
+        assert actor.neighbors(location_labels=["Classroom"])[0] in actor.neighbors(
             location_labels=["School"]
         )
 
 
-# %%
 # TODO
 # n_locations wird ignoriert, wenn das obere Level von nest 2 instanzen hat
 # und das untere nur 1, es werden trotzdem 2 Classrooms erstellt
@@ -63,25 +59,22 @@ def test_2():
         def nest(self):
             return School
 
-    model = p2n.Model()
-    creator = p2n.Creator(model=model)
+    env = p2n.Environment()
+    creator = p2n.Creator(env=env)
     creator.create(df=df, location_designers=[School, Classroom])
-    inspector = p2n.NetworkInspector(model)
+    inspector = p2n.NetworkInspector(env)
     inspector.plot_bipartite_network()
-    print(len(model.locations))
+    print(len(env.locations))
 
-    assert len(model.agents) == 4
+    assert len(env.actors) == 4
 
     # TODO
-    # assert len(model.locations) == 3
+    # assert len(env.locations) == 3
 
-    for location in model.locations:
+    for location in env.locations:
         if location.type == "School":
-            assert len(location.agents) == 2
+            assert len(location.actors) == 2
         if location.type == "Classroom":
             pass
             # TODO
-            # assert len(location.agents) == 4
-
-
-# %%
+            # assert len(location.actors) == 4

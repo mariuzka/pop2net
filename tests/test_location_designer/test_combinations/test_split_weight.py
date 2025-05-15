@@ -4,43 +4,40 @@ import pop2net as p2n
 
 
 def test_1():
-    model = p2n.Model()
-    creator = p2n.Creator(model=model)
+    env = p2n.Environment()
+    creator = p2n.Creator(env=env)
 
     df = pd.DataFrame({"status": ["A", "B", "B", "A", "A"]})
 
     class ClassRoom(p2n.LocationDesigner):
-        def split(self, agent):
-            return agent.status
+        def split(self, actor):
+            return actor.status
 
-        def weight(self, agent):
+        def weight(self, actor):
             return 5
 
-    creator.create_agents(df=df)
+    creator.create_actors(df=df)
     creator.create_locations(location_designers=[ClassRoom])
 
-    assert len(model.locations) == 2
-    assert len(model.agents) == 5
-    assert len(model.locations[0].agents) == 3
-    assert len(model.locations[1].agents) == 2
-    assert all(agent.status == "A" for agent in model.locations[0].agents)
-    assert all(agent.status == "B" for agent in model.locations[1].agents)
+    assert len(env.locations) == 2
+    assert len(env.actors) == 5
+    assert len(env.locations[0].actors) == 3
+    assert len(env.locations[1].actors) == 2
+    assert all(actor.status == "A" for actor in env.locations[0].actors)
+    assert all(actor.status == "B" for actor in env.locations[1].actors)
 
-    #
     locations_weights = []
-    # model sum weight
-    for location in model.locations:
+    for location in env.locations:
         locations_weights.append(
-            sum([model.get_weight(agent, location) for agent in location.agents])
+            sum([env.get_weight(actor, location) for actor in location.actors])
         )
     assert sum(locations_weights) == 25
-    # individual weights
-    assert all(location.get_weight(agent) == 5 for agent in location.agents)
+    assert all(location.get_weight(actor) == 5 for actor in location.actors)
 
 
 def test_2():
-    model = p2n.Model()
-    creator = p2n.Creator(model=model)
+    env = p2n.Environment()
+    creator = p2n.Creator(env=env)
 
     df = pd.DataFrame(
         {
@@ -49,65 +46,65 @@ def test_2():
     )
 
     class ClassRoom(p2n.LocationDesigner):
-        def split(self, agent):
-            return agent.status
+        def split(self, actor):
+            return actor.status
 
-        def weight(self, agent):
-            if agent.status == "A":
+        def weight(self, actor):
+            if actor.status == "A":
                 return 2
-            if agent.status == "B":
+            if actor.status == "B":
                 return 4
 
-    creator.create_agents(df=df)
+    creator.create_actors(df=df)
     creator.create_locations(location_designers=[ClassRoom])
 
-    assert len(model.locations) == 2
-    assert len(model.agents) == 5
-    assert len(model.locations[0].agents) == 3
-    assert len(model.locations[1].agents) == 2
-    assert all(agent.status == "A" for agent in model.locations[0].agents)
-    assert all(agent.status == "B" for agent in model.locations[1].agents)
+    assert len(env.locations) == 2
+    assert len(env.actors) == 5
+    assert len(env.locations[0].actors) == 3
+    assert len(env.locations[1].actors) == 2
+    assert all(actor.status == "A" for actor in env.locations[0].actors)
+    assert all(actor.status == "B" for actor in env.locations[1].actors)
 
     assert (
-        sum([model.get_weight(agent, model.locations[0]) for agent in model.locations[0].agents])
+        sum([env.get_weight(actor, env.locations[0]) for actor in env.locations[0].actors])
         == 6
     )
     assert (
-        sum([model.get_weight(agent, model.locations[1]) for agent in model.locations[1].agents])
+        sum([env.get_weight(actor, env.locations[1]) for actor in env.locations[1].actors])
         == 8
     )
-    assert all(model.locations[0].get_weight(agent) == 2 for agent in model.locations[0].agents)
-    assert all(model.locations[1].get_weight(agent) == 4 for agent in model.locations[1].agents)
+    assert all(env.locations[0].get_weight(actor) == 2 for actor in env.locations[0].actors)
+    assert all(env.locations[1].get_weight(actor) == 4 for actor in env.locations[1].actors)
 
 
 def test_3():
-    model = p2n.Model()
-    creator = p2n.Creator(model=model)
+    env = p2n.Environment()
+    creator = p2n.Creator(env=env)
     df = pd.DataFrame({"status": ["A", "B", "A", "B"], "attention_span": [1, 3, 2.5, 4]})
 
     class ClassRoom(p2n.LocationDesigner):
-        def split(self, agent):
-            return agent.status
+        def split(self, actor):
+            return actor.status
 
-        def weight(self, agent):
-            return agent.attention_span
+        def weight(self, actor):
+            return actor.attention_span
 
-    creator.create_agents(df=df)
+    creator.create_actors(df=df)
     creator.create_locations(location_designers=[ClassRoom])
 
-    assert len(model.locations) == 2
-    assert len(model.agents) == 4
-    assert len(model.locations[0].agents) == 2
-    assert len(model.locations[1].agents) == 2
-    assert all(agent.status == "A" for agent in model.locations[0].agents)
-    assert all(agent.status == "B" for agent in model.locations[1].agents)
+    assert len(env.locations) == 2
+    assert len(env.actors) == 4
+    assert len(env.locations[0].actors) == 2
+    assert len(env.locations[1].actors) == 2
+    assert all(actor.status == "A" for actor in env.locations[0].actors)
+    assert all(actor.status == "B" for actor in env.locations[1].actors)
 
     assert (
-        sum([model.get_weight(agent, model.locations[0]) for agent in model.locations[0].agents])
+        sum([env.get_weight(actor, env.locations[0]) for actor in env.locations[0].actors])
         == 3.5
     )
 
     assert (
-        sum([model.get_weight(agent, model.locations[1]) for agent in model.locations[1].agents])
+        sum([env.get_weight(actor, env.locations[1]) for actor in env.locations[1].actors])
         == 7
     )

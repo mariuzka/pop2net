@@ -10,20 +10,20 @@ def test_1():
         },
     )
 
-    model = p2n.Model()
-    creator = p2n.Creator(model)
+    env = p2n.Environment()
+    creator = p2n.Creator(env=env)
 
     class TestLocation(p2n.LocationDesigner):
         n_locations = None
 
-        def split(self, agent):
-            return agent.status
+        def split(self, actor):
+            return actor.status
 
-    creator.create_agents(df=df)
+    creator.create_actors(df=df)
     creator.create_locations(location_designers=[TestLocation])
 
-    assert len(model.locations) == 3
-    assert len(model.agents) == 6
+    assert len(env.locations) == 3
+    assert len(env.actors) == 6
     assert TestLocation.n_locations is None
 
 
@@ -34,20 +34,20 @@ def test_2():
         },
     )
 
-    model = p2n.Model()
-    creator = p2n.Creator(model)
+    env = p2n.Environment()
+    creator = p2n.Creator(env=env)
 
     class TestLocation(p2n.LocationDesigner):
         n_locations = 3
 
-        def split(self, agent):
-            return agent.status
+        def split(self, actor):
+            return actor.status
 
-    creator.create_agents(df=df)
+    creator.create_actors(df=df)
     creator.create_locations(location_designers=[TestLocation])
 
-    assert len(model.locations) == 3
-    assert len(model.agents) == 6
+    assert len(env.locations) == 3
+    assert len(env.actors) == 6
 
     # check if the n_locations attribute is overwritten with None
     assert TestLocation.n_locations is None

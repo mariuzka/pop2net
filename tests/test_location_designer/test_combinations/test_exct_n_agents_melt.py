@@ -14,70 +14,70 @@ def test_1():
         },
     )
 
-    model = p2n.Model()
-    creator = p2n.Creator(model)
+    env = p2n.Environment()
+    creator = p2n.Creator(env=env)
 
     class LocA(p2n.MeltLocationDesigner):
-        n_agents = 2
-        only_exact_n_agents = False
+        n_actors = 2
+        only_exact_n_actors = False
 
-        def filter(self, agent):
-            return agent.status == "A"
+        def filter(self, actor):
+            return actor.status == "A"
 
     class LocB(p2n.MeltLocationDesigner):
-        n_agents = 2
-        only_exact_n_agents = False
+        n_actors = 2
+        only_exact_n_actors = False
 
-        def filter(self, agent):
-            return agent.status == "B"
+        def filter(self, actor):
+            return actor.status == "B"
 
     class LocAB(p2n.LocationDesigner):
         def melt(self):
             return LocA, LocB
 
-    creator.create_agents(df=df)
+    creator.create_actors(df=df)
     creator.create_locations(location_designers=[LocAB])
 
-    assert len(model.agents) == 6
-    assert len(model.locations) == 2
-    assert sum(True for agent in model.locations[0].agents if agent.status == "A") == 2
-    assert sum(True for agent in model.locations[0].agents if agent.status == "B") == 2
-    assert sum(True for agent in model.locations[1].agents if agent.status == "A") == 1
-    assert sum(True for agent in model.locations[1].agents if agent.status == "B") == 1
+    assert len(env.actors) == 6
+    assert len(env.locations) == 2
+    assert sum(True for actor in env.locations[0].actors if actor.status == "A") == 2
+    assert sum(True for actor in env.locations[0].actors if actor.status == "B") == 2
+    assert sum(True for actor in env.locations[1].actors if actor.status == "A") == 1
+    assert sum(True for actor in env.locations[1].actors if actor.status == "B") == 1
 
     # Ver. with exact_n set to true
-    model = p2n.Model()
-    creator = p2n.Creator(model)
+    env = p2n.Environment()
+    creator = p2n.Creator(env=env)
 
     class LocA(p2n.MeltLocationDesigner):
-        n_agents = 2
-        only_exact_n_agents = True
+        n_actors = 2
+        only_exact_n_actors = True
 
-        def filter(self, agent):
-            return agent.status == "A"
+        def filter(self, actor):
+            return actor.status == "A"
 
     class LocB(p2n.MeltLocationDesigner):
-        n_agents = 2
-        only_exact_n_agents = True
+        n_actors = 2
+        only_exact_n_actors = True
 
-        def filter(self, agent):
-            return agent.status == "B"
+        def filter(self, actor):
+            return actor.status == "B"
 
     class LocAB(p2n.LocationDesigner):
-        n_agents = 4
-        only_exact_n_agents = True
+        n_actors = 4
+        only_exact_n_actors = True
 
         def melt(self):
             return LocA, LocB
 
-    creator.create_agents(df=df)
+    creator.create_actors(df=df)
     creator.create_locations(location_designers=[LocAB])
-    inspector = p2n.NetworkInspector(model)
+    inspector = p2n.NetworkInspector(env)
     inspector.plot_bipartite_network()
-    inspector.plot_agent_network(agent_attrs=["status"])
+    inspector.plot_actor_network(actor_attrs=["status"])
 
-    assert len(model.agents) == 6
-    assert len(model.locations) == 1
-    assert sum(True for agent in model.locations[0].agents if agent.status == "A") == 2
-    assert sum(True for agent in model.locations[0].agents if agent.status == "B") == 2
-    assert sum(True for agent in model.agents if not agent.locations) == 2
+    assert len(env.actors) == 6
+    assert len(env.locations) == 1
+    assert sum(True for actor in env.locations[0].actors if actor.status == "A") == 2
+    assert sum(True for actor in env.locations[0].actors if actor.status == "B") == 2
+    assert sum(True for actor in env.actors if not actor.locations) == 2
