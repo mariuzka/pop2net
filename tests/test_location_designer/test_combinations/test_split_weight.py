@@ -65,14 +65,8 @@ def test_2():
     assert all(actor.status == "A" for actor in env.locations[0].actors)
     assert all(actor.status == "B" for actor in env.locations[1].actors)
 
-    assert (
-        sum([env.get_weight(actor, env.locations[0]) for actor in env.locations[0].actors])
-        == 6
-    )
-    assert (
-        sum([env.get_weight(actor, env.locations[1]) for actor in env.locations[1].actors])
-        == 8
-    )
+    assert sum([env.get_weight(actor, env.locations[0]) for actor in env.locations[0].actors]) == 6
+    assert sum([env.get_weight(actor, env.locations[1]) for actor in env.locations[1].actors]) == 8
     assert all(env.locations[0].get_weight(actor) == 2 for actor in env.locations[0].actors)
     assert all(env.locations[1].get_weight(actor) == 4 for actor in env.locations[1].actors)
 
@@ -100,11 +94,7 @@ def test_3():
     assert all(actor.status == "B" for actor in env.locations[1].actors)
 
     assert (
-        sum([env.get_weight(actor, env.locations[0]) for actor in env.locations[0].actors])
-        == 3.5
+        sum([env.get_weight(actor, env.locations[0]) for actor in env.locations[0].actors]) == 3.5
     )
 
-    assert (
-        sum([env.get_weight(actor, env.locations[1]) for actor in env.locations[1].actors])
-        == 7
-    )
+    assert sum([env.get_weight(actor, env.locations[1]) for actor in env.locations[1].actors]) == 7

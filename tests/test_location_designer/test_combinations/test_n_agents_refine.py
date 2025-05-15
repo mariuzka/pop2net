@@ -64,4 +64,3 @@ def test_1():
     # TODO
     # assert len(env.actors) == 10
     # assert len(env.locations) == 6
-    
