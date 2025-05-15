@@ -7,58 +7,58 @@ def test_1():
     df = pd.DataFrame({"status": ["pupil", "pupil", "pupil", "pupil"], "class_id": [1, 2, 1, 2]})
 
     class Classroom(p2n.LocationDesigner):
-        n_agents = 2
+        n_actors = 2
 
-        def stick_together(self, agent):
-            return agent.class_id
+        def stick_together(self, actor):
+            return actor.class_id
 
-    model = p2n.Model()
-    creator = p2n.Creator(model=model)
+    env = p2n.Environment()
+    creator = p2n.Creator(env=env)
     creator.create(df=df, location_designers=[Classroom])
 
-    assert len(model.agents) == 4
-    assert len(model.locations) == 2
+    assert len(env.actors) == 4
+    assert len(env.locations) == 2
 
-    for location in model.locations:
-        assert len(location.agents) == 2
+    for location in env.locations:
+        assert len(location.actors) == 2
 
-    for agent in model.agents:
-        assert agent.neighbors(location_labels=["Classroom"])[0].class_id == agent.class_id
+    for actor in env.actors:
+        assert actor.neighbors(location_labels=["Classroom"])[0].class_id == actor.class_id
 
-    inspector = p2n.NetworkInspector(model)
+    inspector = p2n.NetworkInspector(env)
     inspector.plot_bipartite_network()
-    inspector.plot_agent_network(agent_attrs=df.columns, agent_color="class_id")
+    inspector.plot_actor_network(actor_attrs=df.columns, actor_color="class_id")
 
 
-# stick together with uneven agent-location "seats"
+# stick together with uneven actor-location "seats"
 def test_2():
     df = pd.DataFrame(
         {"status": ["pupil", "pupil", "pupil", "pupil", "pupil"], "class_id": [1, 2, 1, 2, 1]}
     )
 
     class Classroom(p2n.LocationDesigner):
-        n_agents = 2
+        n_actors = 2
 
-        def stick_together(self, agent):
-            return agent.class_id
+        def stick_together(self, actor):
+            return actor.class_id
 
-    model = p2n.Model()
-    creator = p2n.Creator(model=model)
+    env = p2n.Environment()
+    creator = p2n.Creator(env=env)
     creator.create(df=df, location_designers=[Classroom])
-    inspector = p2n.NetworkInspector(model)
+    inspector = p2n.NetworkInspector(env)
     inspector.plot_bipartite_network()
-    inspector.plot_agent_network(agent_attrs=df.columns, agent_color="class_id")
+    inspector.plot_actor_network(actor_attrs=df.columns, actor_color="class_id")
 
-    assert len(model.agents) == 5
-    assert len(model.locations) == 2
+    assert len(env.actors) == 5
+    assert len(env.locations) == 2
 
     expected_loc_lens = [2, 3]
-    for location in model.locations:
-        assert len(location.agents) in expected_loc_lens
-        del expected_loc_lens[expected_loc_lens.index(len(location.agents))]
+    for location in env.locations:
+        assert len(location.actors) in expected_loc_lens
+        del expected_loc_lens[expected_loc_lens.index(len(location.actors))]
 
-    for agent in model.agents:
-        assert all(nghbr.class_id == agent.class_id for nghbr in agent.neighbors())
+    for actor in env.actors:
+        assert all(nghbr.class_id == actor.class_id for nghbr in actor.neighbors())
 
 
 # stick_together with split
@@ -72,38 +72,38 @@ def test_3():
     )
 
     class Classroom(p2n.LocationDesigner):
-        n_agents = 2
+        n_actors = 2
 
-        def split(self, agent):
-            return agent.class_id
+        def split(self, actor):
+            return actor.class_id
 
-        def stick_together(self, agent):
-            return agent.friends
+        def stick_together(self, actor):
+            return actor.friends
 
-    model = p2n.Model()
-    creator = p2n.Creator(model=model)
+    env = p2n.Environment()
+    creator = p2n.Creator(env=env)
     creator.create(df=df, location_designers=[Classroom])
-    inspector = p2n.NetworkInspector(model)
+    inspector = p2n.NetworkInspector(env)
     inspector.plot_bipartite_network()
-    inspector.plot_agent_network(agent_attrs=df.columns, agent_color="class_id")
+    inspector.plot_actor_network(actor_attrs=df.columns, actor_color="class_id")
 
-    assert len(model.agents) == 6
-    assert len(model.locations) == 4
+    assert len(env.actors) == 6
+    assert len(env.locations) == 4
 
     expected_loc_lens = [1, 1, 2, 2]
-    for location in model.locations:
-        assert len(location.agents) in expected_loc_lens
-        del expected_loc_lens[expected_loc_lens.index(len(location.agents))]
+    for location in env.locations:
+        assert len(location.actors) in expected_loc_lens
+        del expected_loc_lens[expected_loc_lens.index(len(location.actors))]
 
-    for agent in model.agents:
-        assert all(nghbr.class_id == agent.class_id for nghbr in agent.neighbors())
+    for actor in env.actors:
+        assert all(nghbr.class_id == actor.class_id for nghbr in actor.neighbors())
 
 
 def test_4():
     # A test with many stick_together-values
 
-    model = p2n.Model()
-    creator = p2n.Creator(model=model)
+    env = p2n.Environment()
+    creator = p2n.Creator(env=env)
 
     df = pd.DataFrame(
         {"group": [1, 1, 1, 2, 2, 3, 3, 3, 3, 4, 3, 2, 3, 4, 5, 6, 6, 6, 6, 6, 10, 23, 10, 1, 1, 1]}
@@ -113,49 +113,49 @@ def test_4():
     class TestLocation(p2n.LocationDesigner):
         n_locations = 5
 
-    creator.create_agents(df=df)
+    creator.create_actors(df=df)
     creator.create_locations(
         location_designers=[TestLocation],
-        delete_magic_agent_attributes=False,
+        delete_magic_actor_attributes=False,
     )
 
-    assert len(model.locations) == 5
-    assert len(model.agents) == 26
+    assert len(env.locations) == 5
+    assert len(env.actors) == 26
 
     # assert that not all members of a group are in the same location
     assert not all(
-        agent_i.TestLocation == agent_j.TestLocation
-        for agent_i in model.agents
-        for agent_j in model.agents
-        if agent_i.group == agent_j.group
+        actor_i.TestLocation == actor_j.TestLocation
+        for actor_i in env.actors
+        for actor_j in env.actors
+        if actor_i.group == actor_j.group
     )
 
-    model = p2n.Model()
-    creator = p2n.Creator(model=model)
-    inspector = p2n.NetworkInspector(model=model)
+    env = p2n.Environment()
+    creator = p2n.Creator(env=env)
+    inspector = p2n.NetworkInspector(env=env)
 
     # location with stick_together()
     class TestLocation(p2n.LocationDesigner):
         n_locations = 5
 
-        def stick_together(self, agent):
-            return agent.group
+        def stick_together(self, actor):
+            return actor.group
 
-    creator.create_agents(df=df)
+    creator.create_actors(df=df)
     creator.create_locations(
         location_designers=[TestLocation],
-        delete_magic_agent_attributes=False,
+        delete_magic_actor_attributes=False,
     )
 
-    assert len(model.locations) == 5
-    assert len(model.agents) == 26
+    assert len(env.locations) == 5
+    assert len(env.actors) == 26
 
     # assert that all members of a group are in the same location
     assert all(
-        agent_i.TestLocation == agent_j.TestLocation
-        for agent_i in model.agents
-        for agent_j in model.agents
-        if agent_i.group == agent_j.group
+        actor_i.TestLocation == actor_j.TestLocation
+        for actor_i in env.actors
+        for actor_j in env.actors
+        if actor_i.group == actor_j.group
     )
 
-    inspector.plot_agent_network(agent_attrs=["group"])
+    inspector.plot_actor_network(actor_attrs=["group"])
