@@ -1,67 +1,14 @@
 import pop2net as p2n
 
 
-def test_model_connect_agents_and_disconnect_agents_1():
-    """A test without specifing locationt types and without removing locations from model."""
+def test_model_connect_actors_and_disconnect_actors_1():
+    """A test without specifying location types and without removing locations from env."""
 
-    model = p2n.Model()
-    agent1 = p2n.Agent(model)
-    agent2 = p2n.Agent(model)
-    agent3 = p2n.Agent(model)
-    agents = [agent1, agent2, agent3]
-
-    class Home(p2n.Location):
-        pass
-
-    class School(p2n.Location):
-        pass
-
-    model.connect_agents(
-        agents=agents,
-        location_cls=Home,
-    )
-
-    model.connect_agents(
-        agents=[agent1, agent2],
-        location_cls=School,
-    )
-
-    assert len(model.agents) == 3
-
-    assert isinstance(model.locations[0], Home)
-    assert isinstance(model.locations[1], School)
-
-    assert agent1 in model.locations[0].agents
-    assert agent1 in model.locations[1].agents
-    assert agent2 in model.locations[0].agents
-    assert agent2 in model.locations[1].agents
-    assert agent3 in model.locations[0].agents
-    assert agent3 not in model.locations[1].agents
-
-    model.disconnect_agents(agents, remove_locations=False)
-
-    assert len(model.agents) == 3
-
-    assert len(model.locations) == 2
-    assert isinstance(model.locations[0], Home)
-    assert isinstance(model.locations[1], School)
-
-    assert len(model.locations[0].agents) == 0
-    assert len(model.locations[1].agents) == 0
-
-    assert len(agent1.locations) == 0
-    assert len(agent2.locations) == 0
-    assert len(agent3.locations) == 0
-
-
-def test_model_connect_agents_and_disconnect_agents_2():
-    """A test without removing locations from model."""
-
-    model = p2n.Model()
-    agent1 = p2n.Agent(model)
-    agent2 = p2n.Agent(model)
-    agent3 = p2n.Agent(model)
-    agents = [agent1, agent2, agent3]
+    env = p2n.Environment()
+    actor1 = p2n.Actor(env)
+    actor2 = p2n.Actor(env)
+    actor3 = p2n.Actor(env)
+    actors = [actor1, actor2, actor3]
 
     class Home(p2n.Location):
         pass
@@ -69,71 +16,52 @@ def test_model_connect_agents_and_disconnect_agents_2():
     class School(p2n.Location):
         pass
 
-    model.connect_agents(
-        agents=agents,
+    env.connect_actors(
+        actors=actors,
         location_cls=Home,
     )
 
-    model.connect_agents(
-        agents=[agent1, agent2],
+    env.connect_actors(
+        actors=[actor1, actor2],
         location_cls=School,
     )
 
-    model.disconnect_agents(agents, location_labels=["Home"], remove_locations=False)
+    assert len(env.actors) == 3
 
-    assert len(model.agents) == 3
+    assert isinstance(env.locations[0], Home)
+    assert isinstance(env.locations[1], School)
 
-    assert len(model.locations) == 2
-    assert isinstance(model.locations[0], Home)
-    assert isinstance(model.locations[1], School)
+    assert actor1 in env.locations[0].actors
+    assert actor1 in env.locations[1].actors
+    assert actor2 in env.locations[0].actors
+    assert actor2 in env.locations[1].actors
+    assert actor3 in env.locations[0].actors
+    assert actor3 not in env.locations[1].actors
 
-    assert len(model.locations[0].agents) == 0
-    assert len(model.locations[1].agents) == 2
+    env.disconnect_actors(actors, remove_locations=False)
 
-    assert len(agent1.locations) == 1
-    assert len(agent2.locations) == 1
-    assert len(agent3.locations) == 0
+    assert len(env.actors) == 3
 
-    model.disconnect_agents(agents, location_labels=["School"], remove_locations=False)
+    assert len(env.locations) == 2
+    assert isinstance(env.locations[0], Home)
+    assert isinstance(env.locations[1], School)
 
-    assert len(model.agents) == 3
+    assert len(env.locations[0].actors) == 0
+    assert len(env.locations[1].actors) == 0
 
-    assert len(model.locations) == 2
-    assert isinstance(model.locations[0], Home)
-    assert isinstance(model.locations[1], School)
-
-    assert len(model.locations[0].agents) == 0
-    assert len(model.locations[1].agents) == 0
-
-    assert len(agent1.locations) == 0
-    assert len(agent2.locations) == 0
-    assert len(agent3.locations) == 0
-
-    model.connect_agents(agents=agents, location_cls=School)
-    model.disconnect_agents(agents=[agent1, agent2], location_labels=["School"])
-
-    assert len(model.agents) == 3
-
-    assert len(model.locations) == 3
-    assert isinstance(model.locations[0], Home)
-    assert isinstance(model.locations[1], School)
-    assert isinstance(model.locations[2], School)
-
-    assert len(model.locations[0].agents) == 0
-    assert len(model.locations[1].agents) == 0
-    assert len(model.locations[2].agents) == 1
-
-    assert len(agent1.locations) == 0
-    assert len(agent2.locations) == 0
-    assert len(agent3.locations) == 1
+    assert len(actor1.locations) == 0
+    assert len(actor2.locations) == 0
+    assert len(actor3.locations) == 0
 
 
-def test_model_connect_agents_and_disconnect_agents_3():
-    model = p2n.Model()
-    agent1 = p2n.Agent(model)
-    agent2 = p2n.Agent(model)
-    agent3 = p2n.Agent(model)
-    agents = [agent1, agent2, agent3]
+def test_model_connect_actors_and_disconnect_actors_2():
+    """A test without removing locations from env."""
+
+    env = p2n.Environment()
+    actor1 = p2n.Actor(env)
+    actor2 = p2n.Actor(env)
+    actor3 = p2n.Actor(env)
+    actors = [actor1, actor2, actor3]
 
     class Home(p2n.Location):
         pass
@@ -141,46 +69,71 @@ def test_model_connect_agents_and_disconnect_agents_3():
     class School(p2n.Location):
         pass
 
-    model.connect_agents(
-        agents=agents,
+    env.connect_actors(
+        actors=actors,
         location_cls=Home,
     )
 
-    model.connect_agents(
-        agents=[agent1, agent2],
+    env.connect_actors(
+        actors=[actor1, actor2],
         location_cls=School,
     )
 
-    model.disconnect_agents(agents, location_labels=["School"], remove_locations=True)
+    env.disconnect_actors(actors, location_labels=["Home"], remove_locations=False)
 
-    assert len(model.agents) == 3
+    assert len(env.actors) == 3
 
-    assert len(model.locations) == 1
-    assert isinstance(model.locations[0], Home)
+    assert len(env.locations) == 2
+    assert isinstance(env.locations[0], Home)
+    assert isinstance(env.locations[1], School)
 
-    assert len(model.locations[0].agents) == 3
+    assert len(env.locations[0].actors) == 0
+    assert len(env.locations[1].actors) == 2
 
-    assert len(agent1.locations) == 1
-    assert len(agent2.locations) == 1
-    assert len(agent3.locations) == 1
+    assert len(actor1.locations) == 1
+    assert len(actor2.locations) == 1
+    assert len(actor3.locations) == 0
 
-    model.disconnect_agents(agents, location_labels=["Home"], remove_locations=True)
+    env.disconnect_actors(actors, location_labels=["School"], remove_locations=False)
 
-    assert len(model.agents) == 3
+    assert len(env.actors) == 3
 
-    assert len(model.locations) == 0
+    assert len(env.locations) == 2
+    assert isinstance(env.locations[0], Home)
+    assert isinstance(env.locations[1], School)
 
-    assert len(agent1.locations) == 0
-    assert len(agent2.locations) == 0
-    assert len(agent3.locations) == 0
+    assert len(env.locations[0].actors) == 0
+    assert len(env.locations[1].actors) == 0
+
+    assert len(actor1.locations) == 0
+    assert len(actor2.locations) == 0
+    assert len(actor3.locations) == 0
+
+    env.connect_actors(actors=actors, location_cls=School)
+    env.disconnect_actors(actors=[actor1, actor2], location_labels=["School"])
+
+    assert len(env.actors) == 3
+
+    assert len(env.locations) == 3
+    assert isinstance(env.locations[0], Home)
+    assert isinstance(env.locations[1], School)
+    assert isinstance(env.locations[2], School)
+
+    assert len(env.locations[0].actors) == 0
+    assert len(env.locations[1].actors) == 0
+    assert len(env.locations[2].actors) == 1
+
+    assert len(actor1.locations) == 0
+    assert len(actor2.locations) == 0
+    assert len(actor3.locations) == 1
 
 
-def test_model_connect_agents_and_disconnect_agents_4():
-    model = p2n.Model()
-    agent1 = p2n.Agent(model)
-    agent2 = p2n.Agent(model)
-    agent3 = p2n.Agent(model)
-    agents = [agent1, agent2, agent3]
+def test_model_connect_actors_and_disconnect_actors_3():
+    env = p2n.Environment()
+    actor1 = p2n.Actor(env)
+    actor2 = p2n.Actor(env)
+    actor3 = p2n.Actor(env)
+    actors = [actor1, actor2, actor3]
 
     class Home(p2n.Location):
         pass
@@ -188,32 +141,46 @@ def test_model_connect_agents_and_disconnect_agents_4():
     class School(p2n.Location):
         pass
 
-    model.connect_agents(
-        agents=agents,
+    env.connect_actors(
+        actors=actors,
         location_cls=Home,
     )
 
-    model.connect_agents(
-        agents=[agent1, agent2],
+    env.connect_actors(
+        actors=[actor1, actor2],
         location_cls=School,
     )
 
-    model.disconnect_agents(agents=[agent1, agent2], remove_locations=True)
+    env.disconnect_actors(actors, location_labels=["School"], remove_locations=True)
 
-    assert len(model.agents) == 3
+    assert len(env.actors) == 3
 
-    assert len(model.locations) == 0
+    assert len(env.locations) == 1
+    assert isinstance(env.locations[0], Home)
 
-    assert len(agent1.locations) == 0
-    assert len(agent2.locations) == 0
-    assert len(agent3.locations) == 0
+    assert len(env.locations[0].actors) == 3
+
+    assert len(actor1.locations) == 1
+    assert len(actor2.locations) == 1
+    assert len(actor3.locations) == 1
+
+    env.disconnect_actors(actors, location_labels=["Home"], remove_locations=True)
+
+    assert len(env.actors) == 3
+
+    assert len(env.locations) == 0
+
+    assert len(actor1.locations) == 0
+    assert len(actor2.locations) == 0
+    assert len(actor3.locations) == 0
 
 
-def test_model_connect_agents_and_disconnect_agents_5():
-    """Test agent.shared_locations()"""
-    model = p2n.Model()
-    agent1 = p2n.Agent(model)
-    agent2 = p2n.Agent(model)
+def test_model_connect_actors_and_disconnect_actors_4():
+    env = p2n.Environment()
+    actor1 = p2n.Actor(env)
+    actor2 = p2n.Actor(env)
+    actor3 = p2n.Actor(env)
+    actors = [actor1, actor2, actor3]
 
     class Home(p2n.Location):
         pass
@@ -221,30 +188,63 @@ def test_model_connect_agents_and_disconnect_agents_5():
     class School(p2n.Location):
         pass
 
-    assert len(agent1.shared_locations(agent2)) == 0
-    assert len(agent1.shared_locations(agent=agent2, location_labels=["Home"])) == 0
-    assert len(agent1.shared_locations(agent=agent2, location_labels=["School"])) == 0
-
-    model.connect_agents(
-        agents=[agent1, agent2],
+    env.connect_actors(
+        actors=actors,
         location_cls=Home,
     )
 
-    assert len(agent1.shared_locations(agent=agent2)) == 1
-    assert len(agent1.shared_locations(agent=agent2, location_labels=["Home"])) == 1
-    assert len(agent1.shared_locations(agent=agent2, location_labels=["School"])) == 0
-
-    model.connect_agents(
-        agents=[agent1, agent2],
+    env.connect_actors(
+        actors=[actor1, actor2],
         location_cls=School,
     )
 
-    assert len(agent1.shared_locations(agent=agent2)) == 2
-    assert len(agent1.shared_locations(agent=agent2, location_labels=["Home"])) == 1
-    assert len(agent1.shared_locations(agent=agent2, location_labels=["School"])) == 1
+    env.disconnect_actors(actors=[actor1, actor2], remove_locations=True)
 
-    model.disconnect_agents(agents=[agent1, agent2], remove_locations=True)
+    assert len(env.actors) == 3
 
-    assert len(agent1.shared_locations(agent=agent2)) == 0
-    assert len(agent1.shared_locations(agent=agent2, location_labels=["Home"])) == 0
-    assert len(agent1.shared_locations(agent=agent2, location_labels=["School"])) == 0
+    assert len(env.locations) == 0
+
+    assert len(actor1.locations) == 0
+    assert len(actor2.locations) == 0
+    assert len(actor3.locations) == 0
+
+
+def test_model_connect_actors_and_disconnect_actors_5():
+    """Test actor.shared_locations()"""
+    env = p2n.Environment()
+    actor1 = p2n.Actor(env)
+    actor2 = p2n.Actor(env)
+
+    class Home(p2n.Location):
+        pass
+
+    class School(p2n.Location):
+        pass
+
+    assert len(actor1.shared_locations(actor2)) == 0
+    assert len(actor1.shared_locations(actor=actor2, location_labels=["Home"])) == 0
+    assert len(actor1.shared_locations(actor=actor2, location_labels=["School"])) == 0
+
+    env.connect_actors(
+        actors=[actor1, actor2],
+        location_cls=Home,
+    )
+
+    assert len(actor1.shared_locations(actor=actor2)) == 1
+    assert len(actor1.shared_locations(actor=actor2, location_labels=["Home"])) == 1
+    assert len(actor1.shared_locations(actor=actor2, location_labels=["School"])) == 0
+
+    env.connect_actors(
+        actors=[actor1, actor2],
+        location_cls=School,
+    )
+
+    assert len(actor1.shared_locations(actor=actor2)) == 2
+    assert len(actor1.shared_locations(actor=actor2, location_labels=["Home"])) == 1
+    assert len(actor1.shared_locations(actor=actor2, location_labels=["School"])) == 1
+
+    env.disconnect_actors(actors=[actor1, actor2], remove_locations=True)
+
+    assert len(actor1.shared_locations(actor=actor2)) == 0
+    assert len(actor1.shared_locations(actor=actor2, location_labels=["Home"])) == 0
+    assert len(actor1.shared_locations(actor=actor2, location_labels=["School"])) == 0

@@ -2,30 +2,30 @@ import pop2net as p2n
 
 
 def test_1():
-    model = p2n.Model()
+    env = p2n.Environment()
 
     for _ in range(10):
-        p2n.Agent(model=model)
+        p2n.Actor(env=env)
 
     for _ in range(10):
-        p2n.Location(model=model)
+        p2n.Location(env=env)
 
     for _ in range(10):
-        p2n.Agent(model=model)
+        p2n.Actor(env=env)
 
     for _ in range(10):
-        p2n.Location(model=model)
+        p2n.Location(env=env)
 
-    # check if the agents can be found by id agents_dict
-    for agent in model.agents:
-        assert agent is model.agents_by_id[agent.id]
+    # check if the actors can be found by id actors_dict
+    for actor in env.actors:
+        assert actor is env.actors_by_id[actor.id]
 
     # check if the locations can be found by id locations_dict
-    for location in model.locations:
-        assert location is model.locations_by_id[location.id]
+    for location in env.locations:
+        assert location is env.locations_by_id[location.id]
 
-    # assert that the agents cannot be found by id in the normal agent_list
-    assert not all(agent is model.agents[agent.id] for agent in model.agents)
+    # assert that the actors cannot be found by id in the normal actor_list
+    assert not all(actor is env.actors[actor.id] for actor in env.actors)
 
     # assert that the locations cannot be found by id in the normal locations_list
-    assert not all(agent is model.agents[agent.id] for agent in model.agents)
+    assert not all(actor is env.actors[actor.id] for actor in env.actors)
