@@ -12,43 +12,43 @@ def test_1():
 
     class TestLocation(p2n.LocationDesigner):
         overcrowding = None
-        n_agents = 5
-        only_exact_n_agents = False
+        n_actors = 5
+        only_exact_n_actors = False
 
     class TestLocation2(p2n.LocationDesigner):
         overcrowding = True
-        n_agents = 5
-        only_exact_n_agents = False
+        n_actors = 5
+        only_exact_n_actors = False
 
     class TestLocation3(p2n.LocationDesigner):
         overcrowding = False
-        n_agents = 5
-        only_exact_n_agents = False
+        n_actors = 5
+        only_exact_n_actors = False
 
-    model = p2n.Model()
-    creator = p2n.Creator(model)
+    env = p2n.Environment()
+    creator = p2n.Creator(env=env)
     creator.create(df=df, location_designers=[TestLocation])
 
-    assert len(model.agents) == 7
-    assert len(model.locations) == 1
-    assert len(model.locations[0].agents) == 7
+    assert len(env.actors) == 7
+    assert len(env.locations) == 1
+    assert len(env.locations[0].actors) == 7
 
-    model = p2n.Model()
-    creator = p2n.Creator(model)
+    env = p2n.Environment()
+    creator = p2n.Creator(env=env)
     creator.create(df=df, location_designers=[TestLocation2])
 
-    assert len(model.agents) == 7
-    assert len(model.locations) == 1
-    assert len(model.locations[0].agents) == 7
+    assert len(env.actors) == 7
+    assert len(env.locations) == 1
+    assert len(env.locations[0].actors) == 7
 
-    model = p2n.Model()
-    creator = p2n.Creator(model)
+    env = p2n.Environment()
+    creator = p2n.Creator(env=env)
     creator.create(df=df, location_designers=[TestLocation3])
 
-    assert len(model.agents) == 7
-    assert len(model.locations) == 2
-    assert len(model.locations[0].agents) == 5
-    assert len(model.locations[1].agents) == 2
+    assert len(env.actors) == 7
+    assert len(env.locations) == 2
+    assert len(env.locations[0].actors) == 5
+    assert len(env.locations[1].actors) == 2
 
 
 def test_1():
@@ -60,42 +60,42 @@ def test_1():
 
     class TestLocation(p2n.LocationDesigner):
         overcrowding = None
-        n_agents = 5
-        only_exact_n_agents = True
+        n_actors = 5
+        only_exact_n_actors = True
 
     class TestLocation2(p2n.LocationDesigner):
         overcrowding = True
-        n_agents = 5
-        only_exact_n_agents = True
+        n_actors = 5
+        only_exact_n_actors = True
 
     class TestLocation3(p2n.LocationDesigner):
         overcrowding = False
-        n_agents = 5
-        only_exact_n_agents = True
+        n_actors = 5
+        only_exact_n_actors = True
 
-    model = p2n.Model()
-    creator = p2n.Creator(model)
+    env = p2n.Environment()
+    creator = p2n.Creator(env=env)
     creator.create(df=df, location_designers=[TestLocation])
 
-    assert len(model.agents) == 7
-    assert len(model.locations) == 1
-    assert len(model.locations[0].agents) == 5
-    assert sum(not agent.locations for agent in model.agents) == 2
+    assert len(env.actors) == 7
+    assert len(env.locations) == 1
+    assert len(env.locations[0].actors) == 5
+    assert sum(not actor.locations for actor in env.actors) == 2
 
-    model = p2n.Model()
-    creator = p2n.Creator(model)
+    env = p2n.Environment()
+    creator = p2n.Creator(env=env)
     creator.create(df=df, location_designers=[TestLocation2])
 
-    assert len(model.agents) == 7
-    assert len(model.locations) == 1
-    assert len(model.locations[0].agents) == 5
-    assert sum(not agent.locations for agent in model.agents) == 2
+    assert len(env.actors) == 7
+    assert len(env.locations) == 1
+    assert len(env.locations[0].actors) == 5
+    assert sum(not actor.locations for actor in env.actors) == 2
 
-    model = p2n.Model()
-    creator = p2n.Creator(model)
+    env = p2n.Environment()
+    creator = p2n.Creator(env=env)
     creator.create(df=df, location_designers=[TestLocation3])
 
-    assert len(model.agents) == 7
-    assert len(model.locations) == 1
-    assert len(model.locations[0].agents) == 5
-    assert sum(not agent.locations for agent in model.agents) == 2
+    assert len(env.actors) == 7
+    assert len(env.locations) == 1
+    assert len(env.locations[0].actors) == 5
+    assert sum(not actor.locations for actor in env.actors) == 2

@@ -9,45 +9,45 @@ def test_1():
     )
 
     class Classroom(p2n.LocationDesigner):
-        n_agents = 2
-        only_exact_n_agents = False
+        n_actors = 2
+        only_exact_n_actors = False
 
-        def stick_together(self, agent):
-            return agent.class_id
+        def stick_together(self, actor):
+            return actor.class_id
 
-    model = p2n.Model()
-    creator = p2n.Creator(model=model)
+    env = p2n.Environment()
+    creator = p2n.Creator(env=env)
     creator.create(df=df, location_designers=[Classroom])
 
-    assert len(model.agents) == 5
-    assert len(model.locations) == 2
-    assert len(model.locations[0].agents) == 2
-    assert len(model.locations[1].agents) == 3
+    assert len(env.actors) == 5
+    assert len(env.locations) == 2
+    assert len(env.locations[0].actors) == 2
+    assert len(env.locations[1].actors) == 3
 
-    for agent in model.agents:
-        assert agent.neighbors(location_labels=["Classroom"])[0].class_id == agent.class_id
+    for actor in env.actors:
+        assert actor.neighbors(location_labels=["Classroom"])[0].class_id == actor.class_id
 
-    # with exact agent set to True
+    # with exact actor set to True
     class Classroom(p2n.LocationDesigner):
-        n_agents = 2
-        only_exact_n_agents = True
+        n_actors = 2
+        only_exact_n_actors = True
 
-        def stick_together(self, agent):
-            return agent.class_id
+        def stick_together(self, actor):
+            return actor.class_id
 
-    model = p2n.Model()
-    creator = p2n.Creator(model=model)
+    env = p2n.Environment()
+    creator = p2n.Creator(env=env)
     creator.create(df=df, location_designers=[Classroom])
 
-    inspector = p2n.NetworkInspector(model)
+    inspector = p2n.NetworkInspector(env)
     inspector.plot_bipartite_network()
-    inspector.plot_agent_network(agent_attrs=df.columns, agent_color="class_id")
+    inspector.plot_actor_network(actor_attrs=df.columns, actor_color="class_id")
 
-    assert len(model.agents) == 5
-    assert len(model.locations) == 1
-    assert len(model.locations[0].agents) == 2
+    assert len(env.actors) == 5
+    assert len(env.locations) == 1
+    assert len(env.locations[0].actors) == 2
 
-    for agent in model.agents:
-        if agent.locations:
-            assert agent.neighbors(location_labels=["Classroom"])[0].class_id == agent.class_id
-    assert all(not agent.locations for agent in model.agents if agent.class_id == 1)
+    for actor in env.actors:
+        if actor.locations:
+            assert actor.neighbors(location_labels=["Classroom"])[0].class_id == actor.class_id
+    assert all(not actor.locations for actor in env.actors if actor.class_id == 1)

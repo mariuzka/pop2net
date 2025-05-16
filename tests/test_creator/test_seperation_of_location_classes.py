@@ -6,19 +6,19 @@ import pop2net as p2n
 @pytest.fixture
 def base_attrs():
     return [
-        "add_agent",
-        "add_agents",
-        "agents",
+        "add_actor",
+        "add_actors",
+        "actors",
         "get_weight",
         "id",
         "log",
-        "model",
+        "env",
         "neighbors",
         "p",
         "project_weights",
         "record",
-        "remove_agent",
-        "remove_agents",
+        "remove_actor",
+        "remove_actors",
         "set_weight",
         "setup",
         "type",
@@ -36,10 +36,10 @@ def magic_attrs():
         "filter",
         "location_class",
         "melt",
-        "n_agents",
+        "n_actors",
         "n_locations",
         "nxgraph",
-        "only_exact_n_agents",
+        "only_exact_n_actors",
         "overcrowding",
         "recycle",
         "refine",
@@ -56,14 +56,14 @@ def test_1(base_attrs, magic_attrs):
         def custom_method1(self):
             pass
 
-    model = p2n.Model()
-    creator = p2n.Creator(model)
-    creator.create_agents(n=10)
+    env = p2n.Environment()
+    creator = p2n.Creator(env=env)
+    creator.create_actors(n=10)
     creator.create_locations(location_designers=[MyLocation])
-    location = model.locations[0]
+    location = env.locations[0]
 
     # check number of locations
-    assert len(model.locations) == 1
+    assert len(env.locations) == 1
 
     # test if the types are correct
     assert location.type == "Location"
@@ -92,14 +92,14 @@ def test_2(base_attrs, magic_attrs):
         def custom_method1(self):
             pass
 
-    model = p2n.Model()
-    creator = p2n.Creator(model)
-    creator.create_agents(n=10)
+    env = p2n.Environment()
+    creator = p2n.Creator(env=env)
+    creator.create_actors(n=10)
     creator.create_locations(location_designers=[MyLocation])
-    location = model.locations[0]
+    location = env.locations[0]
 
     # check number of locations
-    assert len(model.locations) == 1
+    assert len(env.locations) == 1
 
     # test if the types are correct
     assert location.type == "Location"
@@ -126,7 +126,7 @@ def test_3(base_attrs, magic_attrs):
         def custom_method2(self):
             pass
 
-        def weight(self, agent):
+        def weight(self, actor):
             return "MyLocation"
 
     class MyLocationDesigner(p2n.LocationDesigner):
@@ -135,17 +135,17 @@ def test_3(base_attrs, magic_attrs):
         def custom_method1(self):
             pass
 
-        def weight(self, agent):
+        def weight(self, actor):
             return "MyLocationDesigner"
 
-    model = p2n.Model()
-    creator = p2n.Creator(model)
-    creator.create_agents(n=10)
+    env = p2n.Environment()
+    creator = p2n.Creator(env=env)
+    creator.create_actors(n=10)
     creator.create_locations(location_designers=[MyLocationDesigner])
-    location = model.locations[0]
+    location = env.locations[0]
 
     # check number of locations
-    assert len(model.locations) == 1
+    assert len(env.locations) == 1
 
     # test if the types are correct
     assert location.type == "MyLocation"
@@ -179,7 +179,7 @@ def test_4(base_attrs, magic_attrs):
         def custom_method2(self):
             pass
 
-        def weight(self, agent):
+        def weight(self, actor):
             return "MyLocation"
 
     class MyLocationDesigner(p2n.LocationDesigner):
@@ -189,17 +189,17 @@ def test_4(base_attrs, magic_attrs):
         def custom_method1(self):
             pass
 
-        def weight(self, agent):
+        def weight(self, actor):
             return "MyLocationDesigner"
 
-    model = p2n.Model()
-    creator = p2n.Creator(model)
-    creator.create_agents(n=10)
+    env = p2n.Environment()
+    creator = p2n.Creator(env=env)
+    creator.create_actors(n=10)
     creator.create_locations(location_designers=[MyLocationDesigner])
-    location = model.locations[0]
+    location = env.locations[0]
 
     # check number of locations
-    assert len(model.locations) == 1
+    assert len(env.locations) == 1
 
     # test if the types are correct
     assert location.type == "MyLocation"

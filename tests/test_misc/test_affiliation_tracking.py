@@ -4,7 +4,7 @@ import pop2net as p2n
 
 
 def test_affiliation_tracking():
-    class Agent(p2n.Agent):
+    class Actor(p2n.Actor):
         def setup(self):
             self.n_locations = 0
 
@@ -13,32 +13,32 @@ def test_affiliation_tracking():
 
     class Location(p2n.Location):
         def setup(self):
-            self.n_agents = 0
+            self.n_actors = 0
 
-        def count_agents(self):
-            self.n_agents = len(self.agents)
+        def count_actors(self):
+            self.n_actors = len(self.actors)
 
-    class Model(p2n.Model):
+    class Environment(p2n.Environment):
         def setup(self):
-            n_agents = 1000
-            self.add_agents(p2n.AgentList(self, n_agents, Agent))
-            self.add_locations(p2n.LocationList(self, n_agents, Location))
+            n_actors = 1000
+            self.add_actors(p2n.ActorList(self, n_actors, Actor))
+            self.add_locations(p2n.LocationList(self, n_actors, Location))
 
             for i, location in enumerate(self.locations):
-                location.add_agent(self.agents[i])
+                location.add_actor(self.actors[i])
 
         def step(self):
-            self.agents.count_locations()  # type: ignore
-            self.locations.count_agents()  # type: ignore
+            self.actors.count_locations()  # type: ignore
+            self.locations.count_actors()  # type: ignore
 
-    model = Model(parameters={"steps": 5})
-    model.run()
+    env = Environment(parameters={"steps": 5})
+    env.run()
 
-    for agent in model.agents:
-        assert agent.n_locations == 1
+    for actor in env.actors:
+        assert actor.n_locations == 1
 
-    for location in model.locations:
-        assert location.n_agents == 1
+    for location in env.locations:
+        assert location.n_actors == 1
 
 
 if __name__ == "__main__":

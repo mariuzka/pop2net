@@ -12,55 +12,55 @@ def test_1():
 
     class TestLocation1(p2n.LocationDesigner):
         overcrowding = None
-        n_agents = 5
+        n_actors = 5
 
-        def split(self, agent):
-            return agent.status
+        def split(self, actor):
+            return actor.status
 
     class TestLocation2(p2n.LocationDesigner):
         overcrowding = True
-        n_agents = 5
+        n_actors = 5
 
-        def split(self, agent):
-            return agent.status
+        def split(self, actor):
+            return actor.status
 
     class TestLocation3(p2n.LocationDesigner):
         overcrowding = False
-        n_agents = 5
+        n_actors = 5
 
-        def split(self, agent):
-            return agent.status
+        def split(self, actor):
+            return actor.status
 
-    model = p2n.Model()
-    creator = p2n.Creator(model)
+    env = p2n.Environment()
+    creator = p2n.Creator(env=env)
     creator.create(df=df, location_designers=[TestLocation1])
-    assert len(model.agents) == 14
-    assert len(model.locations) == 2
-    assert len(model.locations[0].agents) == 7
-    assert len(model.locations[1].agents) == 7
-    assert all(agent.status == "A" for agent in model.locations[0].agents)
-    assert all(agent.status == "B" for agent in model.locations[1].agents)
+    assert len(env.actors) == 14
+    assert len(env.locations) == 2
+    assert len(env.locations[0].actors) == 7
+    assert len(env.locations[1].actors) == 7
+    assert all(actor.status == "A" for actor in env.locations[0].actors)
+    assert all(actor.status == "B" for actor in env.locations[1].actors)
 
-    model = p2n.Model()
-    creator = p2n.Creator(model)
+    env = p2n.Environment()
+    creator = p2n.Creator(env=env)
     creator.create(df=df, location_designers=[TestLocation2])
-    assert len(model.agents) == 14
-    assert len(model.locations) == 2
-    assert len(model.locations[0].agents) == 7
-    assert len(model.locations[1].agents) == 7
-    assert all(agent.status == "A" for agent in model.locations[0].agents)
-    assert all(agent.status == "B" for agent in model.locations[1].agents)
+    assert len(env.actors) == 14
+    assert len(env.locations) == 2
+    assert len(env.locations[0].actors) == 7
+    assert len(env.locations[1].actors) == 7
+    assert all(actor.status == "A" for actor in env.locations[0].actors)
+    assert all(actor.status == "B" for actor in env.locations[1].actors)
 
-    model = p2n.Model()
-    creator = p2n.Creator(model)
+    env = p2n.Environment()
+    creator = p2n.Creator(env=env)
     creator.create(df=df, location_designers=[TestLocation3])
-    assert len(model.agents) == 14
-    assert len(model.locations) == 4
-    assert len(model.locations[0].agents) == 5
-    assert len(model.locations[1].agents) == 2
-    assert len(model.locations[2].agents) == 5
-    assert len(model.locations[3].agents) == 2
-    assert all(agent.status == "A" for agent in model.locations[0].agents)
-    assert all(agent.status == "A" for agent in model.locations[1].agents)
-    assert all(agent.status == "B" for agent in model.locations[2].agents)
-    assert all(agent.status == "B" for agent in model.locations[3].agents)
+    assert len(env.actors) == 14
+    assert len(env.locations) == 4
+    assert len(env.locations[0].actors) == 5
+    assert len(env.locations[1].actors) == 2
+    assert len(env.locations[2].actors) == 5
+    assert len(env.locations[3].actors) == 2
+    assert all(actor.status == "A" for actor in env.locations[0].actors)
+    assert all(actor.status == "A" for actor in env.locations[1].actors)
+    assert all(actor.status == "B" for actor in env.locations[2].actors)
+    assert all(actor.status == "B" for actor in env.locations[3].actors)

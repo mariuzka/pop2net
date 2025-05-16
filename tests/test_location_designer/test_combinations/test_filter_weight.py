@@ -4,8 +4,8 @@ import pop2net as p2n
 
 
 def test_1():
-    model = p2n.Model()
-    creator = p2n.Creator(model=model)
+    env = p2n.Environment()
+    creator = p2n.Creator(env=env)
 
     df = pd.DataFrame(
         {
@@ -14,24 +14,24 @@ def test_1():
     )
 
     class ClassRoom(p2n.LocationDesigner):
-        def filter(self, agent):
-            return agent.status == "A"
+        def filter(self, actor):
+            return actor.status == "A"
 
-        def weight(self, agent):
-            if agent.status == "A":
+        def weight(self, actor):
+            if actor.status == "A":
                 return 2
             else:
                 return 1
 
-    creator.create_agents(df=df)
+    creator.create_actors(df=df)
     creator.create_locations(location_designers=[ClassRoom])
 
-    assert len(model.locations) == 1
-    assert len(model.agents) == 5
+    assert len(env.locations) == 1
+    assert len(env.actors) == 5
     # TODO TypeError: attribute name must be string, not 'int' versteh das Problem nicht
     # assert all(
-    #    agent.get_location_weight(location=model.locations[0]) == 2 for agent in model.locations[0]
+    #    actor.get_location_weight(location=env.locations[0]) == 2 for actor in env.locations[0]
     # )
 
-    assert len(model.locations[0].agents) == 3
-    assert sum(not agent.locations for agent in model.agents) == 2
+    assert len(env.locations[0].actors) == 3
+    assert sum(not actor.locations for actor in env.actors) == 2
