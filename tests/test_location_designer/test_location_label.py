@@ -2,7 +2,6 @@ import pop2net as p2n
 
 
 def test_location_label():
-
     # Test 1: Default label (label is class name)
     location = p2n.Location()
     assert location.label == "Location"

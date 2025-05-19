@@ -157,7 +157,6 @@ def test_3():
         actor.group = i % 2
         env.add_actor(actor)
 
-
     creator.create_locations(
         location_designers=[City, Group],
         delete_magic_actor_attributes=False,
