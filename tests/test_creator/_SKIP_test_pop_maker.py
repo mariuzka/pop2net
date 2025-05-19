@@ -5,10 +5,9 @@ import pop2net as p2n
 from pop2net.actor import Actor
 from pop2net.location import Location
 
-
-# TODO wie das übersetzen? 
-#class Model(p2n.Model):
-   # pass
+# TODO wie das übersetzen?
+# class Model(p2n.Model):
+# pass
 
 
 class MyAgent(Actor):
@@ -80,5 +79,6 @@ def test_create_locations():
     for location in locations:
         for actor in location.actors:
             assert location.group(actor) == location.group_id
+
 
 test_create_locations()

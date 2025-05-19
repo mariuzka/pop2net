@@ -24,14 +24,9 @@ def test_1():
     assert len(env.actors) == 5
     assert len(env.locations[0].actors) == 5
     # sum of weights correct?
-    assert (
-        sum([env.get_weight(actor, env.locations[0]) for actor in env.locations[0].actors])
-        == 5
-    )
+    assert sum([env.get_weight(actor, env.locations[0]) for actor in env.locations[0].actors]) == 5
     # individual weights correct?
-    assert all(
-        env.get_weight(actor, env.locations[0]) == 1 for actor in env.locations[0].actors
-    )
+    assert all(env.get_weight(actor, env.locations[0]) == 1 for actor in env.locations[0].actors)
 
 
 def test_2():
@@ -58,10 +53,7 @@ def test_2():
     assert len(env.actors) == 5
     assert len(env.locations[0].actors) == 5
     # sum of weights correct?
-    assert (
-        sum([env.get_weight(actor, env.locations[0]) for actor in env.locations[0].actors])
-        == 17
-    )
+    assert sum([env.get_weight(actor, env.locations[0]) for actor in env.locations[0].actors]) == 17
     # individual weights correct?
     assert all(
         env.get_weight(actor, env.locations[0]) == 1
@@ -92,10 +84,7 @@ def test_3():
     assert len(env.actors) == 5
     assert len(env.locations[0].actors) == 5
     # sum of weights correct?
-    assert (
-        sum([env.get_weight(actor, env.locations[0]) for actor in env.locations[0].actors])
-        == 17
-    )
+    assert sum([env.get_weight(actor, env.locations[0]) for actor in env.locations[0].actors]) == 17
     # individual weights correct?
     assert all(
         env.get_weight(actor, env.locations[0]) == 1
