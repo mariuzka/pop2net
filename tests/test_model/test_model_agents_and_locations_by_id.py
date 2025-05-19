@@ -4,17 +4,10 @@ import pop2net as p2n
 def test_1():
     env = p2n.Environment()
 
-    for _ in range(10):
-        p2n.Actor(env=env)
-
-    for _ in range(10):
-        p2n.Location(env=env)
-
-    for _ in range(10):
-        p2n.Actor(env=env)
-
-    for _ in range(10):
-        p2n.Location(env=env)
+    env.add_actors([p2n.Actor() for _ in range(10)])
+    env.add_actors([p2n.Location() for _ in range(10)])
+    env.add_actors([p2n.Actor() for _ in range(10)])
+    env.add_actors([p2n.Location() for _ in range(10)])
 
     # check if the actors can be found by id actors_dict
     for actor in env.actors:

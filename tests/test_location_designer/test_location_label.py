@@ -2,24 +2,23 @@ import pop2net as p2n
 
 
 def test_location_label():
-    env = p2n.Environment()
 
     # Test 1: Default label (label is class name)
-    location = p2n.Location(env)
+    location = p2n.Location()
     assert location.label == "Location"
 
     # Test 2: Label is custom class name
     class MyLocation(p2n.Location):
         pass
 
-    location = MyLocation(env)
+    location = MyLocation()
     assert location.label == "MyLocation"
 
     # Test 3: Label is custom string
     class MyLocation(p2n.Location):
         label = "MyLocationYo"
 
-    location = MyLocation(env)
+    location = MyLocation()
     assert location.label == "MyLocationYo"
 
 

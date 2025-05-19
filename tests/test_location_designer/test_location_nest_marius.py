@@ -17,8 +17,9 @@ def test_1():
     creator = p2n.Creator(env=env)
 
     for i in range(8):
-        actor = p2n.Actor(env=env)
+        actor = p2n.Actor()
         actor.group = i % 2
+        env.add_actor(actor)
 
     creator.create_locations(
         location_designers=[CityDesigner, GroupDesigner],
@@ -28,13 +29,13 @@ def test_1():
     for actor in env.actors:
         print(vars(actor))
 
-    for location in env.locations.select(env.locations.label == "City"):
+    for location in [loc for loc in env.locations if loc.label == "City"]:
         assert int(location.actors[0].group) == 0
         assert int(location.actors[1].group) == 1
         assert int(location.actors[2].group) == 0
         assert int(location.actors[3].group) == 1
 
-    for location in env.locations.select(env.locations.label == "Group"):
+    for location in [loc for loc in env.locations if loc.label == "Group"]:
         assert location.actors[0].group == location.actors[1].group
 
     # not all members of the same group are also in the same city (which is not desired)
@@ -53,13 +54,13 @@ def test_1():
         delete_magic_actor_attributes=False,
     )
 
-    for location in env.locations.select(env.locations.label == "City"):
+    for location in [loc for loc in env.locations if loc.label == "City"]:
         assert int(location.actors[0].group) == 0
         assert int(location.actors[1].group) == 1
         assert int(location.actors[2].group) == 0
         assert int(location.actors[3].group) == 1
 
-    for location in env.locations.select(env.locations.label == "Group"):
+    for location in [loc for loc in env.locations if loc.label == "Group"]:
         assert location.actors[0].group == location.actors[1].group
 
     # all members of a group are in the same city

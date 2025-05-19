@@ -6,8 +6,7 @@ def test_1():
     ensuring that actors are only assigned to one mutation of the location designer."""
 
     class TestActor(p2n.Actor):
-        def __init__(self, env):
-            super().__init__(env)
+        pass
 
     class TestLocation(p2n.LocationDesigner):
         n_locations = 1
@@ -26,8 +25,7 @@ def test_1():
     env = p2n.Environment()
     creator = p2n.Creator(env=env)
 
-    for _ in range(10):
-        TestActor(env=env)
+    env.add_actors([TestActor() for _ in range(10)])
 
     creator.create_locations(location_designers=[TestLocation])
 
