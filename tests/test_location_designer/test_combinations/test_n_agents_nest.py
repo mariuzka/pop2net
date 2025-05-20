@@ -40,9 +40,6 @@ def test_1():
             is actor.neighbors(location_labels=["School"])[0]
         )
 
-    inspector = p2n.NetworkInspector(env)
-    inspector.plot_bipartite_network()
-
 
 def test_2():
     df = pd.DataFrame(

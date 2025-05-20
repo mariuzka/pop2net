@@ -86,10 +86,6 @@ def test_2():
         if location.label == "Classroom"
     )
 
-    inspector = p2n.NetworkInspector(env)
-    inspector.plot_bipartite_network()
-    inspector.plot_actor_network(actor_attrs=df.columns, actor_color="id")
-
     class School(p2n.LocationDesigner):
         n_actors = 4
 
@@ -117,10 +113,6 @@ def test_2():
         for location in env.locations
         if location.label == "Classroom"
     )
-
-    inspector = p2n.NetworkInspector(env)
-    inspector.plot_bipartite_network()
-    inspector.plot_actor_network(actor_attrs=df.columns, actor_color="group")
 
     for location in env.locations:
         if location.label == "School":
