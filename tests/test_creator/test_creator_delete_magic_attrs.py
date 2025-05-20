@@ -42,7 +42,7 @@ def test_del_magic_agent_attrs1(magic_actor_attributes):
         clear=True,
     )
 
-    for agent in env.actors:
+    for actor in env.actors:
         for attr in magic_actor_attributes:
             assert not hasattr(actor, attr)
 
@@ -74,7 +74,7 @@ def test_del_magic_agent_attrs2(magic_actor_attributes):
     # Second test: DELETE magic agent attributes
     creator.create(
         df=df,
-        n_agents=10,
+        n_actors=10,
         location_designers=[Location1, Location2],
         delete_magic_actor_attributes=True,
         clear=True,

@@ -70,7 +70,7 @@ def test_2():
     creator.create(df=df, location_designers=[Classroom, School])
     inspector = p2n.NetworkInspector(env=env)
     inspector.plot_bipartite_network()
-    inspector.plot_actor_network(actor_attrs=["status", "id"])
+    inspector.plot_actor_network(actor_attrs=["status"])
 
     assert len(env.actors) == 6
     assert len(env.locations) == 4

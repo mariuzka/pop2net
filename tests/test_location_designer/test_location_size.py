@@ -618,12 +618,14 @@ def test_melt_1():
             return TestMeltLocation0, TestMeltLocation1
 
     for _ in range(5):
-        actor = p2n.Actor(env)
+        actor = p2n.Actor()
         actor.opinion = 0
+        env.add_actor(actor)
 
     for _ in range(5):
-        actor = p2n.Actor(env)
+        actor = p2n.Actor()
         actor.opinion = 1
+        env.add_actor(actor)
 
     creator.create_locations(location_designers=[TestLocation])
 
@@ -658,12 +660,14 @@ def test_melt_2():
             return TestMeltLocation0, TestMeltLocation1
 
     for _ in range(5):
-        actor = p2n.Actor(env)
+        actor = p2n.Actor()
         actor.opinion = 0
+        env.add_actor(actor)
 
     for _ in range(5):
-        actor = p2n.Actor(env)
+        actor = p2n.Actor()
         actor.opinion = 1
+        env.add_actor(actor)
 
     creator.create_locations(location_designers=[TestLocation])
 
@@ -696,12 +700,14 @@ def test_melt_3():
             return TestMeltLocation0, TestMeltLocation1
 
     for _ in range(5):
-        actor = p2n.Actor(env)
+        actor = p2n.Actor()
         actor.opinion = 0
+        env.add_actor(actor)
 
     for _ in range(5):
-        actor = p2n.Actor(env)
+        actor = p2n.Actor()
         actor.opinion = 1
+        env.add_actor(actor)
 
     creator.create_locations(location_designers=[TestLocation])
 

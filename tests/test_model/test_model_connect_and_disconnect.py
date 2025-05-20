@@ -5,10 +5,11 @@ def test_model_connect_actors_and_disconnect_actors_1():
     """A test without specifying location types and without removing locations from env."""
 
     env = p2n.Environment()
-    actor1 = p2n.Actor(env)
-    actor2 = p2n.Actor(env)
-    actor3 = p2n.Actor(env)
+    actor1 = p2n.Actor()
+    actor2 = p2n.Actor()
+    actor3 = p2n.Actor()
     actors = [actor1, actor2, actor3]
+    env.add_actors(actors)
 
     class Home(p2n.Location):
         pass
@@ -58,10 +59,11 @@ def test_model_connect_actors_and_disconnect_actors_2():
     """A test without removing locations from env."""
 
     env = p2n.Environment()
-    actor1 = p2n.Actor(env)
-    actor2 = p2n.Actor(env)
-    actor3 = p2n.Actor(env)
+    actor1 = p2n.Actor()
+    actor2 = p2n.Actor()
+    actor3 = p2n.Actor()
     actors = [actor1, actor2, actor3]
+    env.add_actors(actors)
 
     class Home(p2n.Location):
         pass
@@ -130,10 +132,11 @@ def test_model_connect_actors_and_disconnect_actors_2():
 
 def test_model_connect_actors_and_disconnect_actors_3():
     env = p2n.Environment()
-    actor1 = p2n.Actor(env)
-    actor2 = p2n.Actor(env)
-    actor3 = p2n.Actor(env)
+    actor1 = p2n.Actor()
+    actor2 = p2n.Actor()
+    actor3 = p2n.Actor()
     actors = [actor1, actor2, actor3]
+    env.add_actors(actors)
 
     class Home(p2n.Location):
         pass
@@ -177,10 +180,11 @@ def test_model_connect_actors_and_disconnect_actors_3():
 
 def test_model_connect_actors_and_disconnect_actors_4():
     env = p2n.Environment()
-    actor1 = p2n.Actor(env)
-    actor2 = p2n.Actor(env)
-    actor3 = p2n.Actor(env)
+    actor1 = p2n.Actor()
+    actor2 = p2n.Actor()
+    actor3 = p2n.Actor()
     actors = [actor1, actor2, actor3]
+    env.add_actors(actors)
 
     class Home(p2n.Location):
         pass
@@ -212,8 +216,9 @@ def test_model_connect_actors_and_disconnect_actors_4():
 def test_model_connect_actors_and_disconnect_actors_5():
     """Test actor.shared_locations()"""
     env = p2n.Environment()
-    actor1 = p2n.Actor(env)
-    actor2 = p2n.Actor(env)
+    actor1 = p2n.Actor()
+    actor2 = p2n.Actor()
+    env.add_actors([actor1, actor2])
 
     class Home(p2n.Location):
         pass

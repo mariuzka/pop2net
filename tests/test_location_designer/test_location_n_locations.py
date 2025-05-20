@@ -35,9 +35,7 @@ def test_3():
         n_actors = 2
         only_exact_n_actors = False
 
-    for _ in range(10):
-        p2n.Actor(env=env)
-
+    env.add_actors([p2n.Actor() for _ in range(10)])
     creator.create_locations(location_designers=[ClassRoom])
 
     assert len(env.locations) == 4
@@ -56,8 +54,7 @@ def test_4():
         n_actors = 3
         only_exact_n_actors = True
 
-    for _ in range(10):
-        p2n.Actor(env=env)
+    env.add_actors([p2n.Actor() for _ in range(10)])
 
     creator.create_locations(location_designers=[ClassRoom])
 
