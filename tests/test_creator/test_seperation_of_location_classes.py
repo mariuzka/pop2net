@@ -2,7 +2,8 @@ import pytest
 
 import pop2net as p2n
 
-#TODO: test this with different frameworks
+# TODO: test this with different frameworks
+
 
 @pytest.fixture
 def base_attrs():
