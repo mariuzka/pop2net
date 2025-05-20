@@ -2,6 +2,7 @@ import pytest
 
 import pop2net as p2n
 
+#TODO: test this with different frameworks
 
 @pytest.fixture
 def base_attrs():
@@ -10,19 +11,15 @@ def base_attrs():
         "add_actors",
         "actors",
         "get_weight",
-        "id",
-        "log",
+        "id_p2n",
         "env",
         "neighbors",
-        "p",
         "project_weights",
-        "record",
         "remove_actor",
         "remove_actors",
         "set_weight",
         "setup",
         "type",
-        "vars",
         "weight",
     ]
 
