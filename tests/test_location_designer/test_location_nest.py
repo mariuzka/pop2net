@@ -58,7 +58,7 @@ def test_2():
 
     class ClassroomDesigner(p2n.LocationDesigner):
         label = "Classroom"
-        #n_actors = 2
+        # n_actors = 2
 
         def split(self, actor):
             return actor.group
@@ -93,7 +93,7 @@ def test_2():
 
     class ClassroomDesigner(p2n.LocationDesigner):
         label = "Classroom"
-        #n_actors = 2
+        # n_actors = 2
 
         def split(self, actor):
             return actor.group

@@ -144,7 +144,7 @@ def test_3():
         n_actors = 4
 
     class Group(p2n.LocationDesigner):
-        #n_actors = 2
+        # n_actors = 2
 
         def split(self, actor):
             return actor.group
@@ -172,7 +172,9 @@ def test_3():
         assert location.actors[0].group == location.actors[1].group
 
     # not all members of the same group are also in the same city (which is not desired)
-    assert not all(location.actors[0].City == location.actors[-1].City for location in env.locations)
+    assert not all(
+        location.actors[0].City == location.actors[-1].City for location in env.locations
+    )
 
     class GroupNestedInCity(Group):
         def nest(self):
