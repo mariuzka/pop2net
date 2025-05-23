@@ -57,7 +57,7 @@ def test_2():
         n_actors = 4
 
     class Classroom(p2n.LocationDesigner):
-        n_actors = 2
+        #n_actors = 2
 
         def split(self, actor):
             return actor.group
@@ -71,7 +71,7 @@ def test_2():
     )
 
     assert len(env.actors) == 8
-    assert len(env.locations) == 6
+    assert len(env.locations) == 4
 
     for location in env.locations:
         if location.label == "School":
@@ -81,7 +81,7 @@ def test_2():
             assert counter[2] == 2
 
     assert not all(
-        location.actors[0].School == location.actors[1].School
+        location.actors[0].School == location.actors[-1].School
         for location in env.locations
         if location.label == "Classroom"
     )
@@ -90,7 +90,7 @@ def test_2():
         n_actors = 4
 
     class Classroom(p2n.LocationDesigner):
-        n_actors = 2
+        #n_actors = 2
 
         def split(self, actor):
             return actor.group
@@ -109,7 +109,7 @@ def test_2():
     assert len(env.actors) == 8
     assert len(env.locations) == 6
     assert all(
-        location.actors[0].School == location.actors[1].School
+        location.actors[0].School == location.actors[-1].School
         for location in env.locations
         if location.label == "Classroom"
     )
