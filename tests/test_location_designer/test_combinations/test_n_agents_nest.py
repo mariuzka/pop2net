@@ -57,7 +57,7 @@ def test_2():
         n_actors = 4
 
     class Classroom(p2n.LocationDesigner):
-        #n_actors = 2
+        # n_actors = 2
 
         def split(self, actor):
             return actor.group
@@ -90,7 +90,7 @@ def test_2():
         n_actors = 4
 
     class Classroom(p2n.LocationDesigner):
-        #n_actors = 2
+        # n_actors = 2
 
         def split(self, actor):
             return actor.group
