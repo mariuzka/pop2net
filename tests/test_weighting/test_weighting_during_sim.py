@@ -51,10 +51,10 @@ def test_weighting_during_sim3():
     class WeightedModel(ap.Model):
         def setup(self):
             self.env = p2n.Environment(model=self)
-            
+
             self.location = p2n.Location()
             self.env.add_location(self.location)
-            
+
             self.actor = p2n.Actor()
             self.env.add_actor(self.actor)
 
@@ -80,10 +80,10 @@ def test_weighting_during_sim4():
     class WeightedModel(ap.Model):
         def setup(self):
             self.env = p2n.Environment(model=self)
-            
+
             self.location = WeightedLocation()
             self.env.add_location(self.location)
-            
+
             self.actor = p2n.Actor()
             self.env.add_actor(self.actor)
 
