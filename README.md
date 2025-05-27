@@ -1,5 +1,5 @@
 ![](https://github.com/mariuzka/pop2net/actions/workflows/tox.yml/badge.svg)
-![Python 3.9+](https://img.shields.io/badge/python->=3.9-blue.svg)
+![Python 3.11+](https://img.shields.io/badge/python->=3.11-blue.svg)
 
 # Pop2net
 
