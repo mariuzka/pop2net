@@ -345,7 +345,6 @@ class Creator:
             n_location_groups_is_fixed = True
             groups: list[list] = [[]]
 
-
         else:
             # TODO:
             raise Exception
@@ -857,7 +856,7 @@ class Creator:
                         # Assigning process:
                         # The if-statement below is just a quick fix to handle .n_actors == 0.
                         # TODO: Fix this earlier in the code
-                        if dummy_location.n_actors is None or dummy_location.n_actors > 0: 
+                        if dummy_location.n_actors is None or dummy_location.n_actors > 0:
                             for actor in subsplit_affiliated_actors:
                                 location.add_actor(actor)
 
@@ -872,7 +871,9 @@ class Creator:
                                     weight=weight,
                                 )
 
-                                group_info_str = f"gv={location.split_value},gid={location.group_id}"
+                                group_info_str = (
+                                    f"gv={location.split_value},gid={location.group_id}"
+                                )
                                 setattr(actor, label, group_info_str)
                                 setattr(actor, label + "_assigned", True)
                                 setattr(actor, label + "_id", group_count - 1)
@@ -885,7 +886,9 @@ class Creator:
                                 setattr(
                                     actor,
                                     label + "_tail",
-                                    True if group_list.index(actor) == (len(group_list) - 1) else False,
+                                    True
+                                    if group_list.index(actor) == (len(group_list) - 1)
+                                    else False,
                                 )
 
                             locations.append(location)
