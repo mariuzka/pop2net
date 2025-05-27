@@ -854,37 +854,44 @@ class Creator:
                         split_value_locations.append(location)
 
                         # Assigning process:
-                        for actor in subsplit_affiliated_actors:
-                            location.add_actor(actor)
+                        # The if-statement below is just a quick fix to handle .n_actors == 0.
+                        # TODO: Fix this earlier in the code
+                        if dummy_location.n_actors is None or dummy_location.n_actors > 0:
+                            for actor in subsplit_affiliated_actors:
+                                location.add_actor(actor)
 
-                            weight = (
-                                actor._P2NTEMP_melt_location_weight
-                                if actor._P2NTEMP_melt_location_weight is not None
-                                else location.weight(actor)
-                            )
+                                weight = (
+                                    actor._P2NTEMP_melt_location_weight
+                                    if actor._P2NTEMP_melt_location_weight is not None
+                                    else location.weight(actor)
+                                )
 
-                            location.set_weight(
-                                actor=actor,
-                                weight=weight,
-                            )
+                                location.set_weight(
+                                    actor=actor,
+                                    weight=weight,
+                                )
 
-                            group_info_str = f"gv={location.split_value},gid={location.group_id}"
-                            setattr(actor, label, group_info_str)
-                            setattr(actor, label + "_assigned", True)
-                            setattr(actor, label + "_id", group_count - 1)
-                            setattr(actor, label + "_position", group_list.index(actor))
-                            setattr(
-                                actor,
-                                label + "_head",
-                                True if group_list.index(actor) == 0 else False,
-                            )
-                            setattr(
-                                actor,
-                                label + "_tail",
-                                True if group_list.index(actor) == (len(group_list) - 1) else False,
-                            )
+                                group_info_str = (
+                                    f"gv={location.split_value},gid={location.group_id}"
+                                )
+                                setattr(actor, label, group_info_str)
+                                setattr(actor, label + "_assigned", True)
+                                setattr(actor, label + "_id", group_count - 1)
+                                setattr(actor, label + "_position", group_list.index(actor))
+                                setattr(
+                                    actor,
+                                    label + "_head",
+                                    True if group_list.index(actor) == 0 else False,
+                                )
+                                setattr(
+                                    actor,
+                                    label + "_tail",
+                                    True
+                                    if group_list.index(actor) == (len(group_list) - 1)
+                                    else False,
+                                )
 
-                        locations.append(location)
+                            locations.append(location)
 
                 if (
                     dummy_location.n_locations is not None
