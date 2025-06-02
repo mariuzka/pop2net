@@ -390,29 +390,39 @@ class NetworkInspector:
 
             result_list.append(get_network_measures(nx_subgraph))
         return result_list
-
+    
     def location_crosstab(
         self,
-        select_locations: _location.location | list[_location.Location],
+        location_labels: str | list[str],
         actor_attributes: str | list[str],
         output_format="table",
     ) -> list[pd.DataFrame] | None:
-        """Crosstable for specified location classes and actor attribute."""
+        """
+        Generates a crosstabulation of actor attributes for specified location labels.
+
+        Args:
+            location_labels (str | list[str]): Location label(s) to filter locations for the crosstab.
+            actor_attributes (str | list[str]): Actor attribute(s) to use for the crosstab.
+            output_format (str, optional): Output format, either "table" for printed tables or "df" for DataFrame output. Defaults to "table".
+
+        Returns:
+            list[pd.DataFrame] | None: List of DataFrames with crosstab results if output_format is "df", otherwise None.
+        """
         # Make every Parameter a list
-        if select_locations:
-            if not isinstance(select_locations, list):
-                select_locations = [select_locations]
+        if location_labels:
+            if not isinstance(location_labels, list):
+                location_labels = [location_labels]
 
         if actor_attributes:
             if not isinstance(actor_attributes, list):
                 actor_attributes = [actor_attributes]
-
+        
         # determine eligible locations classes
         valid_locations = []
-        if select_locations:
+        if location_labels:
             for location_instance in self.env.locations:
-                for locationtype in select_locations:
-                    if isinstance(location_instance, locationtype):
+                for locationtype in location_labels:
+                    if location_instance.label == locationtype:
                         valid_locations.append(location_instance)
         else:
             valid_locations = list(self.env.locations)
@@ -422,7 +432,7 @@ class NetworkInspector:
             actor_dfs = {}
             if actor_attributes:
                 for i, location_instance in enumerate(valid_locations):
-                    title = f"{i + 1}.Location: {str(location_instance).split(' ')[0]}"
+                    title = f"{i + 1}.Location: {str(location_instance.label).split(' ')[0]}"
                     df = pd.DataFrame([vars(actor) for actor in location_instance.actors])
                     df = df[list(actor_attributes)]
                     actor_dfs[title] = df
@@ -447,8 +457,8 @@ class NetworkInspector:
             actor_dfs = {}
             result_list = []
             for i, location_instance in enumerate(valid_locations):
-                title = f"{i + 1}.Location: {str(location_instance).split(' ')[0]}"
-                location_type = str(location_instance).split(" ")[0]
+                title = f"{i + 1}.Location: {str(location_instance.label).split(' ')[0]}"
+                location_type = str(location_instance.label).split(" ")[0]
                 df = pd.DataFrame([vars(actor) for actor in location_instance.actors])
 
                 # only keep wanted columns (actor attributes)
