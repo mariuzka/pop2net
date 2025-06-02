@@ -13,7 +13,7 @@ from tabulate import tabulate
 import pop2net.utils as utils
 
 if typing.TYPE_CHECKING:
-    from . import location as _location
+    pass
 
 
 class NetworkInspector:
@@ -390,15 +390,14 @@ class NetworkInspector:
 
             result_list.append(get_network_measures(nx_subgraph))
         return result_list
-    
+
     def location_crosstab(
         self,
         location_labels: str | list[str],
         actor_attributes: str | list[str],
         output_format="table",
     ) -> list[pd.DataFrame] | None:
-        """
-        Generates a crosstabulation of actor attributes for specified location labels.
+        """Generates a crosstabulation of actor attributes for specified location labels.
 
         Args:
             location_labels (str | list[str]): Location label(s) to filter locations for the crosstab.
@@ -416,7 +415,7 @@ class NetworkInspector:
         if actor_attributes:
             if not isinstance(actor_attributes, list):
                 actor_attributes = [actor_attributes]
-        
+
         # determine eligible locations classes
         valid_locations = []
         if location_labels:
@@ -500,15 +499,13 @@ class NetworkInspector:
             return result_list
         return None
 
-    
     def location_information(
         self,
         location_labels: str | list[str],
         actor_attributes: str | None | list[str] | None = None,
         output_format: str = "table",
     ) -> None | pd.DataFrame:
-        """
-        Provides detailed information about actors assigned to specific location instances.
+        """Provides detailed information about actors assigned to specific location instances.
 
         This method allows filtering by location labels and actor attributes, and can output
         the information either as a formatted table (printed to stdout) or as a pandas DataFrame.
