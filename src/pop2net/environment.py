@@ -32,6 +32,7 @@ class Environment:
         """
         # settings
         self.framework: str | None = framework
+        self._framework = None
         self.enable_p2n_warnings = enable_p2n_warnings
 
         # import framework dependencies, if required
