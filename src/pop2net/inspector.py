@@ -13,7 +13,7 @@ from tabulate import tabulate
 import pop2net.utils as utils
 
 if typing.TYPE_CHECKING:
-    from . import location as _location
+    pass
 
 
 class NetworkInspector:
@@ -393,15 +393,24 @@ class NetworkInspector:
 
     def location_crosstab(
         self,
-        select_locations: _location.location | list[_location.Location],
+        location_labels: str | list[str],
         actor_attributes: str | list[str],
         output_format="table",
     ) -> list[pd.DataFrame] | None:
-        """Crosstable for specified location classes and actor attribute."""
+        """Generates a crosstabulation of actor attributes for specified location labels.
+
+        Args:
+            location_labels (str | list[str]): Location label(s) to filter locations for the crosstab.
+            actor_attributes (str | list[str]): Actor attribute(s) to use for the crosstab.
+            output_format (str, optional): Output format, either "table" for printed tables or "df" for DataFrame output. Defaults to "table".
+
+        Returns:
+            list[pd.DataFrame] | None: List of DataFrames with crosstab results if output_format is "df", otherwise None.
+        """
         # Make every Parameter a list
-        if select_locations:
-            if not isinstance(select_locations, list):
-                select_locations = [select_locations]
+        if location_labels:
+            if not isinstance(location_labels, list):
+                location_labels = [location_labels]
 
         if actor_attributes:
             if not isinstance(actor_attributes, list):
@@ -409,10 +418,10 @@ class NetworkInspector:
 
         # determine eligible locations classes
         valid_locations = []
-        if select_locations:
+        if location_labels:
             for location_instance in self.env.locations:
-                for locationtype in select_locations:
-                    if isinstance(location_instance, locationtype):
+                for locationtype in location_labels:
+                    if location_instance.label == locationtype:
                         valid_locations.append(location_instance)
         else:
             valid_locations = list(self.env.locations)
@@ -422,7 +431,7 @@ class NetworkInspector:
             actor_dfs = {}
             if actor_attributes:
                 for i, location_instance in enumerate(valid_locations):
-                    title = f"{i + 1}.Location: {str(location_instance).split(' ')[0]}"
+                    title = f"{i + 1}.Location: {str(location_instance.label).split(' ')[0]}"
                     df = pd.DataFrame([vars(actor) for actor in location_instance.actors])
                     df = df[list(actor_attributes)]
                     actor_dfs[title] = df
@@ -447,8 +456,8 @@ class NetworkInspector:
             actor_dfs = {}
             result_list = []
             for i, location_instance in enumerate(valid_locations):
-                title = f"{i + 1}.Location: {str(location_instance).split(' ')[0]}"
-                location_type = str(location_instance).split(" ")[0]
+                title = f"{i + 1}.Location: {str(location_instance.label).split(' ')[0]}"
+                location_type = str(location_instance.label).split(" ")[0]
                 df = pd.DataFrame([vars(actor) for actor in location_instance.actors])
 
                 # only keep wanted columns (actor attributes)
@@ -492,28 +501,29 @@ class NetworkInspector:
 
     def location_information(
         self,
-        select_locations: _location.Location | list[_location.Location] | None = None,
+        location_labels: str | list[str],
         actor_attributes: str | None | list[str] | None = None,
         output_format: str = "table",
     ) -> None | pd.DataFrame:
-        """Provides information on the actors assigned to location instances.
+        """Provides detailed information about actors assigned to specific location instances.
 
-           Displayed  information can be filtered by specifying certain location
-           classes and actor_attributes
+        This method allows filtering by location labels and actor attributes, and can output
+        the information either as a formatted table (printed to stdout) or as a pandas DataFrame.
 
         Args:
-            select_locations (p2n.Location | list[p2n.Location] | None, optional): A list of
-                location classes. Defaults to None.
-            actor_attributes (str | None | list[str] | None, optional): A list of actor attributes.
-                Defaults to None.
-            output_format (str, optional): A str determining what is returned. Defaults to "table".
+            location_labels (str | list[str]): One or more location labels to filter the locations.
+            actor_attributes (str | None | list[str], optional): One or more actor attributes to include in the output.
+                If None, a default subset of attributes is used. Defaults to None.
+            output_format (str, optional): Determines the output format. Use "table" to print a formatted table,
+                or "df" to return a pandas DataFrame. Defaults to "table".
 
         Returns:
-            None | pd.DataFrame: A pandas.DataFrame or nothing.
+            None | pd.DataFrame: Returns None if output_format is "table" (prints to stdout).
+                Returns a pandas DataFrame if output_format is "df".
         """
-        if select_locations:
-            if not isinstance(select_locations, list):
-                select_locations = [select_locations]
+        if location_labels:
+            if not isinstance(location_labels, list):
+                location_labels = [location_labels]
 
         if actor_attributes:
             if not isinstance(actor_attributes, list):
@@ -521,10 +531,10 @@ class NetworkInspector:
 
         # determine eligible locations classes
         valid_locations = []
-        if select_locations:
+        if location_labels:
             for location_instance in self.env.locations:
-                for locationtype in select_locations:
-                    if isinstance(location_instance, locationtype):
+                for locationtype in location_labels:
+                    if location_instance.label == locationtype:
                         valid_locations.append(location_instance)
         else:
             valid_locations = list(self.env.locations)
@@ -534,8 +544,8 @@ class NetworkInspector:
         if actor_attributes:
             for i, location_instance in enumerate(valid_locations):
                 # Create the title of printout
-                title = f"{i + 1}.Location: {str(location_instance).split(' ')[0]}"
-                location_type = str(location_instance).split(" ")[0]
+                title = f"{i + 1}.Location: {str(location_instance.label).split(' ')[0]}"
+                location_type = str(location_instance.label).split(" ")[0]
                 # get all actors per location instance, subset df by actor-attributes
                 df = pd.DataFrame([vars(actor) for actor in location_instance.actors])
                 df = df[list(actor_attributes)]
@@ -543,8 +553,8 @@ class NetworkInspector:
                 actor_dfs[title] = df
         else:
             for i, location_instance in enumerate(valid_locations):
-                title = f"{i + 1}.Location: {str(location_instance).split(' ')[0]}"
-                location_type = str(location_instance).split(" ")[0]
+                title = f"{i + 1}.Location: {str(location_instance.label).split(' ')[0]}"
+                location_type = str(location_instance.label).split(" ")[0]
                 df = pd.DataFrame([vars(actor) for actor in location_instance.actors])
                 df.drop(df.iloc[:, 0:7], axis=1, inplace=True)
                 df["location_type"] = location_type
