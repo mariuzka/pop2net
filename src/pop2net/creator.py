@@ -34,17 +34,10 @@ class Creator:
         self._temp_actor_attrs = ["_P2NTEMP_split_values", "_P2NTEMP_melt_location_weight"]
         self.model = self.env.model
 
-        # if self.model is not None:
-        #    self._dummy_model = type(self.model)()
-
-        if self.env.framework is not None:
-            self._dummy_model = self.env._framework.Model()
-
     def _create_dummy_location(self, designer) -> p2n.Location:
         # TODO: Organize this code better
-        # TODO: Add the case where a model is provided but no framework
 
-        if self.model is None:
+        if self.env.framework is None:
             if designer.location_class is None:
                 # case 1: no framework & default location class
                 dummy_location_class = type("Location", (designer,), {})
@@ -52,7 +45,11 @@ class Creator:
                 # case 2: no framework & custom location class
                 location_name = utils._get_cls_as_str(designer.location_class)
                 dummy_location_class = type(location_name, (designer, designer.location_class), {})
+
             dummy_location = dummy_location_class()
+            dummy_location.model = (
+                self.model
+            )  # if no model was passed to the env, this is just None
 
         else:
             if designer.location_class is None:
@@ -193,8 +190,11 @@ class Creator:
             actors = []
             for _, row in df.iterrows():
                 if actor_class_dict is None:
-                    if self.model is None:
+                    if self.env.framework is None:
                         actor = actor_class()
+                        actor.model = (
+                            self.model
+                        )  # if no model was passed to the env, this is just None
                     else:
                         actor = actor_class(model=self.model)
                 else:
