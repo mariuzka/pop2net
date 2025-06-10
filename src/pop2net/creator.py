@@ -45,9 +45,11 @@ class Creator:
                 # case 2: no framework & custom location class
                 location_name = utils._get_cls_as_str(designer.location_class)
                 dummy_location_class = type(location_name, (designer, designer.location_class), {})
-            
+
             dummy_location = dummy_location_class()
-            dummy_location.model = self.model # if no model was passed to the env, this is just None
+            dummy_location.model = (
+                self.model
+            )  # if no model was passed to the env, this is just None
 
         else:
             if designer.location_class is None:
@@ -190,7 +192,9 @@ class Creator:
                 if actor_class_dict is None:
                     if self.env.framework is None:
                         actor = actor_class()
-                        actor.model = self.model # if no model was passed to the env, this is just None
+                        actor.model = (
+                            self.model
+                        )  # if no model was passed to the env, this is just None
                     else:
                         actor = actor_class(model=self.model)
                 else:
