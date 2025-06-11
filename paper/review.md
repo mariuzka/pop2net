@@ -26,3 +26,10 @@ reviewer 2:
 - [ ] In the statement of need you say that other packages lack generalization while also being too abstract. These two critiques seem to contradict each other. Also, it does not seem that pop2net is about generalization, as it focuses on only one type of network. Maybe the statement of need could be improved by instead focusing on the advantages of pop2net's modelling approach (i.e. the three core features) in comparison to e.g. just using networkx graphs.
 
 - [ ] "while also providing functionality for generating networks compatible with other modeling frameworks" - this sounds cool but i couldn't find an example how and with which other framework it can be used. As @EwoutH mentioned, it would be cool of course if you could do something like Model.agentpy() and Model.mesa() to use pop2net with different base packages, but that is probably a nice-to-have for the future. But I think you need to illustrate what is meant by this sentence.
+
+
+editor:
+
+One point of attention: we're really trying to keep the short papers <1000 words, because often they were getting too long. So while I agree with some of the points raised, JOSS favours a short paper with links to the docs.
+
+So from the comments above: yes to explain what a bipartite network is (the paper should be understandable by non-experts), yes to putting the workflow, but perhaps no to putting code and several examples (one would be enough).
