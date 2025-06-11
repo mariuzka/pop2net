@@ -34,14 +34,15 @@ bibliography: paper.bib
 
 Agent-based modeling is a scientific method used in fields such as social science, biology, and ecology to simulate the interactions of autonomous agents and study the resulting emergent phenomena.
 The relationships between agents that structure the simulated interactions are often represented by network graphs.
-Since empirical data on networks is rare, most of agent-based models rely on artificially generated networks [@amblard_which_2015].
+Since empirical data on networks is rare, most of agent-based models (ABM) rely on artificially generated networks [@amblard_which_2015].
 Consequently, generating a valid network structure at the beginning of a simulation, as well as accessing and modifying it during the simulation, are critical steps that must be managed in almost any agent-based model.
 
-Pop2net is a Python package that combines many steps related to network generation and management for agent-based modeling using a bipartite approach:
-In Pop2net, relations are represented as a graph of agents and locations.
-Locations act as a contact layer, representing specific contexts through which agents connect.
-This makes it easy to generate and manage custom network structures in an agent-based model.
-Pop2net extends the existing agent-based modeling framework AgentPy [@foramitti_agentpy_2021], while also providing functionality for generating networks compatible with other modeling frameworks.
+Pop2net is a Python package that combines many steps related to network generation and management for agent-based modeling using a bipartite approach.
+Bipartite networks consist of two distinct types of entities, where edges are only formed between entities of different types.
+In Pop2net, relationships are represented as bipartite networks connecting agents and locations, with direct links existing only between agents and locations.
+However, when two agents are linked to the same location, they are considered indirectly connected through that shared location.
+In this way, locations serve as a contact layer between agents, representing the places where interactions occur or the contexts that facilitate agent connections.
+The bipartite approach to relations makes it easy to generate and manage custom network structures in agent-based models.
 
 
 # Statement of Need

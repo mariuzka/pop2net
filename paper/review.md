@@ -21,7 +21,7 @@ reviewer 1:
 
 reviewer 2:
 
-- [ ] Please provide a short explanation in the beginning of what a bipartite network is. I think for a newcomer it would not immediately be clear. Maybe a graphic or example could be helpful.
+- [X] Please provide a short explanation in the beginning of what a bipartite network is. I think for a newcomer it would not immediately be clear. Maybe a graphic or example could be helpful.
 
 - [ ] In the statement of need you say that other packages lack generalization while also being too abstract. These two critiques seem to contradict each other. Also, it does not seem that pop2net is about generalization, as it focuses on only one type of network. Maybe the statement of need could be improved by instead focusing on the advantages of pop2net's modelling approach (i.e. the three core features) in comparison to e.g. just using networkx graphs.
 
