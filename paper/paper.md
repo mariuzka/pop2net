@@ -32,12 +32,12 @@ bibliography: paper.bib
 
 # Summary
 
-Agent-based modeling is a scientific method used in fields such as social science, biology, and ecology to simulate the interactions of autonomous agents and study the resulting emergent phenomena.
+Agent-based modeling (ABM) is a scientific method used in fields such as social science, biology, and ecology to simulate the interactions of autonomous agents and study the resulting emergent phenomena.
 The relationships between agents that structure the simulated interactions are often represented by network graphs.
-Since empirical data on networks is rare, most of agent-based models (ABM) rely on artificially generated networks [@amblard_which_2015].
+Since empirical data on networks is rare, most of agent-based models rely on artificially generated networks [@amblard_which_2015].
 Consequently, generating a valid network structure at the beginning of a simulation, as well as accessing and modifying it during the simulation, are critical steps that must be managed in almost any agent-based model.
 
-Pop2net is a Python package that combines many steps related to network generation and management for agent-based modeling using a bipartite approach.
+Pop2net is a Python package that combines many steps related to network generation and management for ABM using a bipartite approach.
 Bipartite networks consist of two distinct types of entities, where edges are only formed between entities of different types.
 In Pop2net, relationships are represented as bipartite networks connecting agents and locations, with direct links existing only between agents and locations.
 However, when two agents are linked to the same location, they are considered indirectly connected through that shared location.
@@ -48,18 +48,18 @@ The bipartite approach to relations makes it easy to generate and manage custom 
 # Statement of Need
 
 Currently, there are only a few tools designed to create and manage networks in agent-based models.
-General-purpose agent-based modeling frameworks, such as NetLogo [@wilensky_netlogo_1999], Mesa [@kazil_utilizing_2020], AgentPy [@foramitti_agentpy_2021], and Melodie [@yu_melodie_2023], offer basic data types for representing networks but lack advanced tools for creating custom network structures and provide only limited support for bipartite graphs out of the box.
-Existing network generators designed specifically for agent-based modeling, such as SynthPops [@mistry_synthpops_2021], often lack generalization, being domain-specific and limited in scope.
+General-purpose ABM frameworks, such as NetLogo [@wilensky_netlogo_1999], Mesa [@kazil_utilizing_2020], AgentPy [@foramitti_agentpy_2021], and Melodie [@yu_melodie_2023], offer basic data types for representing networks but lack advanced tools for creating custom network structures and provide only limited support for bipartite graphs out of the box.
+Existing network generators designed specifically for ABM, such as SynthPops [@mistry_synthpops_2021], often lack generalization, being domain-specific and limited in scope.
 As a result, most agent-based models rely on highly abstract network models [@amblard_which_2015].
 Custom modifications to tailor such network models to specific research designs are often complex and inflexible.
 
 Pop2net aims to address this gap in the toolkit of agent-based modelers by offering a framework for creating and managing custom network structures, with the flexibility to integrate empirical data and traditional network models.
-We identify three core features of Pop2net that are currently lacking in existing software for agent-based modeling:
+We identify three core features of Pop2net that are currently lacking in existing software for ABM:
 
 1. **A bipartite approach to networks.**
     Pop2net implements a bipartite approach to networks, which simplifies the creation and management of relations between agents in simulation models.
     The approach of creating a network based on agents and locations is not entirely new, but it is already common in epidemiological agent-based models (e.g., @kerr_covasim_2020, @vermeulen_social_2021, @kaffai_modeling_2021).
-    However, Pop2net is the first software package to implement this approach in a general package for network generation and management in agent-based modeling.
+    However, Pop2net is the first software package to implement this approach in a general package for network generation and management in ABM.
 
 2. **Scalable and modular network generation.**
     Based on the bipartite approach, Pop2net offers an innovative way of creating networks programmatically and modularly.
