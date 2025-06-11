@@ -117,5 +117,7 @@ This work was funded by Deutsche Forschungsgemeinschaft (DFG, German Research Fo
 
 We acknowledge the support of the Deutsche Forschungsgemeinschaft (DFG, German Research Foundation under the DFG reference number UP 31/1) for the Stuttgart Research Focus Interchange Forum for Reflecting on Intelligent Systems (IRIS).
 
+We thank Maximilian Richter for his valuable contribution to the package.
+
 
 # References
