@@ -1,15 +1,13 @@
-
-from pop2net.inspector import NetworkInspector
 from pop2net.actor import Actor
-from pop2net.location import Location
 from pop2net.environment import Environment
+from pop2net.inspector import NetworkInspector
+from pop2net.location import Location
 
 
 def test_crosstab_df():
-
     def setup_env():
         env = Environment()
-        a1 = Actor() 
+        a1 = Actor()
         a1.status = "pupil"
         a2 = Actor()
         a2.status = "teacher"
@@ -23,15 +21,13 @@ def test_crosstab_df():
     env = setup_env()
     inspector = NetworkInspector(env)
     result = inspector.location_crosstab(
-        location_labels="TestLoc",
-        actor_attributes="status",
-        output_format="df"
+        location_labels="TestLoc", actor_attributes="status", output_format="df"
     )
     # should return a list with one DataFrame
     assert isinstance(result, list) and len(result) == 1
     df = result[0]
     # check columns and types
-    assert list(df.columns) == ["location_id","status", "count", "location_type"]
+    assert list(df.columns) == ["location_id", "status", "count", "location_type"]
     # two rows for the two statuses
     assert len(df) == 2
     # counts are all 1
@@ -42,11 +38,11 @@ def test_crosstab_df():
     assert set(df["location_id"]) == {0}
     assert set(df["location_type"]) == {"TestLoc"}
 
-def test_crosstab_table(capsys):
 
+def test_crosstab_table(capsys):
     def setup_env():
         env = Environment()
-        a1 = Actor() 
+        a1 = Actor()
         a1.status = "pupil"
         a2 = Actor()
         a2.status = "teacher"
@@ -56,13 +52,11 @@ def test_crosstab_table(capsys):
         env.add_location(loc)
         [env.add_actor_to_location(loc, actor) for actor in env.actors]
         return env
-    
+
     env = setup_env()
     inspector = NetworkInspector(env)
     result = inspector.location_crosstab(
-        location_labels="TestLoc",
-        actor_attributes="status",
-        output_format="table"
+        location_labels="TestLoc", actor_attributes="status", output_format="table"
     )
     # table mode returns None and prints fancy grid
     assert result is None
