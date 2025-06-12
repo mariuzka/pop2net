@@ -53,7 +53,7 @@ It provides extensive control over network structures and a wide range of ready-
 However, NetworkX was not originally designed with ABM in mind, which can make managing networks or creating custom network structures within ABM frameworks cumbersome and inflexible.
 While the built-in network models are powerful, they are often too abstract to directly support the specific needs of ABM applications.
 
-ABM frameworks in Python—such as Mesa [@kazil_utilizing_2020], AgentPy [@foramitti_agentpy_2021], and Melodie [@yu_melodie_2023]—offer improved data structures for representing and manipulating networks.
+ABM frameworks in Python—such as Mesa [@kazil_utilizing_2020, @hoeven_mesa_2025], AgentPy [@foramitti_agentpy_2021], and Melodie [@yu_melodie_2023]—offer improved data structures for representing and manipulating networks.
 However, they still lack advanced tools for generating custom network topologies and provide only limited out-of-the-box support for bipartite graphs.
 
 Pop2net aims to address this gap in the toolkit of agent-based modelers by utilizing bipartite networks for organizing relations in ABM, with the flexibility to integrate empirical data and traditional network models:
