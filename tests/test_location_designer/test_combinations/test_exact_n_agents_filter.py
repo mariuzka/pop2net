@@ -10,40 +10,40 @@ def test_1():
             "status": ["A", "A", "A", "B"],
         }
     )
-    model = p2n.Model()
-    creator = p2n.Creator(model=model)
+    env = p2n.Environment()
+    creator = p2n.Creator(env=env)
 
     class TestLocation(p2n.LocationDesigner):
-        only_exact_n_agents = False
-        n_agents = 2
+        only_exact_n_actors = False
+        n_actors = 2
 
-        def filter(self, agent):
-            return agent.status == "A"
+        def filter(self, actor):
+            return actor.status == "A"
 
     creator.create(df=df, location_designers=[TestLocation])
 
-    assert len(model.agents) == 4
-    assert len(model.locations) == 2
-    assert len(model.locations[0].agents) == 2
-    assert all(agent.status == "A" for agent in model.locations[0].agents)
-    assert len(model.locations[1].agents) == 1
-    assert all(agent.status == "A" for agent in model.locations[1].agents)
-    assert all(not agent.locations for agent in model.agents if agent.status == "B")
+    assert len(env.actors) == 4
+    assert len(env.locations) == 2
+    assert len(env.locations[0].actors) == 2
+    assert all(actor.status == "A" for actor in env.locations[0].actors)
+    assert len(env.locations[1].actors) == 1
+    assert all(actor.status == "A" for actor in env.locations[1].actors)
+    assert all(not actor.locations for actor in env.actors if actor.status == "B")
 
-    model = p2n.Model()
-    creator = p2n.Creator(model=model)
+    env = p2n.Environment()
+    creator = p2n.Creator(env=env)
 
     class TestLocation(p2n.LocationDesigner):
-        only_exact_n_agents = True
-        n_agents = 2
+        only_exact_n_actors = True
+        n_actors = 2
 
-        def filter(self, agent):
-            return agent.status == "A"
+        def filter(self, actor):
+            return actor.status == "A"
 
     creator.create(df=df, location_designers=[TestLocation])
 
-    assert len(model.agents) == 4
-    assert len(model.locations) == 1
-    assert len(model.locations[0].agents) == 2
-    assert all(agent.status == "A" for agent in model.locations[0].agents)
-    assert all(not agent.locations for agent in model.agents if agent.status == "B")
+    assert len(env.actors) == 4
+    assert len(env.locations) == 1
+    assert len(env.locations[0].actors) == 2
+    assert all(actor.status == "A" for actor in env.locations[0].actors)
+    assert all(not actor.locations for actor in env.actors if actor.status == "B")

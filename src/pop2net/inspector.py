@@ -13,25 +13,25 @@ from tabulate import tabulate
 import pop2net.utils as utils
 
 if typing.TYPE_CHECKING:
-    from . import location as _location
+    pass
 
 
 class NetworkInspector:
-    """Helper class that contains functions to inspect the network of a pop2net model."""
+    """Helper class that contains functions to inspect the network of a pop2net environment."""
 
-    def __init__(self, model) -> None:
+    def __init__(self, env) -> None:
         """Initiate a NetworkInspector.
 
         Args:
-            model (Model): The model.
+            env (Environment): The environment this NetworkInspector belongs to.
         """
-        self.model = model
+        self.env = env  # TODO: make instances of inspector without a fixed env possible
 
     def plot_bipartite_network(
         self,
-        agent_attrs: list | None = None,
+        actor_attrs: list | None = None,
         location_attrs: list | None = None,
-        agent_color: str | None = None,
+        actor_color: str | None = None,
         location_color: str | None = None,
         edge_alpha: str = "weight",
         edge_color: str = "black",
@@ -39,15 +39,15 @@ class NetworkInspector:
         node_size: int = 10,
         node_alpha=0.5,
     ) -> None:
-        """Plots the bipartite network of agents and locations.
+        """Plots the bipartite network of actors and locations.
 
         Args:
-            agent_attrs (list | None, optional): A list of agent attributes that
+            actor_attrs (list | None, optional): A list of actor attributes that
                 should be shown as node attributes in the network graph. Defaults to None.
             location_attrs (list | None, optional): A list of location attributes that
                 should be shown as node attributes in the network graph. Defaults to None.
-            agent_color (str | None, optional): The agent attribute that determines the
-            color of the agent nodes. Defaults to None.
+            actor_color (str | None, optional): The actor attribute that determines the
+            color of the actor nodes. Defaults to None.
             location_color (str | None, optional): The location attribute that determines the
             color of the location nodes. Defaults to None.
             edge_alpha (str, optional): The edge attribute that determines the edges' transparency.
@@ -57,15 +57,15 @@ class NetworkInspector:
             node_size (int, optional): The size of the nodes. Defaults to 10.
             node_alpha (float, optional): The transparency of the nodes. Defaults to 0.5.
         """
-        if agent_attrs is None:
-            agent_attrs = ["type"]
+        if actor_attrs is None:
+            actor_attrs = ["type"]
         else:
-            agent_attrs = list(agent_attrs)
-            if "type" not in agent_attrs:
-                agent_attrs.append("type")
+            actor_attrs = list(actor_attrs)
+            if "type" not in actor_attrs:
+                actor_attrs.append("type")
 
-        if agent_color is not None and agent_color not in agent_attrs:
-            agent_attrs.append(agent_color)
+        if actor_color is not None and actor_color not in actor_attrs:
+            actor_attrs.append(actor_color)
 
         if location_attrs is None:
             location_attrs = ["type", "label"]
@@ -80,8 +80,8 @@ class NetworkInspector:
         if location_color is not None and location_color not in location_attrs:
             location_attrs.append(location_color)
 
-        graph = self.model.export_bipartite_network(
-            agent_attrs=agent_attrs,
+        graph = self.env.export_bipartite_network(
+            actor_attrs=actor_attrs,
             location_attrs=location_attrs,
         )
 
@@ -97,7 +97,7 @@ class NetworkInspector:
 
         plot.draw(
             node_color=(
-                agent_color if agent_color is not None else "firebrick",
+                actor_color if actor_color is not None else "firebrick",
                 location_color if location_color is not None else "steelblue",
             ),
             edge_alpha=edge_alpha,
@@ -107,10 +107,10 @@ class NetworkInspector:
             node_alpha=node_alpha,
         )
 
-    def plot_agent_network(
+    def plot_actor_network(
         self,
-        agent_color: str | None = None,
-        agent_attrs: list | None = None,
+        actor_color: str | None = None,
+        actor_attrs: list | None = None,
         edge_alpha: str = "weight",
         edge_color: str = "black",
         include_0_weights: bool = True,
@@ -118,12 +118,12 @@ class NetworkInspector:
         node_size: int = 10,
         node_alpha=0.5,
     ) -> None:
-        """Plots the agent network.
+        """Plots the actor network.
 
         Args:
-            agent_color (str | None, optional): The agent attribute that determines the
-            color of the agent nodes. Defaults to None.
-            agent_attrs (list | None, optional): A list of agent attributes that
+            actor_color (str | None, optional): The actor attribute that determines the
+            color of the actor nodes. Defaults to None.
+            actor_attrs (list | None, optional): A list of actor attributes that
                 should be shown as node attributes in the network graph. Defaults to None.
             edge_alpha (str, optional): The edge attribute that determines the edges' transparency.
                 Defaults to "weight".
@@ -134,18 +134,18 @@ class NetworkInspector:
             node_size (int, optional): The size of the nodes. Defaults to 10.
             node_alpha (float, optional): The transparency of the nodes. Defaults to 0.5.
         """
-        if agent_attrs is None:
-            agent_attrs = ["type"]
+        if actor_attrs is None:
+            actor_attrs = ["type"]
         else:
-            agent_attrs = list(agent_attrs)
-            if "type" not in agent_attrs:
-                agent_attrs.append("type")
+            actor_attrs = list(actor_attrs)
+            if "type" not in actor_attrs:
+                actor_attrs.append("type")
 
-        if agent_color is not None and agent_color not in agent_attrs:
-            agent_attrs.append(agent_color)
+        if actor_color is not None and actor_color not in actor_attrs:
+            actor_attrs.append(actor_color)
 
-        graph = self.model.export_agent_network(
-            node_attrs=agent_attrs,
+        graph = self.env.export_actor_network(
+            node_attrs=actor_attrs,
             include_0_weights=include_0_weights,
         )
 
@@ -153,7 +153,7 @@ class NetworkInspector:
         plot = BokehGraph(graph, width=400, height=400, hover_edges=True)
         plot.layout(layout=graph_layout)
         plot.draw(
-            node_color="firebrick" if agent_color is None else agent_color,
+            node_color="firebrick" if actor_color is None else actor_color,
             node_size=node_size,
             edge_alpha=edge_alpha,
             edge_color=edge_color,
@@ -163,9 +163,9 @@ class NetworkInspector:
 
     def plot_networks(
         self,
-        agent_attrs: list | None = None,
+        actor_attrs: list | None = None,
         location_attrs: list | None = None,
-        agent_color: str | None = None,
+        actor_color: str | None = None,
         location_color: str | None = None,
         edge_alpha: str = "weight",
         edge_color: str = "black",
@@ -174,15 +174,15 @@ class NetworkInspector:
         node_size: int = 10,
         node_alpha: float = 0.5,
     ) -> None:
-        """Plots the bipartite network and the agent network.
+        """Plots the bipartite network and the actor network.
 
         Args:
-            agent_attrs (list | None, optional): A list of agent attributes that
+            actor_attrs (list | None, optional): A list of actor attributes that
                 should be shown as node attributes in the network graph. Defaults to None.
             location_attrs (list | None, optional): A list of location attributes that
                 should be shown as node attributes in the network graph. Defaults to None.
-            agent_color (str | None, optional): The agent attribute that determines the
-                color of the agent nodes. Defaults to None.
+            actor_color (str | None, optional): The actor attribute that determines the
+                color of the actor nodes. Defaults to None.
             location_color (str | None, optional): The location attribute that determines the
                 color of the location nodes. Defaults to None.
             edge_alpha (str, optional): The edge attribute that determines the edges' transparency.
@@ -195,8 +195,8 @@ class NetworkInspector:
             node_alpha (float, optional): The transparency of the nodes. Defaults to 0.5.
         """
         self.plot_bipartite_network(
-            agent_color=agent_color,
-            agent_attrs=agent_attrs,
+            actor_color=actor_color,
+            actor_attrs=actor_attrs,
             location_color=location_color,
             location_attrs=location_attrs,
             edge_color=edge_color,
@@ -206,9 +206,9 @@ class NetworkInspector:
             node_alpha=node_alpha,
         )
 
-        self.plot_agent_network(
-            agent_color=agent_color,
-            agent_attrs=agent_attrs,
+        self.plot_actor_network(
+            actor_color=actor_color,
+            actor_attrs=actor_attrs,
             edge_color=edge_color,
             edge_alpha=edge_alpha,
             include_0_weights=include_0_weights,
@@ -218,7 +218,7 @@ class NetworkInspector:
         )
 
     def eval_affiliations(self, return_data=False) -> tuple[pd.DataFrame, pd.DataFrame] | None:
-        """Prints information on the distribution of agents per location and locations per agent.
+        """Prints information on the distribution of actors per location and locations per actor.
 
         Raises:
             Pop2netException: _description_
@@ -228,9 +228,9 @@ class NetworkInspector:
             [
                 {
                     "location_label": location.label,
-                    "n_agents": len(location.agents),
+                    "n_actors": len(location.actors),
                 }
-                for location in self.model.locations
+                for location in self.env.locations
             ],
         )
 
@@ -241,22 +241,22 @@ class NetworkInspector:
         df1.columns = df1.columns.droplevel()
         df1 = df1.drop("count", axis=1)
 
-        utils.print_header("Number of agents per location")
+        utils.print_header("Number of actors per location")
         print(df1)
 
         df2 = pd.DataFrame(
             [
                 {
-                    "agent_id": agent.id,
-                    "n_affiliated_locations": len(agent.locations),
+                    "actor_id": actor.id_p2n,
+                    "n_affiliated_locations": len(actor.locations),
                 }
-                for agent in self.model.agents
+                for actor in self.env.actors
             ],
         )
         df2 = df2.n_affiliated_locations.describe()
         df2 = df2.drop("count", axis=0)
 
-        utils.print_header("Number of affiliated locations per agent")
+        utils.print_header("Number of affiliated locations per actor")
         print(df2.to_frame())
 
         if return_data:
@@ -266,18 +266,18 @@ class NetworkInspector:
     # TODO: calculate relative freqs
     def create_contact_matrix(
         self,
-        agents: list | None = None,
+        actors: list | None = None,
         attr: str = "id",
         weighted: bool = False,
         plot: bool = True,
         annot: bool = False,
         return_df: bool = False,
     ) -> pd.DataFrame:
-        """Create a contact matrix as a DataFrame from a given model's agent list.
+        """Create a contact matrix as a DataFrame from a given env's actor list.
 
         Args:
-            agents: A list of agents.
-            attr: The agent attribute which is shown in the matrix.
+            actors: A list of actors.
+            attr: The actor attribute which is shown in the matrix.
             weighted: Should the contacts be weighted? Defaults to False.
             plot: Should the matrix be plotted? Defaults to False.
             annot: Should the plottet matrix be annotated? Defaults to False.
@@ -286,8 +286,8 @@ class NetworkInspector:
         Returns:
             A DataFrame containing a contact matrix based on `attr`.
         """
-        if agents is None:
-            agents = self.model.agents
+        if actors is None:
+            actors = self.env.actors
 
         contact_data = []
         attr_values = []
@@ -296,26 +296,26 @@ class NetworkInspector:
         attr_u_name = f"{attr}_u"
         attr_v_name = f"{attr}_v"
 
-        for agent_u in agents:
-            attr_u = getattr(agent_u, attr)
+        for actor_u in actors:
+            attr_u = getattr(actor_u, attr)
             if attr_u is not None:
                 attr_values.append(attr_u)
 
-                for agent_v in agent_u.neighbors():
-                    attr_v = getattr(agent_v, attr)
+                for actor_v in actor_u.neighbors():
+                    attr_v = getattr(actor_v, attr)
                     if attr_v is not None:
                         attr_values.append(attr_v)
 
-                        pair = {agent_u.id, agent_v.id}
+                        pair = {actor_u.id_p2n, actor_v.id_p2n}
 
                         if pair not in pairs:
                             contact_data.append(
                                 {
-                                    "id_u": agent_u.id,
+                                    "id_u": actor_u.id_p2n,
                                     attr_u_name: attr_u,
-                                    "id_v": agent_v.id,
+                                    "id_v": actor_v.id_p2n,
                                     attr_v_name: attr_v,
-                                    "weight": agent_u.get_agent_weight(agent_v),
+                                    "weight": actor_u.get_actor_weight(actor_v),
                                 },
                             )
                             pairs.append(pair)
@@ -344,19 +344,19 @@ class NetworkInspector:
         if return_df:
             return df
 
-    def network_measures(self, agent_attrs=None) -> list[dict]:
-        """Calculates common network measures for the agent-level network graph.
+    def network_measures(self, actor_attrs=None) -> list[dict]:
+        """Calculates common network measures for the actor-level network graph.
 
         If the created network consist of independent groups of nodes
         subgraphs are created and measures are calculated for each subgraph
 
         Args:
-            agent_attrs: A list of agent attributes
+            actor_attrs: A list of actor attributes
 
         Return:
             list of dictionaries of the common network measure results
         """
-        nx_graph = self.model.export_agent_network(node_attrs=agent_attrs)
+        nx_graph = self.env.export_actor_network(node_attrs=actor_attrs)
 
         # make distinction between multiple independent networks and one network
 
@@ -393,44 +393,53 @@ class NetworkInspector:
 
     def location_crosstab(
         self,
-        select_locations: _location.location | list[_location.Location],
-        agent_attributes: str | list[str],
+        location_labels: str | list[str],
+        actor_attributes: str | list[str],
         output_format="table",
     ) -> list[pd.DataFrame] | None:
-        """Crosstable for specified location classes and agent attribute."""
-        # Make every Parameter a list
-        if select_locations:
-            if not isinstance(select_locations, list):
-                select_locations = [select_locations]
+        """Generates a crosstabulation of actor attributes for specified location labels.
 
-        if agent_attributes:
-            if not isinstance(agent_attributes, list):
-                agent_attributes = [agent_attributes]
+        Args:
+            location_labels (str | list[str]): Location label(s) to filter locations for the crosstab.
+            actor_attributes (str | list[str]): Actor attribute(s) to use for the crosstab.
+            output_format (str, optional): Output format, either "table" for printed tables or "df" for DataFrame output. Defaults to "table".
+
+        Returns:
+            list[pd.DataFrame] | None: List of DataFrames with crosstab results if output_format is "df", otherwise None.
+        """
+        # Make every Parameter a list
+        if location_labels:
+            if not isinstance(location_labels, list):
+                location_labels = [location_labels]
+
+        if actor_attributes:
+            if not isinstance(actor_attributes, list):
+                actor_attributes = [actor_attributes]
 
         # determine eligible locations classes
         valid_locations = []
-        if select_locations:
-            for location_instance in self.model.locations:
-                for locationtype in select_locations:
-                    if isinstance(location_instance, locationtype):
+        if location_labels:
+            for location_instance in self.env.locations:
+                for locationtype in location_labels:
+                    if location_instance.label == locationtype:
                         valid_locations.append(location_instance)
         else:
-            valid_locations = list(self.model.locations)
+            valid_locations = list(self.env.locations)
 
-        # create agent df per location instance
+        # create actor df per location instance
         if output_format == "table":
-            agent_dfs = {}
-            if agent_attributes:
+            actor_dfs = {}
+            if actor_attributes:
                 for i, location_instance in enumerate(valid_locations):
-                    title = f"{i + 1}.Location: {str(location_instance).split(' ')[0]}"
-                    df = pd.DataFrame([vars(agent) for agent in location_instance.agents])
-                    df = df[list(agent_attributes)]
-                    agent_dfs[title] = df
+                    title = f"{i + 1}.Location: {str(location_instance.label).split(' ')[0]}"
+                    df = pd.DataFrame([vars(actor) for actor in location_instance.actors])
+                    df = df[list(actor_attributes)]
+                    actor_dfs[title] = df
 
-            for title, df in agent_dfs.items():
-                for agent_attribute in agent_attributes:
+            for title, df in actor_dfs.items():
+                for actor_attribute in actor_attributes:
                     crosstab_table = pd.crosstab(
-                        index=df[agent_attribute],
+                        index=df[actor_attribute],
                         columns="count",
                     )
 
@@ -438,33 +447,33 @@ class NetworkInspector:
                     print(
                         tabulate(
                             crosstab_table,
-                            headers=[agent_attribute, "count"],
+                            headers=[actor_attribute, "count"],
                             tablefmt="fancy_grid",
                         ),
                     )
                     print("\n")
         if output_format == "df":
-            agent_dfs = {}
+            actor_dfs = {}
             result_list = []
             for i, location_instance in enumerate(valid_locations):
-                title = f"{i + 1}.Location: {str(location_instance).split(' ')[0]}"
-                location_type = str(location_instance).split(" ")[0]
-                df = pd.DataFrame([vars(agent) for agent in location_instance.agents])
+                title = f"{i + 1}.Location: {str(location_instance.label).split(' ')[0]}"
+                location_type = str(location_instance.label).split(" ")[0]
+                df = pd.DataFrame([vars(actor) for actor in location_instance.actors])
 
-                # only keep wanted columns (agent attributes)
-                df = df[list(agent_attributes)]
+                # only keep wanted columns (actor attributes)
+                df = df[list(actor_attributes)]
 
                 # add location type as str
                 df["location_type"] = location_type
 
-                agent_dfs[title] = df
+                actor_dfs[title] = df
 
-            for agent_attribute in agent_attributes:
+            for actor_attribute in actor_attributes:
                 location_id = 0
                 df_list_of_attribute = []
-                for _, df in agent_dfs.items():
+                for _, df in actor_dfs.items():
                     crosstab_table = pd.crosstab(
-                        index=df[agent_attribute],
+                        index=df[actor_attribute],
                         columns="count",
                     )
                     crosstab_table.insert(
@@ -492,67 +501,68 @@ class NetworkInspector:
 
     def location_information(
         self,
-        select_locations: _location.Location | list[_location.Location] | None = None,
-        agent_attributes: str | None | list[str] | None = None,
+        location_labels: str | list[str],
+        actor_attributes: str | None | list[str] | None = None,
         output_format: str = "table",
     ) -> None | pd.DataFrame:
-        """Provides information on the agents assigned to location instances.
+        """Provides detailed information about actors assigned to specific location instances.
 
-           Displayed  information can be filtered by specifying certain location
-           classes and agent_attributes
+        This method allows filtering by location labels and actor attributes, and can output
+        the information either as a formatted table (printed to stdout) or as a pandas DataFrame.
 
         Args:
-            select_locations (p2n.Location | list[p2n.Location] | None, optional): A list of
-                location classes. Defaults to None.
-            agent_attributes (str | None | list[str] | None, optional): A list of agent attributes.
-                Defaults to None.
-            output_format (str, optional): A str determining what is returned. Defaults to "table".
+            location_labels (str | list[str]): One or more location labels to filter the locations.
+            actor_attributes (str | None | list[str], optional): One or more actor attributes to include in the output.
+                If None, a default subset of attributes is used. Defaults to None.
+            output_format (str, optional): Determines the output format. Use "table" to print a formatted table,
+                or "df" to return a pandas DataFrame. Defaults to "table".
 
         Returns:
-            None | pd.DataFrame: A pandas.DataFrame or nothing.
+            None | pd.DataFrame: Returns None if output_format is "table" (prints to stdout).
+                Returns a pandas DataFrame if output_format is "df".
         """
-        if select_locations:
-            if not isinstance(select_locations, list):
-                select_locations = [select_locations]
+        if location_labels:
+            if not isinstance(location_labels, list):
+                location_labels = [location_labels]
 
-        if agent_attributes:
-            if not isinstance(agent_attributes, list):
-                agent_attributes = [agent_attributes]
+        if actor_attributes:
+            if not isinstance(actor_attributes, list):
+                actor_attributes = [actor_attributes]
 
         # determine eligible locations classes
         valid_locations = []
-        if select_locations:
-            for location_instance in self.model.locations:
-                for locationtype in select_locations:
-                    if isinstance(location_instance, locationtype):
+        if location_labels:
+            for location_instance in self.env.locations:
+                for locationtype in location_labels:
+                    if location_instance.label == locationtype:
                         valid_locations.append(location_instance)
         else:
-            valid_locations = list(self.model.locations)
+            valid_locations = list(self.env.locations)
 
-        # create agent df per location instance
-        agent_dfs = {}
-        if agent_attributes:
+        # create actor df per location instance
+        actor_dfs = {}
+        if actor_attributes:
             for i, location_instance in enumerate(valid_locations):
                 # Create the title of printout
-                title = f"{i + 1}.Location: {str(location_instance).split(' ')[0]}"
-                location_type = str(location_instance).split(" ")[0]
-                # get all agents per location instance, subset df by agent-attributes
-                df = pd.DataFrame([vars(agent) for agent in location_instance.agents])
-                df = df[list(agent_attributes)]
+                title = f"{i + 1}.Location: {str(location_instance.label).split(' ')[0]}"
+                location_type = str(location_instance.label).split(" ")[0]
+                # get all actors per location instance, subset df by actor-attributes
+                df = pd.DataFrame([vars(actor) for actor in location_instance.actors])
+                df = df[list(actor_attributes)]
                 df["location_type"] = location_type
-                agent_dfs[title] = df
+                actor_dfs[title] = df
         else:
             for i, location_instance in enumerate(valid_locations):
-                title = f"{i + 1}.Location: {str(location_instance).split(' ')[0]}"
-                location_type = str(location_instance).split(" ")[0]
-                df = pd.DataFrame([vars(agent) for agent in location_instance.agents])
+                title = f"{i + 1}.Location: {str(location_instance.label).split(' ')[0]}"
+                location_type = str(location_instance.label).split(" ")[0]
+                df = pd.DataFrame([vars(actor) for actor in location_instance.actors])
                 df.drop(df.iloc[:, 0:7], axis=1, inplace=True)
                 df["location_type"] = location_type
-                agent_dfs[title] = df
+                actor_dfs[title] = df
 
         if output_format == "table":
             #### Print Part "Basic"
-            for title, df in agent_dfs.items():
+            for title, df in actor_dfs.items():
                 print(f"{title} \n")
                 print(tabulate(df, headers="keys", tablefmt="fancy_grid"))
                 print("\n")
@@ -560,7 +570,7 @@ class NetworkInspector:
         if output_format == "df":
             location_id_counter = 0
             df_list = []
-            for _, df in agent_dfs.items():
+            for _, df in actor_dfs.items():
                 df.insert(0, "location_id", [location_id_counter] * len(df.index))
                 location_id_counter += 1
                 df_list.append(df)

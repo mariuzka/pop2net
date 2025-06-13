@@ -17,25 +17,25 @@ def test_1():
         n_locations = 2
 
         def refine(self):
-            if len(self.agents) % 2 == 0:
-                new_agent = p2n.Agent(model)
-                new_agent.status = "pupil"
-                self.add_agent(new_agent)
+            if len(self.actors) % 2 == 0:
+                new_actor = p2n.Actor(env)
+                new_actor.status = "pupil"
+                self.add_actor(new_actor)
 
-    model = p2n.Model()
+    env = p2n.Environment()
 
-    creator = p2n.Creator(model=model)
+    creator = p2n.Creator(env=env)
     creator.create(df=df, location_classes=[TestLocation])
 
-    inspector = p2n.NetworkInspector(model)
+    inspector = p2n.NetworkInspector(env)
     inspector.plot_bipartite_network()
-    inspector.plot_agent_network(agent_attrs=df.columns, agent_color="status")
+    inspector.plot_actor_network(actor_attrs=df.columns, actor_color="status")
 
-    assert len(model.locations) == 2
-    assert len(model.agents) == 6
-    assert len(model.locations[0].agents) == 3
-    assert len(model.locations[1].agents) == 3
-    assert sum(agent.status == "pupil" for agent in model.locations[0].agents) == 2
-    assert sum(agent.status == "teacher" for agent in model.locations[0].agents) == 1
-    assert sum(agent.status == "pupil" for agent in model.locations[1].agents) == 2
-    assert sum(agent.status == "teacher" for agent in model.locations[1].agents) == 1
+    assert len(env.locations) == 2
+    assert len(env.actors) == 6
+    assert len(env.locations[0].actors) == 3
+    assert len(env.locations[1].actors) == 3
+    assert sum(actor.status == "pupil" for actor in env.locations[0].actors) == 2
+    assert sum(actor.status == "teacher" for actor in env.locations[0].actors) == 1
+    assert sum(actor.status == "pupil" for actor in env.locations[1].actors) == 2
+    assert sum(actor.status == "teacher" for actor in env.locations[1].actors) == 1

@@ -9,3 +9,4 @@ Tutorial
    Introduction/introduction_simulations
    Introduction/inspector
    Introduction/network_export
+   Introduction/framework_integration

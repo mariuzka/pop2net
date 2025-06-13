@@ -16,28 +16,28 @@ def test_1():
 
     class School(p2n.LocationDesigner):
         overcrowding = False
-        n_agents = 5
+        n_actors = 5
 
     class Classroom(p2n.LocationDesigner):
         overcrowding = False
-        n_agents = 5
+        n_actors = 5
 
         def nest(self):
             return School
 
-    model = p2n.Model()
-    creator = p2n.Creator(model=model)
+    env = p2n.Environment()
+    creator = p2n.Creator(env=env)
     creator.create(df=df, location_designers=[School, Classroom])
-    inspector = p2n.NetworkInspector(model)
+    inspector = p2n.NetworkInspector(env)
     inspector.plot_bipartite_network()
-    inspector.plot_agent_network(agent_attrs=df)
+    inspector.plot_actor_network(actor_attrs=df)
 
-    assert len(model.agents) == 7
-    assert len(model.locations) == 4
-    assert len(model.locations[0].agents) == 5
-    assert len(model.locations[1].agents) == 2
-    assert len(model.locations[2].agents) == 5
-    assert len(model.locations[3].agents) == 2
+    assert len(env.actors) == 7
+    assert len(env.locations) == 4
+    assert len(env.locations[0].actors) == 5
+    assert len(env.locations[1].actors) == 2
+    assert len(env.locations[2].actors) == 5
+    assert len(env.locations[3].actors) == 2
 
 
 # %%
@@ -54,154 +54,147 @@ def test_2():
     )
 
     class School(p2n.LocationDesigner):
-        n_agents = 4
+        n_actors = 4
 
     class Classroom(p2n.LocationDesigner):
-        n_agents = 2
+        # n_actors = 2
 
-        def split(self, agent):
-            return agent.group
+        def split(self, actor):
+            return actor.group
 
-    model = p2n.Model()
-    creator = p2n.Creator(model=model)
+    env = p2n.Environment()
+    creator = p2n.Creator(env=env)
     creator.create(
         df=df,
         location_designers=[School, Classroom],
-        delete_magic_agent_attributes=False,
+        delete_magic_actor_attributes=False,
     )
 
-    assert len(model.agents) == 8
-    assert len(model.locations) == 6
+    assert len(env.actors) == 8
+    assert len(env.locations) == 4
 
-    for location in model.locations:
+    for location in env.locations:
         if location.label == "School":
-            assert len(location.agents) == 4
-            counter = Counter([agent.group for agent in location.agents])
+            assert len(location.actors) == 4
+            counter = Counter([actor.group for actor in location.actors])
             assert counter[1] == 2
             assert counter[2] == 2
 
     assert not all(
-        location.agents[0].School == location.agents[1].School
-        for location in model.locations
+        location.actors[0].School == location.actors[-1].School
+        for location in env.locations
         if location.label == "Classroom"
     )
 
-    inspector = p2n.NetworkInspector(model)
-    inspector.plot_bipartite_network()
-    inspector.plot_agent_network(agent_attrs=df.columns, agent_color="id")
-
     class School(p2n.LocationDesigner):
-        n_agents = 4
+        n_actors = 4
 
     class Classroom(p2n.LocationDesigner):
-        n_agents = 2
+        # n_actors = 2
 
-        def split(self, agent):
-            return agent.group
+        def split(self, actor):
+            return actor.group
 
         def nest(self):
             return "School"
 
-    model = p2n.Model()
-    creator = p2n.Creator(model=model)
+    env = p2n.Environment()
+    creator = p2n.Creator(env=env)
     creator.create(
         df=df,
         location_designers=[School, Classroom],
-        delete_magic_agent_attributes=False,
+        delete_magic_actor_attributes=False,
     )
 
-    assert len(model.agents) == 8
-    assert len(model.locations) == 6
+    assert len(env.actors) == 8
+    assert len(env.locations) == 6
     assert all(
-        location.agents[0].School == location.agents[1].School
-        for location in model.locations
+        location.actors[0].School == location.actors[-1].School
+        for location in env.locations
         if location.label == "Classroom"
     )
 
-    inspector = p2n.NetworkInspector(model)
-    inspector.plot_bipartite_network()
-    inspector.plot_agent_network(agent_attrs=df.columns, agent_color="group")
-
-    for location in model.locations:
+    for location in env.locations:
         if location.label == "School":
-            assert len(location.agents) == 4
+            assert len(location.actors) == 4
         if location.label == "Classroom":
-            assert len(location.agents) == 2
+            assert len(location.actors) == 2
 
-    for location in model.locations:
+    for location in env.locations:
         if location.label == "School":
-            assert len(location.agents) == 4
-            counter = Counter([agent.group for agent in location.agents])
+            assert len(location.actors) == 4
+            counter = Counter([actor.group for actor in location.actors])
             assert counter[1] == 2
             assert counter[2] == 2
 
     assert any(
-        agent.neighbors(location_labels=[Classroom])
-        not in agent.neighbors(location_labels=[School])
-        for agent in model.agents
+        actor.neighbors(location_labels=[Classroom])
+        not in actor.neighbors(location_labels=[School])
+        for actor in env.actors
     )
 
-    for location in model.locations:
+    for location in env.locations:
         if location.label == "School":
-            for agent in location.agents:
-                assert all(agent.School == nghbr.School for nghbr in agent.neighbors())
+            for actor in location.actors:
+                assert all(actor.School == nghbr.School for nghbr in actor.neighbors())
 
 
 def test_3():
     class City(p2n.LocationDesigner):
-        n_agents = 4
+        n_actors = 4
 
     class Group(p2n.LocationDesigner):
-        n_agents = 2
+        # n_actors = 2
 
-        def split(self, agent):
-            return agent.group
+        def split(self, actor):
+            return actor.group
 
-    model = p2n.Model()
-    creator = p2n.Creator(model=model)
+    env = p2n.Environment()
+    creator = p2n.Creator(env=env)
 
     for i in range(8):
-        agent = p2n.Agent(model=model)
-        agent.group = i % 2
+        actor = p2n.Actor()
+        actor.group = i % 2
+        env.add_actor(actor)
 
     creator.create_locations(
         location_designers=[City, Group],
-        delete_magic_agent_attributes=False,
+        delete_magic_actor_attributes=False,
     )
 
-    for location in model.locations.select(model.locations.label == "City"):
-        assert int(location.agents[0].group) == 0
-        assert int(location.agents[1].group) == 1
-        assert int(location.agents[2].group) == 0
-        assert int(location.agents[3].group) == 1
+    for location in [loc for loc in env.locations if loc.label == "City"]:
+        assert int(location.actors[0].group) == 0
+        assert int(location.actors[1].group) == 1
+        assert int(location.actors[2].group) == 0
+        assert int(location.actors[3].group) == 1
 
-    for location in model.locations.select(model.locations.label == "Group"):
-        assert location.agents[0].group == location.agents[1].group
+    for location in [loc for loc in env.locations if loc.label == "Group"]:
+        assert location.actors[0].group == location.actors[1].group
 
     # not all members of the same group are also in the same city (which is not desired)
     assert not all(
-        location.agents[0].City == location.agents[1].City for location in model.locations
+        location.actors[0].City == location.actors[-1].City for location in env.locations
     )
 
     class GroupNestedInCity(Group):
         def nest(self):
             return City
 
-    model = p2n.Model()
-    creator = p2n.Creator(model=model)
+    env = p2n.Environment()
+    creator = p2n.Creator(env=env)
     creator.create_locations(
         location_designers=[City, GroupNestedInCity],
-        delete_magic_agent_attributes=False,
+        delete_magic_actor_attributes=False,
     )
 
-    for location in model.locations.select(model.locations.label == "City"):
-        assert int(location.agents[0].group) == 0
-        assert int(location.agents[1].group) == 1
-        assert int(location.agents[2].group) == 0
-        assert int(location.agents[3].group) == 1
+    for location in [loc for loc in env.locations if loc.label == "City"]:
+        assert int(location.actors[0].group) == 0
+        assert int(location.actors[1].group) == 1
+        assert int(location.actors[2].group) == 0
+        assert int(location.actors[3].group) == 1
 
-    for location in model.locations.select(model.locations.label == "Group"):
-        assert location.agents[0].group == location.agents[1].group
+    for location in [loc for loc in env.locations if loc.label == "Group"]:
+        assert location.actors[0].group == location.actors[1].group
 
     # all members of a group are in the same city
-    assert all(location.agents[0].City == location.agents[1].City for location in model.locations)
+    assert all(location.actors[0].City == location.actors[-1].City for location in env.locations)

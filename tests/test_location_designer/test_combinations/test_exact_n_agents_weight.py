@@ -10,21 +10,21 @@ def test_1():
         },
     )
 
-    model = p2n.Model()
-    creator = p2n.Creator(model)
+    env = p2n.Environment()
+    creator = p2n.Creator(env=env)
 
     class TestLocation(p2n.LocationDesigner):
-        n_agents = 2
-        only_exact_n_agents = True
+        n_actors = 2
+        only_exact_n_actors = True
 
-        def weight(self, agent):
+        def weight(self, actor):
             return 1
 
-    creator.create_agents(df=df)
+    creator.create_actors(df=df)
     creator.create_locations(location_designers=[TestLocation])
 
-    assert len(model.locations) == 1
-    assert len(model.agents) == 3
-    assert len(model.locations[0].agents) == 2
-    assert all(agent.status == "A" for agent in model.locations[0].agents)
-    assert all(model.locations[0].get_weight(agent) == 1 for agent in model.locations[0].agents)
+    assert len(env.locations) == 1
+    assert len(env.actors) == 3
+    assert len(env.locations[0].actors) == 2
+    assert all(actor.status == "A" for actor in env.locations[0].actors)
+    assert all(env.locations[0].get_weight(actor) == 1 for actor in env.locations[0].actors)

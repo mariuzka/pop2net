@@ -12,17 +12,17 @@ df = pd.DataFrame(
 def test_recycle_1():
     class Teacher(p2n.MeltLocationDesigner):
         label = "Teacher"
-        n_agents = 1
+        n_actors = 1
 
-        def filter(self, agent):
-            return agent.status == "teacher"
+        def filter(self, actor):
+            return actor.status == "teacher"
 
     class Pupils(p2n.MeltLocationDesigner):
         label = "Pupil"
-        n_agents = 1
+        n_actors = 1
 
-        def filter(self, agent):
-            return agent.status == "pupil"
+        def filter(self, actor):
+            return actor.status == "pupil"
 
     class Classroom(p2n.LocationDesigner):
         label = "Classroom"
@@ -31,33 +31,33 @@ def test_recycle_1():
         def melt(self):
             return Teacher, Pupils
 
-    model = p2n.Model()
-    creator = p2n.Creator(model)
-    creator.create_agents(df=df)
+    env = p2n.Environment()
+    creator = p2n.Creator(env=env)
+    creator.create_actors(df=df)
     creator.create_locations(location_designers=[Classroom])
-    inspector = p2n.NetworkInspector(model)
+    inspector = p2n.NetworkInspector(env)
     inspector.plot_bipartite_network()
 
-    assert len(model.agents) == 5
-    assert len(model.locations) == 3
+    assert len(env.actors) == 5
+    assert len(env.locations) == 3
 
-    for location in model.locations:
-        assert location.agents[0].status == "teacher"
-        assert location.agents[1].status == "pupil"
+    for location in env.locations:
+        assert location.actors[0].status == "teacher"
+        assert location.actors[1].status == "pupil"
 
 
 def test_recycle_2():
     class Teacher(p2n.MeltLocationDesigner):
-        n_agents = 1
+        n_actors = 1
 
-        def filter(self, agent):
-            return agent.status == "teacher"
+        def filter(self, actor):
+            return actor.status == "teacher"
 
     class Pupils(p2n.MeltLocationDesigner):
-        n_agents = 1
+        n_actors = 1
 
-        def filter(self, agent):
-            return agent.status == "pupil"
+        def filter(self, actor):
+            return actor.status == "pupil"
 
     class Classroom(p2n.LocationDesigner):
         recycle = False
@@ -65,19 +65,19 @@ def test_recycle_2():
         def melt(self):
             return Teacher, Pupils
 
-    model = p2n.Model()
-    creator = p2n.Creator(model)
-    creator.create_agents(df=df)
+    env = p2n.Environment()
+    creator = p2n.Creator(env=env)
+    creator.create_actors(df=df)
     creator.create_locations(location_designers=[Classroom])
-    inspector = p2n.NetworkInspector(model)
+    inspector = p2n.NetworkInspector(env)
     inspector.plot_bipartite_network()
 
-    assert len(model.agents) == 5
-    assert len(model.locations) == 2
+    assert len(env.actors) == 5
+    assert len(env.locations) == 2
 
-    for location in model.locations:
-        assert location.agents[0].status == "teacher"
-        assert location.agents[1].status == "pupil"
+    for location in env.locations:
+        assert location.actors[0].status == "teacher"
+        assert location.actors[1].status == "pupil"
 
-    assert model.agents[4].status == "pupil"
-    assert len(model.agents[4].locations) == 0
+    assert env.actors[4].status == "pupil"
+    assert len(env.actors[4].locations) == 0

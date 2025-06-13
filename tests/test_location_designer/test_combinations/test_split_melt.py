@@ -4,8 +4,8 @@ import pop2net as p2n
 
 
 def test_1():
-    model = p2n.Model()
-    creator = p2n.Creator(model=model)
+    env = p2n.Environment()
+    creator = p2n.Creator(env=env)
     df = pd.DataFrame(
         {
             "status": [
@@ -24,37 +24,37 @@ def test_1():
     )
 
     class PupilHelper(p2n.LocationDesigner):
-        def filter(self, agent):
-            return agent.status == "pupil"
+        def filter(self, actor):
+            return actor.status == "pupil"
 
-        def split(self, agent):
-            return agent.class_id
+        def split(self, actor):
+            return actor.class_id
 
     class TeacherHelper(p2n.LocationDesigner):
-        def filter(self, agent):
-            return agent.status == "teacher"
+        def filter(self, actor):
+            return actor.status == "teacher"
 
-        def split(self, agent):
-            return agent.class_id
+        def split(self, actor):
+            return actor.class_id
 
     class ClassRoom(p2n.LocationDesigner):
         def melt(self):
             return PupilHelper, TeacherHelper
 
-    creator.create_agents(df=df)
+    creator.create_actors(df=df)
     creator.create_locations(location_designers=[ClassRoom])
 
-    assert len(model.agents) == 9
-    assert len(model.locations) == 3
+    assert len(env.actors) == 9
+    assert len(env.locations) == 3
 
-    for location in model.locations:
-        assert len(location.agents) == 3
-        assert all(location.agents[0].class_id == agent.class_id for agent in location.agents)
+    for location in env.locations:
+        assert len(location.actors) == 3
+        assert all(location.actors[0].class_id == actor.class_id for actor in location.actors)
 
 
 def test_2():
-    model = p2n.Model()
-    creator = p2n.Creator(model=model)
+    env = p2n.Environment()
+    creator = p2n.Creator(env=env)
     df = pd.DataFrame(
         {
             "status": [
@@ -74,40 +74,40 @@ def test_2():
     )
 
     class PupilHelper(p2n.MeltLocationDesigner):
-        def filter(self, agent):
-            return agent.status == "pupil"
+        def filter(self, actor):
+            return actor.status == "pupil"
 
-        def split(self, agent):
-            return agent.class_id
+        def split(self, actor):
+            return actor.class_id
 
     class TeacherHelper(p2n.MeltLocationDesigner):
-        def filter(self, agent):
-            return agent.status == "teacher"
+        def filter(self, actor):
+            return actor.status == "teacher"
 
-        def split(self, agent):
-            return agent.class_id
+        def split(self, actor):
+            return actor.class_id
 
     class ClassRoom(p2n.LocationDesigner):
         def melt(self):
             return PupilHelper, TeacherHelper
 
     class SchoolHelper(p2n.MeltLocationDesigner):
-        def filter(self, agent):
-            return agent.status == "principal"
+        def filter(self, actor):
+            return actor.status == "principal"
 
     class School(p2n.LocationDesigner):
         def melt(self):
             return ClassRoom, SchoolHelper
 
-    creator.create_agents(df=df)
+    creator.create_actors(df=df)
     creator.create_locations(location_designers=[ClassRoom, School])
 
-    assert len(model.agents) == 10
-    assert len(model.locations) == 4
+    assert len(env.actors) == 10
+    assert len(env.locations) == 4
 
-    for location in model.locations:
+    for location in env.locations:
         if location.label == "ClassRoom":
-            assert len(location.agents) == 3
-            assert all(location.agents[0].class_id == agent.class_id for agent in location.agents)
+            assert len(location.actors) == 3
+            assert all(location.actors[0].class_id == actor.class_id for actor in location.actors)
         else:
-            assert len(location.agents) == 10
+            assert len(location.actors) == 10

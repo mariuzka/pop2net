@@ -2,30 +2,28 @@ import pop2net as p2n
 
 
 def test_location_label():
-    model = p2n.Model()
-
     # Test 1: Default label (label is class name)
-    location = p2n.Location(model)
+    location = p2n.Location()
     assert location.label == "Location"
 
     # Test 2: Label is custom class name
     class MyLocation(p2n.Location):
         pass
 
-    location = MyLocation(model)
+    location = MyLocation()
     assert location.label == "MyLocation"
 
     # Test 3: Label is custom string
     class MyLocation(p2n.Location):
         label = "MyLocationYo"
 
-    location = MyLocation(model)
+    location = MyLocation()
     assert location.label == "MyLocationYo"
 
 
 def test_location_designer_label():
-    model = p2n.Model()
-    creator = p2n.Creator(model)
+    env = p2n.Environment()
+    creator = p2n.Creator(env=env)
 
     # Test 1: Default label (label is designer class name)
     class School(p2n.LocationDesigner):
@@ -42,7 +40,7 @@ def test_location_designer_label():
     location = creator.create_locations(location_designers=[School])[0]
     assert location.label == "SchoolYo"
 
-    # Test 3: Label is sthe designer class name even if a custom location class is used
+    # Test 3: Label is the designer class name even if a custom location class is used
     class School(p2n.Location):
         pass
 

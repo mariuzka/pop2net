@@ -4,63 +4,64 @@ import pop2net as p2n
 def test_1():
     class CityDesigner(p2n.LocationDesigner):
         label = "City"
-        n_agents = 4
+        n_actors = 4
 
     class GroupDesigner(p2n.LocationDesigner):
         label = "Group"
-        n_agents = 2
+        # n_actors = 2
 
-        def split(self, agent):
-            return agent.group
+        def split(self, actor):
+            return actor.group
 
-    model = p2n.Model()
-    creator = p2n.Creator(model=model)
+    env = p2n.Environment()
+    creator = p2n.Creator(env=env)
 
     for i in range(8):
-        agent = p2n.Agent(model=model)
-        agent.group = i % 2
+        actor = p2n.Actor()
+        actor.group = i % 2
+        env.add_actor(actor)
 
     creator.create_locations(
         location_designers=[CityDesigner, GroupDesigner],
-        delete_magic_agent_attributes=False,
+        delete_magic_actor_attributes=False,
     )
 
-    for agent in model.agents:
-        print(vars(agent))
+    for actor in env.actors:
+        print(vars(actor))
 
-    for location in model.locations.select(model.locations.label == "City"):
-        assert int(location.agents[0].group) == 0
-        assert int(location.agents[1].group) == 1
-        assert int(location.agents[2].group) == 0
-        assert int(location.agents[3].group) == 1
+    for location in [loc for loc in env.locations if loc.label == "City"]:
+        assert int(location.actors[0].group) == 0
+        assert int(location.actors[1].group) == 1
+        assert int(location.actors[2].group) == 0
+        assert int(location.actors[3].group) == 1
 
-    for location in model.locations.select(model.locations.label == "Group"):
-        assert location.agents[0].group == location.agents[1].group
+    for location in [loc for loc in env.locations if loc.label == "Group"]:
+        assert location.actors[0].group == location.actors[1].group
 
     # not all members of the same group are also in the same city (which is not desired)
     assert not all(
-        location.agents[0].City == location.agents[1].City for location in model.locations
+        location.actors[0].City == location.actors[-1].City for location in env.locations
     )
 
     class GroupNestedInCityDesigner(GroupDesigner):
         def nest(self):
             return "City"
 
-    model = p2n.Model()
-    creator = p2n.Creator(model=model)
+    env = p2n.Environment()
+    creator = p2n.Creator(env=env)
     creator.create_locations(
         location_designers=[CityDesigner, GroupNestedInCityDesigner],
-        delete_magic_agent_attributes=False,
+        delete_magic_actor_attributes=False,
     )
 
-    for location in model.locations.select(model.locations.label == "City"):
-        assert int(location.agents[0].group) == 0
-        assert int(location.agents[1].group) == 1
-        assert int(location.agents[2].group) == 0
-        assert int(location.agents[3].group) == 1
+    for location in [loc for loc in env.locations if loc.label == "City"]:
+        assert int(location.actors[0].group) == 0
+        assert int(location.actors[1].group) == 1
+        assert int(location.actors[2].group) == 0
+        assert int(location.actors[3].group) == 1
 
-    for location in model.locations.select(model.locations.label == "Group"):
-        assert location.agents[0].group == location.agents[1].group
+    for location in [loc for loc in env.locations if loc.label == "Group"]:
+        assert location.actors[0].group == location.actors[1].group
 
     # all members of a group are in the same city
-    assert all(location.agents[0].City == location.agents[1].City for location in model.locations)
+    assert all(location.actors[0].City == location.actors[1].City for location in env.locations)
