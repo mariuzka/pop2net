@@ -81,125 +81,122 @@
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">agentpy.objects</span><span class="w"> </span><span class="kn">import</span> <span class="n">Object</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">agentpy.sequences</span><span class="w"> </span><span class="kn">import</span> <span class="n">AgentList</span>
-
-<span class="kn">from</span><span class="w"> </span><span class="nn">.</span><span class="w"> </span><span class="kn">import</span> <span class="n">agent</span> <span class="k">as</span> <span class="n">_agent</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">.</span><span class="w"> </span><span class="kn">import</span> <span class="n">model</span> <span class="k">as</span> <span class="n">_model</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.</span><span class="w"> </span><span class="kn">import</span> <span class="n">actor</span> <span class="k">as</span> <span class="n">_actor</span>
 
 
 <div class="viewcode-block" id="Location">
 <a class="viewcode-back" href="../../api/location.html#pop2net.Location">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">Location</span><span class="p">(</span><span class="n">Object</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Location</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Base class for location objects.&quot;&quot;&quot;</span>
 
     <span class="n">label</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">_model</span><span class="o">.</span><span class="n">Model</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Location constructor.</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            model: Model this Location should be associated with.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">model</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">add_location</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Location constructor.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">label</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">label</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">label</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">env</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">id_p2n</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">agents</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AgentList</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the list of agents affiliated with this location.</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">actors</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the list of actors affiliated with this location.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            List of agents at this location.</span>
+<span class="sd">            List of actors at this location.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">agents_of_location</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">actors_of_location</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
-<div class="viewcode-block" id="Location.add_agent">
-<a class="viewcode-back" href="../../api/location.html#pop2net.Location.add_agent">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">add_agent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent</span><span class="p">:</span> <span class="n">_agent</span><span class="o">.</span><span class="n">Agent</span><span class="p">,</span> <span class="n">weight</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Assigns the given agent to this location.</span>
+<div class="viewcode-block" id="Location.add_actor">
+<a class="viewcode-back" href="../../api/location.html#pop2net.Location.add_actor">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_actor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">actor</span><span class="p">:</span> <span class="n">_actor</span><span class="o">.</span><span class="n">Actor</span><span class="p">,</span> <span class="n">weight</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Assigns the given actor to this location.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            agent: The agent that should be added to the location.</span>
-<span class="sd">            weight: The edge weight between the agent and the location.</span>
+<span class="sd">            actor: The actor that should be added to the location.</span>
+<span class="sd">            weight: The edge weight between the actor and the location.</span>
 <span class="sd">                Defaults to None. If weight is set to None, the weight is generated by</span>
 <span class="sd">                location.weight(), which returns 1 by default.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">add_agent_to_location</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent</span><span class="o">=</span><span class="n">agent</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="n">weight</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">add_actor_to_location</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">actor</span><span class="o">=</span><span class="n">actor</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="n">weight</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="Location.add_agents">
-<a class="viewcode-back" href="../../api/location.html#pop2net.Location.add_agents">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">add_agents</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agents</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">weight</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add multiple agents at once.</span>
+<div class="viewcode-block" id="Location.add_actors">
+<a class="viewcode-back" href="../../api/location.html#pop2net.Location.add_actors">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_actors</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">actors</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">weight</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add multiple actors at once.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            agents (list): An iterable over agents.</span>
-<span class="sd">            weight(float | None): The edge weight between the agents and the location.</span>
+<span class="sd">            actors (list): An iterable over actors.</span>
+<span class="sd">            weight(float | None): The edge weight between the actors and the location.</span>
 <span class="sd">                Defaults to None. If weight is set to None, the weight is generated by</span>
 <span class="sd">                location.weight(), which returns 1 by default.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">for</span> <span class="n">agent</span> <span class="ow">in</span> <span class="n">agents</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_agent</span><span class="p">(</span><span class="n">agent</span><span class="o">=</span><span class="n">agent</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="n">weight</span><span class="p">)</span></div>
+        <span class="k">for</span> <span class="n">actor</span> <span class="ow">in</span> <span class="n">actors</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_actor</span><span class="p">(</span><span class="n">actor</span><span class="o">=</span><span class="n">actor</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="n">weight</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="Location.remove_agent">
-<a class="viewcode-back" href="../../api/location.html#pop2net.Location.remove_agent">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">remove_agent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent</span><span class="p">:</span> <span class="n">_agent</span><span class="o">.</span><span class="n">Agent</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Removes the given agent from this location.</span>
+<div class="viewcode-block" id="Location.remove_actor">
+<a class="viewcode-back" href="../../api/location.html#pop2net.Location.remove_actor">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">remove_actor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">actor</span><span class="p">:</span> <span class="n">_actor</span><span class="o">.</span><span class="n">Actor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Removes the given actor from this location.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            agent: Agent that is to be removed.</span>
+<span class="sd">            actor: Actor that is to be removed.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">remove_agent_from_location</span><span class="p">(</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">remove_actor_from_location</span><span class="p">(</span>
             <span class="n">location</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
-            <span class="n">agent</span><span class="o">=</span><span class="n">agent</span><span class="p">,</span>
+            <span class="n">actor</span><span class="o">=</span><span class="n">actor</span><span class="p">,</span>
         <span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="Location.remove_agents">
-<a class="viewcode-back" href="../../api/location.html#pop2net.Location.remove_agents">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">remove_agents</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agents</span><span class="p">:</span> <span class="nb">list</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Remove multiple agents at once.</span>
+<div class="viewcode-block" id="Location.remove_actors">
+<a class="viewcode-back" href="../../api/location.html#pop2net.Location.remove_actors">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">remove_actors</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">actors</span><span class="p">:</span> <span class="nb">list</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Remove multiple actors at once.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            agents (list): An iterable over agents.</span>
+<span class="sd">            actors (list): An iterable over actors.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">for</span> <span class="n">agent</span> <span class="ow">in</span> <span class="n">agents</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">remove_agent</span><span class="p">(</span><span class="n">agent</span><span class="o">=</span><span class="n">agent</span><span class="p">)</span></div>
+        <span class="k">for</span> <span class="n">actor</span> <span class="ow">in</span> <span class="n">actors</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">remove_actor</span><span class="p">(</span><span class="n">actor</span><span class="o">=</span><span class="n">actor</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Location.neighbors">
 <a class="viewcode-back" href="../../api/location.html#pop2net.Location.neighbors">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">neighbors</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent</span><span class="p">:</span> <span class="n">_agent</span><span class="o">.</span><span class="n">Agent</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AgentList</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns a list of agents which are connected to the given agent via this location.</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">neighbors</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">actor</span><span class="p">:</span> <span class="n">_actor</span><span class="o">.</span><span class="n">Actor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ActorList</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns a list of actors which are connected to the given actor via this location.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            agent: Agent of whom the neighbors at this location are to be returned.</span>
+<span class="sd">            actor: Actor of whom the neighbors at this location are to be returned.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            AgentList: A list of all agents at this location except the passed agent.</span>
+<span class="sd">            ActorList: A list of all actors at this location except the passed actor.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">agents</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">agents_of_location</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-        <span class="n">agents</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">agent</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">agents</span></div>
+        <span class="n">actors</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">actors_of_location</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">actors</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">actor</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">actors</span></div>
 
 
 <div class="viewcode-block" id="Location.set_weight">
 <a class="viewcode-back" href="../../api/location.html#pop2net.Location.set_weight">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">set_weight</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent</span><span class="p">,</span> <span class="n">weight</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the weight of an agent at the current location.</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_weight</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">actor</span><span class="p">,</span> <span class="n">weight</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the weight of an actor at the current location.</span>
 
 <span class="sd">        If weight is None the method location.weight() will be used to generate a weight.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            agent (Agent): The agent.</span>
+<span class="sd">            actor (Actor): The actor.</span>
 <span class="sd">            weight (float): The weight.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">set_weight</span><span class="p">(</span>
-            <span class="n">agent</span><span class="o">=</span><span class="n">agent</span><span class="p">,</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">set_weight</span><span class="p">(</span>
+            <span class="n">actor</span><span class="o">=</span><span class="n">actor</span><span class="p">,</span>
             <span class="n">location</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
             <span class="n">weight</span><span class="o">=</span><span class="n">weight</span><span class="p">,</span>
         <span class="p">)</span></div>
@@ -207,44 +204,44 @@
 
 <div class="viewcode-block" id="Location.get_weight">
 <a class="viewcode-back" href="../../api/location.html#pop2net.Location.get_weight">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_weight</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent</span><span class="p">:</span> <span class="n">_agent</span><span class="o">.</span><span class="n">Agent</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the edge weight between an agent and the location.</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_weight</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">actor</span><span class="p">:</span> <span class="n">_actor</span><span class="o">.</span><span class="n">Actor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the edge weight between an actor and the location.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            agent: Agent of which the edge weight should be returned.</span>
+<span class="sd">            actor: Actor of which the edge weight should be returned.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Edge weight.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">get_weight</span><span class="p">(</span><span class="n">agent</span><span class="o">=</span><span class="n">agent</span><span class="p">,</span> <span class="n">location</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">get_weight</span><span class="p">(</span><span class="n">actor</span><span class="o">=</span><span class="n">actor</span><span class="p">,</span> <span class="n">location</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Location.weight">
 <a class="viewcode-back" href="../../api/location.html#pop2net.Location.weight">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">weight</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>  <span class="c1"># noqa: ARG002</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generates the edge weight between a given agent and the location instance.</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">weight</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">actor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>  <span class="c1"># noqa: ARG002</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generates the edge weight between a given actor and the location instance.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            agent (_type_): An agent.</span>
+<span class="sd">            actor (_type_): An actor.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            float: The weight between the given agent and the location.</span>
+<span class="sd">            float: The weight between the given actor and the location.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="mi">1</span></div>
 
 
 <div class="viewcode-block" id="Location.project_weights">
 <a class="viewcode-back" href="../../api/location.html#pop2net.Location.project_weights">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">project_weights</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent1</span><span class="p">:</span> <span class="n">_agent</span><span class="o">.</span><span class="n">Agent</span><span class="p">,</span> <span class="n">agent2</span><span class="p">:</span> <span class="n">_agent</span><span class="o">.</span><span class="n">Agent</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculates the edge weight between two agents assigned to the same location instance.</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">project_weights</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">actor1</span><span class="p">:</span> <span class="n">_actor</span><span class="o">.</span><span class="n">Actor</span><span class="p">,</span> <span class="n">actor2</span><span class="p">:</span> <span class="n">_actor</span><span class="o">.</span><span class="n">Actor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculates the edge weight between two actors assigned to the same location instance.</span>
 
-<span class="sd">        Defines how the weights are combined when the edge weight between two agents is determined.</span>
+<span class="sd">        Defines how the weights are combined when the edge weight between two actors is determined.</span>
 <span class="sd">        Can be completely rewritten to have location-specific methods of this kind with the same</span>
 <span class="sd">        name or can be used as it is in the simulation code.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            agent1: First agent of the pair.</span>
-<span class="sd">            agent2: Second agent of the pair.</span>
+<span class="sd">            actor1: First actor of the pair.</span>
+<span class="sd">            actor2: Second actor of the pair.</span>
 
 <span class="sd">        Raises:</span>
 <span class="sd">            Exception: Raised if `self.weight_projection_function` is not in [&quot;average&quot;, &quot;simultan&quot;]</span>
@@ -252,7 +249,7 @@
 <span class="sd">        Returns:</span>
 <span class="sd">            Combined edge weight.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="nb">min</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">get_weight</span><span class="p">(</span><span class="n">agent1</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_weight</span><span class="p">(</span><span class="n">agent2</span><span class="p">)])</span></div>
+        <span class="k">return</span> <span class="nb">min</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">get_weight</span><span class="p">(</span><span class="n">actor1</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_weight</span><span class="p">(</span><span class="n">actor2</span><span class="p">)])</span></div>
 </div>
 
 </pre></div>

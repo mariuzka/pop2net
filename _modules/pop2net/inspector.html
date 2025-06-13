@@ -92,29 +92,29 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">pop2net.utils</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">utils</span>
 
 <span class="k">if</span> <span class="n">typing</span><span class="o">.</span><span class="n">TYPE_CHECKING</span><span class="p">:</span>
-    <span class="kn">from</span><span class="w"> </span><span class="nn">.</span><span class="w"> </span><span class="kn">import</span> <span class="n">location</span> <span class="k">as</span> <span class="n">_location</span>
+    <span class="k">pass</span>
 
 
 <div class="viewcode-block" id="NetworkInspector">
 <a class="viewcode-back" href="../../api/inspector.html#pop2net.inspector.NetworkInspector">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">NetworkInspector</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Helper class that contains functions to inspect the network of a pop2net model.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Helper class that contains functions to inspect the network of a pop2net environment.&quot;&quot;&quot;</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Initiate a NetworkInspector.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            model (Model): The model.</span>
+<span class="sd">            env (Environment): The environment this NetworkInspector belongs to.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">model</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">env</span> <span class="o">=</span> <span class="n">env</span>  <span class="c1"># TODO: make instances of inspector without a fixed env possible</span>
 
 <div class="viewcode-block" id="NetworkInspector.plot_bipartite_network">
 <a class="viewcode-back" href="../../api/inspector.html#pop2net.inspector.NetworkInspector.plot_bipartite_network">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">plot_bipartite_network</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">agent_attrs</span><span class="p">:</span> <span class="nb">list</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">actor_attrs</span><span class="p">:</span> <span class="nb">list</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">location_attrs</span><span class="p">:</span> <span class="nb">list</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">agent_color</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">actor_color</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">location_color</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">edge_alpha</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;weight&quot;</span><span class="p">,</span>
         <span class="n">edge_color</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;black&quot;</span><span class="p">,</span>
@@ -122,15 +122,15 @@
         <span class="n">node_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
         <span class="n">node_alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Plots the bipartite network of agents and locations.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Plots the bipartite network of actors and locations.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            agent_attrs (list | None, optional): A list of agent attributes that</span>
+<span class="sd">            actor_attrs (list | None, optional): A list of actor attributes that</span>
 <span class="sd">                should be shown as node attributes in the network graph. Defaults to None.</span>
 <span class="sd">            location_attrs (list | None, optional): A list of location attributes that</span>
 <span class="sd">                should be shown as node attributes in the network graph. Defaults to None.</span>
-<span class="sd">            agent_color (str | None, optional): The agent attribute that determines the</span>
-<span class="sd">            color of the agent nodes. Defaults to None.</span>
+<span class="sd">            actor_color (str | None, optional): The actor attribute that determines the</span>
+<span class="sd">            color of the actor nodes. Defaults to None.</span>
 <span class="sd">            location_color (str | None, optional): The location attribute that determines the</span>
 <span class="sd">            color of the location nodes. Defaults to None.</span>
 <span class="sd">            edge_alpha (str, optional): The edge attribute that determines the edges&#39; transparency.</span>
@@ -140,15 +140,15 @@
 <span class="sd">            node_size (int, optional): The size of the nodes. Defaults to 10.</span>
 <span class="sd">            node_alpha (float, optional): The transparency of the nodes. Defaults to 0.5.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">agent_attrs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">agent_attrs</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">actor_attrs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">actor_attrs</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">agent_attrs</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">agent_attrs</span><span class="p">)</span>
-            <span class="k">if</span> <span class="s2">&quot;type&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">agent_attrs</span><span class="p">:</span>
-                <span class="n">agent_attrs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">)</span>
+            <span class="n">actor_attrs</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">actor_attrs</span><span class="p">)</span>
+            <span class="k">if</span> <span class="s2">&quot;type&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">actor_attrs</span><span class="p">:</span>
+                <span class="n">actor_attrs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">agent_color</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">agent_color</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">agent_attrs</span><span class="p">:</span>
-            <span class="n">agent_attrs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">agent_color</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">actor_color</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">actor_color</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">actor_attrs</span><span class="p">:</span>
+            <span class="n">actor_attrs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">actor_color</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">location_attrs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">location_attrs</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">,</span> <span class="s2">&quot;label&quot;</span><span class="p">]</span>
@@ -163,8 +163,8 @@
         <span class="k">if</span> <span class="n">location_color</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">location_color</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">location_attrs</span><span class="p">:</span>
             <span class="n">location_attrs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">location_color</span><span class="p">)</span>
 
-        <span class="n">graph</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">export_bipartite_network</span><span class="p">(</span>
-            <span class="n">agent_attrs</span><span class="o">=</span><span class="n">agent_attrs</span><span class="p">,</span>
+        <span class="n">graph</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">export_bipartite_network</span><span class="p">(</span>
+            <span class="n">actor_attrs</span><span class="o">=</span><span class="n">actor_attrs</span><span class="p">,</span>
             <span class="n">location_attrs</span><span class="o">=</span><span class="n">location_attrs</span><span class="p">,</span>
         <span class="p">)</span>
 
@@ -180,7 +180,7 @@
 
         <span class="n">plot</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span>
             <span class="n">node_color</span><span class="o">=</span><span class="p">(</span>
-                <span class="n">agent_color</span> <span class="k">if</span> <span class="n">agent_color</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="s2">&quot;firebrick&quot;</span><span class="p">,</span>
+                <span class="n">actor_color</span> <span class="k">if</span> <span class="n">actor_color</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="s2">&quot;firebrick&quot;</span><span class="p">,</span>
                 <span class="n">location_color</span> <span class="k">if</span> <span class="n">location_color</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="s2">&quot;steelblue&quot;</span><span class="p">,</span>
             <span class="p">),</span>
             <span class="n">edge_alpha</span><span class="o">=</span><span class="n">edge_alpha</span><span class="p">,</span>
@@ -191,12 +191,12 @@
         <span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="NetworkInspector.plot_agent_network">
-<a class="viewcode-back" href="../../api/inspector.html#pop2net.inspector.NetworkInspector.plot_agent_network">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">plot_agent_network</span><span class="p">(</span>
+<div class="viewcode-block" id="NetworkInspector.plot_actor_network">
+<a class="viewcode-back" href="../../api/inspector.html#pop2net.inspector.NetworkInspector.plot_actor_network">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">plot_actor_network</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">agent_color</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">agent_attrs</span><span class="p">:</span> <span class="nb">list</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">actor_color</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">actor_attrs</span><span class="p">:</span> <span class="nb">list</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">edge_alpha</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;weight&quot;</span><span class="p">,</span>
         <span class="n">edge_color</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;black&quot;</span><span class="p">,</span>
         <span class="n">include_0_weights</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
@@ -204,12 +204,12 @@
         <span class="n">node_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
         <span class="n">node_alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Plots the agent network.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Plots the actor network.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            agent_color (str | None, optional): The agent attribute that determines the</span>
-<span class="sd">            color of the agent nodes. Defaults to None.</span>
-<span class="sd">            agent_attrs (list | None, optional): A list of agent attributes that</span>
+<span class="sd">            actor_color (str | None, optional): The actor attribute that determines the</span>
+<span class="sd">            color of the actor nodes. Defaults to None.</span>
+<span class="sd">            actor_attrs (list | None, optional): A list of actor attributes that</span>
 <span class="sd">                should be shown as node attributes in the network graph. Defaults to None.</span>
 <span class="sd">            edge_alpha (str, optional): The edge attribute that determines the edges&#39; transparency.</span>
 <span class="sd">                Defaults to &quot;weight&quot;.</span>
@@ -220,18 +220,18 @@
 <span class="sd">            node_size (int, optional): The size of the nodes. Defaults to 10.</span>
 <span class="sd">            node_alpha (float, optional): The transparency of the nodes. Defaults to 0.5.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">agent_attrs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">agent_attrs</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">actor_attrs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">actor_attrs</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">agent_attrs</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">agent_attrs</span><span class="p">)</span>
-            <span class="k">if</span> <span class="s2">&quot;type&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">agent_attrs</span><span class="p">:</span>
-                <span class="n">agent_attrs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">)</span>
+            <span class="n">actor_attrs</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">actor_attrs</span><span class="p">)</span>
+            <span class="k">if</span> <span class="s2">&quot;type&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">actor_attrs</span><span class="p">:</span>
+                <span class="n">actor_attrs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">agent_color</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">agent_color</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">agent_attrs</span><span class="p">:</span>
-            <span class="n">agent_attrs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">agent_color</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">actor_color</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">actor_color</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">actor_attrs</span><span class="p">:</span>
+            <span class="n">actor_attrs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">actor_color</span><span class="p">)</span>
 
-        <span class="n">graph</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">export_agent_network</span><span class="p">(</span>
-            <span class="n">node_attrs</span><span class="o">=</span><span class="n">agent_attrs</span><span class="p">,</span>
+        <span class="n">graph</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">export_actor_network</span><span class="p">(</span>
+            <span class="n">node_attrs</span><span class="o">=</span><span class="n">actor_attrs</span><span class="p">,</span>
             <span class="n">include_0_weights</span><span class="o">=</span><span class="n">include_0_weights</span><span class="p">,</span>
         <span class="p">)</span>
 
@@ -239,7 +239,7 @@
         <span class="n">plot</span> <span class="o">=</span> <span class="n">BokehGraph</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span> <span class="n">hover_edges</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="n">plot</span><span class="o">.</span><span class="n">layout</span><span class="p">(</span><span class="n">layout</span><span class="o">=</span><span class="n">graph_layout</span><span class="p">)</span>
         <span class="n">plot</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span>
-            <span class="n">node_color</span><span class="o">=</span><span class="s2">&quot;firebrick&quot;</span> <span class="k">if</span> <span class="n">agent_color</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">agent_color</span><span class="p">,</span>
+            <span class="n">node_color</span><span class="o">=</span><span class="s2">&quot;firebrick&quot;</span> <span class="k">if</span> <span class="n">actor_color</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">actor_color</span><span class="p">,</span>
             <span class="n">node_size</span><span class="o">=</span><span class="n">node_size</span><span class="p">,</span>
             <span class="n">edge_alpha</span><span class="o">=</span><span class="n">edge_alpha</span><span class="p">,</span>
             <span class="n">edge_color</span><span class="o">=</span><span class="n">edge_color</span><span class="p">,</span>
@@ -252,9 +252,9 @@
 <a class="viewcode-back" href="../../api/inspector.html#pop2net.inspector.NetworkInspector.plot_networks">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">plot_networks</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">agent_attrs</span><span class="p">:</span> <span class="nb">list</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">actor_attrs</span><span class="p">:</span> <span class="nb">list</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">location_attrs</span><span class="p">:</span> <span class="nb">list</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">agent_color</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">actor_color</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">location_color</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">edge_alpha</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;weight&quot;</span><span class="p">,</span>
         <span class="n">edge_color</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;black&quot;</span><span class="p">,</span>
@@ -263,15 +263,15 @@
         <span class="n">node_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
         <span class="n">node_alpha</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Plots the bipartite network and the agent network.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Plots the bipartite network and the actor network.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            agent_attrs (list | None, optional): A list of agent attributes that</span>
+<span class="sd">            actor_attrs (list | None, optional): A list of actor attributes that</span>
 <span class="sd">                should be shown as node attributes in the network graph. Defaults to None.</span>
 <span class="sd">            location_attrs (list | None, optional): A list of location attributes that</span>
 <span class="sd">                should be shown as node attributes in the network graph. Defaults to None.</span>
-<span class="sd">            agent_color (str | None, optional): The agent attribute that determines the</span>
-<span class="sd">                color of the agent nodes. Defaults to None.</span>
+<span class="sd">            actor_color (str | None, optional): The actor attribute that determines the</span>
+<span class="sd">                color of the actor nodes. Defaults to None.</span>
 <span class="sd">            location_color (str | None, optional): The location attribute that determines the</span>
 <span class="sd">                color of the location nodes. Defaults to None.</span>
 <span class="sd">            edge_alpha (str, optional): The edge attribute that determines the edges&#39; transparency.</span>
@@ -284,8 +284,8 @@
 <span class="sd">            node_alpha (float, optional): The transparency of the nodes. Defaults to 0.5.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">plot_bipartite_network</span><span class="p">(</span>
-            <span class="n">agent_color</span><span class="o">=</span><span class="n">agent_color</span><span class="p">,</span>
-            <span class="n">agent_attrs</span><span class="o">=</span><span class="n">agent_attrs</span><span class="p">,</span>
+            <span class="n">actor_color</span><span class="o">=</span><span class="n">actor_color</span><span class="p">,</span>
+            <span class="n">actor_attrs</span><span class="o">=</span><span class="n">actor_attrs</span><span class="p">,</span>
             <span class="n">location_color</span><span class="o">=</span><span class="n">location_color</span><span class="p">,</span>
             <span class="n">location_attrs</span><span class="o">=</span><span class="n">location_attrs</span><span class="p">,</span>
             <span class="n">edge_color</span><span class="o">=</span><span class="n">edge_color</span><span class="p">,</span>
@@ -295,9 +295,9 @@
             <span class="n">node_alpha</span><span class="o">=</span><span class="n">node_alpha</span><span class="p">,</span>
         <span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">plot_agent_network</span><span class="p">(</span>
-            <span class="n">agent_color</span><span class="o">=</span><span class="n">agent_color</span><span class="p">,</span>
-            <span class="n">agent_attrs</span><span class="o">=</span><span class="n">agent_attrs</span><span class="p">,</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">plot_actor_network</span><span class="p">(</span>
+            <span class="n">actor_color</span><span class="o">=</span><span class="n">actor_color</span><span class="p">,</span>
+            <span class="n">actor_attrs</span><span class="o">=</span><span class="n">actor_attrs</span><span class="p">,</span>
             <span class="n">edge_color</span><span class="o">=</span><span class="n">edge_color</span><span class="p">,</span>
             <span class="n">edge_alpha</span><span class="o">=</span><span class="n">edge_alpha</span><span class="p">,</span>
             <span class="n">include_0_weights</span><span class="o">=</span><span class="n">include_0_weights</span><span class="p">,</span>
@@ -310,7 +310,7 @@
 <div class="viewcode-block" id="NetworkInspector.eval_affiliations">
 <a class="viewcode-back" href="../../api/inspector.html#pop2net.inspector.NetworkInspector.eval_affiliations">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">eval_affiliations</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">return_data</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Prints information on the distribution of agents per location and locations per agent.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Prints information on the distribution of actors per location and locations per actor.</span>
 
 <span class="sd">        Raises:</span>
 <span class="sd">            Pop2netException: _description_</span>
@@ -320,9 +320,9 @@
             <span class="p">[</span>
                 <span class="p">{</span>
                     <span class="s2">&quot;location_label&quot;</span><span class="p">:</span> <span class="n">location</span><span class="o">.</span><span class="n">label</span><span class="p">,</span>
-                    <span class="s2">&quot;n_agents&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">location</span><span class="o">.</span><span class="n">agents</span><span class="p">),</span>
+                    <span class="s2">&quot;n_actors&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">location</span><span class="o">.</span><span class="n">actors</span><span class="p">),</span>
                 <span class="p">}</span>
-                <span class="k">for</span> <span class="n">location</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">locations</span>
+                <span class="k">for</span> <span class="n">location</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">locations</span>
             <span class="p">],</span>
         <span class="p">)</span>
 
@@ -333,22 +333,22 @@
         <span class="n">df1</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">df1</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">droplevel</span><span class="p">()</span>
         <span class="n">df1</span> <span class="o">=</span> <span class="n">df1</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s2">&quot;count&quot;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
-        <span class="n">utils</span><span class="o">.</span><span class="n">print_header</span><span class="p">(</span><span class="s2">&quot;Number of agents per location&quot;</span><span class="p">)</span>
+        <span class="n">utils</span><span class="o">.</span><span class="n">print_header</span><span class="p">(</span><span class="s2">&quot;Number of actors per location&quot;</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="n">df1</span><span class="p">)</span>
 
         <span class="n">df2</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
             <span class="p">[</span>
                 <span class="p">{</span>
-                    <span class="s2">&quot;agent_id&quot;</span><span class="p">:</span> <span class="n">agent</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
-                    <span class="s2">&quot;n_affiliated_locations&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">agent</span><span class="o">.</span><span class="n">locations</span><span class="p">),</span>
+                    <span class="s2">&quot;actor_id&quot;</span><span class="p">:</span> <span class="n">actor</span><span class="o">.</span><span class="n">id_p2n</span><span class="p">,</span>
+                    <span class="s2">&quot;n_affiliated_locations&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">actor</span><span class="o">.</span><span class="n">locations</span><span class="p">),</span>
                 <span class="p">}</span>
-                <span class="k">for</span> <span class="n">agent</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">agents</span>
+                <span class="k">for</span> <span class="n">actor</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">actors</span>
             <span class="p">],</span>
         <span class="p">)</span>
         <span class="n">df2</span> <span class="o">=</span> <span class="n">df2</span><span class="o">.</span><span class="n">n_affiliated_locations</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span>
         <span class="n">df2</span> <span class="o">=</span> <span class="n">df2</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s2">&quot;count&quot;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
-        <span class="n">utils</span><span class="o">.</span><span class="n">print_header</span><span class="p">(</span><span class="s2">&quot;Number of affiliated locations per agent&quot;</span><span class="p">)</span>
+        <span class="n">utils</span><span class="o">.</span><span class="n">print_header</span><span class="p">(</span><span class="s2">&quot;Number of affiliated locations per actor&quot;</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="n">df2</span><span class="o">.</span><span class="n">to_frame</span><span class="p">())</span>
 
         <span class="k">if</span> <span class="n">return_data</span><span class="p">:</span>
@@ -361,18 +361,18 @@
 <a class="viewcode-back" href="../../api/inspector.html#pop2net.inspector.NetworkInspector.create_contact_matrix">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">create_contact_matrix</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">agents</span><span class="p">:</span> <span class="nb">list</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">actors</span><span class="p">:</span> <span class="nb">list</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">attr</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;id&quot;</span><span class="p">,</span>
         <span class="n">weighted</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">plot</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
         <span class="n">annot</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">return_df</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a contact matrix as a DataFrame from a given model&#39;s agent list.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a contact matrix as a DataFrame from a given env&#39;s actor list.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            agents: A list of agents.</span>
-<span class="sd">            attr: The agent attribute which is shown in the matrix.</span>
+<span class="sd">            actors: A list of actors.</span>
+<span class="sd">            attr: The actor attribute which is shown in the matrix.</span>
 <span class="sd">            weighted: Should the contacts be weighted? Defaults to False.</span>
 <span class="sd">            plot: Should the matrix be plotted? Defaults to False.</span>
 <span class="sd">            annot: Should the plottet matrix be annotated? Defaults to False.</span>
@@ -381,8 +381,8 @@
 <span class="sd">        Returns:</span>
 <span class="sd">            A DataFrame containing a contact matrix based on `attr`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">agents</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">agents</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">agents</span>
+        <span class="k">if</span> <span class="n">actors</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">actors</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">actors</span>
 
         <span class="n">contact_data</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">attr_values</span> <span class="o">=</span> <span class="p">[]</span>
@@ -391,26 +391,26 @@
         <span class="n">attr_u_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">attr</span><span class="si">}</span><span class="s2">_u&quot;</span>
         <span class="n">attr_v_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">attr</span><span class="si">}</span><span class="s2">_v&quot;</span>
 
-        <span class="k">for</span> <span class="n">agent_u</span> <span class="ow">in</span> <span class="n">agents</span><span class="p">:</span>
-            <span class="n">attr_u</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">agent_u</span><span class="p">,</span> <span class="n">attr</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">actor_u</span> <span class="ow">in</span> <span class="n">actors</span><span class="p">:</span>
+            <span class="n">attr_u</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">actor_u</span><span class="p">,</span> <span class="n">attr</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">attr_u</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">attr_values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">attr_u</span><span class="p">)</span>
 
-                <span class="k">for</span> <span class="n">agent_v</span> <span class="ow">in</span> <span class="n">agent_u</span><span class="o">.</span><span class="n">neighbors</span><span class="p">():</span>
-                    <span class="n">attr_v</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">agent_v</span><span class="p">,</span> <span class="n">attr</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">actor_v</span> <span class="ow">in</span> <span class="n">actor_u</span><span class="o">.</span><span class="n">neighbors</span><span class="p">():</span>
+                    <span class="n">attr_v</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">actor_v</span><span class="p">,</span> <span class="n">attr</span><span class="p">)</span>
                     <span class="k">if</span> <span class="n">attr_v</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                         <span class="n">attr_values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">attr_v</span><span class="p">)</span>
 
-                        <span class="n">pair</span> <span class="o">=</span> <span class="p">{</span><span class="n">agent_u</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">agent_v</span><span class="o">.</span><span class="n">id</span><span class="p">}</span>
+                        <span class="n">pair</span> <span class="o">=</span> <span class="p">{</span><span class="n">actor_u</span><span class="o">.</span><span class="n">id_p2n</span><span class="p">,</span> <span class="n">actor_v</span><span class="o">.</span><span class="n">id_p2n</span><span class="p">}</span>
 
                         <span class="k">if</span> <span class="n">pair</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">pairs</span><span class="p">:</span>
                             <span class="n">contact_data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
                                 <span class="p">{</span>
-                                    <span class="s2">&quot;id_u&quot;</span><span class="p">:</span> <span class="n">agent_u</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                                    <span class="s2">&quot;id_u&quot;</span><span class="p">:</span> <span class="n">actor_u</span><span class="o">.</span><span class="n">id_p2n</span><span class="p">,</span>
                                     <span class="n">attr_u_name</span><span class="p">:</span> <span class="n">attr_u</span><span class="p">,</span>
-                                    <span class="s2">&quot;id_v&quot;</span><span class="p">:</span> <span class="n">agent_v</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                                    <span class="s2">&quot;id_v&quot;</span><span class="p">:</span> <span class="n">actor_v</span><span class="o">.</span><span class="n">id_p2n</span><span class="p">,</span>
                                     <span class="n">attr_v_name</span><span class="p">:</span> <span class="n">attr_v</span><span class="p">,</span>
-                                    <span class="s2">&quot;weight&quot;</span><span class="p">:</span> <span class="n">agent_u</span><span class="o">.</span><span class="n">get_agent_weight</span><span class="p">(</span><span class="n">agent_v</span><span class="p">),</span>
+                                    <span class="s2">&quot;weight&quot;</span><span class="p">:</span> <span class="n">actor_u</span><span class="o">.</span><span class="n">get_actor_weight</span><span class="p">(</span><span class="n">actor_v</span><span class="p">),</span>
                                 <span class="p">},</span>
                             <span class="p">)</span>
                             <span class="n">pairs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pair</span><span class="p">)</span>
@@ -442,19 +442,19 @@
 
 <div class="viewcode-block" id="NetworkInspector.network_measures">
 <a class="viewcode-back" href="../../api/inspector.html#pop2net.inspector.NetworkInspector.network_measures">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">network_measures</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent_attrs</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculates common network measures for the agent-level network graph.</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">network_measures</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">actor_attrs</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculates common network measures for the actor-level network graph.</span>
 
 <span class="sd">        If the created network consist of independent groups of nodes</span>
 <span class="sd">        subgraphs are created and measures are calculated for each subgraph</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            agent_attrs: A list of agent attributes</span>
+<span class="sd">            actor_attrs: A list of actor attributes</span>
 
 <span class="sd">        Return:</span>
 <span class="sd">            list of dictionaries of the common network measure results</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">nx_graph</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">export_agent_network</span><span class="p">(</span><span class="n">node_attrs</span><span class="o">=</span><span class="n">agent_attrs</span><span class="p">)</span>
+        <span class="n">nx_graph</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">export_actor_network</span><span class="p">(</span><span class="n">node_attrs</span><span class="o">=</span><span class="n">actor_attrs</span><span class="p">)</span>
 
         <span class="c1"># make distinction between multiple independent networks and one network</span>
 
@@ -494,44 +494,53 @@
 <a class="viewcode-back" href="../../api/inspector.html#pop2net.inspector.NetworkInspector.location_crosstab">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">location_crosstab</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">select_locations</span><span class="p">:</span> <span class="n">_location</span><span class="o">.</span><span class="n">location</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="n">_location</span><span class="o">.</span><span class="n">Location</span><span class="p">],</span>
-        <span class="n">agent_attributes</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+        <span class="n">location_labels</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+        <span class="n">actor_attributes</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
         <span class="n">output_format</span><span class="o">=</span><span class="s2">&quot;table&quot;</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Crosstable for specified location classes and agent attribute.&quot;&quot;&quot;</span>
-        <span class="c1"># Make every Parameter a list</span>
-        <span class="k">if</span> <span class="n">select_locations</span><span class="p">:</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">select_locations</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
-                <span class="n">select_locations</span> <span class="o">=</span> <span class="p">[</span><span class="n">select_locations</span><span class="p">]</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generates a crosstabulation of actor attributes for specified location labels.</span>
 
-        <span class="k">if</span> <span class="n">agent_attributes</span><span class="p">:</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">agent_attributes</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
-                <span class="n">agent_attributes</span> <span class="o">=</span> <span class="p">[</span><span class="n">agent_attributes</span><span class="p">]</span>
+<span class="sd">        Args:</span>
+<span class="sd">            location_labels (str | list[str]): Location label(s) to filter locations for the crosstab.</span>
+<span class="sd">            actor_attributes (str | list[str]): Actor attribute(s) to use for the crosstab.</span>
+<span class="sd">            output_format (str, optional): Output format, either &quot;table&quot; for printed tables or &quot;df&quot; for DataFrame output. Defaults to &quot;table&quot;.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            list[pd.DataFrame] | None: List of DataFrames with crosstab results if output_format is &quot;df&quot;, otherwise None.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Make every Parameter a list</span>
+        <span class="k">if</span> <span class="n">location_labels</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">location_labels</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+                <span class="n">location_labels</span> <span class="o">=</span> <span class="p">[</span><span class="n">location_labels</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">actor_attributes</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">actor_attributes</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+                <span class="n">actor_attributes</span> <span class="o">=</span> <span class="p">[</span><span class="n">actor_attributes</span><span class="p">]</span>
 
         <span class="c1"># determine eligible locations classes</span>
         <span class="n">valid_locations</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">if</span> <span class="n">select_locations</span><span class="p">:</span>
-            <span class="k">for</span> <span class="n">location_instance</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">locations</span><span class="p">:</span>
-                <span class="k">for</span> <span class="n">locationtype</span> <span class="ow">in</span> <span class="n">select_locations</span><span class="p">:</span>
-                    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">location_instance</span><span class="p">,</span> <span class="n">locationtype</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">location_labels</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">location_instance</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">locations</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">locationtype</span> <span class="ow">in</span> <span class="n">location_labels</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">location_instance</span><span class="o">.</span><span class="n">label</span> <span class="o">==</span> <span class="n">locationtype</span><span class="p">:</span>
                         <span class="n">valid_locations</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">location_instance</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">valid_locations</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">locations</span><span class="p">)</span>
+            <span class="n">valid_locations</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">locations</span><span class="p">)</span>
 
-        <span class="c1"># create agent df per location instance</span>
+        <span class="c1"># create actor df per location instance</span>
         <span class="k">if</span> <span class="n">output_format</span> <span class="o">==</span> <span class="s2">&quot;table&quot;</span><span class="p">:</span>
-            <span class="n">agent_dfs</span> <span class="o">=</span> <span class="p">{}</span>
-            <span class="k">if</span> <span class="n">agent_attributes</span><span class="p">:</span>
+            <span class="n">actor_dfs</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">if</span> <span class="n">actor_attributes</span><span class="p">:</span>
                 <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">location_instance</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">valid_locations</span><span class="p">):</span>
-                    <span class="n">title</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">.Location: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">location_instance</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
-                    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([</span><span class="nb">vars</span><span class="p">(</span><span class="n">agent</span><span class="p">)</span> <span class="k">for</span> <span class="n">agent</span> <span class="ow">in</span> <span class="n">location_instance</span><span class="o">.</span><span class="n">agents</span><span class="p">])</span>
-                    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="nb">list</span><span class="p">(</span><span class="n">agent_attributes</span><span class="p">)]</span>
-                    <span class="n">agent_dfs</span><span class="p">[</span><span class="n">title</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span>
+                    <span class="n">title</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">.Location: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">location_instance</span><span class="o">.</span><span class="n">label</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+                    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([</span><span class="nb">vars</span><span class="p">(</span><span class="n">actor</span><span class="p">)</span> <span class="k">for</span> <span class="n">actor</span> <span class="ow">in</span> <span class="n">location_instance</span><span class="o">.</span><span class="n">actors</span><span class="p">])</span>
+                    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="nb">list</span><span class="p">(</span><span class="n">actor_attributes</span><span class="p">)]</span>
+                    <span class="n">actor_dfs</span><span class="p">[</span><span class="n">title</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span>
 
-            <span class="k">for</span> <span class="n">title</span><span class="p">,</span> <span class="n">df</span> <span class="ow">in</span> <span class="n">agent_dfs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-                <span class="k">for</span> <span class="n">agent_attribute</span> <span class="ow">in</span> <span class="n">agent_attributes</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">title</span><span class="p">,</span> <span class="n">df</span> <span class="ow">in</span> <span class="n">actor_dfs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="k">for</span> <span class="n">actor_attribute</span> <span class="ow">in</span> <span class="n">actor_attributes</span><span class="p">:</span>
                     <span class="n">crosstab_table</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">crosstab</span><span class="p">(</span>
-                        <span class="n">index</span><span class="o">=</span><span class="n">df</span><span class="p">[</span><span class="n">agent_attribute</span><span class="p">],</span>
+                        <span class="n">index</span><span class="o">=</span><span class="n">df</span><span class="p">[</span><span class="n">actor_attribute</span><span class="p">],</span>
                         <span class="n">columns</span><span class="o">=</span><span class="s2">&quot;count&quot;</span><span class="p">,</span>
                     <span class="p">)</span>
 
@@ -539,33 +548,33 @@
                     <span class="nb">print</span><span class="p">(</span>
                         <span class="n">tabulate</span><span class="p">(</span>
                             <span class="n">crosstab_table</span><span class="p">,</span>
-                            <span class="n">headers</span><span class="o">=</span><span class="p">[</span><span class="n">agent_attribute</span><span class="p">,</span> <span class="s2">&quot;count&quot;</span><span class="p">],</span>
+                            <span class="n">headers</span><span class="o">=</span><span class="p">[</span><span class="n">actor_attribute</span><span class="p">,</span> <span class="s2">&quot;count&quot;</span><span class="p">],</span>
                             <span class="n">tablefmt</span><span class="o">=</span><span class="s2">&quot;fancy_grid&quot;</span><span class="p">,</span>
                         <span class="p">),</span>
                     <span class="p">)</span>
                     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">output_format</span> <span class="o">==</span> <span class="s2">&quot;df&quot;</span><span class="p">:</span>
-            <span class="n">agent_dfs</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="n">actor_dfs</span> <span class="o">=</span> <span class="p">{}</span>
             <span class="n">result_list</span> <span class="o">=</span> <span class="p">[]</span>
             <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">location_instance</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">valid_locations</span><span class="p">):</span>
-                <span class="n">title</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">.Location: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">location_instance</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
-                <span class="n">location_type</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">location_instance</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-                <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([</span><span class="nb">vars</span><span class="p">(</span><span class="n">agent</span><span class="p">)</span> <span class="k">for</span> <span class="n">agent</span> <span class="ow">in</span> <span class="n">location_instance</span><span class="o">.</span><span class="n">agents</span><span class="p">])</span>
+                <span class="n">title</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">.Location: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">location_instance</span><span class="o">.</span><span class="n">label</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="n">location_type</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">location_instance</span><span class="o">.</span><span class="n">label</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([</span><span class="nb">vars</span><span class="p">(</span><span class="n">actor</span><span class="p">)</span> <span class="k">for</span> <span class="n">actor</span> <span class="ow">in</span> <span class="n">location_instance</span><span class="o">.</span><span class="n">actors</span><span class="p">])</span>
 
-                <span class="c1"># only keep wanted columns (agent attributes)</span>
-                <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="nb">list</span><span class="p">(</span><span class="n">agent_attributes</span><span class="p">)]</span>
+                <span class="c1"># only keep wanted columns (actor attributes)</span>
+                <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="nb">list</span><span class="p">(</span><span class="n">actor_attributes</span><span class="p">)]</span>
 
                 <span class="c1"># add location type as str</span>
                 <span class="n">df</span><span class="p">[</span><span class="s2">&quot;location_type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">location_type</span>
 
-                <span class="n">agent_dfs</span><span class="p">[</span><span class="n">title</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span>
+                <span class="n">actor_dfs</span><span class="p">[</span><span class="n">title</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span>
 
-            <span class="k">for</span> <span class="n">agent_attribute</span> <span class="ow">in</span> <span class="n">agent_attributes</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">actor_attribute</span> <span class="ow">in</span> <span class="n">actor_attributes</span><span class="p">:</span>
                 <span class="n">location_id</span> <span class="o">=</span> <span class="mi">0</span>
                 <span class="n">df_list_of_attribute</span> <span class="o">=</span> <span class="p">[]</span>
-                <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">df</span> <span class="ow">in</span> <span class="n">agent_dfs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">df</span> <span class="ow">in</span> <span class="n">actor_dfs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
                     <span class="n">crosstab_table</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">crosstab</span><span class="p">(</span>
-                        <span class="n">index</span><span class="o">=</span><span class="n">df</span><span class="p">[</span><span class="n">agent_attribute</span><span class="p">],</span>
+                        <span class="n">index</span><span class="o">=</span><span class="n">df</span><span class="p">[</span><span class="n">actor_attribute</span><span class="p">],</span>
                         <span class="n">columns</span><span class="o">=</span><span class="s2">&quot;count&quot;</span><span class="p">,</span>
                     <span class="p">)</span>
                     <span class="n">crosstab_table</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span>
@@ -596,67 +605,68 @@
 <a class="viewcode-back" href="../../api/inspector.html#pop2net.inspector.NetworkInspector.location_information">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">location_information</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">select_locations</span><span class="p">:</span> <span class="n">_location</span><span class="o">.</span><span class="n">Location</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="n">_location</span><span class="o">.</span><span class="n">Location</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">agent_attributes</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">location_labels</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+        <span class="n">actor_attributes</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">output_format</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;table&quot;</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span> <span class="o">|</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Provides information on the agents assigned to location instances.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Provides detailed information about actors assigned to specific location instances.</span>
 
-<span class="sd">           Displayed  information can be filtered by specifying certain location</span>
-<span class="sd">           classes and agent_attributes</span>
+<span class="sd">        This method allows filtering by location labels and actor attributes, and can output</span>
+<span class="sd">        the information either as a formatted table (printed to stdout) or as a pandas DataFrame.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            select_locations (p2n.Location | list[p2n.Location] | None, optional): A list of</span>
-<span class="sd">                location classes. Defaults to None.</span>
-<span class="sd">            agent_attributes (str | None | list[str] | None, optional): A list of agent attributes.</span>
-<span class="sd">                Defaults to None.</span>
-<span class="sd">            output_format (str, optional): A str determining what is returned. Defaults to &quot;table&quot;.</span>
+<span class="sd">            location_labels (str | list[str]): One or more location labels to filter the locations.</span>
+<span class="sd">            actor_attributes (str | None | list[str], optional): One or more actor attributes to include in the output.</span>
+<span class="sd">                If None, a default subset of attributes is used. Defaults to None.</span>
+<span class="sd">            output_format (str, optional): Determines the output format. Use &quot;table&quot; to print a formatted table,</span>
+<span class="sd">                or &quot;df&quot; to return a pandas DataFrame. Defaults to &quot;table&quot;.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            None | pd.DataFrame: A pandas.DataFrame or nothing.</span>
+<span class="sd">            None | pd.DataFrame: Returns None if output_format is &quot;table&quot; (prints to stdout).</span>
+<span class="sd">                Returns a pandas DataFrame if output_format is &quot;df&quot;.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">select_locations</span><span class="p">:</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">select_locations</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
-                <span class="n">select_locations</span> <span class="o">=</span> <span class="p">[</span><span class="n">select_locations</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">location_labels</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">location_labels</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+                <span class="n">location_labels</span> <span class="o">=</span> <span class="p">[</span><span class="n">location_labels</span><span class="p">]</span>
 
-        <span class="k">if</span> <span class="n">agent_attributes</span><span class="p">:</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">agent_attributes</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
-                <span class="n">agent_attributes</span> <span class="o">=</span> <span class="p">[</span><span class="n">agent_attributes</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">actor_attributes</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">actor_attributes</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+                <span class="n">actor_attributes</span> <span class="o">=</span> <span class="p">[</span><span class="n">actor_attributes</span><span class="p">]</span>
 
         <span class="c1"># determine eligible locations classes</span>
         <span class="n">valid_locations</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">if</span> <span class="n">select_locations</span><span class="p">:</span>
-            <span class="k">for</span> <span class="n">location_instance</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">locations</span><span class="p">:</span>
-                <span class="k">for</span> <span class="n">locationtype</span> <span class="ow">in</span> <span class="n">select_locations</span><span class="p">:</span>
-                    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">location_instance</span><span class="p">,</span> <span class="n">locationtype</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">location_labels</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">location_instance</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">locations</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">locationtype</span> <span class="ow">in</span> <span class="n">location_labels</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">location_instance</span><span class="o">.</span><span class="n">label</span> <span class="o">==</span> <span class="n">locationtype</span><span class="p">:</span>
                         <span class="n">valid_locations</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">location_instance</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">valid_locations</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">locations</span><span class="p">)</span>
+            <span class="n">valid_locations</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">locations</span><span class="p">)</span>
 
-        <span class="c1"># create agent df per location instance</span>
-        <span class="n">agent_dfs</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="k">if</span> <span class="n">agent_attributes</span><span class="p">:</span>
+        <span class="c1"># create actor df per location instance</span>
+        <span class="n">actor_dfs</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">if</span> <span class="n">actor_attributes</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">location_instance</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">valid_locations</span><span class="p">):</span>
                 <span class="c1"># Create the title of printout</span>
-                <span class="n">title</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">.Location: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">location_instance</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
-                <span class="n">location_type</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">location_instance</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-                <span class="c1"># get all agents per location instance, subset df by agent-attributes</span>
-                <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([</span><span class="nb">vars</span><span class="p">(</span><span class="n">agent</span><span class="p">)</span> <span class="k">for</span> <span class="n">agent</span> <span class="ow">in</span> <span class="n">location_instance</span><span class="o">.</span><span class="n">agents</span><span class="p">])</span>
-                <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="nb">list</span><span class="p">(</span><span class="n">agent_attributes</span><span class="p">)]</span>
+                <span class="n">title</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">.Location: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">location_instance</span><span class="o">.</span><span class="n">label</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="n">location_type</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">location_instance</span><span class="o">.</span><span class="n">label</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="c1"># get all actors per location instance, subset df by actor-attributes</span>
+                <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([</span><span class="nb">vars</span><span class="p">(</span><span class="n">actor</span><span class="p">)</span> <span class="k">for</span> <span class="n">actor</span> <span class="ow">in</span> <span class="n">location_instance</span><span class="o">.</span><span class="n">actors</span><span class="p">])</span>
+                <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="nb">list</span><span class="p">(</span><span class="n">actor_attributes</span><span class="p">)]</span>
                 <span class="n">df</span><span class="p">[</span><span class="s2">&quot;location_type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">location_type</span>
-                <span class="n">agent_dfs</span><span class="p">[</span><span class="n">title</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span>
+                <span class="n">actor_dfs</span><span class="p">[</span><span class="n">title</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">location_instance</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">valid_locations</span><span class="p">):</span>
-                <span class="n">title</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">.Location: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">location_instance</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
-                <span class="n">location_type</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">location_instance</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-                <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([</span><span class="nb">vars</span><span class="p">(</span><span class="n">agent</span><span class="p">)</span> <span class="k">for</span> <span class="n">agent</span> <span class="ow">in</span> <span class="n">location_instance</span><span class="o">.</span><span class="n">agents</span><span class="p">])</span>
+                <span class="n">title</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">.Location: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">location_instance</span><span class="o">.</span><span class="n">label</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="n">location_type</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">location_instance</span><span class="o">.</span><span class="n">label</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([</span><span class="nb">vars</span><span class="p">(</span><span class="n">actor</span><span class="p">)</span> <span class="k">for</span> <span class="n">actor</span> <span class="ow">in</span> <span class="n">location_instance</span><span class="o">.</span><span class="n">actors</span><span class="p">])</span>
                 <span class="n">df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">7</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
                 <span class="n">df</span><span class="p">[</span><span class="s2">&quot;location_type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">location_type</span>
-                <span class="n">agent_dfs</span><span class="p">[</span><span class="n">title</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span>
+                <span class="n">actor_dfs</span><span class="p">[</span><span class="n">title</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span>
 
         <span class="k">if</span> <span class="n">output_format</span> <span class="o">==</span> <span class="s2">&quot;table&quot;</span><span class="p">:</span>
             <span class="c1">#### Print Part &quot;Basic&quot;</span>
-            <span class="k">for</span> <span class="n">title</span><span class="p">,</span> <span class="n">df</span> <span class="ow">in</span> <span class="n">agent_dfs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">title</span><span class="p">,</span> <span class="n">df</span> <span class="ow">in</span> <span class="n">actor_dfs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
                 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">title</span><span class="si">}</span><span class="s2"> </span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
                 <span class="nb">print</span><span class="p">(</span><span class="n">tabulate</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="s2">&quot;keys&quot;</span><span class="p">,</span> <span class="n">tablefmt</span><span class="o">=</span><span class="s2">&quot;fancy_grid&quot;</span><span class="p">))</span>
                 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
@@ -664,7 +674,7 @@
         <span class="k">if</span> <span class="n">output_format</span> <span class="o">==</span> <span class="s2">&quot;df&quot;</span><span class="p">:</span>
             <span class="n">location_id_counter</span> <span class="o">=</span> <span class="mi">0</span>
             <span class="n">df_list</span> <span class="o">=</span> <span class="p">[]</span>
-            <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">df</span> <span class="ow">in</span> <span class="n">agent_dfs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">df</span> <span class="ow">in</span> <span class="n">actor_dfs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
                 <span class="n">df</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;location_id&quot;</span><span class="p">,</span> <span class="p">[</span><span class="n">location_id_counter</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="p">))</span>
                 <span class="n">location_id_counter</span> <span class="o">+=</span> <span class="mi">1</span>
                 <span class="n">df_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>

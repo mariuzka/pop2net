@@ -84,8 +84,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">pop2net.location</span><span class="w"> </span><span class="kn">import</span> <span class="n">Location</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pop2net.utils</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">utils</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">.</span><span class="w"> </span><span class="kn">import</span> <span class="n">agent</span> <span class="k">as</span> <span class="n">_agent</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">.</span><span class="w"> </span><span class="kn">import</span> <span class="n">model</span> <span class="k">as</span> <span class="n">_model</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.</span><span class="w"> </span><span class="kn">import</span> <span class="n">actor</span> <span class="k">as</span> <span class="n">_actor</span>
 
 
 <div class="viewcode-block" id="LocationDesigner">
@@ -97,21 +96,17 @@
     <span class="n">location_class</span><span class="p">:</span> <span class="nb">type</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">location_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
 
-    <span class="n">n_agents</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">n_actors</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">overcrowding</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="n">only_exact_n_agents</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">only_exact_n_actors</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="n">n_locations</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">static_weight</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="n">recycle</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
     <span class="n">nxgraph</span><span class="p">:</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">_model</span><span class="o">.</span><span class="n">Model</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a helper class to create locations.</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            model (_model.Model):  The model.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a helper class to create locations.&quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">group_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">subgroup_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">group_value</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
@@ -128,14 +123,14 @@
 
 <div class="viewcode-block" id="LocationDesigner.filter">
 <a class="viewcode-back" href="../../api/location_designer.html#pop2net.LocationDesigner.filter">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">filter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent</span><span class="p">:</span> <span class="n">_agent</span><span class="o">.</span><span class="n">Agent</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>  <span class="c1"># noqa: ARG002</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Check whether the agent is meant to join this type of location.</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">filter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">actor</span><span class="p">:</span> <span class="n">_actor</span><span class="o">.</span><span class="n">Actor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>  <span class="c1"># noqa: ARG002</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Check whether the actor is meant to join this type of location.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            agent: The agent that is currently processed by the Creator.</span>
+<span class="sd">            actor: The actor that is currently processed by the Creator.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            True if the agent is allowed to join the location, False otherwise.</span>
+<span class="sd">            True if the actor is allowed to join the location, False otherwise.</span>
 <span class="sd">            Returns True by default.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="kc">True</span></div>
@@ -143,48 +138,48 @@
 
 <div class="viewcode-block" id="LocationDesigner.bridge">
 <a class="viewcode-back" href="../../api/location_designer.html#pop2net.LocationDesigner.bridge">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">bridge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent</span><span class="p">:</span> <span class="n">_agent</span><span class="o">.</span><span class="n">Agent</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">list</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># noqa: ARG002</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create locations with one agent for each unique value returned.</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">bridge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">actor</span><span class="p">:</span> <span class="n">_actor</span><span class="o">.</span><span class="n">Actor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">list</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># noqa: ARG002</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create locations with one actor for each unique value returned.</span>
 
 <span class="sd">        Cannot be used in combination with melt().</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            agent (_agent.Agent): The agent that is currently processed by the Creator.</span>
+<span class="sd">            actor (_actor.Actor): The actor that is currently processed by the Creator.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            float | str | list | None:</span>
-<span class="sd">                The value which is used to assign agents to location instances.</span>
+<span class="sd">                The value which is used to assign actors to location instances.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="kc">None</span></div>
 
 
 <div class="viewcode-block" id="LocationDesigner.split">
 <a class="viewcode-back" href="../../api/location_designer.html#pop2net.LocationDesigner.split">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">split</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent</span><span class="p">:</span> <span class="n">_agent</span><span class="o">.</span><span class="n">Agent</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">list</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># noqa: ARG002</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">split</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">actor</span><span class="p">:</span> <span class="n">_actor</span><span class="o">.</span><span class="n">Actor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">list</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># noqa: ARG002</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Creates seperate location instances for each unique returned value.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            agent: The agent that is currently processed by the Creator.</span>
+<span class="sd">            actor: The actor that is currently processed by the Creator.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            float | str | list | None:</span>
-<span class="sd">                The value(s) that determine(s) to which location instance the agent is assigned.</span>
+<span class="sd">                The value(s) that determine(s) to which location instance the actor is assigned.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="kc">None</span></div>
 
 
 <div class="viewcode-block" id="LocationDesigner.stick_together">
 <a class="viewcode-back" href="../../api/location_designer.html#pop2net.LocationDesigner.stick_together">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">stick_together</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent</span><span class="p">:</span> <span class="n">_agent</span><span class="o">.</span><span class="n">Agent</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span> <span class="o">|</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Assigns agents with a shared value on an attribute to the same location instance.</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">stick_together</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">actor</span><span class="p">:</span> <span class="n">_actor</span><span class="o">.</span><span class="n">Actor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span> <span class="o">|</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Assigns actors with a shared value on an attribute to the same location instance.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            agent (_agent.Agent): The agent that is currently processed by the Creator.</span>
+<span class="sd">            actor (_actor.Actor): The actor that is currently processed by the Creator.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            float | str: A value that defines the groups of agents.</span>
+<span class="sd">            float | str: A value that defines the groups of actors.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">agent</span><span class="o">.</span><span class="n">id</span></div>
+        <span class="k">return</span> <span class="n">actor</span><span class="o">.</span><span class="n">id_p2n</span></div>
 
 
 <div class="viewcode-block" id="LocationDesigner.nest">
@@ -192,7 +187,7 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">nest</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">type</span><span class="p">[</span><span class="n">Location</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Nests this location class into another location class.</span>
 
-<span class="sd">        Ensures that the agents assigned to the same instance of this location class</span>
+<span class="sd">        Ensures that the actors assigned to the same instance of this location class</span>
 <span class="sd">        are also assigned to the same instance of the returned location class.</span>
 
 <span class="sd">        Returns:</span>
@@ -204,9 +199,9 @@
 <div class="viewcode-block" id="LocationDesigner.melt">
 <a class="viewcode-back" href="../../api/location_designer.html#pop2net.LocationDesigner.melt">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">melt</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Location</span><span class="p">]</span> <span class="o">|</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Location</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Allows to assign agents with different attribute values to the same location.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Allows to assign actors with different attribute values to the same location.</span>
 
-<span class="sd">        Merges the agents assigned to the instances of the returned location classes</span>
+<span class="sd">        Merges the actors assigned to the instances of the returned location classes</span>
 <span class="sd">        into one instance of this location class.</span>
 
 <span class="sd">        Returns:</span>
@@ -215,11 +210,11 @@
         <span class="k">return</span> <span class="p">[]</span></div>
 
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_subsplit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent</span><span class="p">:</span> <span class="n">_agent</span><span class="o">.</span><span class="n">Agent</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">float</span> <span class="o">|</span> <span class="nb">list</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># noqa: ARG002</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_subsplit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">actor</span><span class="p">:</span> <span class="n">_actor</span><span class="o">.</span><span class="n">Actor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">float</span> <span class="o">|</span> <span class="nb">list</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># noqa: ARG002</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Splits a location instance into sub-instances to create a certain network structure.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            agent (_agent.Agent): The agent that is currently processed by the Creator.</span>
+<span class="sd">            actor (_actor.Actor): The actor that is currently processed by the Creator.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            str | float | None: A value or a list of values that represent specific sub-instances.</span>
@@ -228,10 +223,10 @@
             <span class="k">return</span> <span class="kc">None</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">node_indices</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nxgraph</span><span class="o">.</span><span class="n">nodes</span><span class="p">)</span>
-            <span class="n">agent_pos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">agents_</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">agent</span><span class="p">)</span>
+            <span class="n">actor_pos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">actors_</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">actor</span><span class="p">)</span>
 
-            <span class="k">if</span> <span class="n">agent_pos</span> <span class="o">&lt;=</span> <span class="nb">len</span><span class="p">(</span><span class="n">node_indices</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
-                <span class="n">node_index</span> <span class="o">=</span> <span class="n">node_indices</span><span class="p">[</span><span class="n">agent_pos</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">actor_pos</span> <span class="o">&lt;=</span> <span class="nb">len</span><span class="p">(</span><span class="n">node_indices</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">node_index</span> <span class="o">=</span> <span class="n">node_indices</span><span class="p">[</span><span class="n">actor_pos</span><span class="p">]</span>
 
                 <span class="k">return</span> <span class="p">[</span>
                     <span class="n">utils</span><span class="o">.</span><span class="n">_join_positions</span><span class="p">(</span><span class="n">pos1</span><span class="o">=</span><span class="n">node_index</span><span class="p">,</span> <span class="n">pos2</span><span class="o">=</span><span class="n">neighbor</span><span class="p">)</span>
@@ -261,58 +256,58 @@
 
     <span class="n">location_class</span><span class="p">:</span> <span class="nb">type</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">location_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="n">n_agents</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">n_actors</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">overcrowding</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="n">only_exact_n_agents</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">only_exact_n_actors</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="n">n_locations</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">filter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent</span><span class="p">:</span> <span class="n">_agent</span><span class="o">.</span><span class="n">Agent</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>  <span class="c1"># noqa: ARG002</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Check whether the agent is meant to join this type of location.</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">filter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">actor</span><span class="p">:</span> <span class="n">_actor</span><span class="o">.</span><span class="n">Actor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>  <span class="c1"># noqa: ARG002</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Check whether the actor is meant to join this type of location.</span>
 
 <span class="sd">        This is a boilerplate implementation of this method which always returns True; i.e. all</span>
-<span class="sd">        agents will always be allowed at this location. Override this method in your own</span>
+<span class="sd">        actors will always be allowed at this location. Override this method in your own</span>
 <span class="sd">        implementations as you seem fit.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            agent: The agent that is currently processed by the Creator.</span>
+<span class="sd">            actor: The actor that is currently processed by the Creator.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            True if the agent is allowed to join the location, False otherwise.</span>
+<span class="sd">            True if the actor is allowed to join the location, False otherwise.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="kc">True</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">stick_together</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent</span><span class="p">:</span> <span class="n">_agent</span><span class="o">.</span><span class="n">Agent</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span> <span class="o">|</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Assigns agents with a shared value on an attribute to the same location instance.</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">stick_together</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">actor</span><span class="p">:</span> <span class="n">_actor</span><span class="o">.</span><span class="n">Actor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span> <span class="o">|</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Assigns actors with a shared value on an attribute to the same location instance.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            agent (_agent.Agent): The agent that is currently processed by the Creator.</span>
+<span class="sd">            actor (_actor.Actor): The actor that is currently processed by the Creator.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            float | str: A value that defines the groups of agents.</span>
+<span class="sd">            float | str: A value that defines the groups of actors.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">agent</span><span class="o">.</span><span class="n">id</span>
+        <span class="k">return</span> <span class="n">actor</span><span class="o">.</span><span class="n">id_p2n</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">split</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent</span><span class="p">:</span> <span class="n">_agent</span><span class="o">.</span><span class="n">Agent</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">list</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># noqa: ARG002</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">split</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">actor</span><span class="p">:</span> <span class="n">_actor</span><span class="o">.</span><span class="n">Actor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">list</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># noqa: ARG002</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Creates seperate location instances for each unique returned value.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            agent: The agent that is currently processed by the Creator.</span>
+<span class="sd">            actor: The actor that is currently processed by the Creator.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            float | str | list | None: The value(s) that determine(s) to which location instance</span>
-<span class="sd">                the agent is assigned.</span>
+<span class="sd">                the actor is assigned.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="kc">None</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">weight</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent</span><span class="p">:</span> <span class="n">_agent</span><span class="o">.</span><span class="n">Agent</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># noqa: ARG002</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Defines the edge weight between the agent and the location instance.</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">weight</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">actor</span><span class="p">:</span> <span class="n">_actor</span><span class="o">.</span><span class="n">Actor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># noqa: ARG002</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Defines the edge weight between the actor and the location instance.</span>
 
-<span class="sd">        Defines how the edge weight between an agent and the location is determined.</span>
+<span class="sd">        Defines how the edge weight between an actor and the location is determined.</span>
 <span class="sd">        This is a boilerplate implementation of this method which always returns 1; i.e. all</span>
 <span class="sd">        edge weights will be 1. Override this method in your own implementations as you seem fit.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            agent: The agent that is currently processed by the Creator.</span>
+<span class="sd">            actor: The actor that is currently processed by the Creator.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            The edge weight.</span>
