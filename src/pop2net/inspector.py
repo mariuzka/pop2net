@@ -344,11 +344,7 @@ class NetworkInspector:
         if return_df:
             return df
 
-    def network_measures(
-            self,
-            actor_attrs:list[str] =None,
-            weighted: bool  = True
-        ) -> list[dict]:
+    def network_measures(self, actor_attrs: list[str] = None, weighted: bool = True) -> list[dict]:
         """Calculates common network measures for the actor-level network graph.
 
         If the created network consist of independent groups of nodes
@@ -366,7 +362,6 @@ class NetworkInspector:
         # make distinction between multiple independent networks and one network
 
         def get_network_measures(nx_graph) -> dict:
-
             result_dict = {}
             result_dict["n_nodes"] = nx.number_of_nodes(nx_graph)
             result_dict["diameter"] = nx.diameter(nx_graph, weight="weight")
@@ -381,12 +376,11 @@ class NetworkInspector:
                 weight="weight",
             )
             return result_dict
-        
+
         def get_network_measures_no_weight(nx_graph) -> dict:
-            
             result_dict = {}
             result_dict["n_nodes"] = nx.number_of_nodes(nx_graph)
-            result_dict["diameter"] = nx.diameter(nx_graph, weight = None)
+            result_dict["diameter"] = nx.diameter(nx_graph, weight=None)
             result_dict["density"] = nx.density(nx_graph)
             result_dict["transitivity"] = nx.transitivity(nx_graph)
             result_dict["avg_clustering"] = nx.average_clustering(
@@ -405,7 +399,7 @@ class NetworkInspector:
         for component in network_components:
             try:
                 nx_subgraph = nx_graph.subgraph(component)
-                
+
             except nx.NetworkXError:
                 print("Cant make graph out of component")
                 break
