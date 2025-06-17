@@ -1,6 +1,6 @@
 reviewer 1:
 
-- [wip] Add the workflow visualization diagram - The about page in the documentation includes a helpful workflow diagram showing the relationship between micro-level data, agent classes, and location instances. Including this visualization (or a simplified version) would give readers a clearer understanding of Pop2net's approach.
+- [X] Add the workflow visualization diagram - The about page in the documentation includes a helpful workflow diagram showing the relationship between micro-level data, agent classes, and location instances. Including this visualization (or a simplified version) would give readers a clearer understanding of Pop2net's approach.
 
 - [ ] Incorporate practical code examples - Your paper would benefit from showing how the concepts translate into straightforward code: ... These examples would demonstrate the simplicity of the API and make the bipartite approach more concrete. Here's an example how we did this in our Mesa paper (we might have done a little much).
 
