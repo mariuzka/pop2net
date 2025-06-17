@@ -114,6 +114,11 @@ Pop2net's components can be categorized into three sectors.
     The NetworkInspector class provides methods for quick network analysis, such as visualization and the calculation of network measures.
 
 
+The diagram below visualizes Pop2net's structure and workflow:
+
+![](flowchart.png)
+
+
 # Documentation
 
 To make Pop2net as user-friendly as possible, we also provide comprehensive documentation.
