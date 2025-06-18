@@ -47,6 +47,7 @@ The aim of Pop2net's bipartite approach to relations is to simplify the generati
 
 # Statement of Need
 
+<!-- TODO: Den ersten Absatz kürzen -->
 Besides NetLogo [@wilensky_netlogo_1999], Python has become one of the primary programming languages for building agent-based models.
 In the Python ecosystem, NetworkX [@hagberg_exploring_2008] is the dominant library for working with networks.
 It provides extensive control over network structures and a wide range of ready-to-use network models.
@@ -116,7 +117,113 @@ Pop2net's components can be categorized into three sectors.
 
 The diagram below visualizes Pop2net's structure and workflow:
 
-![](flowchart.png)
+![](img/flowchart.png)
+
+
+# Code examples
+
+## Basic example
+
+```python
+
+import pop2net as p2n
+
+# create environment
+env = p2n.Environment()
+
+# create 3 actors & add them to the environment
+actor1 = p2n.Actor()
+actor2 = p2n.Actor()
+actor3 = p2n.Actor()
+env.add_actors([actor1, actor2, actor3])
+
+# Define (empty) location classes
+class Friendship(p2n.Location):
+    pass
+
+class School(p2n.Location):
+    pass
+
+# create school location, add it to the environment & add all actors to the school
+school = School()
+env.add_location(school)
+school.add_actors(env.actors)
+
+# connect two actors via a friendship location
+actor1.connect(actor2, location_cls=Friendship)
+
+# get all actors that are connected with actor1 via friendship
+actor1.neighbors(location_labels=["Friendship"])
+```
+
+`[<pop2net.actor.Actor at 0x7f8151580f20>]`
+
+
+```python
+# create a NetworkInspector and plot the bipartite network
+inspector = p2n.NetworkInspector(env)
+inspector.plot_bipartite_network()
+```
+
+![](img/example1_plot.png)
+
+
+
+## Example of modular network generation
+
+```python
+import pop2net as p2n
+
+env = p2n.Environment()
+creator = p2n.Creator(env)
+inspector = p2n.NetworkInspector(env)
+
+
+# design city locations
+class City(p2n.LocationDesigner):
+    n_locations = 2 # set the number of cities to 2
+
+
+# design households
+class Household(p2n.LocationDesigner):
+    def split(self, actor):
+        """Create one household location for each household id."""
+        return actor.household_id
+
+    def weight(self, actor):
+        """Set the weight between the actor and the location."""
+        return 24 - actor.work_hours
+
+
+# design work places
+class Work(p2n.LocationDesigner):
+    n_actors = 5 # set the number of actors per work location to 5
+
+    def split(self, actor):
+        """Create seperated work locations for each industry."""
+        return actor.industry
+
+    def weight(self, actor):
+        """Set the weight between the actor and the location."""
+        return actor.work_hours
+    
+    def filter(self, actor):
+        """Only assign actors with more than 0 work hours to this location type."""
+        return actor.work_hours > 0
+    
+
+# create the agents and connect them
+creator.create(
+    df=df, # sample from this data to create the actors
+    n_actors=100, # set the number of actors to 100
+    sample_level="household_id", # sample whole households
+    location_designers=[City, Household, Work], # connect the actors via cities, households and work places
+    )
+
+# plot bipartite and unipartite networks
+inspector.plot_networks(location_color="label")
+``` 
+![](img/example2_plot.png)
 
 
 # Documentation
