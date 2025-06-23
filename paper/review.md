@@ -33,3 +33,11 @@ editor:
 One point of attention: we're really trying to keep the short papers <1000 words, because often they were getting too long. So while I agree with some of the points raised, JOSS favours a short paper with links to the docs.
 
 So from the comments above: yes to explain what a bipartite network is (the paper should be understandable by non-experts), yes to putting the workflow, but perhaps no to putting code and several examples (one would be enough).
+
+todos:
+- pfeil von location zu location designer
+- pfeile labeln evtl.
+- basic beispiel weg
+- creator beispiel beschreiben in einem absatz
+- datensatz mit faker erstellen / beispiel voll funktionsfähig machen sodass man es rauskopieren kann
+- mesa modell mal mit löschen / hinzufügen von agenten während simulation testen
