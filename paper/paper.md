@@ -120,56 +120,7 @@ The diagram below visualizes Pop2net's structure and workflow:
 ![](img/flowchart.png)
 
 
-# Code examples
-
-## Basic example
-
-```python
-
-import pop2net as p2n
-
-# create environment
-env = p2n.Environment()
-
-# create 3 actors & add them to the environment
-actor1 = p2n.Actor()
-actor2 = p2n.Actor()
-actor3 = p2n.Actor()
-env.add_actors([actor1, actor2, actor3])
-
-# Define (empty) location classes
-class Friendship(p2n.Location):
-    pass
-
-class School(p2n.Location):
-    pass
-
-# create school location, add it to the environment & add all actors to the school
-school = School()
-env.add_location(school)
-school.add_actors(env.actors)
-
-# connect two actors via a friendship location
-actor1.connect(actor2, location_cls=Friendship)
-
-# get all actors that are connected with actor1 via friendship
-actor1.neighbors(location_labels=["Friendship"])
-```
-
-`[<pop2net.actor.Actor at 0x7f8151580f20>]`
-
-
-```python
-# create a NetworkInspector and plot the bipartite network
-inspector = p2n.NetworkInspector(env)
-inspector.plot_bipartite_network()
-```
-
-![](img/example1_plot.png)
-
-
-
-## Example of modular network generation
+# Code example of modular network generation
 
 ```python
 import pop2net as p2n
