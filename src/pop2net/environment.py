@@ -427,7 +427,7 @@ class Environment:
 
                 location_cls = Location
 
-        if self.framework is None:
+        if self.model is None:
             location = location_cls()
         else:
             location = location_cls(model=self.model)
