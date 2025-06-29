@@ -193,7 +193,7 @@ creator.create(
 # plot bipartite and unipartite networks
 inspector.plot_networks(location_color="label")
 ```
-![](img/example2_plot.png)
+![](img/network_plots.png)
 
 
 # Documentation
