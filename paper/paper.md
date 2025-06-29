@@ -118,15 +118,30 @@ The diagram below visualizes Pop2net's structure and workflow:
 ![](img/flowchart.png)
 
 
-# Code example of modular network generation
+# Example of network generation
+
+The following example demonstrates how to create a network in a modular way using the Creator and LocationDesigner classes. 
+It also showcases how Pop2net can generate agents from micro-level data.
+
+First, we load some artificial example data. 
+Each row represents an actor, and each column corresponds to an actor attribute.
+These data will later be used to generate the network's actors.
+
+Next, we define three different LocationDesigner classes.
+Each one instructs the Creator to generate a certain number of locations of a specific type and to connect actors with matching attribute values to the appropriate location instances.
+For example, the Work LocationDesigner tells the Creator to create work locations—grouped by industry—with a maximum size of five actors each. Only agents with more than zero work hours are connected to these locations, and the edge weight reflects each agent's number of work hours.
+
+In the final step, the Creator samples a specified number of actors from the example data.
+It supports oversampling and allows sampling actors as groups based on a shared column (e.g., household ID), ensuring that duplicated households are assigned unique IDs.
+Finally, the Creator generates the location instances and connects the actors to the locations according to the instructions provided by the LocationDesigners.
+
 
 ```python
+import pandas as pd
 import pop2net as p2n
 
-env = p2n.Environment()
-creator = p2n.Creator(env)
-inspector = p2n.NetworkInspector(env)
-
+# load example micro-level data
+df = pd.read_csv("example_data.csv")
 
 # design city locations
 class City(p2n.LocationDesigner):
@@ -155,11 +170,15 @@ class Work(p2n.LocationDesigner):
     def weight(self, actor):
         """Set the weight between the actor and the location."""
         return actor.work_hours
-
+    
     def filter(self, actor):
         """Only assign actors with more than 0 work hours to this location type."""
         return actor.work_hours > 0
 
+
+env = p2n.Environment()
+creator = p2n.Creator(env)
+inspector = p2n.NetworkInspector(env)
 
 # create the agents and connect them
 creator.create(
