@@ -36,8 +36,4 @@ So from the comments above: yes to explain what a bipartite network is (the pape
 
 todos:
 - pfeil von location zu location designer
-- pfeile labeln evtl.
-- basic beispiel weg
-- creator beispiel beschreiben in einem absatz
-- datensatz mit faker erstellen / beispiel voll funktionsfähig machen sodass man es rauskopieren kann
 - mesa modell mal mit löschen / hinzufügen von agenten während simulation testen
