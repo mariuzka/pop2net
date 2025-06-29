@@ -143,6 +143,7 @@ import pop2net as p2n
 # load example micro-level data
 df = pd.read_csv("example_data.csv")
 
+
 # design city locations
 class City(p2n.LocationDesigner):
     n_locations = 2 # set the number of cities to 2
@@ -176,6 +177,7 @@ class Work(p2n.LocationDesigner):
         return actor.work_hours > 0
 
 
+# create pop2net's main objects
 env = p2n.Environment()
 creator = p2n.Creator(env)
 inspector = p2n.NetworkInspector(env)
