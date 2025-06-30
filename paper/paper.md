@@ -117,22 +117,8 @@ The diagram below visualizes Pop2net's structure and workflow:
 
 # Example of network generation
 
-The following example demonstrates how to create a network based on three differnt location types using the Creator and LocationDesigner classes. 
-It also showcases how Pop2net can generate agents from micro-level data.
-
-<!-- Reichen die zwei Sätze oben oder den Teil ab hier noch drin lassen? -->
-First, we load an artificial example dataset containing information about a person’s household, working hours, and industry.
-Each row represents an actor, and each column corresponds to an actor attribute.
-These data will later be used to generate the network's actors.
-
-Next, we define three different LocationDesigner classes.
-Each one instructs the Creator to generate a certain number of locations of a specific type and to connect actors with matching attribute values to the appropriate location instances.
-For example, the Work LocationDesigner tells the Creator to create work locations—grouped by industry—with a size of five actors each. 
-Only agents with more than zero work hours are connected to these locations, and the edge weight reflects each agent's number of work hours.
-
-In the final step, the Creator samples a specified number of actors from the example data.
-It supports oversampling and allows sampling actors as groups based on a shared column (e.g., household ID), ensuring that duplicated households are assigned unique IDs.
-Finally, the Creator generates the location instances and connects the actors to the locations according to the instructions provided by the LocationDesigners.
+The following example demonstrates how to generate a network with different location types and assign actors to these locations based on their attributes using Pop2net.
+It involves loading micro-level data, defining rules for location creation and actor assignment, and finally sampling and connecting actors to locations accordingly.
 
 
 ```python
