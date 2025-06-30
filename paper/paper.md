@@ -8,6 +8,7 @@ tags:
   - Network generation
   - Bipartite networks
   - AgentPy
+  - Mesa
 
 authors:
   - name: Marius Kaffai
