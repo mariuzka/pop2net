@@ -455,7 +455,7 @@ class Creator:
                     dummy_location=dummy_location,
                 )
 
-                # get all values for which seperated groups/locations should be created
+                # get all values for which separated groups/locations should be created
                 melt_split_values = self._get_split_values(
                     actors=melt_location_affiliated_actors,
                     dummy_location=melt_dummy_location,
