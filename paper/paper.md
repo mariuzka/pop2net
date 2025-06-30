@@ -40,23 +40,22 @@ Addtionally, accessing and modifying the network during the simulation are steps
 
 Pop2net is a Python package that combines many steps related to network generation and management for ABM using a bipartite approach.
 Bipartite networks consist of two distinct types of entities where edges are only formed between entities of different types.
-In Pop2net, relationships are represented as bipartite networks connecting *actors* and *locations*, with direct links existing only between actors and locations.
-However, when two actors are linked to the same location, they are considered connected through that shared location.
+In Pop2net, relationships are represented as bipartite networks connecting *actors* and *locations*.
+When two actors are linked to the same location, they are considered connected through that shared location.
 In this way, locations serve as a contact layer between actors, representing places where interactions occur or contexts that facilitate actor connections.
 The aim of Pop2net's bipartite approach to relations is to simplify the generation and management of network structures in ABM.
 
 
 # Statement of Need
-
-Building upon NetworkX [@hagberg_exploring_2008], we provide an extensive tool designed to simplify and streamline the generation of (empirically calibrated) bipartite networks for further use with common ABM frameworks.
-It provides extensive control over network structures and a wide range of ready-to-use network models.
-NetworkX was not originally designed with ABM in mind, which can make managing networks or creating custom network structures within ABM frameworks cumbersome and inflexible.
+In Python, NetworkX [@hagberg_exploring_2008] provides extensive control over network structures and a wide range of ready-to-use network models.
+However, NetworkX was not originally designed with ABM in mind, which can make managing networks or creating custom network structures within ABM frameworks cumbersome and inflexible.
 While the built-in network models are powerful, they are often too abstract to directly support the specific needs of ABM applications.
 
 ABM frameworks in Python—such as Mesa [@kazil_utilizing_2020, @hoeven_mesa_2025], AgentPy [@foramitti_agentpy_2021], and Melodie [@yu_melodie_2023]—offer improved data structures for representing and manipulating networks.
 However, they still lack advanced tools for generating custom network topologies and provide only limited out-of-the-box support for bipartite graphs.
 
-Pop2net aims to address this gap in the toolkit of agent-based modelers by utilizing bipartite networks for organizing relations in ABM, with the flexibility to integrate empirical data and traditional network models:
+Pop2net aims to address this gap in the toolkit of agent-based modelers.
+Building upon NetworkX, we provide an extensive tool designed to simplify and streamline the generation of (empirically calibrated) bipartite networks for further use with common ABM frameworks.
 
 1. **Bringing bipartite networks to agent-based modeling in Python**
     Pop2net implements a bipartite approach to networks in ABM, which can simplify their creation and management by organizing relations through locations.
@@ -82,34 +81,34 @@ While Pop2net is implemented in Python, to our knowledge, no comparable software
 
 Pop2net's components can be categorized into three sectors.
 
-1. **Mandatory base classes.**
+1. **Environment, Actor and Location.**
     The first sector contains the three object classes—Environment, Actor, and Location—that must always be used to facilitate the bipartite network structure of Pop2net.
     The Environment class is Pop2net's main object that holds all entities and manages their relations.
     Central attributes of the Environment class are:
-    * A NetworkX graph object [@hagberg_exploring_2008] that stores all actors, locations, and their relationships.
+    * A NetworkX graph object that stores all actors, locations, and their relationships.
     * An actor list and a location list that provide convenient access to actor and location objects.
     * Various methods for managing tasks such as connecting actors and locations or exporting the network.
 
-    Actors are the (inter)acting entities in the simulation—what is typically referred to as agents in agent-based modeling (ABM).
-    However, since Pop2net also treats locations as agents, especially when integrated with frameworks like Mesa or AgentPy, we found it clearer to refer to the primary acting entities as actors.
+    Actors are the (inter)acting entities in the simulation—what is typically referred to as *agents* in ABM.
+    However, since Pop2net also treats locations as agents, especially when integrated with frameworks like Mesa or AgentPy, we found it clearer to refer to the primary acting entities as *actors*.
 
     Locations represent the places or contexts in which actors interact.
     In Pop2net, every connection between actors must be mediated by a location.
 
-    Both actors and locations provide several methods—for example, to retrieve all associated locations or actors, find neighboring actors within specific location types, or connect actors to one another through certain locations.
+    Both actors and locations provide several methods which help managing relations during simulations—for example, to retrieve all associated locations or actors, find neighboring actors within specific location types, or connect actors to one another through certain locations.
 
 
-2. **Network generators.**
-    The classes Creator and LocationDesigner are the tools in Pop2net that enable the user to generate custom (bipartite) networks.
-    By defining location types using the LocationDesigner, users can quickly specify which actors are connected to a location, how many location instances should be created, whether locations are nested within other locations, or how strongly the connection between an actor and a location is weighted.
+2. **Creator and LocationDesigner.**
+    The classes Creator and LocationDesigner are the tools in Pop2net that enable the user to generate custom (bipartite) networks in a modular and scalable way.
+    By defining location types using the LocationDesigner, users can quickly specify which agent should be connected to a certain location type, how many location instances should be created, whether locations are nested within other locations, or how strongly the connection between an actor and a location is weighted.
     Based on these definitions, the Creator class generates a bipartite network of actors and locations.
-    Pop2net’s networks and their components can serve as the basis for simulation models, be integrated with Mesa and AgentPy, or be exported to NetworkX in both bipartite and unipartite formats.
+    The generated networks and their components can serve as the basis for simulation models, be integrated with Mesa and AgentPy, or be exported to NetworkX in both bipartite and unipartite formats.
 
     The Creator also provides convenient methods to generate actors and their attributes directly from empirical micro-level data, e.g., survey data.
     Those empirically created attributes support the creation of realistic network structures by including them in the location definitions, for instance, the age or the household of the actors.
     Location types can also incorporate network graphs based on empirical data or generated by NetworkX.
 
-3. **Inspection tools.**
+3. **NetworkInspector.**
     The NetworkInspector class provides methods for quick network analysis, such as visualization and the calculation of network measures.
 
 
@@ -120,9 +119,10 @@ The diagram below visualizes Pop2net's structure and workflow:
 
 # Example of network generation
 
-The following example demonstrates how to create a network in a modular way using the Creator and LocationDesigner classes. 
+The following example demonstrates how to create a network based on three differnt location types using the Creator and LocationDesigner classes. 
 It also showcases how Pop2net can generate agents from micro-level data.
 
+<!-- Reichen die zwei Sätze oben oder den Teil ab hier noch drin lassen? -->
 First, we load some artificial example data. 
 Each row represents an actor, and each column corresponds to an actor attribute.
 These data will later be used to generate the network's actors.
