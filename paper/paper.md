@@ -1,6 +1,6 @@
 
 ---
-title: "Pop2net: A bipartite approach to generating and managing network structures for agent-based modeling"
+title: "Pop2net: Bipartite network generation for agent-based modeling"
 
 tags:
   - Python
@@ -28,8 +28,6 @@ date: 27.01.2025
 
 bibliography: paper.bib
 ---
-
-<!-- Titel alternative: "Pop2net: Bipartite network generation for agent-based modeling" -->
 
 # Summary
 
