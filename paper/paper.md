@@ -1,6 +1,6 @@
 
 ---
-title: "Pop2net: A Python package for bipartite networks in agent-based simulations"
+title: "Pop2net: A bipartite approach to generating and managing network structures for agent-based modeling"
 
 tags:
   - Python
@@ -29,6 +29,7 @@ date: 27.01.2025
 bibliography: paper.bib
 ---
 
+<!-- Titel alternative: "Pop2net: Bipartite network generation for agent-based modeling" -->
 
 # Summary
 
@@ -56,8 +57,9 @@ However, they still lack advanced tools for generating custom network topologies
 
 Pop2net aims to address this gap in the toolkit of agent-based modelers.
 Building upon NetworkX, we provide an extensive tool designed to simplify and streamline the generation of (empirically calibrated) bipartite networks for further use with common ABM frameworks.
+While Pop2net is implemented in Python, to our knowledge, no comparable software exists in other programming environments that offers the following features:
 
-1. **Bringing bipartite networks to agent-based modeling in Python**
+1. **Bringing bipartite networks to agent-based modeling**
     Pop2net implements a bipartite approach to networks in ABM, which can simplify their creation and management by organizing relations through locations.
     Especially in models that simulate humans interacting in specific places or connected through shared contexts, organizing relationships through locations can be far more intuitive and easier to manage.
     While this approach is already common in epidemiological ABM (e.g., @kerr_covasim_2020, @vermeulen_social_2021, @kaffai_modeling_2021),
@@ -74,8 +76,6 @@ Building upon NetworkX, we provide an extensive tool designed to simplify and st
     The empirical micro-level data can be used to generate a population of actors and then refer to the empirical attributes when determining the rules of how actors connect via location definitions.
     This enables users, especially those from the social sciences, to ground network generation in empirical data, even in the absence of detailed network data.
 
-While Pop2net is implemented in Python, to our knowledge, no comparable software exists in other programming environments that offers the same functionality.
-
 
 # Software structure
 
@@ -91,16 +91,14 @@ Pop2net's components can be categorized into three sectors.
 
     Actors are the (inter)acting entities in the simulation—what is typically referred to as *agents* in ABM.
     However, since Pop2net also treats locations as agents, especially when integrated with frameworks like Mesa or AgentPy, we found it clearer to refer to the primary acting entities as *actors*.
-
     Locations represent the places or contexts in which actors interact.
     In Pop2net, every connection between actors must be mediated by a location.
-
     Both actors and locations provide several methods which help managing relations during simulations—for example, to retrieve all associated locations or actors, find neighboring actors within specific location types, or connect actors to one another through certain locations.
 
 
 2. **Creator and LocationDesigner.**
     The classes Creator and LocationDesigner are the tools in Pop2net that enable the user to generate custom (bipartite) networks in a modular and scalable way.
-    By defining location types using the LocationDesigner, users can quickly specify which agent should be connected to a certain location type, how many location instances should be created, whether locations are nested within other locations, or how strongly the connection between an actor and a location is weighted.
+    By defining location types using the LocationDesigner, users can, for instance, quickly specify which agent should be connected to a certain location type, how many location instances should be created, whether locations are nested within other locations, or how strongly the connection between an actor and a location is weighted.
     Based on these definitions, the Creator class generates a bipartite network of actors and locations.
     The generated networks and their components can serve as the basis for simulation models, be integrated with Mesa and AgentPy, or be exported to NetworkX in both bipartite and unipartite formats.
 
@@ -123,13 +121,14 @@ The following example demonstrates how to create a network based on three differ
 It also showcases how Pop2net can generate agents from micro-level data.
 
 <!-- Reichen die zwei Sätze oben oder den Teil ab hier noch drin lassen? -->
-First, we load some artificial example data. 
+First, we load an artificial example dataset containing information about a person’s household, working hours, and industry.
 Each row represents an actor, and each column corresponds to an actor attribute.
 These data will later be used to generate the network's actors.
 
 Next, we define three different LocationDesigner classes.
 Each one instructs the Creator to generate a certain number of locations of a specific type and to connect actors with matching attribute values to the appropriate location instances.
-For example, the Work LocationDesigner tells the Creator to create work locations—grouped by industry—with a maximum size of five actors each. Only agents with more than zero work hours are connected to these locations, and the edge weight reflects each agent's number of work hours.
+For example, the Work LocationDesigner tells the Creator to create work locations—grouped by industry—with a size of five actors each. 
+Only agents with more than zero work hours are connected to these locations, and the edge weight reflects each agent's number of work hours.
 
 In the final step, the Creator samples a specified number of actors from the example data.
 It supports oversampling and allows sampling actors as groups based on a shared column (e.g., household ID), ensuring that duplicated households are assigned unique IDs.
@@ -198,8 +197,7 @@ inspector.plot_networks(location_color="label")
 
 # Documentation
 
-To make Pop2net as user-friendly as possible, we also provide comprehensive documentation.
-This not only describes the package's API, but also provides detailed tutorials that explain how to create actors, locations and networks using interactive network diagrams and simulations with example data sets.[^1]
+Pop2net offers user-friendly documentation, including API references and tutorials with interactive diagrams and example simulations.[^1]
 
 [^1]: The tutorials are available at: [https://mariuzka.github.io/pop2net/section_introduction.html](https://mariuzka.github.io/pop2net/section_introduction.html)
 
