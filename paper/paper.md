@@ -154,7 +154,7 @@ class Work(p2n.LocationDesigner):
     n_actors = 5 # set the number of actors per work location to 5
 
     def split(self, actor):
-        """Create seperated work locations for each industry."""
+        """Create separated work locations for each industry."""
         return actor.industry
 
     def weight(self, actor):
