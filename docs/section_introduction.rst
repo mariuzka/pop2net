@@ -10,3 +10,4 @@ Tutorial
    Introduction/inspector
    Introduction/network_export
    Introduction/framework_integration
+   Introduction/actors_from_surveys
