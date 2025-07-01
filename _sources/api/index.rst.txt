@@ -8,7 +8,7 @@ API Reference
 .. toctree::
    :maxdepth: 0
 
-   agent
+   actor
    location
    location_designer
    creator

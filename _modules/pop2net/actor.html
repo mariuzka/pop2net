@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pop2net.actor &mdash; pop2net 0.1.0 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=01f34227"></script>
+        <script src="../../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="author" title="About these documents" href="../../about.html" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            pop2net
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../about.html">About Pop2net</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../section_introduction.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/index.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../section_examples.html">Example Gallery</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developers.html">Notes to Developers</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">pop2net</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">pop2net.actor</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for pop2net.actor</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Base class to create Actor objects.&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">typing</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+
+<span class="k">if</span> <span class="n">typing</span><span class="o">.</span><span class="n">TYPE_CHECKING</span><span class="p">:</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">.</span><span class="w"> </span><span class="kn">import</span> <span class="n">location</span> <span class="k">as</span> <span class="n">_location</span>
+
+
+<div class="viewcode-block" id="Actor">
+<a class="viewcode-back" href="../../api/actor.html#pop2net.Actor">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Actor</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;This is a Base class to represent actors in the simulation.</span>
+
+<span class="sd">    Actors&#39; behavior can be implemented in classes that inherit from this.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Actor Constructor.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">env</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">id_p2n</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Actor.neighbors">
+<a class="viewcode-back" href="../../api/actor.html#pop2net.Actor.neighbors">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">neighbors</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">location_labels</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return all neighbors of an actor.</span>
+
+<span class="sd">        Convenience method that returns all neighbors over all locations this actor is currently</span>
+<span class="sd">        located in. The locations to be considered can be defined with location_labels.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            location_labels: A list of location_labels.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            All actors co-located with this actor over all locations.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">neighbors_of_actor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">location_labels</span><span class="o">=</span><span class="n">location_labels</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Actor.shared_locations">
+<a class="viewcode-back" href="../../api/actor.html#pop2net.Actor.shared_locations">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">shared_locations</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">actor</span><span class="p">,</span> <span class="n">location_labels</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns all locations that this actor shares with another actor.</span>
+<span class="sd">        Use location_labels to specify which type of locations should be included in the search</span>
+<span class="sd">        for shared locations.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            actor (p2n.Actor): The other actor.</span>
+<span class="sd">            location_labels (list[str] | None, optional): A list of location_labels. Defaults to None.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            list: Shared locations.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">locations_between_actors</span><span class="p">(</span>
+            <span class="n">actor1</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
+            <span class="n">actor2</span><span class="o">=</span><span class="n">actor</span><span class="p">,</span>
+            <span class="n">location_labels</span><span class="o">=</span><span class="n">location_labels</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Actor.add_location">
+<a class="viewcode-back" href="../../api/actor.html#pop2net.Actor.add_location">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_location</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">location</span><span class="p">:</span> <span class="n">_location</span><span class="o">.</span><span class="n">Location</span><span class="p">,</span> <span class="n">weight</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add this actor to a given location.</span>
+<span class="sd">        If weight is None, it will be set to 1.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            location: Add actor to this location.</span>
+<span class="sd">            weight (float | None): The edge weight between the actor and the location.</span>
+<span class="sd">                Defaults to None.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">add_actor_to_location</span><span class="p">(</span><span class="n">actor</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">location</span><span class="o">=</span><span class="n">location</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="n">weight</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Actor.add_locations">
+<a class="viewcode-back" href="../../api/actor.html#pop2net.Actor.add_locations">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_locations</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">locations</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">weight</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add this actor to multiple locations.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            locations (list): Add the actor to these locations.</span>
+<span class="sd">            weight (float | None): The edge weight between the actor and the location.</span>
+<span class="sd">                Defaults to None.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">location</span> <span class="ow">in</span> <span class="n">locations</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_location</span><span class="p">(</span><span class="n">location</span><span class="o">=</span><span class="n">location</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="n">weight</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Actor.remove_location">
+<a class="viewcode-back" href="../../api/actor.html#pop2net.Actor.remove_location">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">remove_location</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">location</span><span class="p">:</span> <span class="n">_location</span><span class="o">.</span><span class="n">Location</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Remove this actor from a given location.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            location: Remove actor from this location.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">remove_actor_from_location</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">location</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Actor.remove_locations">
+<a class="viewcode-back" href="../../api/actor.html#pop2net.Actor.remove_locations">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">remove_locations</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">locations</span><span class="p">:</span> <span class="nb">list</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Remove this Actor from the given locations.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            locations (list): A list of location instances.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">location</span> <span class="ow">in</span> <span class="n">locations</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">remove_location</span><span class="p">(</span><span class="n">location</span><span class="p">)</span></div>
+
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">locations</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns a list of locations that this actor is associated with.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            A list of locations.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">locations_of_actor</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">location_labels</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns a list of labels of the locations this actor is associated with.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            list[str]: A list of location labels.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">location</span><span class="o">.</span><span class="n">label</span> <span class="k">for</span> <span class="n">location</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">locations</span><span class="p">]</span>
+
+<div class="viewcode-block" id="Actor.get_actor_weight">
+<a class="viewcode-back" href="../../api/actor.html#pop2net.Actor.get_actor_weight">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_actor_weight</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">actor</span><span class="p">:</span> <span class="n">Actor</span><span class="p">,</span> <span class="n">location_labels</span><span class="p">:</span> <span class="nb">list</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the edge weight between this actor and a given other actor.</span>
+
+<span class="sd">        This is summed over all shared locations.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            actor: The other actor.</span>
+<span class="sd">            location_labels (list): A list of location classes to specify the type of locations</span>
+<span class="sd">                which are considered.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            A weight of the contact between the two actors.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">weight</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">location</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">shared_locations</span><span class="p">(</span><span class="n">actor</span><span class="o">=</span><span class="n">actor</span><span class="p">,</span> <span class="n">location_labels</span><span class="o">=</span><span class="n">location_labels</span><span class="p">):</span>
+            <span class="n">weight</span> <span class="o">+=</span> <span class="n">location</span><span class="o">.</span><span class="n">project_weights</span><span class="p">(</span><span class="n">actor1</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">actor2</span><span class="o">=</span><span class="n">actor</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">weight</span></div>
+
+
+<div class="viewcode-block" id="Actor.get_location_weight">
+<a class="viewcode-back" href="../../api/actor.html#pop2net.Actor.get_location_weight">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_location_weight</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">location</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the edge weight between this actor and a given location.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            location (_type_): A location.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            float: The edge weight.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">get_weight</span><span class="p">(</span><span class="n">actor</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">location</span><span class="o">=</span><span class="n">location</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Actor.connect">
+<a class="viewcode-back" href="../../api/actor.html#pop2net.Actor.connect">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">connect</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">actor</span><span class="p">:</span> <span class="n">Actor</span><span class="p">,</span> <span class="n">location_cls</span><span class="p">:</span> <span class="n">_location</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">weight</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Connects this actor with a given other actor via an instance of a given location class.</span>
+<span class="sd">        If location_cls is None, the default pop2net.Location class is used to create a new location</span>
+<span class="sd">        instance. If weight is None, it will be set to 1.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            actor (p2n.Actor): An actor to connect with.</span>
+<span class="sd">            location_cls (type): The location class that is used to create a location instance.</span>
+<span class="sd">            weight(float | None): The edge weight between the actors and the location.</span>
+<span class="sd">                Defaults to None.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">connect_actors</span><span class="p">(</span><span class="n">actors</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="p">,</span> <span class="n">actor</span><span class="p">],</span> <span class="n">location_cls</span><span class="o">=</span><span class="n">location_cls</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="n">weight</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Actor.disconnect">
+<a class="viewcode-back" href="../../api/actor.html#pop2net.Actor.disconnect">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">disconnect</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">neighbor</span><span class="p">:</span> <span class="n">Actor</span><span class="p">,</span>
+        <span class="n">location_labels</span><span class="p">:</span> <span class="nb">list</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">remove_self</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">remove_neighbor</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">remove_locations</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Disconnects this actor from a given other actor by removing them from shared locations.</span>
+
+<span class="sd">        If a list of location types is given, only shared locations of the given types are</span>
+<span class="sd">        considered. Turn on `remove_locations` in order to not only remove the actors from the</span>
+<span class="sd">        given location instance but also to remove the location instance from the model.  Keep in</span>
+<span class="sd">        mind that this may affect other actors that are still connected with the location instance.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            neighbor (Actor): An actor to disconnect from.</span>
+<span class="sd">            location_labels (list | None, optional): A list of location types to specify which</span>
+<span class="sd">            shared locations are considered. Defaults to None.</span>
+<span class="sd">            remove_self (bool): Should the actor be removed from the shared locations?</span>
+<span class="sd">                Defaults to True.</span>
+<span class="sd">            remove_neighbor (bool): Should the neighbor be removed from the shared locations?</span>
+<span class="sd">                Defaults to True.</span>
+<span class="sd">            remove_locations (bool, optional): A bool that determines whether the shared locations</span>
+<span class="sd">                shall be removed from the model. Defaults to False.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">shared_locations</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">shared_locations</span><span class="p">(</span>
+            <span class="n">actor</span><span class="o">=</span><span class="n">neighbor</span><span class="p">,</span>
+            <span class="n">location_labels</span><span class="o">=</span><span class="n">location_labels</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">location</span> <span class="ow">in</span> <span class="n">shared_locations</span><span class="p">:</span>
+            <span class="n">warn</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">for</span> <span class="n">actor</span> <span class="ow">in</span> <span class="n">location</span><span class="o">.</span><span class="n">actors</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">actor</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="bp">self</span><span class="p">,</span> <span class="n">neighbor</span><span class="p">]:</span>
+                    <span class="n">warn</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="k">break</span>
+
+            <span class="k">if</span> <span class="n">remove_self</span><span class="p">:</span>
+                <span class="n">location</span><span class="o">.</span><span class="n">remove_actor</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">warn</span><span class="p">:</span>
+                    <span class="n">msg</span> <span class="o">=</span> <span class="p">(</span>
+                        <span class="s2">&quot;There are other actors at the location from which you have removed actors.&quot;</span>
+                    <span class="p">)</span>
+                    <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">remove_neighbor</span><span class="p">:</span>
+                <span class="n">location</span><span class="o">.</span><span class="n">remove_actor</span><span class="p">(</span><span class="n">neighbor</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">warn</span><span class="p">:</span>
+                    <span class="n">msg</span> <span class="o">=</span> <span class="p">(</span>
+                        <span class="s2">&quot;There are other actors at the location from which you have removed actors.&quot;</span>
+                    <span class="p">)</span>
+                    <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">remove_locations</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">remove_location</span><span class="p">(</span><span class="n">location</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">warn</span><span class="p">:</span>
+                    <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;You have removed a location to which other actors were still connected.&quot;</span>
+                    <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Marius Kaffai, Lukas Erhard.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
