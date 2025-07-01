@@ -442,7 +442,7 @@
 
 <div class="viewcode-block" id="NetworkInspector.network_measures">
 <a class="viewcode-back" href="../../api/inspector.html#pop2net.inspector.NetworkInspector.network_measures">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">network_measures</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">actor_attrs</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">network_measures</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">actor_attrs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">weighted</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculates common network measures for the actor-level network graph.</span>
 
 <span class="sd">        If the created network consist of independent groups of nodes</span>
@@ -450,6 +450,7 @@
 
 <span class="sd">        Args:</span>
 <span class="sd">            actor_attrs: A list of actor attributes</span>
+<span class="sd">            weighted: Should the network be considered weighted or unweighted</span>
 
 <span class="sd">        Return:</span>
 <span class="sd">            list of dictionaries of the common network measure results</span>
@@ -474,6 +475,20 @@
             <span class="p">)</span>
             <span class="k">return</span> <span class="n">result_dict</span>
 
+        <span class="k">def</span><span class="w"> </span><span class="nf">get_network_measures_no_weight</span><span class="p">(</span><span class="n">nx_graph</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+            <span class="n">result_dict</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="n">result_dict</span><span class="p">[</span><span class="s2">&quot;n_nodes&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">number_of_nodes</span><span class="p">(</span><span class="n">nx_graph</span><span class="p">)</span>
+            <span class="n">result_dict</span><span class="p">[</span><span class="s2">&quot;diameter&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">diameter</span><span class="p">(</span><span class="n">nx_graph</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+            <span class="n">result_dict</span><span class="p">[</span><span class="s2">&quot;density&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">density</span><span class="p">(</span><span class="n">nx_graph</span><span class="p">)</span>
+            <span class="n">result_dict</span><span class="p">[</span><span class="s2">&quot;transitivity&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">transitivity</span><span class="p">(</span><span class="n">nx_graph</span><span class="p">)</span>
+            <span class="n">result_dict</span><span class="p">[</span><span class="s2">&quot;avg_clustering&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">average_clustering</span><span class="p">(</span>
+                <span class="n">nx_graph</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">result_dict</span><span class="p">[</span><span class="s2">&quot;avg_path_length&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">average_shortest_path_length</span><span class="p">(</span>
+                <span class="n">nx_graph</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="k">return</span> <span class="n">result_dict</span>
+
         <span class="n">network_components</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">nx</span><span class="o">.</span><span class="n">connected_components</span><span class="p">(</span><span class="n">nx_graph</span><span class="p">))</span>
         <span class="n">network_components</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">network_components</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="nb">len</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
@@ -482,11 +497,14 @@
         <span class="k">for</span> <span class="n">component</span> <span class="ow">in</span> <span class="n">network_components</span><span class="p">:</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">nx_subgraph</span> <span class="o">=</span> <span class="n">nx_graph</span><span class="o">.</span><span class="n">subgraph</span><span class="p">(</span><span class="n">component</span><span class="p">)</span>
+
             <span class="k">except</span> <span class="n">nx</span><span class="o">.</span><span class="n">NetworkXError</span><span class="p">:</span>
                 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Cant make graph out of component&quot;</span><span class="p">)</span>
                 <span class="k">break</span>
-
-            <span class="n">result_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">get_network_measures</span><span class="p">(</span><span class="n">nx_subgraph</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">weighted</span><span class="p">:</span>
+                <span class="n">result_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">get_network_measures</span><span class="p">(</span><span class="n">nx_subgraph</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">result_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">get_network_measures_no_weight</span><span class="p">(</span><span class="n">nx_subgraph</span><span class="p">))</span>
         <span class="k">return</span> <span class="n">result_list</span></div>
 
 
