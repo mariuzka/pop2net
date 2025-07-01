@@ -6,7 +6,7 @@ reviewer 1:
 
 - [X] Highlight location types as organizational tools - The paper mentions location types but could better explain how they effectively organize different relationship contexts. An example or visual might also help here: ... This pattern enables modelers to implement context-specific behaviors, a notable advantage of your approach.
 
-- [ ] Clarify distinction from population synthesizers - The documentation states that "Pop2net is not a population synthesizer." Adding this distinction to your paper would help readers better understand your tool's purpose and scope.
+- [X] Clarify distinction from population synthesizers - The documentation states that "Pop2net is not a population synthesizer." Adding this distinction to your paper would help readers better understand your tool's purpose and scope.
 
 - [ ] Expand on NetworkInspector functionality - The paper briefly mentions "inspection tools," but could benefit from highlighting the visualization capabilities (inspector.plot_bipartite_network() / inspector.plot_agent_network()) and maybe include a few figures as examples.
 
@@ -33,7 +33,3 @@ editor:
 One point of attention: we're really trying to keep the short papers <1000 words, because often they were getting too long. So while I agree with some of the points raised, JOSS favours a short paper with links to the docs.
 
 So from the comments above: yes to explain what a bipartite network is (the paper should be understandable by non-experts), yes to putting the workflow, but perhaps no to putting code and several examples (one would be enough).
-
-todos:
-- pfeil von location zu location designer
-- mesa modell mal mit löschen / hinzufügen von agenten während simulation testen
