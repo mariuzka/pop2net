@@ -128,7 +128,8 @@ It involves loading micro-level data, defining rules for location creation and a
 import pandas as pd
 import pop2net as p2n
 
-# load example micro-level data containing the columns "household_id", "work_hours" and "industry"
+# load example micro-level data 
+# containing the columns "household_id", "work_hours" and "industry"
 df = pd.read_csv("example_data.csv")
 
 
@@ -175,7 +176,12 @@ creator.create(
     df=df, # sample from this data to create the actors
     n_actors=100, # set the number of actors to 100
     sample_level="household_id", # sample whole households
-    location_designers=[City, Household, Work], # connect the actors via cities, households and work places
+    location_designers=[ 
+        # connect the actors via the following location types
+        City, 
+        Household, 
+        Work,
+        ], 
     )
 
 # plot bipartite and unipartite networks
