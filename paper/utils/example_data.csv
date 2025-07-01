@@ -1,0 +1,9 @@
+household_id,industry,work_hours
+1,cars,8
+2,food,4
+2,cars,6
+2,food,8
+3,cars,16
+3,food,12
+3,food,0
+3,food,0

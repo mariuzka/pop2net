@@ -18,17 +18,9 @@ Creating networks using contact layers is not new, but is already known from epi
 However, Pop2net is the first software package that makes this approach of network generation usable in a general and domain-unspecific framework.
 
 The main output of Pop2net is a bipartite network: a population of agents linked through contact layers.
-This linked population can be used directly in an agent-based model or exported in networkX format, for instance.
-For the former option, Pop2net behaves as a plugin for the general agent-based modeling framework `AgentPy <https://agentpy.readthedocs.io/en/latest/>`_ .
+This linked population can be used directly in an agent-based model (Mesa, AgentPy, etc.) or exported in networkX format, for instance.
 Pop2net also makes it possible to create the population of agents from empirical individual data easily.
 This allows the user to tie the desired properties of the network structure to empirical agent attributes.
-
-It is important to understand, that Pop2net is not a *population synthesizer*.
-The main purpose of Pop2net is to connect agents via contact layers to easily generate a valid interaction structure for agent-based models.
-Pop2net does not create any original data on the agent-level.
-All the data Pop2net uses to create agents must be given by the user.
-However, Pop2net makes it very easy to transform (empirical or artificial) micro-level data into agent populations of any size by providing convenient sampling tools.
-In addition, Pop2net includes tools to inspect the network properties and compare it to empirical data.
 
 The following figure provides an overview of the workflow to generate networks using Pop2net:
 
