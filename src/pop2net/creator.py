@@ -944,7 +944,7 @@ class Creator:
         replace_sample_level_column: bool = True,
         clear: bool = False,
         delete_magic_actor_attributes: bool = True,
-        return_elements = False,
+        return_elements=False,
     ) -> tuple:
         """Creates actors and locations based on a given dataset.
 
