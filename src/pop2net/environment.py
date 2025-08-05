@@ -73,15 +73,15 @@ class Environment:
             return self._framework.agent.AgentSet(agents=objects, random=self.model.random)
         else:
             raise ValueError("Invalid framework.")
-        
+
     class ActorList(list):
         """Custom list wrapper for actors with custom string representation."""
-    
+
         def __str__(self):
             if len(self) == 0:
                 return "ActorList(empty)"
             return f"ActorList [{len(self)} actors]"
-        
+
         def __repr__(self):
             if len(self) == 0:
                 return "ActorList([])"
@@ -89,17 +89,17 @@ class Environment:
 
     class LocationList(list):
         """Custom list wrapper for locations with custom string representation."""
-    
+
         def __str__(self):
             if len(self) == 0:
                 return "LocationList(empty)"
             return f"LocationList [{len(self)} locations]"
-        
+
         def __repr__(self):
             if len(self) == 0:
                 return "LocationList([])"
             return f"LocationList [{len(self)} locations]"
-        
+
     def _to_custom_list(self, objects, list_type):
         """Convert objects to custom list type if no framework is used."""
         if self.framework is None:
