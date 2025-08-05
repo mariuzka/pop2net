@@ -73,6 +73,39 @@ class Environment:
             return self._framework.agent.AgentSet(agents=objects, random=self.model.random)
         else:
             raise ValueError("Invalid framework.")
+        
+    class ActorList(list):
+        """Custom list wrapper for actors with custom string representation."""
+    
+        def __str__(self):
+            if len(self) == 0:
+                return "ActorList(empty)"
+            return f"ActorList [{len(self)} actors]"
+        
+        def __repr__(self):
+            if len(self) == 0:
+                return "ActorList([])"
+            return f"ActorList [{len(self)} actors]"
+
+    class LocationList(list):
+        """Custom list wrapper for locations with custom string representation."""
+    
+        def __str__(self):
+            if len(self) == 0:
+                return "LocationList(empty)"
+            return f"LocationList [{len(self)} locations]"
+        
+        def __repr__(self):
+            if len(self) == 0:
+                return "LocationList([])"
+            return f"LocationList [{len(self)} locations]"
+        
+    def _to_custom_list(self, objects, list_type):
+        """Convert objects to custom list type if no framework is used."""
+        if self.framework is None:
+            return list_type(objects)
+        else:
+            return self._to_framework(objects)
 
     @property
     def actors(self) -> list:
@@ -85,9 +118,8 @@ class Environment:
         Returns:
             list: A non-mutable list of all actors in the environment.
         """
-        return self._to_framework(
-            [data["_obj"] for _, data in self.g.nodes(data=True) if data["bipartite"] == 0]
-        )
+        objects = [data["_obj"] for _, data in self.g.nodes(data=True) if data["bipartite"] == 0]
+        return self._to_custom_list(objects, self.ActorList)
 
     @property
     def locations(self) -> list:
@@ -100,9 +132,8 @@ class Environment:
         Returns:
             LocationList: a non-mutable LocationList of all locations in the environment.
         """
-        return self._to_framework(
-            [data["_obj"] for _, data in self.g.nodes(data=True) if data["bipartite"] == 1]
-        )
+        objects = [data["_obj"] for _, data in self.g.nodes(data=True) if data["bipartite"] == 1]
+        return self._to_custom_list(objects, self.LocationList)
 
     # TODO: def add_obj as a common parent method for add_actor & add_location
     def add_actor(self, actor: _actor.Actor) -> None:
