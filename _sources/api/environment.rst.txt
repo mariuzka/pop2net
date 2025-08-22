@@ -1,7 +1,7 @@
 .. currentmodule:: pop2net
 
-Model
+Environment
 =====
 
-.. autoclass:: pop2net.Model
+.. autoclass:: pop2net.Environment
     :members:

@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Environment &mdash; pop2net 0.1.0 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=01f34227"></script>
+        <script src="../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            pop2net
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../about.html">About Pop2net</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../section_introduction.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="index.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../section_examples.html">Example Gallery</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers.html">Notes to Developers</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">pop2net</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Environment</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/environment.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="environment">
+<h1>Environment<a class="headerlink" href="#environment" title="Link to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="pop2net.Environment">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pop2net.</span></span><span class="sig-name descname"><span class="pre">Environment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">framework</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enable_p2n_warnings</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pop2net/environment.html#Environment"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pop2net.Environment" title="Link to this definition"></a></dt>
+<dd><p>Class that organizes actors and locations.</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="pop2net.Environment.actors">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">actors</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><span class="pre">list</span></a></em><a class="headerlink" href="#pop2net.Environment.actors" title="Link to this definition"></a></dt>
+<dd><p>Show a iterable view of all actors in the environment.</p>
+<p>Important: While you can make changes to the objects in this list, you
+cannot modify this attribute itself. Instead you have to use methods like
+Environment.add_actor() or Environment.remove_actor(), for instance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A non-mutable list of all actors in the environment.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)">list</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pop2net.Environment.actors_between_locations">
+<span class="sig-name descname"><span class="pre">actors_between_locations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">location1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">location2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">actor_types</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pop2net/environment.html#Environment.actors_between_locations"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pop2net.Environment.actors_between_locations" title="Link to this definition"></a></dt>
+<dd><p>Return all actors between two locations.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>location1</strong> (<a class="reference internal" href="location.html#pop2net.Location" title="pop2net.Location"><em>Location</em></a>) – Location 1.</p></li>
+<li><p><strong>location2</strong> (<a class="reference internal" href="location.html#pop2net.Location" title="pop2net.Location"><em>Location</em></a>) – Location 2.</p></li>
+<li><p><strong>actor_types</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)"><em>tuple</em></a><em>, </em><em>optional</em>) – Constrain the actors to the following types.
+Defaults to None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of actors.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pop2net.Environment.actors_of_location">
+<span class="sig-name descname"><span class="pre">actors_of_location</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">location</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pop2net/environment.html#Environment.actors_of_location"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pop2net.Environment.actors_of_location" title="Link to this definition"></a></dt>
+<dd><p>Return the list of actors associated with a specific location.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>location</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="location.html#pop2net.Location" title="pop2net.location.Location"><code class="xref py py-class docutils literal notranslate"><span class="pre">Location</span></code></a></span>) – The desired location.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of actors.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pop2net.Environment.add_actor">
+<span class="sig-name descname"><span class="pre">add_actor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">actor</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pop2net/environment.html#Environment.add_actor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pop2net.Environment.add_actor" title="Link to this definition"></a></dt>
+<dd><p>Add an actor to the environment.</p>
+<p>The added actor will have no connections to other actors or locatons by default.
+If the actor is already in the current environment, this methods does nothing.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>actor</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="actor.html#pop2net.Actor" title="pop2net.actor.Actor"><code class="xref py py-class docutils literal notranslate"><span class="pre">Actor</span></code></a></span>) – Actor to be added to the environment.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pop2net.Environment.add_actor_to_location">
+<span class="sig-name descname"><span class="pre">add_actor_to_location</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">location</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">actor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pop2net/environment.html#Environment.add_actor_to_location"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pop2net.Environment.add_actor_to_location" title="Link to this definition"></a></dt>
+<dd><p>Add an actor to a specific location.</p>
+<p>Both the actor and the location have to be defined beforehand. All additional keyword
+arguments will be edge attributes for this connection.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>location</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="location.html#pop2net.Location" title="pop2net.location.Location"><code class="xref py py-class docutils literal notranslate"><span class="pre">Location</span></code></a></span>) – Location the actor is to be added to.</p></li>
+<li><p><strong>actor</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="actor.html#pop2net.Actor" title="pop2net.actor.Actor"><code class="xref py py-class docutils literal notranslate"><span class="pre">Actor</span></code></a></span>) – Actor to be added to the location.</p></li>
+<li><p><strong>weight</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.13)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a>]</span>) – An optional weight for the connection.</p></li>
+<li><p><strong>**kwargs</strong> – Additional edge attributes.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.13)"><strong>Exception</strong></a> – Raised if the location does not exist in the environment.</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.13)"><strong>Exception</strong></a> – Raised if the actor does not exist in the environment.</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pop2net.Environment.add_actors">
+<span class="sig-name descname"><span class="pre">add_actors</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">actors</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pop2net/environment.html#Environment.add_actors"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pop2net.Environment.add_actors" title="Link to this definition"></a></dt>
+<dd><p>Add actors to the environment.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>actors</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a>) – A list of the actors to be added.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pop2net.Environment.add_location">
+<span class="sig-name descname"><span class="pre">add_location</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">location</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pop2net/environment.html#Environment.add_location"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pop2net.Environment.add_location" title="Link to this definition"></a></dt>
+<dd><p>Add a location to the environment.</p>
+<p>The added location will have no connections to other actors or locatons by default.
+If the location is already in the current environment, this methods does nothing.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>location</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="location.html#pop2net.Location" title="pop2net.location.Location"><code class="xref py py-class docutils literal notranslate"><span class="pre">Location</span></code></a></span>) – Location to be added to the environment.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pop2net.Environment.add_locations">
+<span class="sig-name descname"><span class="pre">add_locations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">locations</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pop2net/environment.html#Environment.add_locations"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pop2net.Environment.add_locations" title="Link to this definition"></a></dt>
+<dd><p>Add multiple locations to the environment at once.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>locations</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a>) – An iterable over multiple locations.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pop2net.Environment.connect_actors">
+<span class="sig-name descname"><span class="pre">connect_actors</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">actors</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">location_cls</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pop2net/environment.html#Environment.connect_actors"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pop2net.Environment.connect_actors" title="Link to this definition"></a></dt>
+<dd><p>Connects multiple actors via an instance of a given location class.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>actors</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a>) – A list of actors.</p></li>
+<li><p><strong>location_cls</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#type" title="(in Python v3.13)"><em>type</em></a>) – The location class that is used to create a location instance.</p></li>
+<li><p><strong>weight</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em> | </em><em>None</em>) – The edge weight between the actors and the location.
+Defaults to None.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pop2net.Environment.disconnect_actors">
+<span class="sig-name descname"><span class="pre">disconnect_actors</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">actors</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">location_labels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">remove_locations</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pop2net/environment.html#Environment.disconnect_actors"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pop2net.Environment.disconnect_actors" title="Link to this definition"></a></dt>
+<dd><p>Disconnects actors by removing them from shared locations.</p>
+<p>If a list of location types is given, only shared locations of the given types are
+considered. Turn on <cite>remove_locations</cite> in order to not only remove the given actors from the
+given location instance but also to remove the location instance from the environment.
+Use this method with care because removing actors from locations also disconnects those
+actors from all other actors connected to the location. Removing the location instance from
+the environment could have even more sideeffects to those actors still connected with this
+location!</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>actors</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a>) – A list of actors.</p></li>
+<li><p><strong>location_labels</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a><em> | </em><em>None</em><em>, </em><em>optional</em>) – A list of location types to specify which</p></li>
+<li><p><strong>None.</strong> (<em>shared locations are considered. Defaults to</em>)</p></li>
+<li><p><strong>remove_locations</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a><em>, </em><em>optional</em>) – A bool that determines whether the shared locations
+shall be removed from the environment. Defaults to False.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pop2net.Environment.export_actor_network">
+<span class="sig-name descname"><span class="pre">export_actor_network</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node_attrs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_0_weights</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pop2net/environment.html#Environment.export_actor_network"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pop2net.Environment.export_actor_network" title="Link to this definition"></a></dt>
+<dd><p>Creates a projection of the environment’s bipartite network.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>node_attrs</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.13)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></a>]</span>) – A list of actor attributes</p></li>
+<li><p><strong>include_0_weights</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a></span>) – Should edges with weight 0 be displayed?</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://networkx.org/documentation/stable/reference/classes/graph.html#networkx.Graph" title="(in NetworkX v3.5)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Graph</span></code></a></span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A weighted graph created from a environment’s actor list. Actors are connected if they are
+neighbors in the environment. Their connecting edge include the contact_weight as “weight”
+attribute.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pop2net.Environment.get_weight">
+<span class="sig-name descname"><span class="pre">get_weight</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">actor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">location</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pop2net/environment.html#Environment.get_weight"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pop2net.Environment.get_weight" title="Link to this definition"></a></dt>
+<dd><p>Get the weight of an actor at a location.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>actor</strong> (<a class="reference internal" href="actor.html#pop2net.Actor" title="pop2net.Actor"><em>Actor</em></a>) – The actor.</p></li>
+<li><p><strong>location</strong> (<a class="reference internal" href="location.html#pop2net.Location" title="pop2net.Location"><em>Location</em></a>) – The location.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The weight.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pop2net.Environment.locations">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">locations</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><span class="pre">list</span></a></em><a class="headerlink" href="#pop2net.Environment.locations" title="Link to this definition"></a></dt>
+<dd><p>Show a iterable view of all locations in the environment.</p>
+<p>Important: While you can make changes to the objects in this list, you
+cannot modify this attribute itself. Instead you have to use methods like
+Environment.add_location() or Environment.remove_location(), for instance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>a non-mutable LocationList of all locations in the environment.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>LocationList</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pop2net.Environment.locations_between_actors">
+<span class="sig-name descname"><span class="pre">locations_between_actors</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">actor1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">actor2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">location_labels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pop2net/environment.html#Environment.locations_between_actors"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pop2net.Environment.locations_between_actors" title="Link to this definition"></a></dt>
+<dd><p>Return all locations that connects two actors.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>actor1</strong> (<a class="reference internal" href="actor.html#pop2net.Actor" title="pop2net.Actor"><em>Actor</em></a>) – Actor 1.</p></li>
+<li><p><strong>actor2</strong> (<a class="reference internal" href="actor.html#pop2net.Actor" title="pop2net.Actor"><em>Actor</em></a>) – Actor 2.</p></li>
+<li><p><strong>location_labels</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)"><em>tuple</em></a><em>, </em><em>optional</em>) – Constrain the locations to the following types.
+Defaults to None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of locations.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>LocationList</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pop2net.Environment.locations_of_actor">
+<span class="sig-name descname"><span class="pre">locations_of_actor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">actor</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pop2net/environment.html#Environment.locations_of_actor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pop2net.Environment.locations_of_actor" title="Link to this definition"></a></dt>
+<dd><p>Return the list of locations associated with a specific actor.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>actor</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="actor.html#pop2net.Actor" title="pop2net.actor.Actor"><code class="xref py py-class docutils literal notranslate"><span class="pre">Actor</span></code></a></span>) – The desired actor.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></a>[<a class="reference internal" href="location.html#pop2net.Location" title="pop2net.location.Location"><code class="xref py py-class docutils literal notranslate"><span class="pre">Location</span></code></a>]</span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A list of locations.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pop2net.Environment.neighbors_of_actor">
+<span class="sig-name descname"><span class="pre">neighbors_of_actor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">actor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">location_labels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pop2net/environment.html#Environment.neighbors_of_actor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pop2net.Environment.neighbors_of_actor" title="Link to this definition"></a></dt>
+<dd><p>Return a list of neighboring actors for a specific actor.</p>
+<p>The locations to be considered can be defined with location_labels.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>actor</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="actor.html#pop2net.Actor" title="pop2net.actor.Actor"><code class="xref py py-class docutils literal notranslate"><span class="pre">Actor</span></code></a></span>) – Actor of whom the neighbors are to be returned.</p></li>
+<li><p><strong>location_labels</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.13)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></a>]</span>) – A list of location_labels.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></a>[<a class="reference internal" href="actor.html#pop2net.Actor" title="pop2net.actor.Actor"><code class="xref py py-class docutils literal notranslate"><span class="pre">Actor</span></code></a>]</span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The list of neighbors for the specified actor.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pop2net.Environment.remove_actor">
+<span class="sig-name descname"><span class="pre">remove_actor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">actor</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pop2net/environment.html#Environment.remove_actor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pop2net.Environment.remove_actor" title="Link to this definition"></a></dt>
+<dd><p>Remove an actor from the environment.</p>
+<p>If the actor does not exist in the environment, this method does nothing.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>actor</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="actor.html#pop2net.Actor" title="pop2net.actor.Actor"><code class="xref py py-class docutils literal notranslate"><span class="pre">Actor</span></code></a></span>) – Actor to be removed.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pop2net.Environment.remove_actor_from_location">
+<span class="sig-name descname"><span class="pre">remove_actor_from_location</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">location</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">actor</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pop2net/environment.html#Environment.remove_actor_from_location"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pop2net.Environment.remove_actor_from_location" title="Link to this definition"></a></dt>
+<dd><p>Remove an actor from a location.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>location</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="location.html#pop2net.Location" title="pop2net.location.Location"><code class="xref py py-class docutils literal notranslate"><span class="pre">Location</span></code></a></span>) – Location, the actor is to be removed from.</p></li>
+<li><p><strong>actor</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="actor.html#pop2net.Actor" title="pop2net.actor.Actor"><code class="xref py py-class docutils literal notranslate"><span class="pre">Actor</span></code></a></span>) – Actor to be disassociated with the location.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.13)"><strong>Exception</strong></a> – Raised if the location does not exist in the environment.</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.13)"><strong>Exception</strong></a> – Raised if the actor does not exist in the environment.</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pop2net.Environment.remove_actors">
+<span class="sig-name descname"><span class="pre">remove_actors</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">actors</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pop2net/environment.html#Environment.remove_actors"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pop2net.Environment.remove_actors" title="Link to this definition"></a></dt>
+<dd><p>Remove multiple actors from the environment at once.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>actors</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a>) – An iterable over multiple actors.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pop2net.Environment.remove_location">
+<span class="sig-name descname"><span class="pre">remove_location</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">location</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pop2net/environment.html#Environment.remove_location"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pop2net.Environment.remove_location" title="Link to this definition"></a></dt>
+<dd><p>Remove a location from the environment.</p>
+<p>If the location does not exist in the environment, this method does nothing.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>location</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="location.html#pop2net.Location" title="pop2net.location.Location"><code class="xref py py-class docutils literal notranslate"><span class="pre">Location</span></code></a></span>) – Location to be removed.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pop2net.Environment.remove_locations">
+<span class="sig-name descname"><span class="pre">remove_locations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">locations</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pop2net/environment.html#Environment.remove_locations"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pop2net.Environment.remove_locations" title="Link to this definition"></a></dt>
+<dd><p>Remove multiple locations at once.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>locations</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a>) – An iterable over locations.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pop2net.Environment.set_weight">
+<span class="sig-name descname"><span class="pre">set_weight</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">actor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">location</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pop2net/environment.html#Environment.set_weight"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pop2net.Environment.set_weight" title="Link to this definition"></a></dt>
+<dd><p>Set the weight of an actor at a location.</p>
+<p>If weight is None the method location.weight() will be used to generate a weight.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>actor</strong> (<a class="reference internal" href="actor.html#pop2net.Actor" title="pop2net.Actor"><em>Actor</em></a>) – The actor.</p></li>
+<li><p><strong>location</strong> (<a class="reference internal" href="location.html#pop2net.Location" title="pop2net.Location"><em>Location</em></a>) – The location.</p></li>
+<li><p><strong>weight</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) – The weight</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pop2net.Environment.update_weights">
+<span class="sig-name descname"><span class="pre">update_weights</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">location_labels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pop2net/environment.html#Environment.update_weights"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pop2net.Environment.update_weights" title="Link to this definition"></a></dt>
+<dd><p>Updates the edge weights between actors and locations.</p>
+<p>If you only want to update the weights of specific types of locations
+specify those types in location_labels.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>location_labels</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a><em> | </em><em>None</em><em>, </em><em>optional</em>) – A list of location classes that specifiy for
+which location types the weights should be updated.
+If location_labels is None all locations are considered. Defaults to None.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Marius Kaffai, Lukas Erhard.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

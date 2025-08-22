@@ -92,6 +92,7 @@
  | <a href="#P"><strong>P</strong></a>
  | <a href="#R"><strong>R</strong></a>
  | <a href="#S"><strong>S</strong></a>
+ | <a href="#U"><strong>U</strong></a>
  | <a href="#W"><strong>W</strong></a>
  
 </div>
@@ -100,18 +101,44 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/actor.html#pop2net.Actor">Actor (class in pop2net)</a>
 </li>
-      <li><a href="api/location.html#pop2net.Location.actors">actors (pop2net.Location property)</a>
+      <li><a href="api/environment.html#pop2net.Environment.actors">actors (pop2net.Environment property)</a>
+
+      <ul>
+        <li><a href="api/location.html#pop2net.Location.actors">(pop2net.Location property)</a>
 </li>
-      <li><a href="api/location.html#pop2net.Location.add_actor">add_actor() (pop2net.Location method)</a>
+      </ul></li>
+      <li><a href="api/environment.html#pop2net.Environment.actors_between_locations">actors_between_locations() (pop2net.Environment method)</a>
 </li>
+      <li><a href="api/environment.html#pop2net.Environment.actors_of_location">actors_of_location() (pop2net.Environment method)</a>
+</li>
+      <li><a href="api/environment.html#pop2net.Environment.add_actor">add_actor() (pop2net.Environment method)</a>
+
+      <ul>
+        <li><a href="api/location.html#pop2net.Location.add_actor">(pop2net.Location method)</a>
+</li>
+      </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/location.html#pop2net.Location.add_actors">add_actors() (pop2net.Location method)</a>
+      <li><a href="api/environment.html#pop2net.Environment.add_actor_to_location">add_actor_to_location() (pop2net.Environment method)</a>
 </li>
+      <li><a href="api/environment.html#pop2net.Environment.add_actors">add_actors() (pop2net.Environment method)</a>
+
+      <ul>
+        <li><a href="api/location.html#pop2net.Location.add_actors">(pop2net.Location method)</a>
+</li>
+      </ul></li>
       <li><a href="api/actor.html#pop2net.Actor.add_location">add_location() (pop2net.Actor method)</a>
+
+      <ul>
+        <li><a href="api/environment.html#pop2net.Environment.add_location">(pop2net.Environment method)</a>
 </li>
+      </ul></li>
       <li><a href="api/actor.html#pop2net.Actor.add_locations">add_locations() (pop2net.Actor method)</a>
+
+      <ul>
+        <li><a href="api/environment.html#pop2net.Environment.add_locations">(pop2net.Environment method)</a>
 </li>
+      </ul></li>
   </ul></td>
 </tr></table>
 
@@ -128,12 +155,14 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/actor.html#pop2net.Actor.connect">connect() (pop2net.Actor method)</a>
 </li>
-      <li><a href="api/creator.html#pop2net.creator.Creator.create">create() (pop2net.creator.Creator method)</a>
+      <li><a href="api/environment.html#pop2net.Environment.connect_actors">connect_actors() (pop2net.Environment method)</a>
 </li>
-      <li><a href="api/creator.html#pop2net.creator.Creator.create_actors">create_actors() (pop2net.creator.Creator method)</a>
+      <li><a href="api/creator.html#pop2net.creator.Creator.create">create() (pop2net.creator.Creator method)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/creator.html#pop2net.creator.Creator.create_actors">create_actors() (pop2net.creator.Creator method)</a>
+</li>
       <li><a href="api/inspector.html#pop2net.inspector.NetworkInspector.create_contact_matrix">create_contact_matrix() (pop2net.inspector.NetworkInspector method)</a>
 </li>
       <li><a href="api/creator.html#pop2net.creator.Creator.create_locations">create_locations() (pop2net.creator.Creator method)</a>
@@ -150,6 +179,8 @@
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/environment.html#pop2net.Environment.disconnect_actors">disconnect_actors() (pop2net.Environment method)</a>
+</li>
       <li><a href="api/creator.html#pop2net.creator.Creator.draw_sample">draw_sample() (pop2net.creator.Creator method)</a>
 </li>
   </ul></td>
@@ -158,7 +189,13 @@
 <h2 id="E">E</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/environment.html#pop2net.Environment">Environment (class in pop2net)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/inspector.html#pop2net.inspector.NetworkInspector.eval_affiliations">eval_affiliations() (pop2net.inspector.NetworkInspector method)</a>
+</li>
+      <li><a href="api/environment.html#pop2net.Environment.export_actor_network">export_actor_network() (pop2net.Environment method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -182,8 +219,12 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/actor.html#pop2net.Actor.get_location_weight">get_location_weight() (pop2net.Actor method)</a>
 </li>
-      <li><a href="api/location.html#pop2net.Location.get_weight">get_weight() (pop2net.Location method)</a>
+      <li><a href="api/environment.html#pop2net.Environment.get_weight">get_weight() (pop2net.Environment method)</a>
+
+      <ul>
+        <li><a href="api/location.html#pop2net.Location.get_weight">(pop2net.Location method)</a>
 </li>
+      </ul></li>
   </ul></td>
 </tr></table>
 
@@ -196,13 +237,21 @@
 </li>
       <li><a href="api/inspector.html#pop2net.inspector.NetworkInspector.location_information">location_information() (pop2net.inspector.NetworkInspector method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/actor.html#pop2net.Actor.location_labels">location_labels (pop2net.Actor property)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/location_designer.html#pop2net.LocationDesigner">LocationDesigner (class in pop2net)</a>
 </li>
       <li><a href="api/actor.html#pop2net.Actor.locations">locations (pop2net.Actor property)</a>
+
+      <ul>
+        <li><a href="api/environment.html#pop2net.Environment.locations">(pop2net.Environment property)</a>
+</li>
+      </ul></li>
+      <li><a href="api/environment.html#pop2net.Environment.locations_between_actors">locations_between_actors() (pop2net.Environment method)</a>
+</li>
+      <li><a href="api/environment.html#pop2net.Environment.locations_of_actor">locations_of_actor() (pop2net.Environment method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -228,6 +277,8 @@
         <li><a href="api/location.html#pop2net.Location.neighbors">(pop2net.Location method)</a>
 </li>
       </ul></li>
+      <li><a href="api/environment.html#pop2net.Environment.neighbors_of_actor">neighbors_of_actor() (pop2net.Environment method)</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/location_designer.html#pop2net.LocationDesigner.nest">nest() (pop2net.LocationDesigner method)</a>
@@ -258,24 +309,46 @@
 <h2 id="R">R</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/location.html#pop2net.Location.remove_actor">remove_actor() (pop2net.Location method)</a>
+      <li><a href="api/environment.html#pop2net.Environment.remove_actor">remove_actor() (pop2net.Environment method)</a>
+
+      <ul>
+        <li><a href="api/location.html#pop2net.Location.remove_actor">(pop2net.Location method)</a>
 </li>
-      <li><a href="api/location.html#pop2net.Location.remove_actors">remove_actors() (pop2net.Location method)</a>
+      </ul></li>
+      <li><a href="api/environment.html#pop2net.Environment.remove_actor_from_location">remove_actor_from_location() (pop2net.Environment method)</a>
 </li>
+      <li><a href="api/environment.html#pop2net.Environment.remove_actors">remove_actors() (pop2net.Environment method)</a>
+
+      <ul>
+        <li><a href="api/location.html#pop2net.Location.remove_actors">(pop2net.Location method)</a>
+</li>
+      </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/actor.html#pop2net.Actor.remove_location">remove_location() (pop2net.Actor method)</a>
+
+      <ul>
+        <li><a href="api/environment.html#pop2net.Environment.remove_location">(pop2net.Environment method)</a>
 </li>
+      </ul></li>
       <li><a href="api/actor.html#pop2net.Actor.remove_locations">remove_locations() (pop2net.Actor method)</a>
+
+      <ul>
+        <li><a href="api/environment.html#pop2net.Environment.remove_locations">(pop2net.Environment method)</a>
 </li>
+      </ul></li>
   </ul></td>
 </tr></table>
 
 <h2 id="S">S</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/location.html#pop2net.Location.set_weight">set_weight() (pop2net.Location method)</a>
+      <li><a href="api/environment.html#pop2net.Environment.set_weight">set_weight() (pop2net.Environment method)</a>
+
+      <ul>
+        <li><a href="api/location.html#pop2net.Location.set_weight">(pop2net.Location method)</a>
 </li>
+      </ul></li>
       <li><a href="api/location_designer.html#pop2net.LocationDesigner.setup">setup() (pop2net.LocationDesigner method)</a>
 </li>
   </ul></td>
@@ -285,6 +358,14 @@
       <li><a href="api/location_designer.html#pop2net.LocationDesigner.split">split() (pop2net.LocationDesigner method)</a>
 </li>
       <li><a href="api/location_designer.html#pop2net.LocationDesigner.stick_together">stick_together() (pop2net.LocationDesigner method)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="U">U</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/environment.html#pop2net.Environment.update_weights">update_weights() (pop2net.Environment method)</a>
 </li>
   </ul></td>
 </tr></table>
