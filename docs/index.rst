@@ -8,12 +8,8 @@ Welcome to Pop2net's documentation!
 
 **Pop2net** is a new software package for Python that simplifies the creation of network structures for agent-based models.
 Using a simple syntax, Pop2net makes it easy to determine how links between certain (groups of) agents are formed by defining contact layers.
-Due to its full integration into `AgentPy <https://agentpy.readthedocs.io/en/latest/>`_ , networks built with Pop2net can be directly used to run simulations.
+Due to its possible integration into `Mesa <https://mesa.readthedocs.io/latest/>` and `AgentPy <https://agentpy.readthedocs.io/en/latest/>`_ , networks built with Pop2net can be directly used to run simulations.
 Pop2net also offers tools to create populations of agents based on empirical micro-data and to validate network properties.
-
-.. note::
-      This project is under very active development and still in it's early stages.
-
 
 .. toctree::
    :maxdepth: 1
