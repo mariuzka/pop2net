@@ -19,9 +19,10 @@
         <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
         <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script src="../_static/js/theme.js"></script>
-    <link rel="author" title="About these documents" href="../about.html" />
     <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" /> 
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Location" href="location.html" />
+    <link rel="prev" title="Creator" href="creator.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -44,11 +45,46 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../about.html">About Pop2net</a></li>
+<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../section_introduction.html">Tutorial</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="index.html">API Reference</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">API Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="actor.html">Actor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="creator.html">Creator</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Environment</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#pop2net.Environment"><code class="docutils literal notranslate"><span class="pre">Environment</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pop2net.Environment.actors"><code class="docutils literal notranslate"><span class="pre">Environment.actors</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pop2net.Environment.actors_between_locations"><code class="docutils literal notranslate"><span class="pre">Environment.actors_between_locations()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pop2net.Environment.actors_of_location"><code class="docutils literal notranslate"><span class="pre">Environment.actors_of_location()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pop2net.Environment.add_actor"><code class="docutils literal notranslate"><span class="pre">Environment.add_actor()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pop2net.Environment.add_actor_to_location"><code class="docutils literal notranslate"><span class="pre">Environment.add_actor_to_location()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pop2net.Environment.add_actors"><code class="docutils literal notranslate"><span class="pre">Environment.add_actors()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pop2net.Environment.add_location"><code class="docutils literal notranslate"><span class="pre">Environment.add_location()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pop2net.Environment.add_locations"><code class="docutils literal notranslate"><span class="pre">Environment.add_locations()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pop2net.Environment.connect_actors"><code class="docutils literal notranslate"><span class="pre">Environment.connect_actors()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pop2net.Environment.disconnect_actors"><code class="docutils literal notranslate"><span class="pre">Environment.disconnect_actors()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pop2net.Environment.export_actor_network"><code class="docutils literal notranslate"><span class="pre">Environment.export_actor_network()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pop2net.Environment.get_weight"><code class="docutils literal notranslate"><span class="pre">Environment.get_weight()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pop2net.Environment.locations"><code class="docutils literal notranslate"><span class="pre">Environment.locations</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pop2net.Environment.locations_between_actors"><code class="docutils literal notranslate"><span class="pre">Environment.locations_between_actors()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pop2net.Environment.locations_of_actor"><code class="docutils literal notranslate"><span class="pre">Environment.locations_of_actor()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pop2net.Environment.neighbors_of_actor"><code class="docutils literal notranslate"><span class="pre">Environment.neighbors_of_actor()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pop2net.Environment.remove_actor"><code class="docutils literal notranslate"><span class="pre">Environment.remove_actor()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pop2net.Environment.remove_actor_from_location"><code class="docutils literal notranslate"><span class="pre">Environment.remove_actor_from_location()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pop2net.Environment.remove_actors"><code class="docutils literal notranslate"><span class="pre">Environment.remove_actors()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pop2net.Environment.remove_location"><code class="docutils literal notranslate"><span class="pre">Environment.remove_location()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pop2net.Environment.remove_locations"><code class="docutils literal notranslate"><span class="pre">Environment.remove_locations()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pop2net.Environment.set_weight"><code class="docutils literal notranslate"><span class="pre">Environment.set_weight()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pop2net.Environment.update_weights"><code class="docutils literal notranslate"><span class="pre">Environment.update_weights()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="location.html">Location</a></li>
+<li class="toctree-l2"><a class="reference internal" href="location_designer.html">LocationDesigner</a></li>
+<li class="toctree-l2"><a class="reference internal" href="inspector.html">Network Inspector</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../section_examples.html">Example Gallery</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../developers.html">Notes to Developers</a></li>
 </ul>
@@ -67,6 +103,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">API Reference</a></li>
       <li class="breadcrumb-item active">Environment</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/api/environment.rst.txt" rel="nofollow"> View page source</a>
@@ -507,7 +544,10 @@ If location_labels is None all locations are considered. Defaults to None.</p>
 
            </div>
           </div>
-          <footer>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="creator.html" class="btn btn-neutral float-left" title="Creator" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="location.html" class="btn btn-neutral float-right" title="Location" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
 
   <hr/>
 

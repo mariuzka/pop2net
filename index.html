@@ -21,10 +21,9 @@
         <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
         <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="_static/js/theme.js"></script>
-    <link rel="author" title="About these documents" href="about.html" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="About Pop2net" href="about.html" /> 
+    <link rel="next" title="Tutorial" href="section_introduction.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -48,7 +47,6 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="about.html">About Pop2net</a></li>
 <li class="toctree-l1"><a class="reference internal" href="section_introduction.html">Tutorial</a></li>
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api/index.html">API Reference</a></li>
@@ -82,18 +80,24 @@
              
   <section id="welcome-to-pop2net-s-documentation">
 <h1>Welcome to Pop2net’s documentation!<a class="headerlink" href="#welcome-to-pop2net-s-documentation" title="Link to this heading"></a></h1>
-<p><strong>Pop2net</strong> is a new software package for Python that simplifies the creation of network structures for agent-based models.
-Using a simple syntax, Pop2net makes it easy to determine how links between certain (groups of) agents are formed by defining contact layers.
-Due to its full integration into <a class="reference external" href="https://agentpy.readthedocs.io/en/latest/">AgentPy</a> , networks built with Pop2net can be directly used to run simulations.
+<p>Agent-based modeling (ABM) is a scientific method used in fields such as social science, biology, and ecology to simulate interactions of autonomous agents and study the resulting emergent phenomena.
+The relationships between agents, which structure the simulated interactions, are often represented by network graphs.
+Since empirical data on networks is rare, most agent-based models rely on artificially generated networks.
+Consequently, generating a valid network structure at the beginning of a simulation is critical.
+Addtionally, accessing and modifying the network during the simulation are steps that must be managed in almost any agent-based model.</p>
+<p><strong>Pop2net</strong> is a Python package that combines many steps related to network generation and management for ABM using a bipartite approach.
+Bipartite networks consist of two distinct types of entities where edges are only formed between entities of different types.
+In Pop2net, relationships are represented as bipartite networks connecting <em>actors</em> and <em>locations</em>.
+When two actors are linked to the same location, they are considered connected through that shared location.
+In this way, locations serve as a contact layer between actors, representing places where interactions occur or contexts that facilitate actor connections.
+The aim of Pop2net’s bipartite approach to relations is to simplify the generation and management of realistic network structures in ABM.
+Due to its possible integration into <a class="reference external" href="https://mesa.readthedocs.io/latest/">Mesa</a> and <a class="reference external" href="https://agentpy.readthedocs.io/en/latest/">AgentPy</a> , networks built with Pop2net can be directly used to run simulations.
 Pop2net also offers tools to create populations of agents based on empirical micro-data and to validate network properties.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>This project is under very active development and still in it’s early stages.</p>
-</div>
+<p>The following figure provides an overview of the workflow to generate networks using Pop2net:</p>
+<a class="reference internal image-reference" href="_images/flowchart.png"><img alt="Alternative text" src="_images/flowchart.png" style="width: 800px;" /></a>
 <div class="toctree-wrapper compound">
 <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="about.html">About Pop2net</a></li>
 <li class="toctree-l1"><a class="reference internal" href="section_introduction.html">Tutorial</a></li>
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api/index.html">API Reference</a></li>
@@ -115,7 +119,7 @@ Pop2net also offers tools to create populations of agents based on empirical mic
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="about.html" class="btn btn-neutral float-right" title="About Pop2net" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="section_introduction.html" class="btn btn-neutral float-right" title="Tutorial" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
