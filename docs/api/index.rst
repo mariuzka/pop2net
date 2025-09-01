@@ -9,8 +9,9 @@ API Reference
    :maxdepth: 0
 
    actor
+   creator
+   environment
    location
    location_designer
-   creator
-   model
    inspector
+   

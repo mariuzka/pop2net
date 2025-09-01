@@ -1,4 +1,4 @@
-.. currentmodule:: pop2net
+.. currentmodule:: pop2net.environment
 
 Environment
 =====
