@@ -39,11 +39,3 @@ The following figure provides an overview of the workflow to generate networks u
    api/index
    section_examples
    developers
-
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
