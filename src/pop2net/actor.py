@@ -126,6 +126,9 @@ class Actor:
         Returns:
             A weight of the contact between the two actors.
         """
+        if actor is self:
+            raise ValueError("actor must be a different instance than self")
+        
         weight = 0
         for location in self.shared_locations(actor=actor, location_labels=location_labels):
             weight += location.project_weights(actor1=self, actor2=actor)
