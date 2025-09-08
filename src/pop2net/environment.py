@@ -65,14 +65,33 @@ class Environment:
         self._fresh_id += 1
 
     def _to_framework(self, objects):
+
+         # TODO Problem: if list is empty, type can not be determined!
+            # Cant correctly assign something like "Actorlist[]" or "LocationList[]"
         if self.framework is None:
+            if len(objects) == 0:
+                return "List(empty)"
+            
+            obj_type = objects[0].type
+            
+            if obj_type == "Actor":
+                objects.__str__ = f"ActorList [{len(objects)} actors]"
+                objects.__repr__= f"ActorList [{len(objects)} actors]"
+                
+            elif obj_type == "Location":
+                objects.__str__ = f"LocationList [{len(objects)} locations]"
+                objects.__repr__ = f"LocationList [{len(objects)} locations]"
             return objects
+           
+
         elif self.framework == "agentpy":
             return self._framework.AgentList(model=self.model, objs=objects)
         elif self.framework == "mesa":
             return self._framework.agent.AgentSet(agents=objects, random=self.model.random)
         else:
             raise ValueError("Invalid framework.")
+        
+        
 
     class ActorList(list):
         """Custom list wrapper for actors with custom string representation."""
