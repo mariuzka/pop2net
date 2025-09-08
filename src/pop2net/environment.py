@@ -64,26 +64,22 @@ class Environment:
         obj.id_p2n = self._fresh_id
         self._fresh_id += 1
 
+    class ObjectList(list):
+        """Simple list subclass for better print out."""
+        def __str__(self):
+            return "ObjectList [ ]" if len(self) == 0 else f"ObjectList [{len(self)} Elements]"
+
+        def __repr__(self):
+            return "ObjectList [ ]" if len(self) == 0 else f"ObjectList [{len(self)} Elements]"
+
     def _to_framework(self, objects):
 
          # TODO Problem: if list is empty, type can not be determined!
             # Cant correctly assign something like "Actorlist[]" or "LocationList[]"
         if self.framework is None:
-            if len(objects) == 0:
-                return "List(empty)"
-            
-            obj_type = objects[0].type
-            
-            if obj_type == "Actor":
-                objects.__str__ = f"ActorList [{len(objects)} actors]"
-                objects.__repr__= f"ActorList [{len(objects)} actors]"
-                
-            elif obj_type == "Location":
-                objects.__str__ = f"LocationList [{len(objects)} locations]"
-                objects.__repr__ = f"LocationList [{len(objects)} locations]"
-            return objects
-           
-
+            # wrap in ObjectList so __str__/__repr__ show the custom format
+            return self.ObjectList(objects if objects is not None else [])
+        
         elif self.framework == "agentpy":
             return self._framework.AgentList(model=self.model, objs=objects)
         elif self.framework == "mesa":
@@ -91,41 +87,6 @@ class Environment:
         else:
             raise ValueError("Invalid framework.")
         
-        
-
-    class ActorList(list):
-        """Custom list wrapper for actors with custom string representation."""
-
-        def __str__(self):
-            if len(self) == 0:
-                return "ActorList(empty)"
-            return f"ActorList [{len(self)} actors]"
-
-        def __repr__(self):
-            if len(self) == 0:
-                return "ActorList([])"
-            return f"ActorList [{len(self)} actors]"
-
-    class LocationList(list):
-        """Custom list wrapper for locations with custom string representation."""
-
-        def __str__(self):
-            if len(self) == 0:
-                return "LocationList(empty)"
-            return f"LocationList [{len(self)} locations]"
-
-        def __repr__(self):
-            if len(self) == 0:
-                return "LocationList([])"
-            return f"LocationList [{len(self)} locations]"
-
-    def _to_custom_list(self, objects, list_type):
-        """Convert objects to custom list type if no framework is used."""
-        if self.framework is None:
-            return list_type(objects)
-        else:
-            return self._to_framework(objects)
-
     @property
     def actors(self) -> list:
         """Show a iterable view of all actors in the environment.
@@ -137,8 +98,9 @@ class Environment:
         Returns:
             list: A non-mutable list of all actors in the environment.
         """
-        objects = [data["_obj"] for _, data in self.g.nodes(data=True) if data["bipartite"] == 0]
-        return self._to_custom_list(objects, self.ActorList)
+        return self._to_framework(
+            [data["_obj"] for _, data in self.g.nodes(data=True) if data["bipartite"] == 0]
+        )
 
     @property
     def locations(self) -> list:
@@ -151,8 +113,9 @@ class Environment:
         Returns:
             LocationList: a non-mutable LocationList of all locations in the environment.
         """
-        objects = [data["_obj"] for _, data in self.g.nodes(data=True) if data["bipartite"] == 1]
-        return self._to_custom_list(objects, self.LocationList)
+        return self._to_framework(
+            [data["_obj"] for _, data in self.g.nodes(data=True) if data["bipartite"] == 1]
+        )
 
     # TODO: def add_obj as a common parent method for add_actor & add_location
     def add_actor(self, actor: _actor.Actor) -> None:
