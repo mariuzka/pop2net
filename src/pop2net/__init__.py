@@ -2,6 +2,7 @@
 
 from .actor import Actor
 from .creator import Creator
+from .entity_list import EntityList
 from .environment import Environment
 from .exceptions import Pop2netException
 from .inspector import NetworkInspector
@@ -13,6 +14,7 @@ from .location_designer import MeltLocationDesigner
 
 __all__ = [
     "Actor",
+    "EntityList",
     "Pop2netException",
     "Location",
     "LocationDesigner",

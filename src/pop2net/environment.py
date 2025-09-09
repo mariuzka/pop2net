@@ -64,22 +64,9 @@ class Environment:
         obj.id_p2n = self._fresh_id
         self._fresh_id += 1
 
-    class ObjectList(list):
-        """Simple list subclass for better print out."""
-        def __str__(self):
-            return "ObjectList [ ]" if len(self) == 0 else f"ObjectList [{len(self)} Elements]"
-
-        def __repr__(self):
-            return "ObjectList [ ]" if len(self) == 0 else f"ObjectList [{len(self)} Elements]"
-
     def _to_framework(self, objects):
-
-         # TODO Problem: if list is empty, type can not be determined!
-            # Cant correctly assign something like "Actorlist[]" or "LocationList[]"
         if self.framework is None:
-            # wrap in ObjectList so __str__/__repr__ show the custom format
-            return self.ObjectList(objects if objects is not None else [])
-        
+            return p2n.EntityList(objects if objects is not None else [])
         elif self.framework == "agentpy":
             return self._framework.AgentList(model=self.model, objs=objects)
         elif self.framework == "mesa":
