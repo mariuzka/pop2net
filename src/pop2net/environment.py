@@ -330,6 +330,10 @@ class Environment:
         )
 
     def _objects_between_objects(self, object1, object2) -> list:
+
+        if object1 is object2:
+            raise ValueError("Entity 1 and entity 2 are identical.")
+
         paths = list(
             nx.all_simple_paths(
                 G=self.g,
