@@ -73,7 +73,7 @@ class Environment:
             return self._framework.agent.AgentSet(agents=objects, random=self.model.random)
         else:
             raise ValueError("Invalid framework.")
-        
+
     @property
     def actors(self) -> list:
         """Show a iterable view of all actors in the environment.
