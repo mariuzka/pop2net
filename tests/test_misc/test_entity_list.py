@@ -18,6 +18,11 @@ def test_print_in_environment():
 
 
 def test_print_in_creator():
+    class TestLocationDesigner(p2n.LocationDesigner):
+        pass
+
     env = p2n.Environment()
     creator = p2n.Creator(env=env)
+
     assert str(creator.create_actors(n=10)) == "EntityList [10 entities]"
+    assert str(creator.create_locations(location_designers=[TestLocationDesigner])) == "EntityList [1 entities]"
