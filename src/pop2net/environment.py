@@ -66,14 +66,14 @@ class Environment:
 
     def _to_framework(self, objects):
         if self.framework is None:
-            return objects
+            return p2n.EntityList(objects if objects is not None else [])
         elif self.framework == "agentpy":
             return self._framework.AgentList(model=self.model, objs=objects)
         elif self.framework == "mesa":
             return self._framework.agent.AgentSet(agents=objects, random=self.model.random)
         else:
             raise ValueError("Invalid framework.")
-
+        
     @property
     def actors(self) -> list:
         """Show a iterable view of all actors in the environment.
