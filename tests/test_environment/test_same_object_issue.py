@@ -7,7 +7,7 @@ def test_1_actor():
     env = p2n.Environment()
     actor1 = p2n.Actor()
     actor2 = p2n.Actor()
-    
+
     env.add_actors([actor1, actor2])
     with pytest.raises(ValueError) as exc:
         actor1.get_actor_weight(actor1)
@@ -35,8 +35,8 @@ def test_3_location():
         env.locations_between_actors(actor1, actor1)
     assert str(exc.value) == "Entity 1 and entity 2 are identical."
 
-def test_4_location_creator():
 
+def test_4_location_creator():
     class Location1(p2n.LocationDesigner):
         pass
 
