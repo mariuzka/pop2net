@@ -1,5 +1,7 @@
-import pop2net as p2n
 import pytest
+
+import pop2net as p2n
+
 
 def test_1():
     env = p2n.Environment()
