@@ -48,8 +48,8 @@ def test_4_location_creator():
         env.locations_between_actors(env.actors[0], env.actors[0])
     assert str(exc.value) == "Entity 1 and entity 2 are identical."
 
-def test_5_shared_loc():
 
+def test_5_shared_loc():
     env = p2n.Environment()
     actor1 = p2n.Actor()
     actor2 = p2n.Actor()
@@ -60,7 +60,7 @@ def test_5_shared_loc():
     with pytest.raises(ValueError) as exc:
         env.actors[0].shared_locations(env.actors[0])
     assert str(exc.value) == "Entity 1 and entity 2 are identical."
-    
+
 
 def test_6_shared_loc_creator():
     class Location1(p2n.LocationDesigner):
