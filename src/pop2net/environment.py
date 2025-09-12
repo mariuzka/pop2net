@@ -66,7 +66,7 @@ class Environment:
 
     def _to_framework(self, objects):
         if self.framework is None:
-            return objects
+            return p2n.EntityList(objects if objects is not None else [])
         elif self.framework == "agentpy":
             return self._framework.AgentList(model=self.model, objs=objects)
         elif self.framework == "mesa":
@@ -330,6 +330,9 @@ class Environment:
         )
 
     def _objects_between_objects(self, object1, object2) -> list:
+        if object1 is object2:
+            raise ValueError("Entity 1 and entity 2 are identical.")
+
         paths = list(
             nx.all_simple_paths(
                 G=self.g,
