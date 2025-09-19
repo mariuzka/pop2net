@@ -5,7 +5,7 @@ class EntityList(list):
         n = len(self)
         if n == 0:
             return "EntityList [ ]"
-        
+
         # Count objects by type
         actor_count = 0
         location_count = 0
@@ -24,6 +24,6 @@ class EntityList(list):
 
         if parts:
             return f"EntityList [{', '.join(parts)}]"
-        
-        # TODO keep Fallback if some unknown type or throw exception at this point ? 
+
+        # TODO keep Fallback if some unknown type or throw exception at this point ?
         return f"EntityList [{n} entities]"
