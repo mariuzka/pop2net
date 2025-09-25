@@ -34,7 +34,7 @@ bibliography: paper.bib
 
 Agent-based modeling (ABM) is a scientific method used in fields such as social science, biology, and ecology to simulate interactions of autonomous agents and study the resulting emergent phenomena.
 The relationships between agents, which structure the simulated interactions, are often represented by network graphs.
-Since empirical data on networks is rare, most agent-based models rely on artificially generated networks [@amblard_which_2015].
+Since empirical data on networks is rare, many agent-based models rely on artificially generated networks [@amblard_which_2015].
 Consequently, generating a valid network structure at the beginning of a simulation is critical.
 Addtionally, accessing and modifying the network during the simulation are steps that must be managed in almost any agent-based model.
 
