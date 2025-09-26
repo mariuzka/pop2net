@@ -54,7 +54,12 @@ Every code contribution should include tests to help maintain quality and reliab
 We use pytest for testing and ship pytest as a dev dependency.
 That after installation, the tests can be run with ``poetry run pytest``
 
-4. Submitting a Pull Request
+4. Documenting changes
+----------------------
+
+If your contribution changes the behavior of pop2net in any way or adds features, please make sure all changes and functionalities are reflected in the documentation.
+
+5. Submitting a Pull Request
 ----------------------------
 
 - Push your branch to your fork.
