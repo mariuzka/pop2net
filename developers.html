@@ -50,11 +50,20 @@
 <li class="toctree-l1"><a class="reference internal" href="api/index.html">API Reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="section_examples.html">Example Gallery</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Notes to Developers</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#installation">Installation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#testing">Testing</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#versioning">Versioning</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#branches">Branches</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#how-to-release">How to Release</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#how-to-contribute">How to Contribute</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#reporting-issues">1. Reporting Issues</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#development-setup">2. Development setup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#testing">3. Testing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#documenting-changes">4. Documenting changes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#submitting-a-pull-request">5. Submitting a Pull Request</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#for-core-developers">For core developers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#branches">Branches</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#how-to-release">How to Release</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -85,19 +94,6 @@
              
   <section id="notes-to-developers">
 <h1>Notes to Developers<a class="headerlink" href="#notes-to-developers" title="Link to this heading"></a></h1>
-<p>These are notes to developers.</p>
-<section id="installation">
-<h2>Installation<a class="headerlink" href="#installation" title="Link to this heading"></a></h2>
-<p>To install pop2net for development, it is strongly advised to use <a class="reference external" href="https://python-poetry.org/">poetry</a>.
-This has to be installed outside the virtual environment.
-The recommended way to have poetry installed, generally is via <a class="reference external" href="https://pipx.pypa.io/stable/installation/">pipx</a>.
-Once poetry is installed, just run <code class="docutils literal notranslate"><span class="pre">poetry</span> <span class="pre">install</span></code> from within the repository to install the package, all dependencies as well as all test and development dependencies.</p>
-</section>
-<section id="testing">
-<h2>Testing<a class="headerlink" href="#testing" title="Link to this heading"></a></h2>
-<p>We use pytest for testing and ship pytest as a dev dependency.
-That after installation, the tests can be run with <code class="docutils literal notranslate"><span class="pre">poetry</span> <span class="pre">run</span> <span class="pre">pytest</span></code></p>
-</section>
 <section id="versioning">
 <h2>Versioning<a class="headerlink" href="#versioning" title="Link to this heading"></a></h2>
 <p>We use a semantic versioning approach of MAJOR.MINOR.PATCH.</p>
@@ -106,28 +102,74 @@ That after installation, the tests can be run with <code class="docutils literal
 <li><p>MINOR versions indicate the addition of new functionality, and</p></li>
 <li><p>PATCH versions only fix bugs and do not otherwise influence the functionality of the package.</p></li>
 </ul>
-</section>
-<section id="branches">
-<h2>Branches<a class="headerlink" href="#branches" title="Link to this heading"></a></h2>
-<p>The <code class="docutils literal notranslate"><span class="pre">main</span></code> branch is locked and can only be modified via PRs.
-The general idea for a development workflow is:</p>
-<ol class="arabic simple">
-<li><p>Create a new feature branch based on <code class="docutils literal notranslate"><span class="pre">dev</span></code>.</p></li>
-<li><p>Create a PR from your feature branch to <code class="docutils literal notranslate"><span class="pre">dev</span></code>.</p></li>
-<li><p>Once we release a new version, we set it up in <code class="docutils literal notranslate"><span class="pre">dev</span></code> and create a relase PR from <code class="docutils literal notranslate"><span class="pre">dev</span></code> to <code class="docutils literal notranslate"><span class="pre">main</span></code>.</p></li>
-</ol>
-<p>If your are not a member of the core development team, PRs are generally always welcome. Please fork the repository, create a new branch and create your PRs from there to <code class="docutils literal notranslate"><span class="pre">pop2net/dev</span></code>.</p>
-</section>
-<section id="how-to-release">
-<h2>How to Release<a class="headerlink" href="#how-to-release" title="Link to this heading"></a></h2>
-<p>The release process is triggered manually as a GitHub Action that is called “Release New Version”.
-In a dropdown menu, you can select how much you want to increment the version.
-The parameters that are selectable are directly passed to a <code class="docutils literal notranslate"><span class="pre">poetry</span> <span class="pre">version</span></code> command, so to see how the version changes, best check poetry’s documentation directly <a class="reference external" href="https://python-poetry.org/docs/cli#version">here</a>.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>It is important to note, that all releases will be published on GitHub, but only stable releases (i.e., not prereleases -&gt; there is no letter in the version number) will be released on pypi.
 That ensures that users of the package can rely on PyPi to always have a up-to-date stable version, whereas developers can easily get pre-releases to test new functionality.</p>
 </div>
+</section>
+<section id="how-to-contribute">
+<h2>How to Contribute<a class="headerlink" href="#how-to-contribute" title="Link to this heading"></a></h2>
+<p>Thank you for your interest in contributing! 🎉
+We welcome bug reports, feature requests, documentation improvements, and code contributions.</p>
+<section id="reporting-issues">
+<h3>1. Reporting Issues<a class="headerlink" href="#reporting-issues" title="Link to this heading"></a></h3>
+<p>Use the <a class="reference external" href="https://github.com/mariuzka/pop2net/issues">GitHub issues</a> to report bugs or suggest features.</p>
+<p>When reporting a bug, include:</p>
+<ul class="simple">
+<li><p>Steps to reproduce</p></li>
+<li><p>Expected behavior</p></li>
+<li><p>Actual behavior</p></li>
+<li><p>Environment details (OS, Python version, package version)</p></li>
+</ul>
+</section>
+<section id="development-setup">
+<h3>2. Development setup<a class="headerlink" href="#development-setup" title="Link to this heading"></a></h3>
+<p>To install pop2net for development, it is strongly advised to use <a class="reference external" href="https://python-poetry.org/">poetry</a>.
+This has to be installed outside the virtual environment.
+The recommended way to have poetry installed, generally is via <a class="reference external" href="https://pipx.pypa.io/stable/installation/">pipx</a>.
+Once poetry is installed, just run <code class="docutils literal notranslate"><span class="pre">poetry</span> <span class="pre">install</span></code> from within the repository to install the package, all dependencies as well as all test and development dependencies.</p>
+</section>
+<section id="testing">
+<h3>3. Testing<a class="headerlink" href="#testing" title="Link to this heading"></a></h3>
+<p>Every code contribution should include tests to help maintain quality and reliability.
+We use pytest for testing and ship pytest as a dev dependency.
+That after installation, the tests can be run with <code class="docutils literal notranslate"><span class="pre">poetry</span> <span class="pre">run</span> <span class="pre">pytest</span></code></p>
+</section>
+<section id="documenting-changes">
+<h3>4. Documenting changes<a class="headerlink" href="#documenting-changes" title="Link to this heading"></a></h3>
+<p>If your contribution changes the behavior of pop2net in any way or adds features, please make sure all changes and functionalities are reflected in the documentation.</p>
+</section>
+<section id="submitting-a-pull-request">
+<h3>5. Submitting a Pull Request<a class="headerlink" href="#submitting-a-pull-request" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Push your branch to your fork.</p></li>
+<li><p>Open a Pull Request (PR) against the <code class="docutils literal notranslate"><span class="pre">dev</span></code> branch.</p></li>
+<li><p>Clearly describe what your PR does and reference any related issues.</p></li>
+<li><p>A maintainer will review your PR and may request changes.</p></li>
+</ul>
+</section>
+</section>
+<section id="for-core-developers">
+<h2>For core developers<a class="headerlink" href="#for-core-developers" title="Link to this heading"></a></h2>
+<section id="branches">
+<h3>Branches<a class="headerlink" href="#branches" title="Link to this heading"></a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">main</span></code> branch is locked and can only be modified via PRs.
+The general idea for a development workflow is:</p>
+<ol class="arabic simple">
+<li><p>Create a new feature branch based on <code class="docutils literal notranslate"><span class="pre">dev</span></code>.</p></li>
+<li><p>Create a PR from your feature branch to <code class="docutils literal notranslate"><span class="pre">dev</span></code>.</p></li>
+<li><p>Once we release a new version, we set it up in <code class="docutils literal notranslate"><span class="pre">dev</span></code> and create a release PR from <code class="docutils literal notranslate"><span class="pre">dev</span></code> to <code class="docutils literal notranslate"><span class="pre">main</span></code>.</p></li>
+</ol>
+<p>If your are not a member of the core development team, PRs are generally always welcome.
+Please fork the repository, create a new branch and create your PRs from there to <code class="docutils literal notranslate"><span class="pre">pop2net/dev</span></code>.</p>
+</section>
+<section id="how-to-release">
+<h3>How to Release<a class="headerlink" href="#how-to-release" title="Link to this heading"></a></h3>
+<p>The release process is triggered manually as a GitHub Action that is called “Release New Version”.
+In a dropdown menu, you can select how much you want to increment the version.
+The parameters that are selectable are directly passed to a <code class="docutils literal notranslate"><span class="pre">poetry</span> <span class="pre">version</span></code> command, so to see how the version changes, best check poetry’s documentation directly <a class="reference external" href="https://python-poetry.org/docs/cli#version">here</a>.</p>
+</section>
 </section>
 </section>
 

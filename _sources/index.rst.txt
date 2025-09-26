@@ -33,7 +33,6 @@ The following figure provides an overview of the workflow to generate networks u
    :maxdepth: 1
    :caption: Contents:
 
-   about
    section_introduction
    installation
    api/index
