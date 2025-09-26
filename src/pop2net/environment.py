@@ -120,6 +120,8 @@ class Environment:
         if not self.g.has_node(actor.id_p2n):
             self.g.add_node(actor.id_p2n, bipartite=0, _obj=actor)
             actor.env = self
+        else:
+            raise ValueError("This environment already has an entity with this id.")
 
     def add_actors(self, actors: list) -> None:
         """Add actors to the environment.
@@ -145,6 +147,8 @@ class Environment:
         if not self.g.has_node(location.id_p2n):
             self.g.add_node(location.id_p2n, bipartite=1, _obj=location)
             location.env = self
+        else:
+            raise ValueError("This environment already has an entity with this id.")
 
     def add_locations(self, locations: list) -> None:
         """Add multiple locations to the environment at once.
