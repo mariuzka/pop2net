@@ -13,9 +13,9 @@ def test_print_in_environment():
     location1.add_actors([actor1, actor2])
 
     assert str(env.locations) == "EntityList [1 location]"
-    #assert repr(env.locations) == "EntityList [1 entities]"
+    # assert repr(env.locations) == "EntityList [1 entities]"
     assert str(env.actors) == "EntityList [2 actors]"
-    #assert repr(env.actors) == "EntityList [2 entities]"
+    # assert repr(env.actors) == "EntityList [2 entities]"
 
 
 def test_print_in_creator():
