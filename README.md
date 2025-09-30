@@ -23,3 +23,10 @@ pip install pop2net
 ## Documentation
 
 Detailed documentation of all features and a collection of example analyses can be found [here](https://mariuzka.github.io/pop2net/).
+
+
+## How to contribute
+
+Contributions are welcome!  
+See the [this guide](https://mariuzka.github.io/pop2net/developers.html) 
+for details on how to get started.
