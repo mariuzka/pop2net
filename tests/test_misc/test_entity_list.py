@@ -17,13 +17,19 @@ def test_print_in_environment():
     assert str(env.actors) == "EntityList [2 actors]"
     # assert repr(env.actors) == "EntityList [2 entities]"
 
-    # mixed objects 
+    # mixed objects
     combined = p2n.EntityList([*env.locations, *env.actors])
-    assert str(combined) == "EntityList [1 location, 2 actors]" or str(combined) == "EntityList [2 actors, 1 location]"
-    
+    assert (
+        str(combined) == "EntityList [1 location, 2 actors]"
+        or str(combined) == "EntityList [2 actors, 1 location]"
+    )
+
     # unknown objects
     combined = p2n.EntityList([*env.locations, *[8]])
-    assert str(combined) == "EntityList [1 location, 1 entity]" or str(combined) == "EntityList [1 entity, 1 location]"
+    assert (
+        str(combined) == "EntityList [1 location, 1 entity]"
+        or str(combined) == "EntityList [1 entity, 1 location]"
+    )
 
 
 def test_print_in_creator():
