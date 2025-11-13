@@ -21,6 +21,11 @@ authors:
     equal-contrib: true
     affiliation: 1
 
+  - name: Maximilian Richter
+    orcid: 0009-0005-5121-8266
+    equal-contrib: false
+    affiliation: 1
+
 affiliations:
  - name: University of Stuttgart, Germany
    index: 1
@@ -201,8 +206,5 @@ Pop2net offers user-friendly documentation, including API references and tutoria
 This work was funded by Deutsche Forschungsgemeinschaft (DFG, German Research Foundation) under Germany´s Excellence Strategy – EXC 2075 – 390740016.
 
 We acknowledge the support of the Deutsche Forschungsgemeinschaft (DFG, German Research Foundation under the DFG reference number UP 31/1) for the Stuttgart Research Focus Interchange Forum for Reflecting on Intelligent Systems (IRIS).
-
-We thank Maximilian Richter for his valuable contribution to the package.
-
 
 # References
