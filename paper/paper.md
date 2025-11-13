@@ -100,6 +100,7 @@ Pop2net's components can be categorized into three sectors.
     Locations represent the places or contexts in which actors interact.
     In Pop2net, every connection between actors must be mediated by a location.
     Both actors and locations provide several methods which help to manage relations during simulations—for example, to retrieve all associated locations or actors, find neighboring actors within specific location types, or connect actors to one another through certain locations.
+    Using multiple inheritance, actors and locations can also be integrated as agent objects into Mesa and AgentPy.
 
 
 2. **Network generators.**
