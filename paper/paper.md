@@ -41,7 +41,7 @@ Agent-based modeling (ABM) is a scientific method used in fields such as social 
 The relationships between agents, which structure the simulated interactions, are often represented by network graphs.
 Since empirical data on networks is rare, many agent-based models rely on artificially generated networks [@amblard_which_2015].
 Consequently, generating a valid network structure at the beginning of a simulation is critical.
-Addtionally, accessing and modifying the network during the simulation are steps that must be managed in almost any agent-based model.
+Additionally, accessing and modifying the network during the simulation are steps that must be managed in almost any agent-based model.
 
 Pop2net is a Python package that combines many steps related to network generation and management for ABM using a bipartite approach.
 Bipartite networks consist of two distinct types of entities where edges are only formed between entities of different types.
@@ -56,7 +56,7 @@ In Python, NetworkX [@hagberg_exploring_2008] provides extensive control over ne
 However, NetworkX was not originally designed with ABM in mind, which can make managing networks or creating custom network structures within ABM frameworks cumbersome and inflexible.
 While the built-in network models are powerful, they are often too abstract to directly support the specific needs of ABM applications.
 
-ABM frameworks in Python—such as Mesa [@kazil_utilizing_2020, @hoeven_mesa_2025], AgentPy [@foramitti_agentpy_2021], and Melodie [@yu_melodie_2023]—offer improved data structures for representing and manipulating networks.
+ABM frameworks in Python—such as Mesa [@kazil_utilizing_2020; @hoeven_mesa_2025], AgentPy [@foramitti_agentpy_2021], and Melodie [@yu_melodie_2023]—offer improved data structures for representing and manipulating networks.
 However, they still lack advanced tools for generating custom network topologies and provide only limited out-of-the-box support for bipartite graphs.
 
 Pop2net aims to address this gap in the toolkit of agent-based modelers.
@@ -99,9 +99,7 @@ Pop2net's components can be categorized into three sectors.
     However, since Pop2net also treats locations as *agents*, especially when integrated with frameworks like Mesa or AgentPy, we found it clearer to refer to the primary acting entities as *actors*.
     Locations represent the places or contexts in which actors interact.
     In Pop2net, every connection between actors must be mediated by a location.
-    
-    Both actors and locations provide several methods which help managing relations during simulations—for example, to retrieve all associated locations or actors, find neighboring actors within specific location types, or connect actors to one another through certain locations.
-    Using multiple inheritance, actors and locations can also be integrated as agent objects into Mesa and AgentPy.
+    Both actors and locations provide several methods which help to manage relations during simulations—for example, to retrieve all associated locations or actors, find neighboring actors within specific location types, or connect actors to one another through certain locations.
 
 
 2. **Network generators.**
@@ -203,7 +201,7 @@ Pop2net offers user-friendly documentation, including API references and tutoria
 
 # Acknowledgements
 
-This work was funded by Deutsche Forschungsgemeinschaft (DFG, German Research Foundation) under Germany´s Excellence Strategy – EXC 2075 – 390740016.
+This work was funded by Deutsche Forschungsgemeinschaft (DFG, German Research Foundation) under Germany's Excellence Strategy – EXC 2075 – 390740016.
 
 We acknowledge the support of the Deutsche Forschungsgemeinschaft (DFG, German Research Foundation under the DFG reference number UP 31/1) for the Stuttgart Research Focus Interchange Forum for Reflecting on Intelligent Systems (IRIS).
 
