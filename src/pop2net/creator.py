@@ -455,7 +455,7 @@ class Creator:
                     dummy_location=dummy_location,
                 )
 
-                # get all values for which seperated groups/locations should be created
+                # get all values for which separated groups/locations should be created
                 melt_split_values = self._get_split_values(
                     actors=melt_location_affiliated_actors,
                     dummy_location=melt_dummy_location,
@@ -944,6 +944,7 @@ class Creator:
         replace_sample_level_column: bool = True,
         clear: bool = False,
         delete_magic_actor_attributes: bool = True,
+        return_elements=False,
     ) -> tuple:
         """Creates actors and locations based on a given dataset.
 
@@ -1004,7 +1005,8 @@ class Creator:
             delete_magic_actor_attributes=delete_magic_actor_attributes,
         )
 
-        return actors, locations
+        if return_elements:
+            return actors, locations
 
     def get_df_actors(
         self,
