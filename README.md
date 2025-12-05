@@ -1,5 +1,7 @@
+[![status](https://joss.theoj.org/papers/387d641e4eda2b34eed69b86dc106771/status.svg)](https://joss.theoj.org/papers/387d641e4eda2b34eed69b86dc106771)
 ![](https://github.com/mariuzka/pop2net/actions/workflows/tox.yml/badge.svg)
 ![Python 3.11+](https://img.shields.io/badge/python->=3.11-blue.svg)
+
 
 # Pop2net
 
