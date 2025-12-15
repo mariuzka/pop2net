@@ -2,7 +2,6 @@ class EntityList(list):
     """Simple list subclass for better print out."""
 
     def __str__(self):
-        # lokale Importe vermeiden Zirkularimporte
         from .actor import Actor
         from .location import Location
 
