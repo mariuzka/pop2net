@@ -1008,44 +1008,4 @@ class Creator:
         if return_elements:
             return actors, locations
 
-    def get_df_actors(
-        self,
-        columns: None | list[str] = None,
-        drop_agentpy_columns: bool = True,
-    ) -> pd.DataFrame:
-        """Returns the latest created population of actors as a dataframe.
-
-        Args:
-            columns (list | None): A list of column names that sould be kept.
-                All other columns are deleted.
-            drop_agentpy_columns (bool): Deletes some columns created by agentpy.
-
-        Raises:
-            Pop2netException: _description_
-
-        Returns:
-            pd.DataFrame: A dataframe which contains one row for each
-            actor and one column for each actor attribute.
-        """
-        if self.actors is None:
-            msg = "There are no actors."
-            raise Pop2netException(msg)
-
-        df = pd.DataFrame([vars(actor) for actor in self.actors])
-
-        if drop_agentpy_columns:
-            df = df.drop(
-                columns=[
-                    "_var_ignore",
-                    "id",
-                    "type",
-                    "log",
-                    "model",
-                    "p",
-                ],
-            )
-
-        if columns is not None:
-            df = df.loc[:, columns]
-
-        return df
+    

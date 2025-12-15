@@ -7,6 +7,7 @@ import typing
 import warnings
 
 import networkx as nx
+import pandas as pd
 
 if typing.TYPE_CHECKING:
     from . import actor as _actor
@@ -579,3 +580,26 @@ class Environment:
         ):
             for actor in location.actors:
                 location.set_weight(actor=actor, weight=location.weight(actor=actor))
+
+    
+    def get_df_actors(
+        self,
+    ) -> pd.DataFrame:
+        """Returns the population of actors as a dataframe.
+
+        Returns:
+            pd.DataFrame: A dataframe which contains one row for each
+            actor and one column for each actor attribute.
+        """
+        return pd.DataFrame([vars(actor) for actor in self.actors])
+    
+    def get_df_locations(
+        self,
+    ) -> pd.DataFrame:
+        """Returns all locations of this environment as a dataframe.
+
+        Returns:
+            pd.DataFrame: A dataframe which contains one row for each
+            location and one column for each location attribute.
+        """
+        return pd.DataFrame([vars(location) for location in self.locations])
