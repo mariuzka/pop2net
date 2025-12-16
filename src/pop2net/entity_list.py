@@ -1,9 +1,12 @@
+from .actor import Actor
+from .location import Location
+
+
 class EntityList(list):
     """Simple list subclass for better print out."""
 
     def __str__(self):
-        from .actor import Actor
-        from .location import Location
+        
 
         n = len(self)
         if n == 0:
