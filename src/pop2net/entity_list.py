@@ -6,8 +6,6 @@ class EntityList(list):
     """Simple list subclass for better print out."""
 
     def __str__(self):
-        
-
         n = len(self)
         if n == 0:
             return "EntityList [ ]"
