@@ -23,3 +23,6 @@ class EntityList(list):
             parts.append(f"{unknown} {'entity' if unknown == 1 else 'entities'}")
 
         return f"EntityList [{', '.join(parts)}]"
+    
+    def __repr__(self):
+        return self.__str__()
