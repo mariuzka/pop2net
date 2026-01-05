@@ -21,6 +21,9 @@ You can install Pop2net using pip:
 pip install pop2net
 ```
 
+Python 3.14.1 has a bug which causes networkX to crash, see [this issue](https://github.com/networkx/networkx/issues/8362).
+If you use Python 3.14, make sure to use any other path version that 3.14.1.
+
 
 ## Documentation
 
