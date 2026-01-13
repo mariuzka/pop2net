@@ -35,3 +35,16 @@ Detailed documentation of all features and a collection of example analyses can 
 Contributions are welcome!  
 See [this guide](https://mariuzka.github.io/pop2net/developers.html) 
 for details on how to get started.
+
+## Citation
+
+If you are using Pop2net, please cite the corresponding [software release paper](https://joss.theoj.org/papers/10.21105/joss.07897) in the Journal of Open Source Software: 
+
+- Kaffai et al., (2026). Pop2net: Bipartite network generation for agent-based modeling. Journal of Open Source Software, 11(117), 7897, https://doi.org/10.21105/joss.07897
+
+### BibTeX
+
+@article{Kaffai2026, doi = {10.21105/joss.07897}, url = {https://doi.org/10.21105/joss.07897}, year = {2026}, publisher = {The Open Journal}, volume = {11}, number = {117}, pages = {7897}, author = {Kaffai, Marius and Erhard, Lukas and Richter, Maximilian}, title = {Pop2net: Bipartite network generation for agent-based modeling}, journal = {Journal of Open Source Software} } 
+
+
+
