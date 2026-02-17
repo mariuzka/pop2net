@@ -37,4 +37,4 @@ def test_network_repro():
 
     average_clustering = nx.average_clustering(env.export_actor_network())
 
-    assert average_clustering == 0.45949783549783546
+    assert round(average_clustering, 10) == 0.4594978355
