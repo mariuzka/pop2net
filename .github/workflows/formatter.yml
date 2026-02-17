@@ -11,6 +11,9 @@ on:
       - main
       - dev
 
+permissions:
+  contents: write
+
 jobs:
   format:
     runs-on: ubuntu-latest
