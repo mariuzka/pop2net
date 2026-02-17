@@ -349,9 +349,7 @@ class Creator:
             # TODO:
             raise Exception
 
-        stick_values = sorted({
-            self._get_stick_value(actor, dummy_location) for actor in actors
-            })
+        stick_values = sorted({self._get_stick_value(actor, dummy_location) for actor in actors})
 
         # dummy_location = self._create_dummy_location(designer)
 
@@ -418,10 +416,9 @@ class Creator:
         dummy_location = self._create_dummy_location(designer)
 
         # get all mother locations the actors are nested in
-        all_mother_group_ids = sorted({
-            self._get_mother_group_id(actor, dummy_location) 
-            for actor in actors
-        })
+        all_mother_group_ids = sorted(
+            {self._get_mother_group_id(actor, dummy_location) for actor in actors}
+        )
 
         # for each mother location
         for mother_group_id in all_mother_group_ids:
@@ -667,13 +664,15 @@ class Creator:
 
             # bridge
             if not dummy_location.melt():
-                bridge_values = sorted({
-                    dummy_location.bridge(actor)
-                    for actor in self._get_affiliated_actors(
-                        actors=actors, dummy_location=dummy_location
-                    )
-                    if dummy_location.bridge(actor) is not None
-                })
+                bridge_values = sorted(
+                    {
+                        dummy_location.bridge(actor)
+                        for actor in self._get_affiliated_actors(
+                            actors=actors, dummy_location=dummy_location
+                        )
+                        if dummy_location.bridge(actor) is not None
+                    }
+                )
 
                 if len(bridge_values) == 0:
                     pass
@@ -781,13 +780,15 @@ class Creator:
                     dummy_location.actors_ = group_list
 
                     # get all subgroub values
-                    subsplit_values = sorted({
-                        actor_subsplit_value
-                        for actor in group_list
-                        for actor_subsplit_value in utils._to_list(
-                            dummy_location._subsplit(actor),
-                        )
-                    })
+                    subsplit_values = sorted(
+                        {
+                            actor_subsplit_value
+                            for actor in group_list
+                            for actor_subsplit_value in utils._to_list(
+                                dummy_location._subsplit(actor),
+                            )
+                        }
+                    )
 
                     # for each group of actors assigned to a specific sublocation
                     for j, subsplit_value in enumerate(subsplit_values):
