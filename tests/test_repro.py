@@ -1,6 +1,7 @@
 # %%
 import agentpy as ap
 import networkx as nx
+import pytest
 
 import pop2net as p2n
 
@@ -37,4 +38,4 @@ def test_network_repro():
 
     average_clustering = nx.average_clustering(env.export_actor_network())
 
-    assert round(average_clustering, 10) == 0.4594978355
+    assert average_clustering == pytest.approx(0.4594978355)
