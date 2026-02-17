@@ -434,7 +434,7 @@
             <span class="c1"># TODO:</span>
             <span class="k">raise</span> <span class="ne">Exception</span>
 
-        <span class="n">stick_values</span> <span class="o">=</span> <span class="p">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_stick_value</span><span class="p">(</span><span class="n">actor</span><span class="p">,</span> <span class="n">dummy_location</span><span class="p">)</span> <span class="k">for</span> <span class="n">actor</span> <span class="ow">in</span> <span class="n">actors</span><span class="p">}</span>
+        <span class="n">stick_values</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">({</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_stick_value</span><span class="p">(</span><span class="n">actor</span><span class="p">,</span> <span class="n">dummy_location</span><span class="p">)</span> <span class="k">for</span> <span class="n">actor</span> <span class="ow">in</span> <span class="n">actors</span><span class="p">})</span>
 
         <span class="c1"># dummy_location = self._create_dummy_location(designer)</span>
 
@@ -501,9 +501,9 @@
         <span class="n">dummy_location</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_dummy_location</span><span class="p">(</span><span class="n">designer</span><span class="p">)</span>
 
         <span class="c1"># get all mother locations the actors are nested in</span>
-        <span class="n">all_mother_group_ids</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_get_mother_group_id</span><span class="p">(</span><span class="n">actor</span><span class="p">,</span> <span class="n">dummy_location</span><span class="p">)</span> <span class="k">for</span> <span class="n">actor</span> <span class="ow">in</span> <span class="n">actors</span>
-        <span class="p">}</span>
+        <span class="n">all_mother_group_ids</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span>
+            <span class="p">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_mother_group_id</span><span class="p">(</span><span class="n">actor</span><span class="p">,</span> <span class="n">dummy_location</span><span class="p">)</span> <span class="k">for</span> <span class="n">actor</span> <span class="ow">in</span> <span class="n">actors</span><span class="p">}</span>
+        <span class="p">)</span>
 
         <span class="c1"># for each mother location</span>
         <span class="k">for</span> <span class="n">mother_group_id</span> <span class="ow">in</span> <span class="n">all_mother_group_ids</span><span class="p">:</span>
@@ -751,13 +751,15 @@
 
             <span class="c1"># bridge</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">dummy_location</span><span class="o">.</span><span class="n">melt</span><span class="p">():</span>
-                <span class="n">bridge_values</span> <span class="o">=</span> <span class="p">{</span>
-                    <span class="n">dummy_location</span><span class="o">.</span><span class="n">bridge</span><span class="p">(</span><span class="n">actor</span><span class="p">)</span>
-                    <span class="k">for</span> <span class="n">actor</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_affiliated_actors</span><span class="p">(</span>
-                        <span class="n">actors</span><span class="o">=</span><span class="n">actors</span><span class="p">,</span> <span class="n">dummy_location</span><span class="o">=</span><span class="n">dummy_location</span>
-                    <span class="p">)</span>
-                    <span class="k">if</span> <span class="n">dummy_location</span><span class="o">.</span><span class="n">bridge</span><span class="p">(</span><span class="n">actor</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
-                <span class="p">}</span>
+                <span class="n">bridge_values</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span>
+                    <span class="p">{</span>
+                        <span class="n">dummy_location</span><span class="o">.</span><span class="n">bridge</span><span class="p">(</span><span class="n">actor</span><span class="p">)</span>
+                        <span class="k">for</span> <span class="n">actor</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_affiliated_actors</span><span class="p">(</span>
+                            <span class="n">actors</span><span class="o">=</span><span class="n">actors</span><span class="p">,</span> <span class="n">dummy_location</span><span class="o">=</span><span class="n">dummy_location</span>
+                        <span class="p">)</span>
+                        <span class="k">if</span> <span class="n">dummy_location</span><span class="o">.</span><span class="n">bridge</span><span class="p">(</span><span class="n">actor</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+                    <span class="p">}</span>
+                <span class="p">)</span>
 
                 <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">bridge_values</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
                     <span class="k">pass</span>
@@ -865,13 +867,15 @@
                     <span class="n">dummy_location</span><span class="o">.</span><span class="n">actors_</span> <span class="o">=</span> <span class="n">group_list</span>
 
                     <span class="c1"># get all subgroub values</span>
-                    <span class="n">subsplit_values</span> <span class="o">=</span> <span class="p">{</span>
-                        <span class="n">actor_subsplit_value</span>
-                        <span class="k">for</span> <span class="n">actor</span> <span class="ow">in</span> <span class="n">group_list</span>
-                        <span class="k">for</span> <span class="n">actor_subsplit_value</span> <span class="ow">in</span> <span class="n">utils</span><span class="o">.</span><span class="n">_to_list</span><span class="p">(</span>
-                            <span class="n">dummy_location</span><span class="o">.</span><span class="n">_subsplit</span><span class="p">(</span><span class="n">actor</span><span class="p">),</span>
-                        <span class="p">)</span>
-                    <span class="p">}</span>
+                    <span class="n">subsplit_values</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span>
+                        <span class="p">{</span>
+                            <span class="n">actor_subsplit_value</span>
+                            <span class="k">for</span> <span class="n">actor</span> <span class="ow">in</span> <span class="n">group_list</span>
+                            <span class="k">for</span> <span class="n">actor_subsplit_value</span> <span class="ow">in</span> <span class="n">utils</span><span class="o">.</span><span class="n">_to_list</span><span class="p">(</span>
+                                <span class="n">dummy_location</span><span class="o">.</span><span class="n">_subsplit</span><span class="p">(</span><span class="n">actor</span><span class="p">),</span>
+                            <span class="p">)</span>
+                        <span class="p">}</span>
+                    <span class="p">)</span>
 
                     <span class="c1"># for each group of actors assigned to a specific sublocation</span>
                     <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">subsplit_value</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">subsplit_values</span><span class="p">):</span>
