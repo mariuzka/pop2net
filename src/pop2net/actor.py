@@ -143,9 +143,9 @@ class Actor:
         return self.env.get_weight(actor=self, location=location)
 
     def connect(
-        self, 
-        actor: Actor, 
-        location_cls: type | None = None, 
+        self,
+        actor: Actor,
+        location_cls: type | None = None,
         location_label: str | None = None,
         weight: float | None = None,
     ):
@@ -161,8 +161,8 @@ class Actor:
                 Defaults to None.
         """
         self.env.connect_actors(
-            actors=[self, actor], 
-            location_cls=location_cls, 
+            actors=[self, actor],
+            location_cls=location_cls,
             location_label=location_label,
             weight=weight,
         )

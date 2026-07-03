@@ -416,10 +416,10 @@ class Environment:
         return self.g[actor.id_p2n][location.id_p2n]["weight"]
 
     def connect_actors(
-        self, 
-        actors: list, 
-        location_cls: type | None = None, 
-        location_label: str = None, 
+        self,
+        actors: list,
+        location_cls: type | None = None,
+        location_label: str = None,
         weight: float | None = None,
     ):
         """Connects multiple actors via an instance of a given location class.

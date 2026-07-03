@@ -190,6 +190,7 @@ def test_location_label_without_class():
     assert len(actor1.shared_locations(actor=actor2)) == 1
     assert len(actor1.shared_locations(actor=actor2, location_labels=["Library"])) == 1
 
+
 def test_location_label_with_class():
     env = p2n.Environment()
     actor1 = p2n.Actor()
