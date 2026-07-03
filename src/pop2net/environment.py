@@ -415,12 +415,19 @@ class Environment:
         """
         return self.g[actor.id_p2n][location.id_p2n]["weight"]
 
-    def connect_actors(self, actors: list, location_cls: type, weight: float | None = None):
+    def connect_actors(
+        self, 
+        actors: list, 
+        location_cls: type | None = None, 
+        location_label: str = None, 
+        weight: float | None = None,
+    ):
         """Connects multiple actors via an instance of a given location class.
 
         Args:
             actors (list): A list of actors.
-            location_cls (type): The location class that is used to create a location instance.
+            location_cls (type | None): The location class that is used to create a location instance.
+            location_label (str | None): If provided, this label is attached to the location and overwrites any existing location labels.
             weight (float | None): The edge weight between the actors and the location.
                 Defaults to None.
         """
@@ -438,6 +445,9 @@ class Environment:
             location = location_cls()
         else:
             location = location_cls(model=self.model)
+
+        if location_label is not None:
+            location.label = location_label
 
         self.add_location(location=location)
         location.add_actors(actors=actors, weight=weight)

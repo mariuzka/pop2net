@@ -1,7 +1,7 @@
 import pop2net as p2n
 
 
-def test_model_connect_actors_and_disconnect_actors_1():
+def test_1():
     """A test without specifying location types and without removing locations from env."""
 
     env = p2n.Environment()
@@ -55,7 +55,7 @@ def test_model_connect_actors_and_disconnect_actors_1():
     assert len(actor3.locations) == 0
 
 
-def test_model_connect_actors_and_disconnect_actors_2():
+def test_2():
     """A test without removing locations from env."""
 
     env = p2n.Environment()
@@ -130,7 +130,7 @@ def test_model_connect_actors_and_disconnect_actors_2():
     assert len(actor3.locations) == 1
 
 
-def test_model_connect_actors_and_disconnect_actors_3():
+def test_3():
     env = p2n.Environment()
     actor1 = p2n.Actor()
     actor2 = p2n.Actor()
@@ -178,7 +178,7 @@ def test_model_connect_actors_and_disconnect_actors_3():
     assert len(actor3.locations) == 0
 
 
-def test_model_connect_actors_and_disconnect_actors_4():
+def test_4():
     env = p2n.Environment()
     actor1 = p2n.Actor()
     actor2 = p2n.Actor()
@@ -213,7 +213,7 @@ def test_model_connect_actors_and_disconnect_actors_4():
     assert len(actor3.locations) == 0
 
 
-def test_model_connect_actors_and_disconnect_actors_5():
+def test_5():
     """Test actor.shared_locations()"""
     env = p2n.Environment()
     actor1 = p2n.Actor()
@@ -253,3 +253,37 @@ def test_model_connect_actors_and_disconnect_actors_5():
     assert len(actor1.shared_locations(actor=actor2)) == 0
     assert len(actor1.shared_locations(actor=actor2, location_labels=["Home"])) == 0
     assert len(actor1.shared_locations(actor=actor2, location_labels=["School"])) == 0
+
+
+def test_location_label_without_class():
+    env = p2n.Environment()
+    actor1 = p2n.Actor()
+    actor2 = p2n.Actor()
+    env.add_actors([actor1, actor2])
+
+    env.connect_actors(
+        actors=[actor1, actor2],
+        location_cls=None,
+        location_label="Library",
+    )
+
+    assert len(actor1.shared_locations(actor=actor2)) == 1
+    assert len(actor1.shared_locations(actor=actor2, location_labels=["Library"])) == 1
+
+def test_location_label_with_class():
+    env = p2n.Environment()
+    actor1 = p2n.Actor()
+    actor2 = p2n.Actor()
+    env.add_actors([actor1, actor2])
+
+    class Home(p2n.Location):
+        pass
+
+    env.connect_actors(
+        actors=[actor1, actor2],
+        location_cls=Home,
+        location_label="Library",
+    )
+
+    assert len(actor1.shared_locations(actor=actor2)) == 1
+    assert len(actor1.shared_locations(actor=actor2, location_labels=["Library"])) == 1

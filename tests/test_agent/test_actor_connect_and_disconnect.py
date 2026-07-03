@@ -173,3 +173,37 @@ def test_actor_disconnect_2():
     assert actor2 in env.locations[0].actors
 
     assert actor3 not in env.locations[0].actors
+
+
+def test_location_label_without_class():
+    env = p2n.Environment()
+    actor1 = p2n.Actor()
+    actor2 = p2n.Actor()
+    env.add_actors([actor1, actor2])
+
+    actor1.connect(
+        actor=actor2,
+        location_cls=None,
+        location_label="Library",
+    )
+
+    assert len(actor1.shared_locations(actor=actor2)) == 1
+    assert len(actor1.shared_locations(actor=actor2, location_labels=["Library"])) == 1
+
+def test_location_label_with_class():
+    env = p2n.Environment()
+    actor1 = p2n.Actor()
+    actor2 = p2n.Actor()
+    env.add_actors([actor1, actor2])
+
+    class Home(p2n.Location):
+        pass
+
+    actor1.connect(
+        actor=actor2,
+        location_cls=Home,
+        location_label="Library",
+    )
+
+    assert len(actor1.shared_locations(actor=actor2)) == 1
+    assert len(actor1.shared_locations(actor=actor2, location_labels=["Library"])) == 1

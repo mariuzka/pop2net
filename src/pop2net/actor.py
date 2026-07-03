@@ -142,18 +142,30 @@ class Actor:
         """
         return self.env.get_weight(actor=self, location=location)
 
-    def connect(self, actor: Actor, location_cls: _location = None, weight: float | None = None):
+    def connect(
+        self, 
+        actor: Actor, 
+        location_cls: type | None = None, 
+        location_label: str | None = None,
+        weight: float | None = None,
+    ):
         """Connects this actor with a given other actor via an instance of a given location class.
         If location_cls is None, the default pop2net.Location class is used to create a new location
         instance. If weight is None, it will be set to 1.
 
         Args:
             actor (p2n.Actor): An actor to connect with.
-            location_cls (type): The location class that is used to create a location instance.
+            location_cls (type | None): The location class that is used to create a location instance.
+            location_label (str | None): If provided, this label is attached to the location and overwrites any existing location labels.
             weight(float | None): The edge weight between the actors and the location.
                 Defaults to None.
         """
-        self.env.connect_actors(actors=[self, actor], location_cls=location_cls, weight=weight)
+        self.env.connect_actors(
+            actors=[self, actor], 
+            location_cls=location_cls, 
+            location_label=location_label,
+            weight=weight,
+        )
 
     def disconnect(
         self,
