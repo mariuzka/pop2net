@@ -208,3 +208,89 @@ def test_location_label_with_class():
 
     assert len(actor1.shared_locations(actor=actor2)) == 1
     assert len(actor1.shared_locations(actor=actor2, location_labels=["Library"])) == 1
+
+
+def test_location_cls_is_None_and_model_is_None():
+    env = p2n.Environment()
+    actor1 = p2n.Actor()
+    actor2 = p2n.Actor()
+    env.add_actors([actor1, actor2])
+
+    actor1.connect(
+        actor=actor2,
+        location_cls=None,
+        weight=2,
+    )
+
+    assert len(actor1.shared_locations(actor=actor2)) == 1
+    assert actor1.get_actor_weight(actor2) == 2
+
+
+def test_location_cls_is_None_and_model_is_not_None():
+    class Model:
+        pass
+
+    model = Model()
+    env = p2n.Environment(model=model)
+    actor1 = p2n.Actor()
+    actor2 = p2n.Actor()
+    env.add_actors([actor1, actor2])
+
+    actor1.connect(
+        actor=actor2,
+        location_cls=None,
+        weight=2,
+    )
+
+    assert len(actor1.shared_locations(actor=actor2)) == 1
+    assert actor1.get_actor_weight(actor2) == 2
+
+def test_location_cls_is_not_None_and_model_is_not_None():
+    class Model:
+        pass
+
+    class Location(p2n.Location):
+        pass
+
+    model = Model()
+    env = p2n.Environment(model=model)
+    actor1 = p2n.Actor()
+    actor2 = p2n.Actor()
+    env.add_actors([actor1, actor2])
+
+    actor1.connect(
+        actor=actor2,
+        location_cls=Location,
+        weight=2,
+    )
+
+    assert len(actor1.shared_locations(actor=actor2)) == 1
+    assert actor1.get_actor_weight(actor2) == 2
+
+
+def test_framework_is_not_None():
+    import mesa
+
+    class Model(mesa.Model):
+        pass
+
+    class Location(p2n.Location, mesa.Agent):
+        pass
+
+    class Agent(p2n.Actor, mesa.Agent):
+        pass
+
+    model = Model()
+    env = p2n.Environment(model=model, framework="mesa")
+    actor1 = Agent(model=model)
+    actor2 = Agent(model=model)
+    env.add_actors([actor1, actor2])
+
+    actor1.connect(
+        actor=actor2,
+        location_cls=Location,
+        weight=2,
+    )
+
+    assert len(actor1.shared_locations(actor=actor2)) == 1
+    assert actor1.get_actor_weight(actor2) == 2
