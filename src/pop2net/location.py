@@ -4,6 +4,8 @@ from __future__ import annotations
 
 from . import actor as _actor
 
+import inspect
+
 
 class Location:
     """Base class for location objects."""
@@ -18,10 +20,13 @@ class Location:
         self.model = None
         self.type = type(self).__name__
 
-        if model is not None:
+        super_init = super().__init__
+        sig = inspect.signature(super_init)
+
+        if "model" in sig.parameters:
             kwargs["model"] = model
 
-        super().__init__(*args, **kwargs)
+        super_init(*args, **kwargs)
 
     def setup(self):
         pass

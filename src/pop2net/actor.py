@@ -8,6 +8,7 @@ import warnings
 if typing.TYPE_CHECKING:
     from . import location as _location
 
+import inspect
 
 class Actor:
     """This is a Base class to represent actors in the simulation.
@@ -22,10 +23,13 @@ class Actor:
         self.model = None
         self.type = type(self).__name__
 
-        if model is not None:
+        super_init = super().__init__
+        sig = inspect.signature(super_init)
+
+        if "model" in sig.parameters:
             kwargs["model"] = model
 
-        super().__init__(*args, **kwargs)
+        super_init(*args, **kwargs)
 
     def neighbors(self, location_labels: list[str] | None = None) -> list:
         """Return all neighbors of an actor.
