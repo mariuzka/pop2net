@@ -1047,5 +1047,3 @@ class Creator:
             df = df.loc[:, columns]
 
         return df
-    
-    

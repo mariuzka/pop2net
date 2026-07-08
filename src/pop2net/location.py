@@ -2,9 +2,9 @@
 
 from __future__ import annotations
 
-from . import actor as _actor
-
 import inspect
+
+from . import actor as _actor
 
 
 class Location:

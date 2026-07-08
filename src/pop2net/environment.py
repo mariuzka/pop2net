@@ -434,8 +434,9 @@ class Environment:
         if location_cls is None:
             if self.framework is None:
                 location_cls = p2n.Location
-                    
+
             else:
+
                 class Location(p2n.Location, self._framework.Agent):
                     pass
 

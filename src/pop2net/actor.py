@@ -10,6 +10,7 @@ if typing.TYPE_CHECKING:
 
 import inspect
 
+
 class Actor:
     """This is a Base class to represent actors in the simulation.
 

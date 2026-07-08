@@ -245,6 +245,7 @@ def test_location_cls_is_None_and_model_is_not_None():
     assert len(actor1.shared_locations(actor=actor2)) == 1
     assert actor1.get_actor_weight(actor2) == 2
 
+
 def test_location_cls_is_not_None_and_model_is_not_None():
     class Model:
         pass
