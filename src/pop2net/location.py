@@ -10,13 +10,17 @@ class Location:
 
     label: str | None = None
 
-    def __init__(self, *args, **kwargs) -> None:
+    def __init__(self, model=None, *args, **kwargs) -> None:
         """Location constructor."""
         self.label = self.__class__.__name__ if self.label is None else self.label
         self.env = None
         self.id_p2n = None
         self.model = None
         self.type = type(self).__name__
+
+        if model is not None:
+            kwargs["model"] = model
+
         super().__init__(*args, **kwargs)
 
     def setup(self):
