@@ -589,59 +589,9 @@ class Environment:
             for actor in location.actors:
                 location.set_weight(actor=actor, weight=location.weight(actor=actor))
 
-    def get_actor_by_attr_value(self, attr_name, attr_value):
+    def _get_actor_by_attr_value(self, attr_name, attr_value):
         for actor in self.actors:
             if getattr(actor, attr_name) == attr_value:
                 return actor
 
-    def create_locations_from_pandas_edge_list(
-        self,
-        df: pd.DataFrame,
-        id_attr_name: str,
-        location_cls: None | type = None,
-        location_label: None | str = None,
-        weighted: bool = False,
-    ):
-        """Create connections ("locations") between actors based on a pandas edge list.
-
-        Each row in the dataframe represents an edge between two actors, identified
-        by their node IDs. The method resolves these IDs to actor instances and
-        creates a connection between them.
-
-        Args:
-            df (pd.DataFrame):
-                DataFrame containing the edge list.
-                Must include the columns "source" and "target", which store node identifiers.
-                If weighted=True, it must also include a "weight" column.
-
-        id_attr_name (str):
-            Name of the actor attribute that stores the node ID used to
-            match actors with the "source" and "target" values.
-
-        location_cls (type | None, optional):
-            Class used to instantiate the location/connection object.
-            If None, a default location class is used.
-
-        location_label (str | None, optional):
-            Optional label assigned to the created location.
-
-        weighted (bool, optional):
-            If True, edge weights are read from the "weight" column in `df`.
-            If False, all connections are created with a default weight of 1.
-
-        Returns:
-            None
-
-        """
-        for _, row in df.iterrows():
-            actor1 = self.get_actor_by_attr_value(attr_name=id_attr_name, attr_value=row["source"])
-            actor2 = self.get_actor_by_attr_value(attr_name=id_attr_name, attr_value=row["target"])
-            weight = row["weight"] if weighted else 1
-
-            if actor1 and actor2:
-                actor1.connect(
-                    actor=actor2,
-                    location_cls=location_cls,
-                    location_label=location_label,
-                    weight=weight,
-                )
+    
