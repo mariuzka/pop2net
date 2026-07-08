@@ -1048,7 +1048,7 @@ class Creator:
 
         return df
 
-def create_locations_from_pandas_edge_list(
+    def create_locations_from_pandas_edge_list(
         self,
         df: pd.DataFrame,
         id_attr_name: str,
