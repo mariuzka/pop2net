@@ -434,17 +434,14 @@ class Environment:
         if location_cls is None:
             if self.framework is None:
                 location_cls = p2n.Location
+                    
             else:
-
                 class Location(p2n.Location, self._framework.Agent):
                     pass
 
                 location_cls = Location
 
-        if self.model is None:
-            location = location_cls()
-        else:
-            location = location_cls(model=self.model)
+        location = location_cls(model=self.model)
 
         if location_label is not None:
             location.label = location_label
