@@ -1088,8 +1088,12 @@ class Creator:
 
         """
         for _, row in df.iterrows():
-            actor1 = self.env._get_actor_by_attr_value(attr_name=id_attr_name, attr_value=row["source"])
-            actor2 = self.env._get_actor_by_attr_value(attr_name=id_attr_name, attr_value=row["target"])
+            actor1 = self.env._get_actor_by_attr_value(
+                attr_name=id_attr_name, attr_value=row["source"]
+            )
+            actor2 = self.env._get_actor_by_attr_value(
+                attr_name=id_attr_name, attr_value=row["target"]
+            )
             weight = row["weight"] if weighted else 1
 
             if actor1 and actor2:
