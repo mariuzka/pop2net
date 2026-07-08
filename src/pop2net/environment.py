@@ -7,7 +7,6 @@ import typing
 import warnings
 
 import networkx as nx
-import pandas as pd
 
 if typing.TYPE_CHECKING:
     from . import actor as _actor
@@ -593,5 +592,3 @@ class Environment:
         for actor in self.actors:
             if getattr(actor, attr_name) == attr_value:
                 return actor
-
-    
