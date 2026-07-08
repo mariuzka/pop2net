@@ -190,13 +190,7 @@ class Creator:
             actors = []
             for _, row in df.iterrows():
                 if actor_class_dict is None:
-                    if self.env.framework is None:
-                        actor = actor_class()
-                        actor.model = (
-                            self.model
-                        )  # if no model was passed to the env, this is just None
-                    else:
-                        actor = actor_class(model=self.model)
+                    actor = actor_class(model=self.model)
                 else:
                     actor = actor_class_dict[row[actor_class_attr]](model=self.model)
 
@@ -1053,3 +1047,5 @@ class Creator:
             df = df.loc[:, columns]
 
         return df
+    
+    
