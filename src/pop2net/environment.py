@@ -589,22 +589,20 @@ class Environment:
             for actor in location.actors:
                 location.set_weight(actor=actor, weight=location.weight(actor=actor))
 
-    
     def get_actor_by_attr_value(self, attr_name, attr_value):
         for actor in self.actors:
             if getattr(actor, attr_name) == attr_value:
                 return actor
 
     def create_locations_from_pandas_edge_list(
-            self, 
-            df: pd.DataFrame, 
-            id_attr_name: str, 
-            location_cls: None | type = None, 
-            location_label: None | str = None, 
-            weighted: bool = False,
-            ):
-        """
-        Create connections ("locations") between actors based on a pandas edge list.
+        self,
+        df: pd.DataFrame,
+        id_attr_name: str,
+        location_cls: None | type = None,
+        location_label: None | str = None,
+        weighted: bool = False,
+    ):
+        """Create connections ("locations") between actors based on a pandas edge list.
 
         Each row in the dataframe represents an edge between two actors, identified
         by their node IDs. The method resolves these IDs to actor instances and
@@ -612,8 +610,8 @@ class Environment:
 
         Args:
             df (pd.DataFrame):
-                DataFrame containing the edge list. 
-                Must include the columns "source" and "target", which store node identifiers. 
+                DataFrame containing the edge list.
+                Must include the columns "source" and "target", which store node identifiers.
                 If weighted=True, it must also include a "weight" column.
 
         id_attr_name (str):
@@ -642,8 +640,8 @@ class Environment:
 
             if actor1 and actor2:
                 actor1.connect(
-                    actor=actor2, 
-                    location_cls=location_cls, 
-                    location_label=location_label, 
+                    actor=actor2,
+                    location_cls=location_cls,
+                    location_label=location_label,
                     weight=weight,
                 )
