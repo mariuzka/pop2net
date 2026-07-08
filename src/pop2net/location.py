@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import inspect
+
 from . import actor as _actor
 
 
@@ -10,14 +12,21 @@ class Location:
 
     label: str | None = None
 
-    def __init__(self, *args, **kwargs) -> None:
+    def __init__(self, model=None, *args, **kwargs) -> None:
         """Location constructor."""
         self.label = self.__class__.__name__ if self.label is None else self.label
         self.env = None
         self.id_p2n = None
         self.model = None
         self.type = type(self).__name__
-        super().__init__(*args, **kwargs)
+
+        super_init = super().__init__
+        sig = inspect.signature(super_init)
+
+        if "model" in sig.parameters:
+            kwargs["model"] = model
+
+        super_init(*args, **kwargs)
 
     def setup(self):
         pass
