@@ -587,3 +587,8 @@ class Environment:
         ):
             for actor in location.actors:
                 location.set_weight(actor=actor, weight=location.weight(actor=actor))
+
+    def _get_actor_by_attr_value(self, attr_name, attr_value):
+        for actor in self.actors:
+            if getattr(actor, attr_name) == attr_value:
+                return actor
