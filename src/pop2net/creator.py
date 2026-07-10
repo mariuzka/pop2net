@@ -1131,13 +1131,9 @@ class Creator:
         id_list = list(set(id_list))
         df_ids = pd.DataFrame({id_attr_name: id_list})
         self.create_actors(df=df_ids, actor_class=actor_class)
-<<<<<<< HEAD
         #TODO: return actors
         #TODO: write tests
 
-=======
-        # TODO: return actors
->>>>>>> aee17c919243f02d97d4759e9c9654247d9b1c7f
 
     def create_actors_from_pandas_edgelist(
         self,
@@ -1174,11 +1170,6 @@ class Creator:
             id_list=node_ids,
             id_attr_name=id_attr_name,
             actor_class=actor_class,
-<<<<<<< HEAD
             )
         #TODO: return actors
         #TODO: write tests
-=======
-        )
-        # TODO: return actors
->>>>>>> aee17c919243f02d97d4759e9c9654247d9b1c7f
