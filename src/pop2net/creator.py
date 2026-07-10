@@ -1083,7 +1083,7 @@ class Creator:
                 If True, edge weights are read from the "weight" column in `df`.
                 If False, all connections are created with a default weight of 1.
 
-            Returns:
+        Returns:
                 None
 
         """
@@ -1105,11 +1105,11 @@ class Creator:
                 )
 
     def create_actors_from_id_list(
-        self, 
-        id_list: list[int | str], 
-        id_attr_name: str, 
+        self,
+        id_list: list[int | str],
+        id_attr_name: str,
         actor_class: None | type,
-        ):
+    ):
         """Create actors based on a list of ids.
 
         Extracts unique IDs and creates one actor instance for each unique ID.
@@ -1124,16 +1124,20 @@ class Creator:
 
             actor_class (None | type[p2n.Actor]): The class from which the actor instances are created.
 
-            Returns:
+        Returns:
                 None
 
         """
         id_list = list(set(id_list))
         df_ids = pd.DataFrame({id_attr_name: id_list})
         self.create_actors(df=df_ids, actor_class=actor_class)
+<<<<<<< HEAD
         #TODO: return actors
         #TODO: write tests
 
+=======
+        # TODO: return actors
+>>>>>>> aee17c919243f02d97d4759e9c9654247d9b1c7f
 
     def create_actors_from_pandas_edgelist(
         self,
@@ -1143,7 +1147,7 @@ class Creator:
     ):
         """Create actors based on a pandas edge list.
 
-        Extracts unique IDs from an edge list stored in a pandas dataframe 
+        Extracts unique IDs from an edge list stored in a pandas dataframe
         and creates one actor instance for each unique ID.
 
         Args:
@@ -1157,19 +1161,24 @@ class Creator:
 
             actor_class (None | type[p2n.Actor]): The class from which the actor instances are created.
 
-            Returns:
+        Returns:
                 None
 
         """
         # get all node ids
         node_ids = df["source"].to_list()
         node_ids.extend(df["target"].to_list())
-        
+
         # create actors from list of unique ids
         self.create_actors_from_id_list(
-            id_list = node_ids, 
+            id_list=node_ids,
             id_attr_name=id_attr_name,
             actor_class=actor_class,
+<<<<<<< HEAD
             )
         #TODO: return actors
         #TODO: write tests
+=======
+        )
+        # TODO: return actors
+>>>>>>> aee17c919243f02d97d4759e9c9654247d9b1c7f
