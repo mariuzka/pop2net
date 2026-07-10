@@ -1068,23 +1068,23 @@ class Creator:
                 Must include the columns "source" and "target", which store node identifiers.
                 If weighted=True, it must also include a "weight" column.
 
-        id_attr_name (str):
-            Name of the actor attribute that stores the node ID used to
-            match actors with the "source" and "target" values.
+            id_attr_name (str):
+                Name of the actor attribute that stores the node ID used to
+                match actors with the "source" and "target" values.
 
-        location_cls (type | None, optional):
-            Class used to instantiate the location/connection object.
-            If None, a default location class is used.
+            location_cls (type | None, optional):
+                Class used to instantiate the location/connection object.
+                If None, a default location class is used.
 
-        location_label (str | None, optional):
-            Optional label assigned to the created location.
+            location_label (str | None, optional):
+                Optional label assigned to the created location.
 
-        weighted (bool, optional):
-            If True, edge weights are read from the "weight" column in `df`.
-            If False, all connections are created with a default weight of 1.
+            weighted (bool, optional):
+                If True, edge weights are read from the "weight" column in `df`.
+                If False, all connections are created with a default weight of 1.
 
-        Returns:
-            None
+            Returns:
+                None
 
         """
         for _, row in df.iterrows():
@@ -1103,3 +1103,71 @@ class Creator:
                     location_label=location_label,
                     weight=weight,
                 )
+
+    def create_actors_from_id_list(
+        self, 
+        id_list: list[int | str], 
+        id_attr_name: str, 
+        actor_class: None | type,
+        ):
+        """Create actors based on a list of ids.
+
+        Extracts unique IDs and creates one actor instance for each unique ID.
+
+        Args:
+            id_list (list):
+                A list that contains IDs.
+
+            id_attr_name (str):
+                The name of the attribute that will be added to each actor instance and
+                contains the ID from the list.
+
+            actor_class (None | type[p2n.Actor]): The class from which the actor instances are created.
+
+            Returns:
+                None
+
+        """
+        id_list = list(set(id_list))
+        df_ids = pd.DataFrame({id_attr_name: id_list})
+        self.create_actors(df=df_ids, actor_class=actor_class)
+        #TODO: return actors
+
+
+    def create_actors_from_pandas_edgelist(
+        self,
+        df: pd.DataFrame,
+        id_attr_name: str,
+        actor_class: None | type = None,
+    ):
+        """Create actors based on a pandas edge list.
+
+        Extracts unique IDs from an edge list stored in a pandas dataframe 
+        and creates one actor instance for each unique ID.
+
+        Args:
+            df (pd.DataFrame):
+                DataFrame containing the edge list.
+                Must include the columns "source" and "target", which store node identifiers.
+
+            id_attr_name (str):
+                The name of the attribute that will be added to each actor instance and
+                contains the ID from the edge list.
+
+            actor_class (None | type[p2n.Actor]): The class from which the actor instances are created.
+
+            Returns:
+                None
+
+        """
+        # get all node ids
+        node_ids = df["source"].to_list()
+        node_ids.extend(df["target"].to_list())
+        
+        # create actors from list of unique ids
+        self.create_actors_from_id_list(
+            id_list = node_ids, 
+            id_attr_name=id_attr_name,
+            actor_class=actor_class,
+            )
+        #TODO: return actors
