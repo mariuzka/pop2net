@@ -27,19 +27,21 @@ def test_simple():
 
     assert env.locations[0].label == "TestLocation"
 
+    actors_by_name = env._get_actors_by_attribute(attr_name="name")
+
     assert (
-        env._get_actor_by_attr_value("name", "John")
-        in env._get_actor_by_attr_value("name", "Paul").neighbors()
+        actors_by_name["John"]
+        in actors_by_name["Paul"].neighbors()
     )
 
     assert (
-        env._get_actor_by_attr_value("name", "Gustav")
-        in env._get_actor_by_attr_value("name", "John").neighbors()
+        actors_by_name["Gustav"]
+        in actors_by_name["John"].neighbors()
     )
 
     assert (
-        env._get_actor_by_attr_value("name", "Gustav")
-        not in env._get_actor_by_attr_value("name", "Paul").neighbors()
+        actors_by_name["Gustav"]
+        not in actors_by_name["Paul"].neighbors()
     )
 
 
@@ -70,17 +72,19 @@ def test_with_framework():
 
     assert env.locations[0].label == "TestLocation"
 
+    actors_by_name = env._get_actors_by_attribute(attr_name="name")
+
     assert (
-        env._get_actor_by_attr_value("name", "John")
-        in env._get_actor_by_attr_value("name", "Paul").neighbors()
+            actors_by_name["John"]
+            in actors_by_name["Paul"].neighbors()
+        )
+    
+    assert (
+        actors_by_name["Gustav"]
+        in actors_by_name["John"].neighbors()
     )
 
     assert (
-        env._get_actor_by_attr_value("name", "Gustav")
-        in env._get_actor_by_attr_value("name", "John").neighbors()
-    )
-
-    assert (
-        env._get_actor_by_attr_value("name", "Gustav")
-        not in env._get_actor_by_attr_value("name", "Paul").neighbors()
+        actors_by_name["Gustav"]
+        not in actors_by_name["Paul"].neighbors()
     )

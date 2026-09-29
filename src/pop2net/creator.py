@@ -1087,22 +1087,22 @@ class Creator:
                 None
 
         """
+        
+        actors_by_id = self.env._get_actors_by_attribute(attr_name=id_attr_name)
+
         for _, row in df.iterrows():
-            actor1 = self.env._get_actor_by_attr_value(
-                attr_name=id_attr_name, attr_value=row["source"]
-            )
-            actor2 = self.env._get_actor_by_attr_value(
-                attr_name=id_attr_name, attr_value=row["target"]
-            )
+            actor1 = actors_by_id[row["source"]]
+            actor2 = actors_by_id[row["target"]]
+
             weight = row["weight"] if weighted else 1
 
-            if actor1 and actor2:
-                actor1.connect(
-                    actor=actor2,
-                    location_cls=location_cls,
-                    location_label=location_label,
-                    weight=weight,
-                )
+            #if actor1 and actor2:
+            actor1.connect(
+                actor=actor2,
+                location_cls=location_cls,
+                location_label=location_label,
+                weight=weight,
+            )
 
     def create_actors_from_id_list(
         self,
