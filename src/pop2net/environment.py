@@ -588,11 +588,8 @@ class Environment:
             for actor in location.actors:
                 location.set_weight(actor=actor, weight=location.weight(actor=actor))
 
-
     def _get_actors_by_attribute(self, attr_name: str) -> dict:
-        """
-        Returns a dictionary that lists all actors by the value of the given attribute.
-        """
+        """Returns a dictionary that lists all actors by the value of the given attribute."""
         d = {}
         for actor in self.actors:
             attr_value = getattr(actor, attr_name)
@@ -606,4 +603,3 @@ class Environment:
                 )
 
         return d
-

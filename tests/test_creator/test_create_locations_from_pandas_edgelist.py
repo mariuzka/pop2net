@@ -29,20 +29,11 @@ def test_simple():
 
     actors_by_name = env._get_actors_by_attribute(attr_name="name")
 
-    assert (
-        actors_by_name["John"]
-        in actors_by_name["Paul"].neighbors()
-    )
+    assert actors_by_name["John"] in actors_by_name["Paul"].neighbors()
 
-    assert (
-        actors_by_name["Gustav"]
-        in actors_by_name["John"].neighbors()
-    )
+    assert actors_by_name["Gustav"] in actors_by_name["John"].neighbors()
 
-    assert (
-        actors_by_name["Gustav"]
-        not in actors_by_name["Paul"].neighbors()
-    )
+    assert actors_by_name["Gustav"] not in actors_by_name["Paul"].neighbors()
 
 
 def test_with_framework():
@@ -74,17 +65,8 @@ def test_with_framework():
 
     actors_by_name = env._get_actors_by_attribute(attr_name="name")
 
-    assert (
-            actors_by_name["John"]
-            in actors_by_name["Paul"].neighbors()
-        )
-    
-    assert (
-        actors_by_name["Gustav"]
-        in actors_by_name["John"].neighbors()
-    )
+    assert actors_by_name["John"] in actors_by_name["Paul"].neighbors()
 
-    assert (
-        actors_by_name["Gustav"]
-        not in actors_by_name["Paul"].neighbors()
-    )
+    assert actors_by_name["Gustav"] in actors_by_name["John"].neighbors()
+
+    assert actors_by_name["Gustav"] not in actors_by_name["Paul"].neighbors()

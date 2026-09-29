@@ -1087,7 +1087,6 @@ class Creator:
                 None
 
         """
-        
         actors_by_id = self.env._get_actors_by_attribute(attr_name=id_attr_name)
 
         for _, row in df.iterrows():
@@ -1096,7 +1095,7 @@ class Creator:
 
             weight = row["weight"] if weighted else 1
 
-            #if actor1 and actor2:
+            # if actor1 and actor2:
             actor1.connect(
                 actor=actor2,
                 location_cls=location_cls,
