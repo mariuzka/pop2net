@@ -85,6 +85,8 @@
 <span class="k">if</span> <span class="n">typing</span><span class="o">.</span><span class="n">TYPE_CHECKING</span><span class="p">:</span>
     <span class="kn">from</span><span class="w"> </span><span class="nn">.</span><span class="w"> </span><span class="kn">import</span> <span class="n">location</span> <span class="k">as</span> <span class="n">_location</span>
 
+<span class="kn">import</span><span class="w"> </span><span class="nn">inspect</span>
+
 
 <div class="viewcode-block" id="Actor">
 <a class="viewcode-back" href="../../api/actor.html#pop2net.Actor">[docs]</a>
@@ -94,14 +96,20 @@
 <span class="sd">    Actors&#39; behavior can be implemented in classes that inherit from this.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Actor Constructor.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">env</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">id_p2n</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span>
 
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">super_init</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span>
+        <span class="n">sig</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">signature</span><span class="p">(</span><span class="n">super_init</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="s2">&quot;model&quot;</span> <span class="ow">in</span> <span class="n">sig</span><span class="o">.</span><span class="n">parameters</span><span class="p">:</span>
+            <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;model&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">model</span>
+
+        <span class="n">super_init</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
 <div class="viewcode-block" id="Actor.neighbors">
 <a class="viewcode-back" href="../../api/actor.html#pop2net.Actor.neighbors">[docs]</a>
@@ -247,18 +255,30 @@
 
 <div class="viewcode-block" id="Actor.connect">
 <a class="viewcode-back" href="../../api/actor.html#pop2net.Actor.connect">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">connect</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">actor</span><span class="p">:</span> <span class="n">Actor</span><span class="p">,</span> <span class="n">location_cls</span><span class="p">:</span> <span class="n">_location</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">weight</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">connect</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">actor</span><span class="p">:</span> <span class="n">Actor</span><span class="p">,</span>
+        <span class="n">location_cls</span><span class="p">:</span> <span class="nb">type</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">location_label</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">weight</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Connects this actor with a given other actor via an instance of a given location class.</span>
 <span class="sd">        If location_cls is None, the default pop2net.Location class is used to create a new location</span>
 <span class="sd">        instance. If weight is None, it will be set to 1.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            actor (p2n.Actor): An actor to connect with.</span>
-<span class="sd">            location_cls (type): The location class that is used to create a location instance.</span>
+<span class="sd">            location_cls (type | None): The location class that is used to create a location instance.</span>
+<span class="sd">            location_label (str | None): If provided, this label is attached to the location and overwrites any existing location labels.</span>
 <span class="sd">            weight(float | None): The edge weight between the actors and the location.</span>
 <span class="sd">                Defaults to None.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">connect_actors</span><span class="p">(</span><span class="n">actors</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="p">,</span> <span class="n">actor</span><span class="p">],</span> <span class="n">location_cls</span><span class="o">=</span><span class="n">location_cls</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="n">weight</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">connect_actors</span><span class="p">(</span>
+            <span class="n">actors</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="p">,</span> <span class="n">actor</span><span class="p">],</span>
+            <span class="n">location_cls</span><span class="o">=</span><span class="n">location_cls</span><span class="p">,</span>
+            <span class="n">location_label</span><span class="o">=</span><span class="n">location_label</span><span class="p">,</span>
+            <span class="n">weight</span><span class="o">=</span><span class="n">weight</span><span class="p">,</span>
+        <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Actor.disconnect">
