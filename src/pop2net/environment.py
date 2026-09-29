@@ -587,3 +587,19 @@ class Environment:
         ):
             for actor in location.actors:
                 location.set_weight(actor=actor, weight=location.weight(actor=actor))
+
+    def _get_actors_by_attribute(self, attr_name: str) -> dict:
+        """Returns a dictionary that lists all actors by the value of the given attribute."""
+        d = {}
+        for actor in self.actors:
+            attr_value = getattr(actor, attr_name)
+
+            if attr_value not in d:
+                d[attr_value] = actor
+            else:
+                raise ValueError(
+                    f"Attribute '{attr_name}' is not unique: value {attr_value!r} "
+                    "occurs for multiple actors."
+                )
+
+        return d
