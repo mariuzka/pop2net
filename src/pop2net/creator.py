@@ -679,8 +679,8 @@ class Creator:
                     """
                     warnings.warn(msg)
 
-                elif len(bridge_values) > 1 and self.env.enable_p2n_warnings:
-                    if dummy_location.n_actors is not None:
+                elif len(bridge_values) > 1:
+                    if dummy_location.n_actors is not None and self.env.enable_p2n_warnings:
                         msg = f"""You cannot use {label}.n_actors and 
                         {label}.bridge() at the same time. {label}.n_actors
                         is ignored."""
