@@ -710,7 +710,8 @@ class Creator:
                     def melt(self):
                         return melt_list
 
-                    designer.melt = melt
+                    # create a subclass instead of modifying the user's designer class
+                    designer = type(designer.__name__, (designer,), {"melt": melt})
                     dummy_location = self._create_dummy_location(designer)
 
             if not dummy_location.melt():

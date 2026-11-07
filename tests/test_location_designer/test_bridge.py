@@ -159,6 +159,39 @@ def test_4():
     assert len(env.actors[4].locations) == 0
 
 
+def test_6():
+    # the same designer class must work in repeated runs (e.g. replications)
+
+    class HeteroRelationship(p2n.LocationDesigner):
+        recycle = False
+
+        def bridge(self, actor):
+            return actor.gender
+
+    class Home(p2n.LocationDesigner):
+        pass
+
+    for _ in range(2):
+        env = p2n.Environment()
+        creator = p2n.Creator(env)
+
+        for gender in ["w", "w", "m", "m"]:
+            actor = p2n.Actor()
+            actor.gender = gender
+            env.add_actor(actor)
+
+        creator.create_locations(location_designers=[HeteroRelationship, Home])
+
+        relationships = [
+            location for location in env.locations if location.label == "HeteroRelationship"
+        ]
+        assert len(relationships) == 2
+
+        for location in relationships:
+            assert [actor.gender for actor in location.actors].count("m") == 1
+            assert [actor.gender for actor in location.actors].count("w") == 1
+
+
 def test_5():
     # bridge() must also work if p2n warnings are disabled
 
