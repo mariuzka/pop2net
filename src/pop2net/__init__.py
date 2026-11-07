@@ -21,6 +21,5 @@ __all__ = [
     "MeltLocationDesigner",
     "NetworkInspector",
     "Environment",
-    "LocationList",
     "Creator",
 ]
