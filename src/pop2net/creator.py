@@ -1130,7 +1130,8 @@ class Creator:
                 None
 
         """
-        id_list = list(set(id_list))
+        # remove duplicates while keeping the order (set() would make the order random)
+        id_list = list(dict.fromkeys(id_list))
         df_ids = pd.DataFrame({id_attr_name: id_list})
         self.create_actors(df=df_ids, actor_class=actor_class)
         # TODO: return actors
