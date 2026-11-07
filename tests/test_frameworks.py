@@ -1,5 +1,6 @@
 import agentpy as ap
 import mesa
+import pandas as pd
 import pytest
 
 import pop2net as p2n
@@ -177,3 +178,33 @@ def test_p2n_with_framework(framework: str):
         assert (
             len(model.env.locations.select(lambda location: location.label == "TestLocation")) == 0
         )
+
+
+@pytest.mark.parametrize("framework", ["agentpy", "mesa"])
+def test_creator_create_with_framework(framework: str):
+    # Creator.create() without a custom actor class must create framework agents
+    framework_ = ap if framework == "agentpy" else mesa
+
+    model = framework_.Model()
+    env = p2n.Environment(model=model, framework=framework)
+    creator = p2n.Creator(env)
+
+    class TestLocation(p2n.LocationDesigner):
+        pass
+
+    df = pd.DataFrame({"x": [1, 2, 3]})
+    actors, locations = creator.create(
+        df=df,
+        location_designers=[TestLocation],
+        return_elements=True,
+    )
+
+    assert len(actors) == 3
+    assert isinstance(actors, agentlist[framework])
+    for actor in actors:
+        assert isinstance(actor, p2n.Actor)
+        assert isinstance(actor, framework_.Agent)
+
+    for location in locations:
+        assert isinstance(location, p2n.Location)
+        assert isinstance(location, framework_.Agent)

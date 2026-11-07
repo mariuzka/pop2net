@@ -933,7 +933,7 @@ class Creator:
         self,
         df: pd.DataFrame,
         location_designers: list,
-        actor_class: type[p2n.Actor] = p2n.Actor,
+        actor_class: None | type[p2n.Actor] = None,
         actor_class_attr: None | str = None,
         actor_class_dict: None | dict = None,
         n_actors: int | None = None,
@@ -952,7 +952,9 @@ class Creator:
             df (pd.DataFrame): A data set with individual data that forms the basis for
                 the creation of actors. Each row is (potentially) translated into one actor.
                 Each column is translated into one actor attribute.
-            actor_class (type[p2n.Actor]): The class from which the actor instances are created.
+            actor_class (None | type[p2n.Actor]): The class from which the actor instances are
+                created. If None, the default actor class is used, which also inherits from the
+                framework's agent class if a framework is set.
             location_designers (list): A list of classes from which the location instances are
                 created.
             n_actors (Optional[int], optional): The number of actors that will be created.
