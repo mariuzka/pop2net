@@ -25,10 +25,6 @@ def test_1():
     for actor in env.actors:
         assert actor.neighbors(location_labels=["Classroom"])[0].class_id == actor.class_id
 
-    inspector = p2n.NetworkInspector(env)
-    inspector.plot_bipartite_network()
-    inspector.plot_actor_network(actor_attrs=df.columns, actor_color="class_id")
-
 
 def test_2():
     df = pd.DataFrame({"status": ["pupil", "pupil", "pupil", "pupil"], "class_id": [1, 1, 1, 1]})
@@ -43,10 +39,6 @@ def test_2():
 
     creator = p2n.Creator(env=env)
     creator.create(df=df, location_designers=[Classroom])
-
-    inspector = p2n.NetworkInspector(env)
-    inspector.plot_bipartite_network()
-    inspector.plot_actor_network(actor_attrs=df.columns, actor_color="status")
 
     assert len(env.actors) == 4
     assert len(env.locations) == 1
@@ -70,10 +62,6 @@ def test_3():
 
     creator = p2n.Creator(env=env)
     creator.create(df=df, location_designers=[Classroom])
-
-    inspector = p2n.NetworkInspector(env)
-    inspector.plot_bipartite_network()
-    inspector.plot_actor_network(actor_attrs=df.columns, actor_color="status")
 
     assert len(env.actors) == 7
     assert len(env.locations) == 3

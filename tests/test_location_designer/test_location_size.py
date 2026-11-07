@@ -430,7 +430,6 @@ def test_20():
 def test_21():
     env = p2n.Environment()
     creator = p2n.Creator(env=env)
-    inspector = p2n.NetworkInspector(env=env)
 
     class TestLocation(p2n.LocationDesigner):
         n_actors = None
@@ -440,8 +439,6 @@ def test_21():
 
     creator.create_actors(n=10)
     creator.create_locations(location_designers=[TestLocation])
-
-    inspector.plot_bipartite_network()
 
     assert len(env.locations) == 6
     assert len(env.locations[0].actors) == 2
@@ -455,7 +452,6 @@ def test_21():
 def test_split_1():
     env = p2n.Environment()
     creator = p2n.Creator(env=env)
-    inspector = p2n.NetworkInspector(env=env)
 
     class TestLocation(p2n.LocationDesigner):
         n_actors = None
@@ -475,8 +471,6 @@ def test_split_1():
     creator.create_actors(df=df)
     creator.create_locations(location_designers=[TestLocation])
 
-    inspector.plot_bipartite_network()
-
     assert len(env.locations) == 3
     for location in env.locations:
         if location.actors[0].age == 10 or location.actors[0].age == 20:
@@ -488,7 +482,6 @@ def test_split_1():
 def test_split_2():
     env = p2n.Environment()
     creator = p2n.Creator(env=env)
-    inspector = p2n.NetworkInspector(env=env)
 
     class TestLocation(p2n.LocationDesigner):
         n_actors = 2
@@ -507,8 +500,6 @@ def test_split_2():
 
     creator.create_actors(df=df)
     creator.create_locations(location_designers=[TestLocation])
-
-    inspector.plot_bipartite_network()
 
     assert len(env.locations) == 5
     assert len(env.locations[0].actors) == 2

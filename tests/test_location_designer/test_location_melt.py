@@ -35,8 +35,6 @@ def test_recycle_1():
     creator = p2n.Creator(env=env)
     creator.create_actors(df=df)
     creator.create_locations(location_designers=[Classroom])
-    inspector = p2n.NetworkInspector(env)
-    inspector.plot_bipartite_network()
 
     assert len(env.actors) == 5
     assert len(env.locations) == 3
@@ -69,8 +67,6 @@ def test_recycle_2():
     creator = p2n.Creator(env=env)
     creator.create_actors(df=df)
     creator.create_locations(location_designers=[Classroom])
-    inspector = p2n.NetworkInspector(env)
-    inspector.plot_bipartite_network()
 
     assert len(env.actors) == 5
     assert len(env.locations) == 2
