@@ -333,7 +333,7 @@
 </pre></div>
 </div>
 </div>
-<p>Using the creator, we can sample from the dataset above. While doing so, we can specify a column to serve as the sampling unit. In this example, we use the household identifier “household_id” as the sample_level. Additionally, it is possible to oversample the data, meaning we can generate more sampled actors than there are original rows. Here, we set the number of samples to 500.</p>
+<p>Using the creator, we can sample from the dataset above. While doing so, we can specify a column to serve as the sampling unit. In this example, we use the household identifier “hid” as the sample_level. Additionally, it is possible to oversample the data, meaning we can generate more sampled actors than there are original rows. Here, we set the number of samples to 500.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
@@ -586,7 +586,7 @@
 </table>
 </div></div>
 </div>
-<p>If you look closely, the method used overwrites the column specified as the sample level (e.g., “hid”) with new, unique values. The original values are preserved in a separate column (e.g., “hid_original”). This ensures that the sample level can still be used to connect actors, without introducing artifacts caused by duplicated samples. If desired, this behavior can be disabled by setting the <code class="docutils literal notranslate"><span class="pre">replace_sample_level_column</span> <span class="pre">argument</span></code> to <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p>
+<p>If you look closely, the method used overwrites the column specified as the sample level (e.g., “hid”) with new, unique values. The original values are preserved in a separate column (e.g., “hid_original”). This ensures that the sample level can still be used to connect actors, without introducing artifacts caused by duplicated samples. If desired, this behavior can be disabled by setting the <code class="docutils literal notranslate"><span class="pre">replace_sample_level_column</span></code> argument to <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p>
 <p>Now we create the actors from the sampled data:</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:

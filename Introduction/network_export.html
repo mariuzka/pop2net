@@ -92,7 +92,7 @@
              
   <section id="Network-model-export">
 <h1>Network model export<a class="headerlink" href="#Network-model-export" title="Link to this heading"></a></h1>
-<p>A network generated with Pop2net can be exported as a networkx graph object using <code class="docutils literal notranslate"><span class="pre">model.export_bipartite_network()</span></code> and <code class="docutils literal notranslate"><span class="pre">model.export_network()</span></code>.</p>
+<p>A network generated with Pop2net can be exported as a networkx graph object using <code class="docutils literal notranslate"><span class="pre">env.export_bipartite_network()</span></code> and <code class="docutils literal notranslate"><span class="pre">env.export_actor_network()</span></code>.</p>
 <p>First, let us create a example network:</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
@@ -866,7 +866,7 @@ var element = document.currentScript.previousSibling.previousSibling;
 })(window);
 </script></div>
 </div>
-<p>In order to export the bipartite network as a networkx graph object, use <code class="docutils literal notranslate"><span class="pre">model.export_bipartite_network()</span></code>. Using the arguments <code class="docutils literal notranslate"><span class="pre">location_attrs</span></code> and <code class="docutils literal notranslate"><span class="pre">agent_attrs</span></code>, location attributes and agent attributes will be saved as node attributes.</p>
+<p>In order to export the bipartite network as a networkx graph object, use <code class="docutils literal notranslate"><span class="pre">env.export_bipartite_network()</span></code>. Using the arguments <code class="docutils literal notranslate"><span class="pre">location_attrs</span></code> and <code class="docutils literal notranslate"><span class="pre">actor_attrs</span></code>, location attributes and actor attributes will be saved as node attributes.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
@@ -885,7 +885,7 @@ var element = document.currentScript.previousSibling.previousSibling;
 &lt;networkx.classes.graph.Graph at 0x714d9c54cad0&gt;
 </pre></div></div>
 </div>
-<p>To transform the network into a agent-level network and save it as a networkx graph object, use <code class="docutils literal notranslate"><span class="pre">model.export_actor_network()</span></code>.</p>
+<p>To transform the network into an actor-level network and save it as a networkx graph object, use <code class="docutils literal notranslate"><span class="pre">env.export_actor_network()</span></code>.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>

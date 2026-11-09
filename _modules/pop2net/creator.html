@@ -766,8 +766,8 @@
 <span class="s2">                    &quot;&quot;&quot;</span>
                     <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
 
-                <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">bridge_values</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">enable_p2n_warnings</span><span class="p">:</span>
-                    <span class="k">if</span> <span class="n">dummy_location</span><span class="o">.</span><span class="n">n_actors</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">bridge_values</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">dummy_location</span><span class="o">.</span><span class="n">n_actors</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="o">.</span><span class="n">enable_p2n_warnings</span><span class="p">:</span>
                         <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;You cannot use </span><span class="si">{</span><span class="n">label</span><span class="si">}</span><span class="s2">.n_actors and </span>
 <span class="s2">                        </span><span class="si">{</span><span class="n">label</span><span class="si">}</span><span class="s2">.bridge() at the same time. </span><span class="si">{</span><span class="n">label</span><span class="si">}</span><span class="s2">.n_actors</span>
 <span class="s2">                        is ignored.&quot;&quot;&quot;</span>
@@ -797,7 +797,8 @@
                     <span class="k">def</span><span class="w"> </span><span class="nf">melt</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
                         <span class="k">return</span> <span class="n">melt_list</span>
 
-                    <span class="n">designer</span><span class="o">.</span><span class="n">melt</span> <span class="o">=</span> <span class="n">melt</span>
+                    <span class="c1"># create a subclass instead of modifying the user&#39;s designer class</span>
+                    <span class="n">designer</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="n">designer</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="p">(</span><span class="n">designer</span><span class="p">,),</span> <span class="p">{</span><span class="s2">&quot;melt&quot;</span><span class="p">:</span> <span class="n">melt</span><span class="p">})</span>
                     <span class="n">dummy_location</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_dummy_location</span><span class="p">(</span><span class="n">designer</span><span class="p">)</span>
 
             <span class="k">if</span> <span class="ow">not</span> <span class="n">dummy_location</span><span class="o">.</span><span class="n">melt</span><span class="p">():</span>
@@ -1023,7 +1024,7 @@
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
         <span class="n">location_designers</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span>
-        <span class="n">actor_class</span><span class="p">:</span> <span class="nb">type</span><span class="p">[</span><span class="n">p2n</span><span class="o">.</span><span class="n">Actor</span><span class="p">]</span> <span class="o">=</span> <span class="n">p2n</span><span class="o">.</span><span class="n">Actor</span><span class="p">,</span>
+        <span class="n">actor_class</span><span class="p">:</span> <span class="kc">None</span> <span class="o">|</span> <span class="nb">type</span><span class="p">[</span><span class="n">p2n</span><span class="o">.</span><span class="n">Actor</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">actor_class_attr</span><span class="p">:</span> <span class="kc">None</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">actor_class_dict</span><span class="p">:</span> <span class="kc">None</span> <span class="o">|</span> <span class="nb">dict</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">n_actors</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -1042,7 +1043,9 @@
 <span class="sd">            df (pd.DataFrame): A data set with individual data that forms the basis for</span>
 <span class="sd">                the creation of actors. Each row is (potentially) translated into one actor.</span>
 <span class="sd">                Each column is translated into one actor attribute.</span>
-<span class="sd">            actor_class (type[p2n.Actor]): The class from which the actor instances are created.</span>
+<span class="sd">            actor_class (None | type[p2n.Actor]): The class from which the actor instances are</span>
+<span class="sd">                created. If None, the default actor class is used, which also inherits from the</span>
+<span class="sd">                framework&#39;s agent class if a framework is set.</span>
 <span class="sd">            location_designers (list): A list of classes from which the location instances are</span>
 <span class="sd">                created.</span>
 <span class="sd">            n_actors (Optional[int], optional): The number of actors that will be created.</span>
@@ -1226,7 +1229,8 @@
 <span class="sd">                None</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">id_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">id_list</span><span class="p">))</span>
+        <span class="c1"># remove duplicates while keeping the order (set() would make the order random)</span>
+        <span class="n">id_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">dict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="n">id_list</span><span class="p">))</span>
         <span class="n">df_ids</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="n">id_attr_name</span><span class="p">:</span> <span class="n">id_list</span><span class="p">})</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">create_actors</span><span class="p">(</span><span class="n">df</span><span class="o">=</span><span class="n">df_ids</span><span class="p">,</span> <span class="n">actor_class</span><span class="o">=</span><span class="n">actor_class</span><span class="p">)</span></div>
 
