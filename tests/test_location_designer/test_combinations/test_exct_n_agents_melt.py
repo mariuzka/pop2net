@@ -72,9 +72,6 @@ def test_1():
 
     creator.create_actors(df=df)
     creator.create_locations(location_designers=[LocAB])
-    inspector = p2n.NetworkInspector(env)
-    inspector.plot_bipartite_network()
-    inspector.plot_actor_network(actor_attrs=["status"])
 
     assert len(env.actors) == 6
     assert len(env.locations) == 1

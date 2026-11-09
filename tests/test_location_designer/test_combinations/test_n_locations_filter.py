@@ -27,9 +27,6 @@ def test_1():
 
     creator.create_actors(df=df)
     creator.create_locations(location_designers=[TestLocationA, TestLocationB])
-    inspector = p2n.NetworkInspector(env=env)
-    inspector.plot_bipartite_network()
-    inspector.plot_actor_network(actor_attrs=["status"])
 
     assert len(env.locations) == 3
     assert len(env.actors) == 6

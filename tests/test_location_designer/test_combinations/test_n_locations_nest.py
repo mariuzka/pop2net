@@ -22,8 +22,6 @@ def test_1():
     env = p2n.Environment()
     creator = p2n.Creator(env=env)
     creator.create(df=df, location_designers=[School, Classroom])
-    inspector = p2n.NetworkInspector(env)
-    inspector.plot_bipartite_network()
 
     assert len(env.actors) == 4
     assert len(env.locations) == 3
@@ -62,8 +60,6 @@ def test_2():
     env = p2n.Environment()
     creator = p2n.Creator(env=env)
     creator.create(df=df, location_designers=[School, Classroom])
-    inspector = p2n.NetworkInspector(env)
-    inspector.plot_bipartite_network()
     print(len(env.locations))
 
     assert len(env.actors) == 4

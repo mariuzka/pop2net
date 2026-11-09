@@ -679,8 +679,8 @@ class Creator:
                     """
                     warnings.warn(msg)
 
-                elif len(bridge_values) > 1 and self.env.enable_p2n_warnings:
-                    if dummy_location.n_actors is not None:
+                elif len(bridge_values) > 1:
+                    if dummy_location.n_actors is not None and self.env.enable_p2n_warnings:
                         msg = f"""You cannot use {label}.n_actors and 
                         {label}.bridge() at the same time. {label}.n_actors
                         is ignored."""
@@ -710,7 +710,8 @@ class Creator:
                     def melt(self):
                         return melt_list
 
-                    designer.melt = melt
+                    # create a subclass instead of modifying the user's designer class
+                    designer = type(designer.__name__, (designer,), {"melt": melt})
                     dummy_location = self._create_dummy_location(designer)
 
             if not dummy_location.melt():
@@ -933,7 +934,7 @@ class Creator:
         self,
         df: pd.DataFrame,
         location_designers: list,
-        actor_class: type[p2n.Actor] = p2n.Actor,
+        actor_class: None | type[p2n.Actor] = None,
         actor_class_attr: None | str = None,
         actor_class_dict: None | dict = None,
         n_actors: int | None = None,
@@ -952,7 +953,9 @@ class Creator:
             df (pd.DataFrame): A data set with individual data that forms the basis for
                 the creation of actors. Each row is (potentially) translated into one actor.
                 Each column is translated into one actor attribute.
-            actor_class (type[p2n.Actor]): The class from which the actor instances are created.
+            actor_class (None | type[p2n.Actor]): The class from which the actor instances are
+                created. If None, the default actor class is used, which also inherits from the
+                framework's agent class if a framework is set.
             location_designers (list): A list of classes from which the location instances are
                 created.
             n_actors (Optional[int], optional): The number of actors that will be created.
@@ -1127,7 +1130,8 @@ class Creator:
                 None
 
         """
-        id_list = list(set(id_list))
+        # remove duplicates while keeping the order (set() would make the order random)
+        id_list = list(dict.fromkeys(id_list))
         df_ids = pd.DataFrame({id_attr_name: id_list})
         self.create_actors(df=df_ids, actor_class=actor_class)
         # TODO: return actors

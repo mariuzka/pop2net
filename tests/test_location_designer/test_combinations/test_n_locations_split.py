@@ -1,4 +1,5 @@
 import pandas as pd
+import pytest
 
 import pop2net as p2n
 
@@ -44,7 +45,8 @@ def test_2():
             return actor.status
 
     creator.create_actors(df=df)
-    creator.create_locations(location_designers=[TestLocation])
+    with pytest.warns(UserWarning, match="n_locations and TestLocation.split"):
+        creator.create_locations(location_designers=[TestLocation])
 
     assert len(env.locations) == 3
     assert len(env.actors) == 6

@@ -25,10 +25,6 @@ def test_1():
     for actor in env.actors:
         assert actor.neighbors(location_labels=["Classroom"])[0].class_id == actor.class_id
 
-    inspector = p2n.NetworkInspector(env)
-    inspector.plot_bipartite_network()
-    inspector.plot_actor_network(actor_attrs=df.columns, actor_color="class_id")
-
 
 # stick together with uneven actor-location "seats"
 def test_2():
@@ -45,9 +41,6 @@ def test_2():
     env = p2n.Environment()
     creator = p2n.Creator(env=env)
     creator.create(df=df, location_designers=[Classroom])
-    inspector = p2n.NetworkInspector(env)
-    inspector.plot_bipartite_network()
-    inspector.plot_actor_network(actor_attrs=df.columns, actor_color="class_id")
 
     assert len(env.actors) == 5
     assert len(env.locations) == 2
@@ -83,9 +76,6 @@ def test_3():
     env = p2n.Environment()
     creator = p2n.Creator(env=env)
     creator.create(df=df, location_designers=[Classroom])
-    inspector = p2n.NetworkInspector(env)
-    inspector.plot_bipartite_network()
-    inspector.plot_actor_network(actor_attrs=df.columns, actor_color="class_id")
 
     assert len(env.actors) == 6
     assert len(env.locations) == 4
@@ -132,7 +122,6 @@ def test_4():
 
     env = p2n.Environment()
     creator = p2n.Creator(env=env)
-    inspector = p2n.NetworkInspector(env=env)
 
     # location with stick_together()
     class TestLocation(p2n.LocationDesigner):
@@ -157,5 +146,3 @@ def test_4():
         for actor_j in env.actors
         if actor_i.group == actor_j.group
     )
-
-    inspector.plot_actor_network(actor_attrs=["group"])

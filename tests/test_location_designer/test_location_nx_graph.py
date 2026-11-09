@@ -1,4 +1,5 @@
 import networkx as nx
+import pytest
 
 import pop2net as p2n
 
@@ -91,10 +92,11 @@ def test_line_3():
         overcrowding = None
 
     creator.create_actors(n=20)
-    creator.create_locations(
-        location_designers=[LineLocationDesigner],
-        delete_magic_actor_attributes=False,
-    )
+    with pytest.warns(UserWarning, match="n_actors if location.nxgraph"):
+        creator.create_locations(
+            location_designers=[LineLocationDesigner],
+            delete_magic_actor_attributes=False,
+        )
 
     assert len(env.actors) == 20
     assert len(env.locations) == 18
@@ -135,10 +137,14 @@ def test_line_4():
         overcrowding = True
 
     creator.create_actors(n=20)
-    creator.create_locations(
-        location_designers=[LineLocationDesigner],
-        delete_magic_actor_attributes=False,
-    )
+    with (
+        pytest.warns(UserWarning, match="n_actors if location.nxgraph"),
+        pytest.warns(UserWarning, match="overcrowding if location.nxgraph"),
+    ):
+        creator.create_locations(
+            location_designers=[LineLocationDesigner],
+            delete_magic_actor_attributes=False,
+        )
 
     assert len(env.actors) == 20
     assert len(env.locations) == 18
@@ -179,10 +185,14 @@ def test_line_5():
         overcrowding = True
 
     creator.create_actors(n=5)
-    creator.create_locations(
-        location_designers=[LineLocationDesigner],
-        delete_magic_actor_attributes=False,
-    )
+    with (
+        pytest.warns(UserWarning, match="n_actors if location.nxgraph"),
+        pytest.warns(UserWarning, match="overcrowding if location.nxgraph"),
+    ):
+        creator.create_locations(
+            location_designers=[LineLocationDesigner],
+            delete_magic_actor_attributes=False,
+        )
 
     assert len(env.actors) == 5
     assert len(env.locations) == 5  # one location instance is useless

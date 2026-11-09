@@ -1,3 +1,5 @@
+import pytest
+
 import pop2net as p2n
 
 
@@ -112,7 +114,8 @@ def test_2():
     assert len(actor3.locations) == 0
 
     env.connect_actors(actors=actors, location_cls=School)
-    env.disconnect_actors(actors=[actor1, actor2], location_labels=["School"])
+    with pytest.warns(UserWarning, match="other actors at the location"):
+        env.disconnect_actors(actors=[actor1, actor2], location_labels=["School"])
 
     assert len(env.actors) == 3
 
@@ -202,7 +205,11 @@ def test_4():
         location_cls=School,
     )
 
-    env.disconnect_actors(actors=[actor1, actor2], remove_locations=True)
+    with (
+        pytest.warns(UserWarning, match="other actors at the location"),
+        pytest.warns(UserWarning, match="removed a location"),
+    ):
+        env.disconnect_actors(actors=[actor1, actor2], remove_locations=True)
 
     assert len(env.actors) == 3
 
